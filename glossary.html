@@ -180,6 +180,24 @@ a.scr:hover { background: var(--emerald-100); }
 .flist { list-style: none; margin: 10px 0 0; padding: 0; }
 .flist li { font-family: var(--font-mono); font-size: 12px; line-height: 21px; color: var(--gray-700); margin: 0; padding: 1px 0; white-space: nowrap; overflow-x: auto; }
 .flist li b { color: var(--gray-900); }
+.flist li .gl {
+  display: block; font-family: var(--font-sans); font-weight: 400;
+  font-size: 12px; line-height: 18px; color: var(--gray-500);
+  white-space: normal; margin: 1px 0 5px;
+}
+.flist li:last-child .gl { margin-bottom: 0; }
+.fnode .fn-g { font-size: 12px; line-height: 19px; color: var(--gray-500); margin-top: 3px; }
+.fnode .fn-g b { color: var(--gray-700); font-weight: 700; }
+.symkey { margin-top: 22px; }
+.symkey-h { font-size: 13px; line-height: 20px; font-weight: 700; color: var(--gray-900); margin: 0 0 10px; }
+.symkey-h span { font-weight: 400; color: var(--gray-500); }
+.symkey table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--gray-200); border-radius: 12px; overflow: hidden; }
+.symkey th, .symkey td { border-bottom: 1px solid var(--gray-100); padding: 7px 14px; text-align: left; font-size: 13px; line-height: 21px; vertical-align: top; }
+.symkey thead th { background: var(--gray-50); color: var(--gray-500); font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+.symkey tbody tr:last-child th, .symkey tbody tr:last-child td { border-bottom: 0; }
+.symkey td.s { font-family: var(--font-mono); font-weight: 700; color: var(--gray-900); white-space: nowrap; width: 1%; }
+.symkey td.k { color: var(--gray-700); }
+.symkey td.w { color: var(--gray-500); white-space: nowrap; width: 1%; }
 .fkey { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; margin-top: 22px; }
 .fkey .k {
   background: #fff; border: 1px solid var(--gray-100); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow-card);
@@ -482,11 +500,13 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
         <div class="fn-k">채권 1건마다 만드는 값 · 1</div>
         <div class="fn-t">Ai = 순지급액 × (1 − 할인율)</div>
         <div class="fn-d">“투자자가 이 채권을 산 값”</div>
+        <div class="fn-g"><b>Ai</b> 그 채권을 산 값</div>
       </div>
       <div class="fnode">
         <div class="fn-k">채권 1건마다 만드는 값 · 2</div>
         <div class="fn-t">Di = 정산예정일 − 선정산일</div>
         <div class="fn-d">“돈이 묶여 있는 날수(금융일수)”</div>
+        <div class="fn-g"><b>Di</b> 그 채권이 묶인 날수</div>
       </div>
     </div>
 
@@ -498,12 +518,18 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
         <div class="fn-t">잔액 계통</div>
         <div class="fn-d">조회할 때마다</div>
         <ul class="flist">
-          <li><b>투자 실행액</b> = Σ Ai (미회수분)</li>
-          <li><b>순현금</b>     = 쿠콘 가상계좌 잔액</li>
-          <li><b>w금융일수</b>  = Σ(Ai·Di) / Σ Ai</li>
-          <li><b>ty수익율</b>   = 할인율 × 365/w</li>
-          <li><b>비중</b>       = 각 몫 / (실행액+현금)</li>
-          <li><b>S입금부족율</b> = Σ SLi / Σ SAi</li>
+          <li><b>투자 실행액</b> = Σ Ai (미회수분)
+            <span class="gl"><b>Σ</b> 전부 더한 값 · <b>Ai</b> 그 채권을 산 값</span></li>
+          <li><b>순현금</b>     = 쿠콘 가상계좌 잔액
+            <span class="gl">채권으로 안 나가고 통장에 남아 있는 현금</span></li>
+          <li><b>w금융일수</b>  = Σ(Ai·Di) / Σ Ai
+            <span class="gl">(산 값 × 묶인 날수)를 전부 더해 ÷ 산 값을 전부 더한 값</span></li>
+          <li><b>ty수익율</b>   = 할인율 × 365/w
+            <span class="gl"><b>w</b> 는 w금융일수 · 1년으로 환산하면 몇 %냐</span></li>
+          <li><b>비중</b>       = 각 몫 / (실행액+현금)
+            <span class="gl">돈 전체를 100 으로 놓은 각자의 몫</span></li>
+          <li><b>S입금부족율</b> = Σ SLi / Σ SAi
+            <span class="gl"><b>SLi</b> 못 받은 금액 · <b>SAi</b> 그 채권에 넣은 돈</span></li>
         </ul>
       </div>
       <div class="fnode">
@@ -512,14 +538,32 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
         <div class="fn-d">매일 자정 배치 → 누적</div>
         <ul class="flist">
           <li>하루치 마감 (D-1 기준)</li>
-          <li><b>SB</b>  = Σ 상환액</li>
-          <li><b>SA</b>  = Σ Ai</li>
-          <li><b>SM</b>  = Σ 투자수익</li>
-          <li><b>SMR</b> = SM / SA</li>
-          <li><b>SD</b>  = Σ(Ai·Di) / Σ Ai</li>
-          <li><b>EC</b>  = 자정 시점 현금잔액</li>
+          <li><b>SB</b>  = Σ 상환액
+            <span class="gl">어제 실제로 회수한 돈을 전부 더한 값</span></li>
+          <li><b>SA</b>  = Σ Ai
+            <span class="gl">어제 만기가 돌아온 채권에 넣었던 돈</span></li>
+          <li><b>SM</b>  = Σ 투자수익
+            <span class="gl">어제 만기 채권에서 남긴 돈</span></li>
+          <li><b>SMR</b> = SM / SA
+            <span class="gl">어제 하루치로 몇 % 벌었나</span></li>
+          <li><b>SD</b>  = Σ(Ai·Di) / Σ Ai
+            <span class="gl">어제 만기 채권이 평균 며칠짜리였나</span></li>
+          <li><b>EC</b>  = 자정 시점 현금잔액
+            <span class="gl">어제 자정에 통장에 남아 있던 현금</span></li>
         </ul>
-        <div class="fn-d" style="margin-top:10px">기간 선택(기본 일주일)으로 합산 → PSA · PSM · PSMR · PSD · PSC</div>
+        <div class="fn-d" style="margin-top:10px">기간 선택(기본 일주일)으로 합산</div>
+        <ul class="flist">
+          <li><b>PSA</b>  = Σ SA
+            <span class="gl">고른 기간 만기 채권에 넣었던 돈</span></li>
+          <li><b>PSM</b>  = Σ SM
+            <span class="gl">고른 기간에 남긴 돈</span></li>
+          <li><b>PSMR</b> = PSM / PSA
+            <span class="gl">고른 기간에 몇 % 벌었나</span></li>
+          <li><b>PSD</b>  = Σ(Api·Dpi) / PSA
+            <span class="gl">고른 기간 채권이 평균 며칠짜리였나 · <b>Api</b> 그 채권을 산 값 · <b>Dpi</b> 그 채권이 묶인 날수</span></li>
+          <li><b>PSC</b>  = Σ EC
+            <span class="gl">고른 기간의 자정 현금잔액을 전부 더한 값</span></li>
+        </ul>
       </div>
     </div>
 
@@ -537,6 +581,35 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
         <div class="fn-d"><a class="scr" href="invest-profit.html">invest-profit.html</a></div>
       </div>
     </div>
+  </div>
+
+  <div class="symkey">
+    <p class="symkey-h">기호 읽는 법 <span>— 위 그림에 나온 기호를 한자리에 모은 것이다.</span></p>
+    <table>
+      <thead><tr><th>기호</th><th>우리말</th><th>어디서 나오나</th></tr></thead>
+      <tbody>
+        <tr><td class="s">Σ</td><td class="k">전부 더한 값</td><td class="w">모든 합계 산식</td></tr>
+        <tr><td class="s">Ai</td><td class="k">그 채권을 산 값 (순지급액에서 할인율만큼 뺀 값)</td><td class="w">잔액·유량 양쪽</td></tr>
+        <tr><td class="s">Di</td><td class="k">그 채권이 묶인 날수 (선정산일 → 정산예정일, <code>금융일수</code>)</td><td class="w">잔액·유량 양쪽</td></tr>
+        <tr><td class="s">Api · Dpi</td><td class="k">고른 기간 안의 <code>Ai</code> · <code>Di</code></td><td class="w">기간 합산</td></tr>
+        <tr><td class="s">w금융일수</td><td class="k">지금 깔려 있는 채권이 평균 며칠짜리냐 (금액 가중평균)</td><td class="w">화면 ①</td></tr>
+        <tr><td class="s">ty수익율</td><td class="k">1년으로 환산하면 몇 %냐</td><td class="w">화면 ①·②</td></tr>
+        <tr><td class="s">SLi</td><td class="k">그 채권에서 덜 들어온 금액</td><td class="w">S입금부족율의 분자</td></tr>
+        <tr><td class="s">SAi</td><td class="k">표본 구간 채권 한 건에 넣은 돈</td><td class="w">S입금부족율의 분모</td></tr>
+        <tr><td class="s">S입금부족율</td><td class="k">넣은 돈 대비 얼마나 덜 들어왔나</td><td class="w">화면 ①</td></tr>
+        <tr><td class="s">SB</td><td class="k">하루치 상환액 — 어제 실제로 회수한 돈</td><td class="w">화면 ② 일별 표</td></tr>
+        <tr><td class="s">SA</td><td class="k">하루치 투자실행금 — 어제 만기 채권에 넣었던 돈</td><td class="w">화면 ② 일별 표</td></tr>
+        <tr><td class="s">SM</td><td class="k">하루치 투자수익 — 어제 남긴 돈</td><td class="w">화면 ② 일별 표</td></tr>
+        <tr><td class="s">SMR</td><td class="k">하루치 투자수익율 — 어제 몇 % 벌었나</td><td class="w">화면 ② 일별 표</td></tr>
+        <tr><td class="s">SD</td><td class="k">하루치 w금융일수 — 어제 만기 채권이 평균 며칠짜리였나</td><td class="w">화면 ② 일별 표</td></tr>
+        <tr><td class="s">EC</td><td class="k">자정 현금잔액 — 어제 자정에 통장에 남아 있던 현금</td><td class="w">화면 ② 현황 카드</td></tr>
+        <tr><td class="s">PSA</td><td class="k">고른 기간 만기 채권에 넣었던 돈</td><td class="w">화면 ② 현황 카드</td></tr>
+        <tr><td class="s">PSM</td><td class="k">고른 기간에 남긴 돈</td><td class="w">화면 ② 현황 카드</td></tr>
+        <tr><td class="s">PSMR</td><td class="k">고른 기간에 몇 % 벌었나</td><td class="w">④ 의 재료</td></tr>
+        <tr><td class="s">PSD</td><td class="k">고른 기간 채권이 평균 며칠짜리였나</td><td class="w">④ 의 재료</td></tr>
+        <tr><td class="s">PSC</td><td class="k">고른 기간의 자정 현금잔액을 전부 더한 값</td><td class="w">⑤ 의 분모</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <p>읽어야 할 것은 딱 세 가지다.</p>

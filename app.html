@@ -58,6 +58,8 @@
   }
   .tbl tfoot td { background: var(--gray-50); border-top: 1px solid var(--gray-100); border-bottom: 0; font-weight: 700; color: var(--gray-900); }
   .tbl tfoot td .avg-note { font-size: 11px; font-weight: 400; color: var(--gray-400); margin-left: 4px; font-family: var(--font-sans); }
+  .tbl tbody td .avg-note { font-size: 11px; font-weight: 400; color: var(--gray-400); margin-left: 4px; font-family: var(--font-sans); }
+  .tbl-note { margin: 10px 20px 0; font-size: 12px; line-height: 1.6; color: var(--gray-500); }
   .tbl-count { font-size: 12px; color: var(--gray-400); margin-left: 8px; }
   .sel-pill { margin-left: 8px; font-weight: 600; }
 
@@ -1185,7 +1187,184 @@ var ASSET_ROWS = [
   {name:'순현금',     amount:105300000,  w:null,  s:null, ty:null, keeper:'㈜쿠콘'}
 ];
 
+/* 일별 투자수익 원장 — 2026-03-01 ~ 08-27 180일. 생성기 daily_ledger.py.
+   월별 표는 이 원장을 조회 기간만큼 잘라 달별로 합친 결과다(rollupMonths). 월별 배열을 따로 두지 않는다.
+   그래야 같은 조회 기간에서 일별 합계와 월별 합계, 그리고 카드 값이 어긋날 수 없다.
+   투자 수익 = floor(투자실행금 x 0.11%) · 상환액 = 투자실행금 + 투자 수익 · Ty수익율 = 0.11% x 365 / W금융일수. */
 var DAILY = [
+  {d:'2026-03-01', repay:166583040, exec:166400000, profit:183040, w:11.4, ty:3.52},
+  {d:'2026-03-02', repay:173790960, exec:173600000, profit:190960, w:11.4, ty:3.52},
+  {d:'2026-03-03', repay:173790960, exec:173600000, profit:190960, w:11.4, ty:3.52},
+  {d:'2026-03-04', repay:165782160, exec:165600000, profit:182160, w:11.4, ty:3.52},
+  {d:'2026-03-05', repay:154770060, exec:154600000, profit:170060, w:11.4, ty:3.52},
+  {d:'2026-03-06', repay:147862470, exec:147700000, profit:162470, w:11.5, ty:3.49},
+  {d:'2026-03-07', repay:149864670, exec:149700000, profit:164670, w:11.3, ty:3.55},
+  {d:'2026-03-08', repay:159074790, exec:158900000, profit:174790, w:11.4, ty:3.52},
+  {d:'2026-03-09', repay:169286010, exec:169100000, profit:186010, w:11.4, ty:3.52},
+  {d:'2026-03-10', repay:173790960, exec:173600000, profit:190960, w:11.4, ty:3.52},
+  {d:'2026-03-11', repay:170287110, exec:170100000, profit:187110, w:11.4, ty:3.52},
+  {d:'2026-03-12', repay:162278310, exec:162100000, profit:178310, w:11.4, ty:3.52},
+  {d:'2026-03-13', repay:156071490, exec:155900000, profit:171490, w:11.5, ty:3.49},
+  {d:'2026-03-14', repay:156071490, exec:155900000, profit:171490, w:11.3, ty:3.55},
+  {d:'2026-03-15', repay:161477430, exec:161300000, profit:177430, w:11.4, ty:3.52},
+  {d:'2026-03-16', repay:166983480, exec:166800000, profit:183480, w:11.4, ty:3.52},
+  {d:'2026-03-17', repay:167484030, exec:167300000, profit:184030, w:11.4, ty:3.52},
+  {d:'2026-03-18', repay:162078090, exec:161900000, profit:178090, w:11.4, ty:3.52},
+  {d:'2026-03-19', repay:154770060, exec:154600000, profit:170060, w:11.4, ty:3.52},
+  {d:'2026-03-20', repay:151566540, exec:151400000, profit:166540, w:11.5, ty:3.49},
+  {d:'2026-03-21', repay:156071490, exec:155900000, profit:171490, w:11.3, ty:3.55},
+  {d:'2026-03-22', repay:165882270, exec:165700000, profit:182270, w:11.4, ty:3.52},
+  {d:'2026-03-23', repay:174491730, exec:174300000, profit:191730, w:11.4, ty:3.52},
+  {d:'2026-03-24', repay:175693050, exec:175500000, profit:193050, w:11.4, ty:3.52},
+  {d:'2026-03-25', repay:168385020, exec:168200000, profit:185020, w:11.4, ty:3.52},
+  {d:'2026-03-26', repay:157072590, exec:156900000, profit:172590, w:11.4, ty:3.52},
+  {d:'2026-03-27', repay:149264010, exec:149100000, profit:164010, w:11.5, ty:3.49},
+  {d:'2026-03-28', repay:149964780, exec:149800000, profit:164780, w:11.3, ty:3.55},
+  {d:'2026-03-29', repay:157773360, exec:157600000, profit:173360, w:11.4, ty:3.52},
+  {d:'2026-03-30', repay:167083590, exec:166900000, profit:183590, w:11.4, ty:3.52},
+  {d:'2026-03-31', repay:171388320, exec:171200000, profit:188320, w:11.4, ty:3.52},
+  {d:'2026-04-01', repay:183001080, exec:182800000, profit:201080, w:11.2, ty:3.58},
+  {d:'2026-04-02', repay:175592940, exec:175400000, profit:192940, w:11.2, ty:3.58},
+  {d:'2026-04-03', repay:170487330, exec:170300000, profit:187330, w:11.2, ty:3.58},
+  {d:'2026-04-04', repay:171788760, exec:171600000, profit:188760, w:11.2, ty:3.58},
+  {d:'2026-04-05', repay:178295910, exec:178100000, profit:195910, w:11.2, ty:3.58},
+  {d:'2026-04-06', repay:184102290, exec:183900000, profit:202290, w:11.3, ty:3.55},
+  {d:'2026-04-07', repay:183601740, exec:183400000, profit:201740, w:11.1, ty:3.62},
+  {d:'2026-04-08', repay:176193600, exec:176000000, profit:193600, w:11.2, ty:3.58},
+  {d:'2026-04-09', repay:166683150, exec:166500000, profit:183150, w:11.2, ty:3.58},
+  {d:'2026-04-10', repay:162278310, exec:162100000, profit:178310, w:11.2, ty:3.58},
+  {d:'2026-04-11', repay:166983480, exec:166800000, profit:183480, w:11.2, ty:3.58},
+  {d:'2026-04-12', repay:178295910, exec:178100000, profit:195910, w:11.2, ty:3.58},
+  {d:'2026-04-13', repay:188907570, exec:188700000, profit:207570, w:11.3, ty:3.55},
+  {d:'2026-04-14', repay:191810760, exec:191600000, profit:210760, w:11.1, ty:3.62},
+  {d:'2026-04-15', repay:185103390, exec:184900000, profit:203390, w:11.2, ty:3.58},
+  {d:'2026-04-16', repay:173490630, exec:173300000, profit:190630, w:11.2, ty:3.58},
+  {d:'2026-04-17', repay:164881170, exec:164700000, profit:181170, w:11.2, ty:3.58},
+  {d:'2026-04-18', repay:164380620, exec:164200000, profit:180620, w:11.2, ty:3.58},
+  {d:'2026-04-19', repay:171488430, exec:171300000, profit:188430, w:11.2, ty:3.58},
+  {d:'2026-04-20', repay:179997780, exec:179800000, profit:197780, w:11.3, ty:3.55},
+  {d:'2026-04-21', repay:183601740, exec:183400000, profit:201740, w:11.1, ty:3.62},
+  {d:'2026-04-22', repay:180298110, exec:180100000, profit:198110, w:11.2, ty:3.58},
+  {d:'2026-04-23', repay:173490630, exec:173300000, profit:190630, w:11.2, ty:3.58},
+  {d:'2026-04-24', repay:169686450, exec:169500000, profit:186450, w:11.2, ty:3.58},
+  {d:'2026-04-25', repay:172589640, exec:172400000, profit:189640, w:11.2, ty:3.58},
+  {d:'2026-04-26', repay:180398220, exec:180200000, profit:198220, w:11.2, ty:3.58},
+  {d:'2026-04-27', repay:186905370, exec:186700000, profit:205370, w:11.3, ty:3.55},
+  {d:'2026-04-28', repay:186304710, exec:186100000, profit:204710, w:11.1, ty:3.62},
+  {d:'2026-04-29', repay:177795360, exec:177600000, profit:195360, w:11.2, ty:3.58},
+  {d:'2026-04-30', repay:166783260, exec:166600000, profit:183260, w:11.2, ty:3.58},
+  {d:'2026-05-01', repay:163679850, exec:163500000, profit:179850, w:11.0, ty:3.65},
+  {d:'2026-05-02', repay:167283810, exec:167100000, profit:183810, w:11.0, ty:3.65},
+  {d:'2026-05-03', repay:178596240, exec:178400000, profit:196240, w:11.0, ty:3.65},
+  {d:'2026-05-04', repay:190008780, exec:189800000, profit:208780, w:11.0, ty:3.65},
+  {d:'2026-05-05', repay:194313510, exec:194100000, profit:213510, w:11.0, ty:3.65},
+  {d:'2026-05-06', repay:189107790, exec:188900000, profit:207790, w:11.1, ty:3.62},
+  {d:'2026-05-07', repay:178696350, exec:178500000, profit:196350, w:10.9, ty:3.68},
+  {d:'2026-05-08', repay:170487330, exec:170300000, profit:187330, w:11.0, ty:3.65},
+  {d:'2026-05-09', repay:169886670, exec:169700000, profit:186670, w:11.0, ty:3.65},
+  {d:'2026-05-10', repay:175993380, exec:175800000, profit:193380, w:11.0, ty:3.65},
+  {d:'2026-05-11', repay:183101190, exec:182900000, profit:201190, w:11.0, ty:3.65},
+  {d:'2026-05-12', repay:185303610, exec:185100000, profit:203610, w:11.0, ty:3.65},
+  {d:'2026-05-13', repay:180798660, exec:180600000, profit:198660, w:11.1, ty:3.62},
+  {d:'2026-05-14', repay:173690850, exec:173500000, profit:190850, w:10.9, ty:3.68},
+  {d:'2026-05-15', repay:170487330, exec:170300000, profit:187330, w:11.0, ty:3.65},
+  {d:'2026-05-16', repay:174792060, exec:174600000, profit:192060, w:11.0, ty:3.65},
+  {d:'2026-05-17', repay:184302510, exec:184100000, profit:202510, w:11.0, ty:3.65},
+  {d:'2026-05-18', repay:192111090, exec:191900000, profit:211090, w:11.0, ty:3.65},
+  {d:'2026-05-19', repay:192111090, exec:191900000, profit:211090, w:11.0, ty:3.65},
+  {d:'2026-05-20', repay:183401520, exec:183200000, profit:201520, w:11.1, ty:3.62},
+  {d:'2026-05-21', repay:171087990, exec:170900000, profit:187990, w:10.9, ty:3.68},
+  {d:'2026-05-22', repay:163579740, exec:163400000, profit:179740, w:11.0, ty:3.65},
+  {d:'2026-05-23', repay:165682050, exec:165500000, profit:182050, w:11.0, ty:3.65},
+  {d:'2026-05-24', repay:175893270, exec:175700000, profit:193270, w:11.0, ty:3.65},
+  {d:'2026-05-25', repay:187105590, exec:186900000, profit:205590, w:11.0, ty:3.65},
+  {d:'2026-05-26', repay:192010980, exec:191800000, profit:210980, w:11.0, ty:3.65},
+  {d:'2026-05-27', repay:188206800, exec:188000000, profit:206800, w:11.1, ty:3.62},
+  {d:'2026-05-28', repay:179397120, exec:179200000, profit:197120, w:10.9, ty:3.68},
+  {d:'2026-05-29', repay:172589640, exec:172400000, profit:189640, w:11.0, ty:3.65},
+  {d:'2026-05-30', repay:172589640, exec:172400000, profit:189640, w:11.0, ty:3.65},
+  {d:'2026-05-31', repay:178496130, exec:178300000, profit:196130, w:11.0, ty:3.65},
+  {d:'2026-06-01', repay:184302510, exec:184100000, profit:202510, w:11.6, ty:3.46},
+  {d:'2026-06-02', repay:184903170, exec:184700000, profit:203170, w:11.6, ty:3.46},
+  {d:'2026-06-03', repay:178896570, exec:178700000, profit:196570, w:11.6, ty:3.46},
+  {d:'2026-06-04', repay:170787660, exec:170600000, profit:187660, w:11.6, ty:3.46},
+  {d:'2026-06-05', repay:167383920, exec:167200000, profit:183920, w:11.6, ty:3.46},
+  {d:'2026-06-06', repay:172289310, exec:172100000, profit:189310, w:11.7, ty:3.43},
+  {d:'2026-06-07', repay:183101190, exec:182900000, profit:201190, w:11.5, ty:3.49},
+  {d:'2026-06-08', repay:192611640, exec:192400000, profit:211640, w:11.6, ty:3.46},
+  {d:'2026-06-09', repay:194013180, exec:193800000, profit:213180, w:11.6, ty:3.46},
+  {d:'2026-06-10', repay:185804160, exec:185600000, profit:204160, w:11.6, ty:3.46},
+  {d:'2026-06-11', repay:173390520, exec:173200000, profit:190520, w:11.6, ty:3.46},
+  {d:'2026-06-12', repay:164781060, exec:164600000, profit:181060, w:11.6, ty:3.46},
+  {d:'2026-06-13', repay:165381720, exec:165200000, profit:181720, w:11.7, ty:3.43},
+  {d:'2026-06-14', repay:174091290, exec:173900000, profit:191290, w:11.5, ty:3.49},
+  {d:'2026-06-15', repay:184302510, exec:184100000, profit:202510, w:11.6, ty:3.46},
+  {d:'2026-06-16', repay:189007680, exec:188800000, profit:207680, w:11.6, ty:3.46},
+  {d:'2026-06-17', repay:185804160, exec:185600000, profit:204160, w:11.6, ty:3.46},
+  {d:'2026-06-18', repay:178295910, exec:178100000, profit:195910, w:11.6, ty:3.46},
+  {d:'2026-06-19', repay:173190300, exec:173000000, profit:190300, w:11.6, ty:3.46},
+  {d:'2026-06-20', repay:174591840, exec:174400000, profit:191840, w:11.7, ty:3.43},
+  {d:'2026-06-21', repay:181098990, exec:180900000, profit:198990, w:11.5, ty:3.49},
+  {d:'2026-06-22', repay:187005480, exec:186800000, profit:205480, w:11.6, ty:3.46},
+  {d:'2026-06-23', repay:186605040, exec:186400000, profit:205040, w:11.6, ty:3.46},
+  {d:'2026-06-24', repay:178996680, exec:178800000, profit:196680, w:11.6, ty:3.46},
+  {d:'2026-06-25', repay:169386120, exec:169200000, profit:186120, w:11.6, ty:3.46},
+  {d:'2026-06-26', repay:164881170, exec:164700000, profit:181170, w:11.6, ty:3.46},
+  {d:'2026-06-27', repay:169586340, exec:169400000, profit:186340, w:11.7, ty:3.43},
+  {d:'2026-06-28', repay:181098990, exec:180900000, profit:198990, w:11.5, ty:3.49},
+  {d:'2026-06-29', repay:191910870, exec:191700000, profit:210870, w:11.6, ty:3.46},
+  {d:'2026-06-30', repay:194914170, exec:194700000, profit:214170, w:11.6, ty:3.46},
+  {d:'2026-07-01', repay:195815160, exec:195600000, profit:215160, w:11.3, ty:3.55},
+  {d:'2026-07-02', repay:183601740, exec:183400000, profit:201740, w:11.3, ty:3.55},
+  {d:'2026-07-03', repay:174491730, exec:174300000, profit:191730, w:11.3, ty:3.55},
+  {d:'2026-07-04', repay:174091290, exec:173900000, profit:191290, w:11.3, ty:3.55},
+  {d:'2026-07-05', repay:181499430, exec:181300000, profit:199430, w:11.3, ty:3.55},
+  {d:'2026-07-06', repay:190509330, exec:190300000, profit:209330, w:11.4, ty:3.52},
+  {d:'2026-07-07', repay:194313510, exec:194100000, profit:213510, w:11.2, ty:3.58},
+  {d:'2026-07-08', repay:190709550, exec:190500000, profit:209550, w:11.3, ty:3.55},
+  {d:'2026-07-09', repay:183601740, exec:183400000, profit:201740, w:11.3, ty:3.55},
+  {d:'2026-07-10', repay:179597340, exec:179400000, profit:197340, w:11.3, ty:3.55},
+  {d:'2026-07-11', repay:182700750, exec:182500000, profit:200750, w:11.3, ty:3.55},
+  {d:'2026-07-12', repay:190809660, exec:190600000, profit:209660, w:11.3, ty:3.55},
+  {d:'2026-07-13', repay:197617140, exec:197400000, profit:217140, w:11.4, ty:3.52},
+  {d:'2026-07-14', repay:197016480, exec:196800000, profit:216480, w:11.2, ty:3.58},
+  {d:'2026-07-15', repay:188106690, exec:187900000, profit:206690, w:11.3, ty:3.55},
+  {d:'2026-07-16', repay:176493930, exec:176300000, profit:193930, w:11.3, ty:3.55},
+  {d:'2026-07-17', repay:170287110, exec:170100000, profit:187110, w:11.3, ty:3.55},
+  {d:'2026-07-18', repay:174091290, exec:173900000, profit:191290, w:11.3, ty:3.55},
+  {d:'2026-07-19', repay:185704050, exec:185500000, profit:204050, w:11.3, ty:3.55},
+  {d:'2026-07-20', repay:197617140, exec:197400000, profit:217140, w:11.4, ty:3.52},
+  {d:'2026-07-21', repay:202122090, exec:201900000, profit:222090, w:11.2, ty:3.58},
+  {d:'2026-07-22', repay:196716150, exec:196500000, profit:216150, w:11.3, ty:3.55},
+  {d:'2026-07-23', repay:185804160, exec:185600000, profit:204160, w:11.3, ty:3.55},
+  {d:'2026-07-24', repay:177294810, exec:177100000, profit:194810, w:11.3, ty:3.55},
+  {d:'2026-07-25', repay:176594040, exec:176400000, profit:194040, w:11.3, ty:3.55},
+  {d:'2026-07-26', repay:183001080, exec:182800000, profit:201080, w:11.3, ty:3.55},
+  {d:'2026-07-27', repay:190409220, exec:190200000, profit:209220, w:11.4, ty:3.52},
+  {d:'2026-07-28', repay:192611640, exec:192400000, profit:211640, w:11.2, ty:3.58},
+  {d:'2026-07-29', repay:188006580, exec:187800000, profit:206580, w:11.3, ty:3.55},
+  {d:'2026-07-30', repay:180598440, exec:180400000, profit:198440, w:11.3, ty:3.55},
+  {d:'2026-07-31', repay:177294810, exec:177100000, profit:194810, w:11.3, ty:3.55},
+  {d:'2026-08-01', repay:187706250, exec:187500000, profit:206250, w:11.6, ty:3.46},
+  {d:'2026-08-02', repay:197917470, exec:197700000, profit:217470, w:11.6, ty:3.46},
+  {d:'2026-08-03', repay:206526930, exec:206300000, profit:226930, w:11.5, ty:3.49},
+  {d:'2026-08-04', repay:206526930, exec:206300000, profit:226930, w:11.6, ty:3.46},
+  {d:'2026-08-05', repay:197016480, exec:196800000, profit:216480, w:11.5, ty:3.49},
+  {d:'2026-08-06', repay:183902070, exec:183700000, profit:202070, w:11.6, ty:3.46},
+  {d:'2026-08-07', repay:175793160, exec:175600000, profit:193160, w:11.5, ty:3.49},
+  {d:'2026-08-08', repay:178095690, exec:177900000, profit:195690, w:11.6, ty:3.46},
+  {d:'2026-08-09', repay:189107790, exec:188900000, profit:207790, w:11.5, ty:3.49},
+  {d:'2026-08-10', repay:201221100, exec:201000000, profit:221100, w:11.6, ty:3.46},
+  {d:'2026-08-11', repay:206526930, exec:206300000, profit:226930, w:11.5, ty:3.49},
+  {d:'2026-08-12', repay:202322310, exec:202100000, profit:222310, w:11.6, ty:3.46},
+  {d:'2026-08-13', repay:192811860, exec:192600000, profit:211860, w:11.6, ty:3.46},
+  {d:'2026-08-14', repay:185503830, exec:185300000, profit:203830, w:11.5, ty:3.49},
+  {d:'2026-08-15', repay:185503830, exec:185300000, profit:203830, w:11.6, ty:3.46},
+  {d:'2026-08-16', repay:191810760, exec:191600000, profit:210760, w:11.6, ty:3.46},
+  {d:'2026-08-17', repay:198418020, exec:198200000, profit:218020, w:11.5, ty:3.49},
+  {d:'2026-08-18', repay:199118790, exec:198900000, profit:218790, w:11.6, ty:3.46},
+  {d:'2026-08-19', repay:192611640, exec:192400000, profit:211640, w:11.5, ty:3.49},
+  {d:'2026-08-20', repay:183902070, exec:183700000, profit:202070, w:11.6, ty:3.46},
   {d:'2026-08-21', repay:179096790, exec:178900000, profit:196790, w:11.4, ty:3.52},
   {d:'2026-08-22', repay:172789860, exec:172600000, profit:189860, w:11.1, ty:3.62},
   {d:'2026-08-23', repay:165481830, exec:165300000, profit:181830, w:10.9, ty:3.68},
@@ -1193,14 +1372,6 @@ var DAILY = [
   {d:'2026-08-25', repay:183301410, exec:183100000, profit:201410, w:11.3, ty:3.55},
   {d:'2026-08-26', repay:176794260, exec:176600000, profit:194260, w:11.2, ty:3.58},
   {d:'2026-08-27', repay:186805260, exec:186600000, profit:205260, w:11.5, ty:3.49}
-];
-var MONTHLY = [
-  {d:'2026-03', repay:5036734320, exec:5031200000, profit:5534320, w:11.4, ty:3.52},
-  {d:'2026-04', repay:5295218340, exec:5289400000, profit:5818340, w:11.2, ty:3.58},
-  {d:'2026-05', repay:5544792570, exec:5538700000, profit:6092570, w:11.0, ty:3.65},
-  {d:'2026-06', repay:5382414150, exec:5376500000, profit:5914150, w:11.6, ty:3.46},
-  {d:'2026-07', repay:5759128080, exec:5752800000, profit:6328080, w:11.3, ty:3.55},
-  {d:'2026-08', repay:5114519790, exec:5108900000, profit:5619790, w:11.5, ty:3.49}
 ];
 
 var CONTRACTS = [
@@ -1364,6 +1535,7 @@ function svg(key, w, cls, style){
 /* ═══ 모델 (조작 결과가 여기 쌓이고, 화면은 여기서만 그려진다) ═══ */
 var IA = {page:1, downloaded:false, empty:false, cert:false};
 var PF = {gran:'daily', from:'2026-08-21', to:'2026-08-27'};
+var RATE_PCT = 0.11;                 /* 할인율 — 대표 정의 원문 "0.11% 예정", 확정값 아님 */
 var MC = {sector:'전체', buyer:'전체', kw:'', page:1, applied:null};
 var AQ = {sel:[false,false,false], signed:[false,false,false], phase:'list'};
 var CT = {sel:{'M2026-0001':1, 'M2026-0004':1, 'M2026-0006':1}, page:1, downloaded:false, empty:false};
@@ -1460,7 +1632,7 @@ var SEED = {
   'invest-assets': function(s){ IA.empty = (s === 'empty'); IA.cert = (s === 'cert-confirm'); IA.downloaded = (s === 'download'); IA.page = (s === 'page2') ? 2 : 1; },
   'invest-profit': function(s){
     if(s === 'monthly'){ PF.gran = 'monthly'; PF.from = '2026-03-01'; PF.to = '2026-08-27'; }
-    else if(s === 'empty'){ PF.gran = 'daily'; PF.from = '2026-07-01'; PF.to = '2026-07-07'; }
+    else if(s === 'empty'){ PF.gran = 'daily'; PF.from = '2026-02-01'; PF.to = '2026-02-07'; }
     else { PF.gran = 'daily'; PF.from = '2026-08-21'; PF.to = '2026-08-27'; }
   },
   'merchants': function(s){
@@ -1741,14 +1913,42 @@ RENDER['certificate'] = function(){
 };
 
 /* ───────── 투자 수익 ───────── */
-function pfRows(){
-  var src = PF.gran === 'daily' ? DAILY : MONTHLY;
-  var a = PF.gran === 'daily' ? PF.from : PF.from.slice(0, 7);
-  var b = PF.gran === 'daily' ? PF.to : PF.to.slice(0, 7);
-  return src.filter(function(r){ return r.d >= a && r.d <= b; });
+/* 조회 기간에 걸친 일자만 자른다 — 일별 표·월별 표·카드·엑셀이 전부 이 한 벌을 본다. */
+function pfDays(){
+  return DAILY.filter(function(r){ return r.d >= PF.from && r.d <= PF.to; });
 }
+/* 월별 표 = 잘라 낸 일자를 달별로 합친 것. 한 달이 조회 기간에 일부만 걸리면 걸린 일자만 합친다.
+   그래서 같은 조회 기간이면 월별 합계 = 일별 합계이고, 카드 값도 둘이 같다. */
+function rollupMonths(days){
+  var out = [], idx = {}, i, g, r;
+  for(i = 0; i < days.length; i++){
+    r = days[i];
+    g = idx[r.d.slice(0, 7)];
+    if(!g){ g = idx[r.d.slice(0, 7)] = {d:r.d.slice(0, 7), repay:0, exec:0, profit:0, w:0, ty:0, wx:0, tx:0, days:0}; out.push(g); }
+    g.repay += r.repay; g.exec += r.exec; g.profit += r.profit;
+    g.wx += r.w * r.exec; g.tx += r.ty * r.exec; g.days += 1;
+  }
+  for(i = 0; i < out.length; i++){
+    g = out[i];
+    /* 합계 행과 같은 규칙 — W금융일수·Ty수익율은 투자실행금 가중평균이다.
+       반올림하지 않고 담아 두고 표기할 때만 자른다. 그래야 일별 표와 월별 표의 카드 값이 같다. */
+    g.w  = g.exec ? g.wx / g.exec : 0;
+    g.ty = g.exec ? g.tx / g.exec : 0;
+  }
+  out.sort(function(a, b){ return a.d < b.d ? -1 : (a.d > b.d ? 1 : 0); });
+  return out;
+}
+function pfRows(){
+  var d = pfDays();
+  return PF.gran === 'daily' ? d : rollupMonths(d);
+}
+/* 원장이 각 달에 대해 갖고 있는 일수 — 조회 기간이 그 달을 일부만 덮었는지 판정한다. */
+var LEDGER_MONTH_DAYS = (function(){
+  var m = {}, i, k;
+  for(i = 0; i < DAILY.length; i++){ k = DAILY[i].d.slice(0, 7); m[k] = (m[k] || 0) + 1; }
+  return m;
+})();
 function assetTotal(){ return sum(ASSET_ROWS, 'amount'); }
-function daysIn(y, m){ return new Date(y, m, 0).getDate(); }
 function cashRow(){
   for(var i = 0; i < ASSET_ROWS.length; i++) if(ASSET_ROWS[i].name === '순현금') return ASSET_ROWS[i];
   return null;
@@ -1757,20 +1957,11 @@ function cashRow(){
    ⑤ = (④ × PSA) / (PSA + PSC).  PSA = 기간 투자실행금 합, PSC = 기간 동안 EC들의 합.
    EC = 전일자 마감시점 순현금이며 하루에 한 건 쌓인다(유량). 기준일 잔액 1개(스톡)로 나누지 않는다.
    일별 EC 원장이 없어 EC 예시값은 순현금 잔액으로 고정한다 — 실데이터 연결은 확인 대상. */
-function ecDays(rows){
-  var n = 0, i;
-  for(i = 0; i < rows.length; i++){
-    if(PF.gran === 'daily'){ n += 1; continue; }
-    var y = parseInt(rows[i].d.slice(0, 4), 10), m = parseInt(rows[i].d.slice(5, 7), 10);
-    var a = rows[i].d + '-01', b = rows[i].d + '-' + ('0' + daysIn(y, m)).slice(-2);
-    if(a < PF.from) a = PF.from;
-    if(b > PF.to)   b = PF.to;
-    n += Math.round((Date.parse(b) - Date.parse(a)) / 86400000) + 1;
-  }
-  return n;
-}
-function tyAssetOf(ty4, psa, rows){
-  var c = cashRow(), psc = (c ? c.amount : 0) * ecDays(rows);
+/* EC 는 하루에 한 건 쌓이는 유량이라 조회 기간에 걸린 일수만큼 센다.
+   일별·월별 어느 쪽으로 보든 같은 기간이면 같은 일수라야 하므로 원장 일수 하나로 센다. */
+function ecDays(){ return pfDays().length; }
+function tyAssetOf(ty4, psa){
+  var c = cashRow(), psc = (c ? c.amount : 0) * ecDays();
   return (psa + psc) ? ty4 * psa / (psa + psc) : 0;
 }
 RENDER['invest-profit'] = function(){
@@ -1796,7 +1987,7 @@ RENDER['invest-profit'] = function(){
   var exec = sum(rows, 'exec'), profit = sum(rows, 'profit'), repay = sum(rows, 'repay');
   var tyExec = rows.length ? wavg(rows, 'ty', 'exec') : 0;
   var wAvg = rows.length ? wavg(rows, 'w', 'exec') : 0;
-  var tyAsset = rows.length ? tyAssetOf(tyExec, exec, rows) : 0;
+  var tyAsset = rows.length ? tyAssetOf(tyExec, exec) : 0;
   M('pf-stat', 'invest-profit').innerHTML =
     '<div class="stat"><div class="summary-label">검색대상기간</div>' +
       '<div class="stat-period">' + presetLabel() + '</div>' +
@@ -1815,8 +2006,8 @@ RENDER['invest-profit'] = function(){
       '<div><div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자자산 대비</span>' +
         '<span class="tip-panel">(투자실행금액 대비 × PSA) ÷ (PSA + PSC)' +
           '<span class="tip-row"><span>PSA</span><span class="tip-green">' + fmt(exec) + '원</span></span>' +
-          '<span class="tip-row"><span>PSC</span><span class="tip-green">' + fmt((cashRow() ? cashRow().amount : 0) * ecDays(rows)) + '원</span></span>' +
-          '<span class="tip-row sum"><span>EC ' + ecDays(rows) + '일 합</span><span>기간 순현금 합계 · 예시값</span></span>' +
+          '<span class="tip-row"><span>PSC</span><span class="tip-green">' + fmt((cashRow() ? cashRow().amount : 0) * ecDays()) + '원</span></span>' +
+          '<span class="tip-row sum"><span>EC ' + ecDays() + '일 합</span><span>기간 순현금 합계 · 예시값</span></span>' +
         '</span></span></div>' +
         '<div class="summary-value">' + fx(tyAsset, 2) + '<span class="unit">%</span></div></div>' +
     '</div></div>';
@@ -1840,7 +2031,17 @@ RENDER['invest-profit'] = function(){
          '</td><td class="num">' + fmt(profit) + '</td>' +
          '<td class="num">' + fx(wAvg, 1) + '<span class="avg-note">(가중평균)</span></td>' +
          '<td class="num">' + fx(tyExec, 2) + '%<span class="avg-note">(가중평균)</span></td></tr></tfoot>';
-    box.innerHTML = t + '</table></div>';
+    /* 한 달을 일부만 덮은 행은 몇 일치인지 표 아래에 적는다 — 한 달 전체로 오해할 여지를 없앤다. */
+    var part = [];
+    if(!daily) for(i = 0; i < rows.length; i++)
+      if(rows[i].days < LEDGER_MONTH_DAYS[rows[i].d]) part.push(rows[i].d + ' ' + rows[i].days + '일');
+    t += '</table></div><p class="tbl-note">' +
+         (daily ? '※ 조회 기간에 걸친 일자만 담는다. 합계 행의 W금융일수·Ty수익율은 투자실행금 가중평균(단순평균 아님).'
+                : '※ 월 행은 그 달 가운데 조회 기간에 걸친 일자만 합친 값이다.' +
+                  (part.length ? ' 일부만 걸친 달 — ' + part.join(' · ') + '.' : '') +
+                  ' 월 행·합계 행의 W금융일수·Ty수익율은 투자실행금 가중평균(단순평균 아님).') +
+         '</p>';
+    box.innerHTML = t;
   }
   var x1 = M('pf-xls1', 'invest-profit'), x2 = M('pf-xls2', 'invest-profit');
   x1.disabled = !rows.length; x2.disabled = !rows.length;
@@ -2085,7 +2286,7 @@ function sheetData(key){
     cols = [44, 300, 340, 90, 90, 90, 90, 0];
     var rw = pfRows(), pexec = sum(rw, 'exec'), pprofit = sum(rw, 'profit');
     var tyE = rw.length ? wavg(rw, 'ty', 'exec') : 0;
-    var tyA = rw.length ? tyAssetOf(tyE, pexec, rw) : 0;
+    var tyA = rw.length ? tyAssetOf(tyE, pexec) : 0;
     rows.push({n:1, c:[{v:'투자수익 현황 — 기준일 ' + BASE_DATE + ' / ' + INVESTOR, c:'c-title', span:2}, null, null, null, null]});
     rows.push({n:2, c:[{v:XLS_NOTICE, c:'c-note', span:2}]});
     rows.push({n:3, c:[{v:'항목', c:'c-head'}, {v:'값', c:'c-head r'}, null, null, null, null, null]});
@@ -2100,7 +2301,7 @@ function sheetData(key){
     rows.push({n:12, c:[null, null, null, null, null, null, null]});
   } else {
     cols = [44, 140, 175, 175, 150, 130, 130, 0];
-    var daily = true, dr = DAILY.filter(function(r){ return r.d >= PF.from && r.d <= PF.to; });
+    var daily = true, dr = pfDays();
     rows.push({n:1, c:[{v:(daily ? '일별' : '월별') + ' 투자수익 — ' + PF.from + ' ~ ' + PF.to + ' / ' + INVESTOR, c:'c-title', span:7}]});
     rows.push({n:2, c:[{v:XLS_NOTICE, c:'c-note', span:7}]});
     rows.push({n:3, c:[{v:daily ? '정산예정일' : '정산예정월', c:'c-head'}, {v:'상환액', c:'c-head r'}, {v:'투자실행금', c:'c-head r'},
@@ -2480,8 +2681,10 @@ window.__selfcheck = function(){
     execMatch: exec === ASSET_ROWS[0].amount,
     assetTotal: total,
     ratioSum: Number(ratios(MERCHANTS, exec).reduce(function(a, r){ return a + r; }, 0).toFixed(1)),
-    dailyProfitSum: sum(DAILY, 'profit'),
-    monthlyProfitSum: sum(MONTHLY, 'profit'),
+    ledgerDays: DAILY.length,
+    ledgerProfitSum: sum(DAILY, 'profit'),
+    monthRollupSum: sum(rollupMonths(DAILY), 'profit'),
+    rollupMatchesLedger: sum(rollupMonths(DAILY), 'profit') === sum(DAILY, 'profit'),
     contracts: CONTRACTS.length,
     signQueue: SIGNQ.length,
     screens: QA('section.screen').length,
