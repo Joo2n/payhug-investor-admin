@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>PayHug Investor — 가맹점</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/base.css">
+</head>
+<body data-active="merchants">
+<div class="page">
+
+  <!-- ═══════════ 사이드바 (수정 금지 — 화면마다 동일) ═══════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <a href="#">
+        <img src="assets/logo-icon.png" alt="PayHug">
+        <span class="wordmark">PayHug <em>Investor</em></span>
+      </a>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group" data-group="invest">
+        <div class="nav-group-label">
+          <span>투자</span>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+        </div>
+        <a class="nav-item" data-menu="invest-assets" href="#">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <span>투자 자산</span>
+        </a>
+        <a class="nav-item" data-menu="invest-returns" href="#">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+          <span>투자 수익</span>
+        </a>
+      </div>
+
+      <div class="nav-group" data-group="merchant">
+        <div class="nav-group-label">
+          <span>가맹점</span>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+        </div>
+        <a class="nav-item" data-menu="merchants" href="#">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          <span>가맹점</span>
+        </a>
+        <a class="nav-item" data-menu="receivables" href="#">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          <span>정산채권 양수</span>
+        </a>
+        <a class="nav-item" data-menu="contracts" href="#">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>계약기록</span>
+        </a>
+      </div>
+
+      <div class="nav-group" data-group="manage">
+        <div class="nav-group-label">
+          <span>관리</span>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+        </div>
+        <a class="nav-item" data-menu="kcoon" href="#">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>쿠콘 관리 현금</span>
+          <svg class="ext" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+        <a class="nav-item" data-menu="password" href="#">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          <span>비밀번호 변경</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-profile">
+      <div class="avatar">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+      </div>
+      <div class="info">
+        <p class="name">㈜테스트인베스트 님 <span class="type-badge">투자자</span></p>
+        <button class="logout">로그아웃</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════ 콘텐츠 영역 ═══════════ -->
+  <main class="content">
+    <div class="page-header">
+      <h1 class="page-title">가맹점</h1>
+      <p class="page-sub">투자 대상 가맹점 목록</p>
+    </div>
+
+    <!-- 검색 필터 -->
+    <div class="search-bar">
+      <div class="filter-row">
+        <div class="filter-field">
+          <label>업종</label>
+          <select class="input" style="width:140px"><option>전체</option><option>음식점업</option></select>
+        </div>
+        <div class="filter-field">
+          <label>채권매입업체</label>
+          <select class="input" style="width:180px"><option>전체</option><option>A-001 ㈜페이허그</option></select>
+        </div>
+        <div class="filter-field" style="flex:1; max-width:360px">
+          <label>검색어</label>
+          <input type="text" class="input" style="width:100%" placeholder="가맹점ID·가맹점명·사업자번호·대표자명">
+        </div>
+        <button class="btn btn-primary">검색</button>
+        <button class="btn btn-outline">초기화</button>
+      </div>
+    </div>
+
+    <!-- 가맹점 목록 -->
+    <div class="tbl-wrap">
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>가맹점ID</th>
+              <th>가맹점명</th>
+              <th>사업자번호</th>
+              <th>대표자</th>
+              <th>업종</th>
+              <th>종목</th>
+              <th>채권매입업체ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="clickable">
+              <td class="mono">M2026-0001</td>
+              <td><span class="name">김성호떡볶이 본점</span></td>
+              <td class="mono">123-45-67890</td>
+              <td>김성호</td>
+              <td>음식점업</td>
+              <td>분식</td>
+              <td><span class="badge sm badge-primary">A-001</span> ㈜페이허그</td>
+            </tr>
+            <tr class="clickable">
+              <td class="mono">M2026-0002</td>
+              <td><span class="name">달빛곱창 홍대점</span></td>
+              <td class="mono">234-56-78901</td>
+              <td>이달빛</td>
+              <td>음식점업</td>
+              <td>곱창</td>
+              <td><span class="badge sm badge-primary">A-001</span> ㈜페이허그</td>
+            </tr>
+            <tr class="clickable">
+              <td class="mono">M2026-0003</td>
+              <td><span class="name">성호분식 2호점</span></td>
+              <td class="mono">345-67-89012</td>
+              <td>박성호</td>
+              <td>음식점업</td>
+              <td>분식</td>
+              <td><span class="badge sm badge-primary">A-001</span> ㈜페이허그</td>
+            </tr>
+            <tr class="clickable">
+              <td class="mono">M2026-0004</td>
+              <td><span class="name">바다마루 횟집</span></td>
+              <td class="mono">456-78-90123</td>
+              <td>조해민</td>
+              <td>음식점업</td>
+              <td>일식</td>
+              <td><span class="badge sm badge-primary">A-001</span> ㈜페이허그</td>
+            </tr>
+            <tr class="clickable">
+              <td class="mono">M2026-0005</td>
+              <td><span class="name">한강커피 잠원점</span></td>
+              <td class="mono">567-89-01234</td>
+              <td>정한강</td>
+              <td>음식점업</td>
+              <td>카페</td>
+              <td><span class="badge sm badge-primary">A-001</span> ㈜페이허그</td>
+            </tr>
+            <tr class="clickable">
+              <td class="mono">M2026-0006</td>
+              <td><span class="name">김밥나라</span></td>
+              <td class="mono">678-90-12345</td>
+              <td>김나라</td>
+              <td>음식점업</td>
+              <td>김밥</td>
+              <td><span class="badge sm badge-primary">A-001</span> ㈜페이허그</td>
+            </tr>
+            <tr class="clickable">
+              <td class="mono">M2026-0007</td>
+              <td><span class="name">초록치킨 서초점</span></td>
+              <td class="mono">789-01-23456</td>
+              <td>최초록</td>
+              <td>음식점업</td>
+              <td>치킨</td>
+              <td><span class="badge sm badge-primary">A-001</span> ㈜페이허그</td>
+            </tr>
+            <tr class="clickable">
+              <td class="mono">M2026-0008</td>
+              <td><span class="name">골목냉면</span></td>
+              <td class="mono">890-12-34567</td>
+              <td>백미순</td>
+              <td>음식점업</td>
+              <td>냉면</td>
+              <td><span class="badge sm badge-primary">A-001</span> ㈜페이허그</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination" style="justify-content:space-between">
+        <span style="font-size:12px; color:var(--gray-500)">총 <b class="mono">8</b>건</span>
+        <div style="display:flex; align-items:center; gap:4px">
+          <button class="page-arrow" disabled>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button class="page-btn active">1</button>
+          <button class="page-arrow" disabled>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+</div>
+</body>
+</html>
