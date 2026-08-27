@@ -12,7 +12,7 @@
   /* 랜딩 갤러리 전용 — 색상은 base.css 변수만 사용 */
   .wrap { max-width: 1024px; margin: 0 auto; padding: 56px 32px 64px; }
   .hero { display: flex; align-items: center; gap: 16px; }
-  .hero img { width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; }
+  .hero img, .hero .logo-mark { display: block; width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; }
   .hero h1 { font-size: 26px; line-height: 34px; font-weight: 700; color: var(--gray-900); margin: 0; }
   .hero h1 em { font-style: normal; color: var(--primary-600); }
   .hero .sub { font-size: 14px; line-height: 20px; color: var(--secondary); margin: 4px 0 0; }
@@ -48,7 +48,7 @@
 <div class="wrap">
 
   <div class="hero">
-    <img src="assets/logo-icon.png" alt="PayHug">
+    <span class="logo-mark" role="img" aria-label="PayHug"></span>
     <div>
       <h1>PayHug <em>투자자 어드민</em> — 화면 설계(안)</h1>
       <p class="sub">투자자용 어드민 UI 기획 · 기존 어드민 디자인시스템 기준</p>
