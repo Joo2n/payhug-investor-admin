@@ -133,6 +133,12 @@ a.scr:hover { background: var(--emerald-100); }
   font-size: 13px; line-height: 22px; color: var(--red-800);
 }
 .warn-inline b { color: var(--red-800); }
+.ok-inline {
+  border-left: 3px solid var(--emerald-500); background: var(--emerald-50);
+  border-radius: 0 10px 10px 0; padding: 12px 16px; margin-top: 14px;
+  font-size: 13px; line-height: 22px; color: var(--emerald-800);
+}
+.ok-inline b { color: var(--emerald-800); }
 .note-inline {
   border-left: 3px solid var(--amber-400); background: var(--amber-50);
   border-radius: 0 10px 10px 0; padding: 12px 16px; margin-top: 14px;
@@ -370,10 +376,10 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
       <button class="clr" id="qClear" type="button" aria-label="검색어 지우기">&#215;</button>
     </div>
     <div class="tb-filters" id="filters">
-      <button class="fchip" type="button" data-src="admin"  aria-pressed="false">기존 어드민 <span class="n">7</span></button>
+      <button class="fchip" type="button" data-src="admin"  aria-pressed="false">기존 어드민 <span class="n">9</span></button>
       <button class="fchip" type="button" data-src="design" aria-pressed="false">설계에만 <span class="n">3</span></button>
       <button class="fchip" type="button" data-src="new"    aria-pressed="false">신설 <span class="n">36</span></button>
-      <button class="fchip" type="button" data-src="check"  aria-pressed="false">확인필요 <span class="n">3</span></button>
+      <button class="fchip" type="button" data-src="check"  aria-pressed="false">확인필요 <span class="n">1</span></button>
       <button class="fchip" type="button" data-src="track"  aria-pressed="false">추적 중 <span class="n">1</span></button>
     </div>
     <div class="tb-count" id="hitCount">용어 <b>50</b>건</div>
@@ -587,7 +593,7 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
       <table class="tbl">
         <thead><tr><th>못 만드는 것</th><th>왜</th></tr></thead>
         <tbody>
-          <tr><td class="key">미지급금 · 과지급금</td><td>“이 채권에 얼마 들어와야 하는데 얼마 들어왔나”를 비교할 대상이 없다</td></tr>
+          <tr><td class="key">미지급금 · 과지급금</td><td>금액 자체는 어드민에 있다. 없는 것은 그 금액을 <b>채권 1건에 귀속시키는 경로</b>다 — 지금은 가맹점·배치 축에 붙어 있다</td></tr>
           <tr><td class="key">금융일수</td><td>채권 1건의 선정산일과 정산예정일을 짝지을 수 없다</td></tr>
           <tr><td class="key">w금융일수 · S입금부족율</td><td>위 둘이 재료다</td></tr>
           <tr><td class="key">자정 마감 배치</td><td>“정산예정일이 어제인 채권”을 뽑을 수 없다</td></tr>
@@ -695,10 +701,10 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
       <table class="tbl">
         <thead><tr><th>출처</th><th class="num">개수</th><th>뜻</th><th>개발 관점</th></tr></thead>
         <tbody>
-          <tr><td><span class="src src-admin">기존 어드민에 있음</span></td><td class="num">7</td><td>지금 운영 어드민 화면을 열면 그 값이 실제로 떠 있다</td><td>가져다 쓰면 된다</td></tr>
+          <tr><td><span class="src src-admin">기존 어드민에 있음</span></td><td class="num">9</td><td>지금 운영 어드민 화면을 열면 그 값이 실제로 떠 있다</td><td>가져다 쓰면 된다. 일부는 여러 필드를 합쳐야 한다</td></tr>
           <tr><td><span class="src src-design">설계에만 있음</span></td><td class="num">3</td><td>Figma 기획서(정산채권DB 등)에 칸은 그려져 있으나 운영 서버에 그 테이블이 있는지는 미확인</td><td>실물 유무부터 확인</td></tr>
           <tr><td><span class="src src-new">투자자용 신설</span></td><td class="num">36</td><td>페이허그 어디에도 없다</td><td>원천부터 새로 만들어야 한다</td></tr>
-          <tr><td><span class="src src-check">확인필요</span></td><td class="num">3</td><td>근거가 갈리거나 정의문 자체가 없다</td><td>결정 먼저, 개발은 그다음</td></tr>
+          <tr><td><span class="src src-check">확인필요</span></td><td class="num">1</td><td>근거가 갈리거나 정의문 자체가 없다</td><td>결정 먼저, 개발은 그다음</td></tr>
           <tr><td><span class="src src-track">추적 중</span></td><td class="num">1</td><td>아직 소재를 못 찾았다</td><td>계속 확인</td></tr>
         </tbody>
       </table>
@@ -2032,38 +2038,40 @@ w =  2일     →  0.11% × (365÷2)     = 20.08%</pre>
         ▼
 <b>S입금부족율 = Σ SLi ÷ Σ SAi</b></pre>
 
-    <article class="term" id="t29" data-src="check">
-      <div class="term-head"><span class="term-no">29</span><h4>미지급금</h4><span class="src src-check">확인필요</span></div>
-      <p class="lede-line">들어오기로 한 돈 중 안 들어온 금액이다. 카드사가 100원 넣기로 했는데 97원만 넣었으면 3원이 미지급금이다.</p>
-      <div class="warn-inline"><b>주의 — 페이허그 정책서의 <code>미지급금</code>과 같은 낱말인데 방향이 반대로 읽힌다.</b> 아래 <code>기획할 때 정해야 할 것</code>을 반드시 보고 넘어가야 한다. 6대 개념(미지급금 · 선정산 제외금액 · 바로이체 · 과지급 · 미회수금 · 환급)과 <b>다른 개념</b>이므로 근거 없이 합칠 수 없다.</div>
+    <article class="term" id="t29" data-src="admin">
+      <div class="term-head"><span class="term-no">29</span><h4>미지급금</h4><span class="src src-admin">기존 어드민에 있음</span></div>
+      <p class="lede-line">선정산으로 가맹점에 지급해야 하는데 아직 못 준 금액이다. 정산 배치가 돈 뒤에 매출이 뒤늦게 도착해 그 배치에서 빠진 건이 여기 쌓인다.</p>
+      <div class="ok-inline"><b>정책서 6대 개념의 <code>미지급금</code>과 같은 것이다.</b> 02 §2의 “원래 가맹점에게 지급해야 했으나 실제 지급되지 않은 금액”과 정의가 일치한다. 종전에 이 카드가 “방향이 반대”라고 적었던 것은 산식 위치에서 역산한 추정이었고, 그 추정이 틀렸다.</div>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
-        <p>원문에 <code>미지급금</code>의 정의문이 없다. 쓰이는 자리는 셋이다.</p>
+        <p>쓰이는 자리는 셋이다.</p>
         <pre class="calc quote">상환액   = 순지급액 − max(0, 미지급금 − 과지급금)
 투자수익 = 채권매입수수료 − max(0, 미지급금 − 과지급금)
 SLi     = 미지급액 − 과지급액</pre>
-        <p>앞의 둘에서 미지급금이 <b>회수액을 깎는 항</b>으로 들어간다. 즉 “덜 들어와서 못 받은 돈”이다.</p>
+        <p>앞의 둘에서 미지급금이 <b>회수액을 깎는 항</b>으로 들어간다. 투자자가 산 채권 중 가맹점에 아직 지급되지 않은 몫만큼은 상환이 일어나지 않았다는 뜻이다.</p>
         <div class="sub-h">계산 예시</div>
-        <pre class="calc">채권 ①  순지급액 49,500  실제 입금 49,500  →  미지급금 <b>0</b>
-채권 ④  순지급액 30,000  실제 입금 28,000  →  미지급금 <i>2,000</i></pre>
+        <pre class="calc">채권 ①  순지급액 49,500  배치에 실려 지급됨   →  미지급금 <b>0</b>
+채권 ④  순지급액 30,000  배치 뒤 도착해 누락  →  미지급금 <i>30,000</i></pre>
       </div>
 
       <div class="blk"><div class="blk-h">이 값은 어디서 오나</div>
-        <p><b><code>확인필요</code>.</b> 운영 코드에 <code>미지급금</code>이라는 필드가 <b>0건</b>이다. 채권 단위로 “정산예정일에 실제 들어온 돈 vs 그 채권의 예정액”을 대사하는 로직도 없다. 락계좌 입금은 은행 거래 원본만 들어와 채권과 붙지 않는다(<code>components/LockAccountDeposits.tsx:71-84</code>).</p>
-        <p><b>같은 이름의 다른 값이 어드민에 셋 있다</b> — 회의에서 헷갈리기 딱 좋은 지점이다.</p>
+        <p><b><code>기존 어드민에 있음</code>.</b> 미정산 누락 도메인이 그대로 이 값이다. 정의문은 화면 배너가 직접 달고 있다 — “정산 배치가 완료된 날짜에 뒤늦게 도착하여 선정산 처리가 누락된 건입니다”(<code>PreSettlementTab.tsx:1197</code>). 해소 액션도 <code>바로이체</code>·<code>이미지급(기록만)</code> 두 갈래(<code>:1214</code>·<code>:1221</code>)라 미지급 상태임이 분명하다.</p>
         <div class="t-card">
           <div class="t-scroll">
             <table class="tbl">
-              <thead><tr><th>어디</th><th>무엇</th></tr></thead>
+              <thead><tr><th>집계 단위</th><th>필드</th><th>위치</th></tr></thead>
               <tbody>
-                <tr><td class="key">정책서 6대 개념 <code>미지급금</code></td><td>페이허그가 가맹점에 못 준 돈</td></tr>
-                <tr><td class="key">어드민 엑셀 헤더 <code>미지급액</code></td><td>선정산 배치가 건너뛴 건의 <code>netPayoutAmt</code>(= 순지급액) — <code>PreSettlementTab.tsx:385</code></td></tr>
-                <tr><td class="key">어드민 배지 <code>미지급</code></td><td>플랫폼 환급이 아직 반영 안 된 상태</td></tr>
+                <tr><td class="key">전체 합</td><td><code>MissedSettlementsData.totalAmount</code></td><td><code>types/settlement.ts:651</code></td></tr>
+                <tr><td class="key">가맹점별 합</td><td><code>totalNetPayoutAmt</code></td><td><code>:645</code></td></tr>
+                <tr><td class="key">날짜별 합</td><td><code>netPayoutAmt</code></td><td><code>:635</code></td></tr>
+                <tr><td class="key">건별</td><td><code>netPayoutAmt</code></td><td><code>:624</code></td></tr>
+                <tr><td class="key">조회</td><td><code>GET /admin/settlement/missed-settlements</code></td><td><code>hooks/useSettlementOverview.ts:349</code></td></tr>
               </tbody>
             </table>
           </div>
         </div>
-        <p>정산채권DB 쪽에서 가장 가까운 칸은 <code>상환부족액</code>이다(<code>figma_policy_db.md</code> §1.1).</p>
+        <p>화면 라벨은 <b>미지급</b>(<code>PreSettlementTab.tsx:1269</code>), 엑셀 <b>미정산누락</b> 시트의 헤더는 <b>미지급액</b>(<code>:385</code>)이다.</p>
+        <p><b>같은 낱말의 다른 값이 하나 더 있다</b> — 플랫폼 환급 상태 배지 <code>미지급</code>(<code>lib/settlementLabels.ts:68</code>)은 배민·쿠팡이츠 환급분이 아직 반영 안 된 상태를 가리키는 <b>상태값</b>이지 이 금액이 아니다.</p>
       </div>
 
       <div class="blk"><div class="blk-h">화면 어디에 보이나</div>
@@ -2072,7 +2080,7 @@ SLi     = 미지급액 − 과지급액</pre>
 
       <div class="blk"><div class="blk-h">다른 용어와 어떻게 이어지나</div>
         <div class="chain">
-          <div class="side in"><span class="lab">재료</span>카드사 실제 입금액 vs <a class="xref" href="#t07">순지급액</a>의 차</div>
+          <div class="side in"><span class="lab">재료</span>미정산 누락 건의 <a class="xref" href="#t07">순지급액</a></div>
           <div class="arw">→</div>
           <div class="side out"><span class="lab">결과</span><a class="xref" href="#t35">상환액 SB</a> · <a class="xref" href="#t37">투자수익 SM</a> · <a class="xref" href="#t31">SLi</a> → <a class="xref" href="#t34">S입금부족율</a></div>
         </div>
@@ -2080,22 +2088,22 @@ SLi     = 미지급액 − 과지급액</pre>
 
       <div class="blk todo"><div class="blk-h">기획할 때 정해야 할 것</div>
         <ol>
-          <li><b>방향을 반드시 확인해야 한다.</b> 페이허그 정책서 02 §2의 <code>미지급금</code>은 “원래 가맹점에게 지급해야 했으나 실제 지급되지 않은 금액”으로 <b>페이허그 → 가맹점</b> 방향이다. 대표 정의의 <code>미지급금</code>은 산식 위치로 보면 <b>정산주체(카드사·배달앱) → 페이허그·투자자</b> 방향으로 읽힌다. 같은 낱말이 반대 방향을 가리키면 개발이 엉뚱한 필드를 가져온다. 6대 개념 분리 원칙상 근거 없이 연결할 수 없으므로 원문 확인이 필요하다</li>
+          <li><b>귀속 단위.</b> 이 값은 지금 가맹점·날짜 축에 붙어 있고, 대표 산식은 정산금채권 1건 축을 요구한다. 채권 1건에 귀속시키는 경로가 <a class="xref" href="#s7">N-1 · N-2</a>다. 정의가 아니라 이것이 남은 일이다</li>
           <li>원문이 <code>미지급액</code>(SLi 자리)과 <code>미지급금</code>(상환액·투자수익 자리)을 섞어 쓴다. 같은 것인지</li>
-          <li>부분 입금인지 아예 미입금인지에 따라 다르게 잡는지</li>
+          <li>이틀 이상 지난 건은 선정산이 아니라 순지급액 전액을 그대로 이체한다(<code>PreSettlementTab.tsx:1197</code>). 이 경우를 투자자 상환에서 어떻게 볼지</li>
         </ol>
       </div>
     </article>
 
-    <article class="term" id="t30" data-src="check">
-      <div class="term-head"><span class="term-no">30</span><h4>과지급금</h4><span class="src src-check">확인필요</span></div>
-      <p class="lede-line">들어오기로 한 것보다 더 들어온 금액이다. 미지급금과 상계되어 부족분을 줄여 준다.</p>
-      <div class="warn-inline"><b>주의 — 페이허그 정책서 02 §4의 <code>과지급</code>과 같은 낱말인데 방향이 반대로 읽힌다.</b> 6대 개념의 <code>과지급</code>과 <b>다른 개념</b>이다.</div>
+    <article class="term" id="t30" data-src="admin">
+      <div class="term-head"><span class="term-no">30</span><h4>과지급금</h4><span class="src src-admin">기존 어드민에 있음</span></div>
+      <p class="lede-line">가맹점에 더 나간 금액이다. 선정산으로 먼저 내준 뒤에 매출이 취소되거나, 가맹점이 현장에서 현금을 직접 받아 같은 돈이 두 번 나간 경우가 여기 해당한다.</p>
+      <div class="ok-inline"><b>정책서 6대 개념의 <code>과지급</code>과 같은 것이다.</b> 02 §4의 “PayHug가 가맹점에게 실제 지급해야 할 금액보다 더 지급한 발생 금액”과 정의가 일치한다. 종전에 이 카드가 “방향이 반대”라고 적었던 것은 역산 추정이었고, 그 추정이 틀렸다.</div>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
-        <p>원문에 정의문이 없다. 쓰이는 자리는 미지급금과 똑같다.</p>
+        <p>쓰이는 자리는 미지급금과 똑같다.</p>
         <pre class="calc quote">max(0, 미지급금 − 과지급금)</pre>
-        <p><code>max(0, …)</code>가 중요하다. <b>과지급이 미지급보다 크면 0으로 깎는다.</b> 즉 더 들어온 만큼을 이익으로 얹어 주지는 않는다.</p>
+        <p><code>max(0, …)</code>가 중요하다. <b>과지급이 미지급보다 크면 0으로 깎는다.</b> 즉 더 나간 만큼을 이익으로 얹어 주지는 않는다.</p>
         <div class="sub-h">계산 예시</div>
         <pre class="calc">경우 1  미지급 2,000, 과지급   0  → max(0, 2,000) = 2,000  → 상환액에서 2,000 차감
 경우 2  미지급 2,000, 과지급 500  → max(0, 1,500) = 1,500  → 1,500만 차감
@@ -2104,7 +2112,20 @@ SLi     = 미지급액 − 과지급액</pre>
       </div>
 
       <div class="blk"><div class="blk-h">이 값은 어디서 오나</div>
-        <p><b><code>확인필요</code>.</b> 운영 코드에 <code>과지급금</code> <b>0건</b>. 미지급금과 같은 사정으로, 채권 단위 대사 자체가 없어 만들 재료가 없다. 가까운 이름인 <code>미회수 이월(CARRY_FORWARD)</code>은 차감이 지급액보다 커서 0원으로 잘린 이월 잔액이라 성격이 다르다(<code>types/settlement.ts:285-290</code>).</p>
+        <p><b><code>기존 어드민에 있음</code>.</b> 다만 <code>과지급금</code>이라는 이름의 단일 필드는 없다. <b>발생 원인 두 갈래가 각각 필드로 실재</b>하고, 그 둘을 더하면 이 값이 된다.</p>
+        <div class="t-card">
+          <div class="t-scroll">
+            <table class="tbl">
+              <thead><tr><th>갈래</th><th>필드</th><th>화면 라벨</th></tr></thead>
+              <tbody>
+                <tr><td class="key">선정산 후 취소 환수</td><td><code>CANCEL_CLAWBACK</code>(<code>types/settlement.ts:525</code>) · 금액은 <code>AdjustmentCategorySummary.pendingAmount</code>(<code>:533</code>)를 이 분류로 거른 값</td><td><code>취소 환수</code>(<code>PreSettlementTab.tsx:108</code>). 화면은 현재 <b>건수만</b> 쓴다(<code>settlement/overview/page.tsx:728</code>)</td></tr>
+                <tr><td class="key">현장결제 중복 수령</td><td><code>offlinePendingTotal</code>(<code>hooks/usePurchaseLedger.ts:108</code>)</td><td><code>미회수(다음 배치)</code>(<code>app/sales/[bizNo]/page.tsx:729</code>)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p>취소 환수의 생성 규칙은 수기 매출 입력 모달이 그대로 적어 둔다 — “음수 금액은 매입취소로 처리되며, 정산 완료 건은 환수(CANCEL_CLAWBACK)가 생성됩니다”(<code>components/sales/ManualSalesModal.tsx:181</code>).</p>
+        <div class="warn-inline"><b><code>미회수 이월(carryForward)</code>을 여기에 붙이지 않는다.</b> <code>carryForwardTotal</code>(<code>types/settlement.ts:290</code>)·<code>carryForwardAmt</code>(<code>:390</code>)는 “당일 이체액으로 차액을 전부 회수하지 못해 다음 날로 이월된 금액”(<code>app/settlements/[id]/fee-adjustments/page.tsx:239-241</code>)이다. 02 §4가 <code>과지급</code>(발생 원인·최초 금액)과 <code>미회수금</code>(현재 남은 회수 잔액)을 갈라 두었고, 이 필드는 <b>뒤쪽</b>이다. 둘을 합치면 같은 돈을 두 번 세게 된다.</div>
       </div>
 
       <div class="blk"><div class="blk-h">화면 어디에 보이나</div>
@@ -2113,7 +2134,7 @@ SLi     = 미지급액 − 과지급액</pre>
 
       <div class="blk"><div class="blk-h">다른 용어와 어떻게 이어지나</div>
         <div class="chain">
-          <div class="side in"><span class="lab">재료</span>카드사 초과 입금</div>
+          <div class="side in"><span class="lab">재료</span>취소 환수 · 현장결제 중복 수령</div>
           <div class="arw">→</div>
           <div class="side out"><span class="lab">결과</span><a class="xref" href="#t35">상환액 SB</a> · <a class="xref" href="#t37">투자수익 SM</a> · <a class="xref" href="#t31">SLi</a>에서 미지급금과 상계</div>
         </div>
@@ -2121,9 +2142,10 @@ SLi     = 미지급액 − 과지급액</pre>
 
       <div class="blk todo"><div class="blk-h">기획할 때 정해야 할 것</div>
         <ol>
-          <li><b>02 §4의 <code>과지급</code>(페이허그가 가맹점에 더 준 돈)과 같은 것인지.</b> 방향이 다르면 다른 이름을 써야 한다</li>
+          <li><b>두 갈래를 다 넣는지.</b> 취소 환수만 볼지, 현장결제 중복 수령까지 합칠지에 따라 금액이 달라진다</li>
+          <li><b>귀속 단위.</b> 두 값 다 가맹점·배치 축에 붙어 있다. 정산금채권 1건 축으로 옮기는 경로가 <a class="xref" href="#s7">N-1 · N-2</a>다</li>
           <li><b><code>max(0, …)</code>로 잘려 나간 초과분(경우 3의 800)의 처리.</b> 다음 채권으로 넘기는지, 그냥 버리는지</li>
-          <li><b><code>SLi</code>에는 <code>max(0, …)</code>가 없다.</b> <code>SLi = 미지급액 − 과지급액</code>이라 음수가 될 수 있다. 상환액·투자수익은 음수를 0으로 자르는데 SLi는 안 자른다. 의도인지 확인이 필요하다. 의도라면 <a class="xref" href="#t34">S입금부족율</a>이 음수로 나올 수 있다</li>
+          <li><b><code>SLi</code>에는 <code>max(0, …)</code>가 없다.</b> <code>SLi = 미지급액 − 과지급액</code>이라 음수가 될 수 있다. 상환액·투자수익은 음수를 0으로 자르는데 SLi는 안 자른다. 의도라면 <a class="xref" href="#t34">S입금부족율</a>이 음수로 나올 수 있다</li>
         </ol>
       </div>
     </article>
@@ -3154,9 +3176,9 @@ w금융일수    11.4
       <table class="tbl">
         <thead><tr><th>낱말</th><th>뜻 A</th><th>뜻 B</th><th>뜻 C</th><th>뭐가 위험한가</th></tr></thead>
         <tbody>
-          <tr><td class="key"><a class="xref" href="#t29">미지급금</a></td><td>정책서 6대 개념 — 페이허그가 가맹점에 못 준 돈</td><td>대표 정의 — 플랫폼이 락계좌에 덜 넣은 돈</td><td>어드민 배지 — 플랫폼 환급 미반영 상태</td><td class="red">방향과 주체가 셋 다 다르다. 합치면 <b>상환액이 반대로 계산된다</b></td></tr>
+          <tr><td class="key"><a class="xref" href="#t29">미지급금</a></td><td>정책서 6대 개념 — 페이허그가 가맹점에 못 준 돈</td><td>대표 정의 — <b>뜻 A와 같다</b>. 어드민 미정산 누락 도메인(<code>MissedSettlementsData</code>)이 그 값</td><td>어드민 배지 <code>미지급</code>(<code>settlementLabels.ts:68</code>) — 플랫폼 환급 미반영 <b>상태값</b>. 금액이 아니다</td><td>A와 B는 같은 것. <b>C만 다르다</b> — 상태 배지를 금액으로 읽지 않는다</td></tr>
           <tr><td class="key">미지급액</td><td>위 A와 같은 뜻의 정책 용어</td><td>어드민 엑셀 헤더 — 배치가 건너뛴 건의 <code>netPayoutAmt</code></td><td class="dim">—</td><td>같은 필드가 어떤 화면에선 <code>순지급액</code>, 어떤 화면에선 <code>미지급액</code>으로 뜬다</td></tr>
-          <tr><td class="key"><a class="xref" href="#t30">과지급 / 과지급금</a></td><td>정책서 — 페이허그가 가맹점에 더 준 돈</td><td>대표 정의 — 플랫폼이 더 넣은 돈</td><td>계약서 <code>과정산금</code> — 플랫폼 초과 입금</td><td class="red">방향이 정반대. <b>회수 대상</b>과 <b>반환 대상</b>이 뒤집힌다</td></tr>
+          <tr><td class="key"><a class="xref" href="#t30">과지급 / 과지급금</a></td><td>정책서 — 페이허그가 가맹점에 더 준 돈</td><td>대표 정의 — <b>뜻 A와 같다</b>. 취소 환수(<code>CANCEL_CLAWBACK</code>)·현장결제 중복 수령이 그 발생 원인</td><td>계약서 <code>과정산금</code> — 플랫폼이 예정보다 초과 입금한 금액</td><td class="red">A와 B는 같은 것. <b>C는 다르다</b> — 주체가 플랫폼이고 가맹점 반환 전제라 매핑 미확정</td></tr>
           <tr><td class="key">미회수</td><td>6대 개념 <code>미회수금</code> — 과지급 뒤 남은 회수 잔액</td><td>어드민 <code>carryForwardTotal</code> — 0원으로 잘린 이월 잔액</td><td>어드민 배지 — 플랫폼 조정 미반영 상태</td><td>셋 다 실재하고 셋 다 다른 값</td></tr>
           <tr><td class="key"><a class="xref" href="#t13">할인율</a></td><td>대표 정의 — 유동화투자자 할인율 0.11% 예정</td><td>어드민 <code>discountRatePct</code> — 예상 매출 정산 시의 리스크 할인</td><td>Figma — 참여자별 할인율(투자자 0.11% / 페이허그 0.35%)</td><td class="red"><b>어드민에서 <code>할인율</code>을 찾으면 엉뚱한 값이 나온다</b></td></tr>
           <tr><td class="key">회수</td><td>6대 개념 — 과지급금 회수</td><td>어드민 <code>매출 회수</code> — 락계좌 → 모계좌 스윕</td><td>플랫폼 조정 배지 <code>회수완료</code>/<code>부분회수</code></td><td>프로젝트 원칙에 이미 등재된 충돌</td></tr>
@@ -3281,18 +3303,18 @@ w금융일수    11.4
     </div>
   </div>
 
-  <h3 class="blk-title">7-4. 결정 전에는 착수 못 하는 것</h3>
-  <div class="n-item block">
-    <div class="n-top"><span class="n-id">B-1</span><span class="n-t"><code>⑥</code> 지표</span></div>
-    <div class="n-grid"><div class="n-cell why" style="grid-column:1/-1"><div class="n-k">왜</div><div class="n-v">원문의 <code>③</code>이 정의되지 않았고, 참조한 이미지가 문서에 첨부돼 있지 않아 번호가 가리키는 화면 자리를 알 수 없다</div></div></div>
+  <h3 class="blk-title">7-4. 결정 대기로 잡았던 3건 — 해소</h3>
+  <div class="n-item">
+    <div class="n-top"><span class="n-id">B-1</span><span class="n-t"><code>⑥</code> 지표</span><span class="n-dep">해소</span></div>
+    <div class="n-grid"><div class="n-cell" style="grid-column:1/-1"><div class="n-k">무엇으로 닫혔나</div><div class="n-v"><code>marker_legend.md</code>가 스토리보드 캡처 2장의 번호 마커로 대응을 복원했다. <code>③</code> = 일별표 <b>투자실행금</b>. 산식은 <code>(투자 수익 ÷ 투자실행금) × 365 ÷ w금융일수</code>다. ④와 ⑥은 동명이의가 아니라 같은 지표의 집계 단위 차이(기간 전체 / 하루치). 카드 <a class="xref" href="#t49">49</a>에 이미 반영돼 있다</div></div></div>
   </div>
-  <div class="n-item block">
-    <div class="n-top"><span class="n-id">B-2</span><span class="n-t"><code>채권매입수수료</code>의 기준금액·요율</span></div>
-    <div class="n-grid"><div class="n-cell why" style="grid-column:1/-1"><div class="n-k">왜</div><div class="n-v">정의문 부재. 투자자 몫(0.11%)인지 통 전체(1.00%)인지에 따라 화면 수익률이 3.56%와 32.35%로 갈린다</div></div></div>
+  <div class="n-item">
+    <div class="n-top"><span class="n-id">B-2</span><span class="n-t"><code>채권매입수수료</code>의 기준금액·요율</span><span class="n-dep">해소</span></div>
+    <div class="n-grid"><div class="n-cell" style="grid-column:1/-1"><div class="n-k">무엇으로 닫혔나</div><div class="n-v">요율은 <b>계약별로 달라지는 파라미터</b>다. 운영 코드에 요율 리터럴이 0건인 것은 결함이 아니라 정상 — 값이 전부 DB <code>PolicyRate.rateBps</code>에서 내려오고 어드민 요율 설정에서 계약별로 정해진다. 투자자 몫인지 통 전체인지도 요율 행의 <code>targetRole</code>로 이미 갈려 있다. 요율 <b>값</b>은 계속 미확정이라 화면 숫자는 <code>예시값</code>으로 둔다 — 값이 미확정인 것과 개발이 막히는 것은 별개다</div></div></div>
   </div>
-  <div class="n-item block">
-    <div class="n-top"><span class="n-id">B-3</span><span class="n-t"><code>미지급금</code>·<code>과지급금</code>의 정의</span></div>
-    <div class="n-grid"><div class="n-cell why" style="grid-column:1/-1"><div class="n-k">왜</div><div class="n-v">정의문 부재. 6대 개념과의 관계 미판정</div></div></div>
+  <div class="n-item">
+    <div class="n-top"><span class="n-id">B-3</span><span class="n-t"><code>미지급금</code>·<code>과지급금</code>의 정의</span><span class="n-dep">해소</span></div>
+    <div class="n-grid"><div class="n-cell" style="grid-column:1/-1"><div class="n-k">무엇으로 닫혔나</div><div class="n-v"><b>미지급금</b> = 선정산으로 가맹점에 지급해야 하는데 못 준 금액, <b>과지급금</b> = 가맹점에 더 나간 금액. 어드민 정산 로직에 이미 있는 개념이고 정책서 6대 개념의 <code>미지급금</code>·<code>과지급</code>과 <b>같은 것</b>이다. 카드 <a class="xref" href="#t29">29</a>·<a class="xref" href="#t30">30</a> 참조. 남은 것은 정의가 아니라 <b>귀속 단위</b> — 채권 1건에 붙이는 경로가 N-2다</div></div></div>
   </div>
 
   <h3 class="blk-title">7-5. 요약</h3>
@@ -3301,7 +3323,7 @@ w금융일수    11.4
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
       기획 순서는 화면이 아니라 N-1(정산금채권 객체)부터다
     </div>
-    <p><b>페이허그에 있는 것은 1층까지다</b> — 매출·수수료·순지급액·선정산 지급액·투자자 매칭·요율 정책. 그다음 층(<b>채권 단위로 쪼개기</b>)이 통째로 비어 있어서 그 위의 배치·집계·화면이 전부 못 선다.</p>
+    <p><b>페이허그에 있는 것은 1층까지다</b> — 매출·수수료·순지급액·선정산 지급액·투자자 매칭·요율 정책·미지급금·과지급금. 그다음 층(<b>채권 단위로 쪼개기</b>)이 통째로 비어 있어서 그 위의 배치·집계·화면이 전부 못 선다. <b>결정을 기다리느라 막혀 있는 것은 없다.</b></p>
   </div>
 </section>
 
@@ -3314,9 +3336,9 @@ w금융일수    11.4
   <div class="alarm">
     <div class="alarm-h">
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-      Q-1과 Q-14가 나머지를 다 막고 있다
+      Q-14 정산금채권 단위가 유일한 병목이다
     </div>
-    <p><b>Q-1 <code>채권매입수수료</code> 범위</b>와 <b>Q-14 <code>정산금채권</code> 단위</b> 두 건이 나머지를 다 막고 있다. 나머지는 이 둘이 풀린 뒤에 정해도 늦지 않다.</p>
+    <p><b>Q-14 <code>정산금채권</code> 단위</b> 한 건이 나머지를 막고 있다. 종전에 함께 병목으로 잡았던 <b>Q-1</b>·<b>Q-2</b>·<b>Q-8</b>은 닫혔고, 아래에 닫힌 내용을 그대로 남겨 뒀다.</p>
     <p class="plain" style="margin-top:10px">
       <button class="copy" type="button" id="copyAll" style="margin-left:0">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
@@ -3333,14 +3355,14 @@ w금융일수    11.4
         이 분류 복사
       </button>
     </div>
-    <div class="q-item hot"><div class="q-id">Q-1</div><div><div class="q-ask"><code>채권매입수수료</code>가 <b>투자자 몫(0.11%)</b>인가, <b>통 전체(1.00%)</b>인가</div><div class="q-why">화면 수익률이 <b>3.56%</b>와 <b>32.35%</b>로 갈린다. 투자 제안서에 들어가는 숫자다</div></div></div>
-    <div class="q-item"><div class="q-id">Q-2</div><div><div class="q-ask"><code>미지급금</code>·<code>과지급금</code>의 <b>주체와 방향</b></div><div class="q-why">정책서 6대 개념(페이허그→가맹점)과 반대로 읽힌다. 잘못 붙이면 상환액이 거꾸로 계산된다</div></div></div>
+    <div class="q-item"><div class="q-id">Q-1</div><div><div class="q-ask"><b>닫힘</b> — <code>채권매입수수료</code>는 통 하나(<code>MARGIN</code>)를 5주체가 나누는 구조이고, 투자자 몫인지 통 전체인지는 요율 행의 <code>targetRole</code>로 갈린다. 요율은 계약별 파라미터라 어드민 요율 설정에서 읽어 온다</div><div class="q-why">요율 <b>값</b>은 계속 미확정이라 화면 숫자는 <code>예시값</code>으로 둔다. 값이 미확정인 것과 개발이 막히는 것은 별개다</div></div></div>
+    <div class="q-item"><div class="q-id">Q-2</div><div><div class="q-ask"><b>닫힘</b> — <code>미지급금</code>은 선정산으로 가맹점에 지급해야 하는데 못 준 금액, <code>과지급금</code>은 가맹점에 더 나간 금액이다. 정책서 6대 개념과 <b>같은 것</b>이고 어드민 정산 로직에 이미 있다</div><div class="q-why">남은 것은 정의가 아니라 귀속 단위다 — 지금은 가맹점·배치 축에 붙어 있고 채권 1건 축으로 옮기는 것이 Q-14와 한 몸이다</div></div></div>
     <div class="q-item"><div class="q-id">Q-3</div><div><div class="q-ask"><code>SLi = 미지급액 − 과지급액</code>에는 <code>max(0, …)</code>가 없는데 상환액·투자수익에는 있다. <b>의도인가</b></div><div class="q-why">S입금부족율이 음수로 나올 수 있다</div></div></div>
     <div class="q-item"><div class="q-id">Q-4</div><div><div class="q-ask"><code>max(0, …)</code>로 잘려 나간 초과분(과지급 &gt; 미지급)은 <b>어디로 가나</b></div><div class="q-why">이월인지 소멸인지</div></div></div>
     <div class="q-item"><div class="q-id">Q-5</div><div><div class="q-ask">1번 이미지 금융일수 예시 <code>선정산일 260827, 정산예정일 260808 → 1</code>은 <b>날짜가 역순이다.</b> 오타인가</div><div class="q-why">판별 자체는 2번 예시로 닫혔으나 원문 확인이 필요하다</div></div></div>
     <div class="q-item"><div class="q-id">Q-6</div><div><div class="q-ask"><code>투자자산</code>이 <b>잔액(투자실행액+순현금)</b>인가 <b>유량(PSA+PSC)</b>인가</div><div class="q-why"><code>⑤</code>가 <b>3.33%</b>와 <b>2.24%</b>로 갈린다</div></div></div>
     <div class="q-item"><div class="q-id">Q-7</div><div><div class="q-ask"><code>ty수익율</code>이 <b>1번 이미지 식(할인율 기준)</b>과 <b>2번 이미지 식(실제 수익율 기준)</b> 두 개인데, 화면 어느 자리에 어느 것을 쓰나</div><div class="q-why">두 화면이 같은 라벨을 달고 있다</div></div></div>
-    <div class="q-item"><div class="q-id">Q-8</div><div><div class="q-ask"><code>⑥</code> 산식의 <code>③</code>이 무엇인가. 원문이 참조한 <b>이미지 두 장을 받을 수 있나</b></div><div class="q-why">일별 표 열 번호로 읽으면 맞아떨어지나 확인이 필요하다</div></div></div>
+    <div class="q-item"><div class="q-id">Q-8</div><div><div class="q-ask"><b>닫힘</b> — <code>③</code>은 일별표 <code>투자실행금</code>이다. 스토리보드 캡처 2장의 번호 마커로 전건 대응했다</div><div class="q-why">④와 ⑥은 동명이의가 아니라 같은 지표의 집계 단위 차이(기간 전체 / 하루치)다</div></div></div>
     <div class="q-item"><div class="q-id">Q-9</div><div><div class="q-ask">배치 산출 목록의 <code>평균순현금</code>과 정의문의 <code>EC(자정 잔액)</code>, <code>PSC(EC들의 합)</code>가 <b>서로 안 맞는다.</b> 어느 쪽인가</div><div class="q-why">평균이냐 합이냐에 따라 <code>⑤</code>가 달라진다</div></div></div>
   </div>
 

@@ -269,7 +269,7 @@
       <li>근거 원천은 <code>스토리보드_Admin_투자자.pptx</code> 17슬라이드 단독. 그 위에 운영 어드민 코드(읽기 전용)와 정책서·계약 분석을 대조.</li>
       <li>수수료율은 대외 1% / 실계산 0.604% / 내부배분 0.6+0.11+0.1% / 0.25% 등 최소 5개 버전이 병존하는 미확정 사안(<code>analysis/00_종합.md</code> C1). 이 문서는 어느 값도 정책값으로 채택하지 않는다.</li>
       <li>화면 설계(안)에 인쇄된 금액·요율·상호는 전부 예시값. 산식 검산에 쓰인 숫자도 예시값 기준의 역산 결과.</li>
-      <li>지급 캘린더(C2)·예상 지급 차액(C4) 역시 미해소. 6대 개념(미지급금·선정산 제외금액·바로이체·과지급·미회수금·환급)과 스토리보드의 <code>입금부족액</code>은 서로 다른 축으로 둔다.</li>
+      <li>지급 캘린더(C2)·예상 지급 차액(C4) 역시 미해소. 대표 정의서의 <code>미지급금</code>·<code>과지급금</code>은 6대 개념(미지급금·선정산 제외금액·바로이체·과지급·미회수금·환급)의 <code>미지급금</code>·<code>과지급</code>과 <b>같은 것</b>이고, 스토리보드의 <code>입금부족액</code>은 그 둘에서 나오는 파생 지표라 목록의 일곱 번째 항목으로 세우지 않는다.</li>
     </ul>
   </div>
 
@@ -1082,7 +1082,7 @@
         <ul class="expo-list">
           <li><div class="expo-item">1. 총판(채권매매업체)의 존재와 상호</div><div class="expo-why">가맹점이 서명하는 계약서에 총판·유동화기관이 당사자로 등장하므로 최소한의 설명은 필요하나, 어디까지 노출할지는 정책 결정 사항으로 남아 있다. <code>SB s14</code>는 <code>채권매매업체ID</code> 열과 필터를 그대로 노출한다<span class="expo-src">figma_policy_contract.md CT-12</span></div></li>
           <li><div class="expo-item">2. 순현금의 보관 주체 표기(㈜쿠콘)</div><div class="expo-why">쿠콘을 자금 보관 주체로 규정한 문서가 없다. 실제로는 이체 실행 벤더다</div></li>
-          <li><div class="expo-item">3. S입금부족율 / 입금부족액</div><div class="expo-why">6대 개념 어디에도 없는 제7의 축. <code>SB s3</code> 각주가 <code>입금부족액 / 선정산금액</code>으로 정의하며 Figma 정산채권DB <code>상환부족액</code>이 원천으로 보인다. 카드사→락계좌 입금이 예상보다 적은 금액을 뜻해 과지급·미회수금과 이름이 비슷하다. 보여줄지, 보여준다면 대외 명칭을 무엇으로 할지 미정<span class="expo-src">노드 529:2950</span></div></li>
+          <li><div class="expo-item">3. S입금부족율 / 입금부족액</div><div class="expo-why">6대 개념 목록의 새 항목이 아니라 <b>파생 지표</b>다 — 분자 <code>SLi = 미지급금 − 과지급금</code>이 6대 개념의 <code>미지급금</code>·<code>과지급</code>을 그대로 쓴다. <code>SB s3</code> 각주는 분모를 <code>선정산금액</code>이라 적어 대표 정의(<code>순지급액 × (1−할인율)</code>)와 다르고, Figma 정산채권DB <code>상환부족액</code>과 같은 값인지도 미확정이다. 보여줄지, 보여준다면 대외 명칭을 무엇으로 할지 미정<span class="expo-src">노드 529:2950</span></div></li>
           <li><div class="expo-item">4. W금융일수·Ty수익율 같은 내부 산정 지표</div><div class="expo-why">스토리보드가 화면 각주로 정의를 달아 둔 만큼 노출 전제로 보이나, 이 지표들은 <code>05_UI_REQUIREMENTS.md</code> §5 매핑표에 없다. 대외 명칭 규칙 자체가 없다</div></li>
           <li><div class="expo-item">5. 투자자에게 노출할 정산 주기</div><div class="expo-why">Figma는 투자자 수익금을 월 1회 정산으로 정의하는데(노드 <code>774:1054</code>) <code>SB s7</code>은 일별·월별 조회를 모두 제공한다. 조회 주기와 정산 주기를 화면에서 구분해 표기할지 미정</div></li>
           <li><div class="expo-item">6. <code>투자자</code> vs <code>유동화기관</code> 대외 표기</div><div class="expo-why">같은 실체가 계약서에서는 유동화기관, 정산채권DB에서는 수익권자로 불린다. 05 §5 매핑표에 참여자 명칭 축이 통째로 비어 있다</div></li>
@@ -1368,10 +1368,10 @@
       <div class="cand-head"><span class="cand-id">7-18</span><span class="cand-t">투자자 대외 노출 용어 — 05 §5 매핑표의 참여자 명칭 축 부재</span><span class="badge sm badge-gray">후보</span></div>
       <div class="cand-body"><dl>
         <dt>질문</dt><dd>투자자 어드민에 인쇄할 대외 용어를 어디에 정의하는가. <code>투자자</code>와 <code>유동화기관</code>과 <code>수익권자</code>를 화면에서 어떻게 갈라 쓰는가. <code>W금융일수</code>·<code>S입금부족율</code>·<code>Ty수익율</code>·<code>입금부족액</code> 같은 내부 산정 지표를 그대로 노출하는가. <code>채권매입업체</code>와 <code>채권매매업체</code> 중 무엇을 쓰는가.</dd>
-        <dt>배경</dt><dd><code>05_UI_REQUIREMENTS.md</code> §5 매핑표는 금액 개념 8행만 담고 있어 참여자 명칭 축이 통째로 비어 있고, 05 전체에 투자자·유동화기관·채권매입 관련 낱말이 한 건도 없다. <code>02_TERMS_AND_STATUS.md</code> §6은 투자자를 "자금 공급 참여자"로 한 줄 정의할 뿐 유동화기관과 같은 실체인지 밝히지 않으며, Figma 용어정리조차 <code>유동화기관(투자자?)</code>로 물음표를 달아 두었다. 스토리보드 자체도 한 슬라이드 안에서 필터를 <code>채권매입업체</code>, 표 헤더를 <code>채권매매업체 ID</code>로 달리 부른다. 한편 스토리보드가 쓰는 <code>입금부족액</code>은 6대 개념 어디에도 속하지 않는 제7의 축이며, 원천은 Figma 정산채권DB <code>상환부족액</code> — 카드사에서 락계좌로 들어온 금액이 예상보다 적은 경우를 뜻한다. 이름이 <code>미회수금</code>·<code>과지급</code>과 비슷해 대외 문구에서 섞일 위험이 크다. (확인필요)</dd>
+        <dt>배경</dt><dd><code>05_UI_REQUIREMENTS.md</code> §5 매핑표는 금액 개념 8행만 담고 있어 참여자 명칭 축이 통째로 비어 있고, 05 전체에 투자자·유동화기관·채권매입 관련 낱말이 한 건도 없다. <code>02_TERMS_AND_STATUS.md</code> §6은 투자자를 "자금 공급 참여자"로 한 줄 정의할 뿐 유동화기관과 같은 실체인지 밝히지 않으며, Figma 용어정리조차 <code>유동화기관(투자자?)</code>로 물음표를 달아 두었다. 스토리보드 자체도 한 슬라이드 안에서 필터를 <code>채권매입업체</code>, 표 헤더를 <code>채권매매업체 ID</code>로 달리 부른다. 한편 스토리보드가 쓰는 <code>입금부족액</code>은 6대 개념의 새 항목이 아니라 <code>미지급금</code>·<code>과지급</code>을 재료로 삼는 파생 지표다. 다만 Figma 정산채권DB <code>상환부족액</code>(카드사에서 락계좌로 들어온 금액이 예상보다 적은 경우)과 같은 값인지는 미확정이고, 이름이 <code>미회수금</code>·<code>과지급</code>과 비슷해 대외 문구에서 섞일 위험이 크다. (확인필요)</dd>
         <dt>위치</dt><dd><code>05_UI_REQUIREMENTS.md</code> §5 매핑표(참여자 명칭 축 신설) / <code>02_TERMS_AND_STATUS.md</code> §2·§4·§6 / 투자자 어드민 전 화면 용어 안내 박스·가맹점 목록 열 라벨</dd>
-        <dt>영향</dt><dd>매핑표에 참여자 축이 생기면 가맹점 화면·계약서·투자자 어드민 세 곳의 명칭을 한 표에서 관리하게 된다. <code>입금부족액</code> 계열을 6대 개념 목록에 제7 항목으로 세울지, 투자자 전용 지표로 격리할지에 따라 02의 구조가 달라진다.</dd>
-        <dt>주의</dt><dd class="caution">6대 개념과 <code>입금부족액</code>을 합치지 않는다. 발생 지점(카드사 → 락계좌 입금 단계)과 귀속 주체(채권 보유자)가 6대 개념과 다르다.</dd>
+        <dt>영향</dt><dd>매핑표에 참여자 축이 생기면 가맹점 화면·계약서·투자자 어드민 세 곳의 명칭을 한 표에서 관리하게 된다. <code>입금부족액</code> 계열을 투자자 전용 지표로 둘지 02에 파생 지표로 등재할지에 따라 02의 구조가 달라진다.</dd>
+        <dt>주의</dt><dd class="caution"><code>입금부족액</code>을 6대 개념 목록의 일곱 번째 항목으로 세우지 않는다. <code>미지급금</code>·<code>과지급</code>에서 나오는 파생 지표라 목록에 넣으면 같은 값을 두 번 세게 된다.</dd>
         <dt>출처</dt><dd class="src">05_UI_REQUIREMENTS.md:80-91 / 02_TERMS_AND_STATUS.md §6 / analysis/figma_01_선정산시스템.md(노드 257:2436) / analysis/figma_policy_db.md §1.1(노드 529:2950) / analysis/archive_02_계약약관.md §2.2 / 스토리보드_Admin_투자자.pptx s3 각주·s14</dd>
       </dl></div>
     </div>
