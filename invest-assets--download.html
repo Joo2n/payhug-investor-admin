@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1440">
-<title>PayHug Admin — 투자 자산</title>
+<title>PayHug Admin — 투자 자산 (엑셀 다운로드 완료)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -28,6 +28,16 @@
     background: var(--gray-50); border-top: 1px solid var(--gray-100);
     font-weight: 700; color: var(--gray-900);
   }
+
+  /* ── 상태 뱃지 (제안서 화면 구분용) ── */
+  .page-title .state-badge {
+    vertical-align: middle; position: relative; top: -2px; margin-left: 8px;
+    font-size: 12px; line-height: 16px; font-weight: 500;
+  }
+
+  /* ── 다운로드 완료 버튼 ── */
+  .btn-excel.is-done { background: var(--emerald-700); }
+  .btn-excel.is-done:hover { background: var(--emerald-700); }
 </style>
 </head>
 <body data-active="invest-assets">
@@ -109,7 +119,7 @@
   <main class="content">
     <div class="page-header row-between">
       <div>
-        <h1 class="page-title">투자 자산</h1>
+        <h1 class="page-title">투자 자산 <span class="badge badge-gray state-badge">엑셀 다운로드 완료</span></h1>
         <p class="page-sub">투자자산 현황과 가맹점별 투자 내역.</p>
       </div>
       <div class="base-date">기준일 <span class="mono">2026-08-27</span></div>
@@ -201,11 +211,11 @@
       <div class="tbl-head">
         <h2>가맹점별 투자자산</h2>
         <div class="actions">
-          <a class="btn btn-excel" href="assets/xlsx/가맹점별투자자산_2026-08-27_2026-08-27.xlsx" download>
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            엑셀 다운로드
-          </a>
-          <a class="btn btn-outline" href="invest-assets--cert-confirm.html">
+          <button class="btn btn-excel is-done">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            다운로드 완료
+          </button>
+          <a class="btn btn-outline" href="certificate.html">
             <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             증명서 다운로드
           </a>
@@ -377,6 +387,11 @@
 
   </main>
 
+</div>
+
+<div class="toast toast-success" role="status">
+  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:20px;height:20px;flex-shrink:0;margin-top:2px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+  <span>가맹점별투자자산_2026-08-27_2026-08-27.xlsx 내려받기 완료</span>
 </div>
 </body>
 </html>

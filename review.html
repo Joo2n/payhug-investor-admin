@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>투자자 어드민 — 순차 확인</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--ln:#e5e7eb;--tx:#111827;--sub:#6b7280;--pri:#4da119;--pri50:#f4fdf0;--warn:#b45309;--warn50:#fffbeb;--bad:#b91c1c;--bad50:#fef2f2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:'Noto Sans KR',-apple-system,sans-serif;font-size:14px;line-height:1.7}
+.wrap{max-width:820px;margin:0 auto;padding:36px 24px 80px}
+h1{font-size:22px;margin:0}
+.lead{color:var(--sub);margin:6px 0 0;font-size:13px}
+.pbar{height:6px;background:var(--ln);border-radius:20px;overflow:hidden;margin:22px 0 6px}
+.pbar i{display:block;height:100%;background:var(--pri);border-radius:20px;transition:width .25s}
+.pmeta{display:flex;justify-content:space-between;font-size:12px;color:var(--sub);margin-bottom:22px}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:26px 28px}
+.stepno{font-size:11px;font-weight:700;color:var(--pri);letter-spacing:.08em}
+h2{font-size:19px;margin:6px 0 0}
+.what{color:var(--sub);margin:8px 0 0}
+.kind{display:inline-block;font-size:11px;font-weight:700;border-radius:20px;padding:2px 10px;margin-top:12px}
+.k-ok{background:var(--pri50);color:var(--pri)}
+.k-warn{background:var(--warn50);color:var(--warn)}
+.k-bad{background:var(--bad50);color:var(--bad)}
+.open{display:inline-flex;align-items:center;gap:7px;margin:18px 0 0;background:var(--pri);color:#fff;text-decoration:none;font-weight:700;font-size:13px;border-radius:9px;padding:11px 20px}
+.open:hover{background:#3a7a15}
+.open.ghost{background:#fff;color:var(--tx);border:1px solid var(--ln)}
+.open.ghost:hover{background:#f9fafb}
+h3{font-size:13px;margin:26px 0 8px;color:var(--sub);font-weight:500}
+ul{margin:0;padding-left:18px}
+li{margin:5px 0}
+.note{background:#f9fafb;border-left:3px solid var(--ln);padding:11px 15px;margin-top:18px;font-size:13px;color:#374151;border-radius:0 8px 8px 0}
+.note.warn{background:var(--warn50);border-left-color:#f59e0b}
+.note.bad{background:var(--bad50);border-left-color:#dc2626}
+.nav{display:flex;gap:10px;margin-top:28px;padding-top:22px;border-top:1px solid var(--ln);flex-wrap:wrap}
+button{font-family:inherit;font-size:13px;font-weight:700;border-radius:9px;padding:11px 20px;border:1px solid var(--ln);background:#fff;color:var(--tx);cursor:pointer}
+button:hover{background:#f9fafb}
+button.ok{background:var(--pri);border-color:var(--pri);color:#fff}
+button.ok:hover{background:#3a7a15}
+button.hold{background:var(--warn50);border-color:#fcd34d;color:var(--warn)}
+button:disabled{opacity:.4;cursor:default}
+.spacer{flex:1}
+.dots{display:flex;gap:5px;flex-wrap:wrap;margin-top:26px}
+.dot{width:26px;height:26px;border-radius:7px;border:1px solid var(--ln);background:#fff;font-size:11px;color:var(--sub);display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:700}
+.dot.cur{border-color:var(--pri);color:var(--pri)}
+.dot.done{background:var(--pri);border-color:var(--pri);color:#fff}
+.dot.held{background:var(--warn50);border-color:#fcd34d;color:var(--warn)}
+.foot{margin-top:26px;font-size:12px;color:var(--sub);text-align:center}
+.foot a{color:var(--pri)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>투자자 어드민 — 순차 확인</h1>
+  <p class="lead">한 번에 한 가지만 본다. 확인했으면 <b>확인</b>, 이상하면 <b>보류</b>. 진행 상태는 이 브라우저에 남는다.</p>
+
+  <div class="pbar"><i id="bar"></i></div>
+  <div class="pmeta"><span id="pcount"></span><span id="pheld"></span></div>
+
+  <div class="card" id="card"></div>
+  <div class="dots" id="dots"></div>
+
+  <p class="foot">
+    전체 파일 목록은 <a href="archive.html">작업물 아카이브</a>.
+    원고·분석 문서는 <a href="http://localhost:8902/" target="_blank">:8902</a>.
+  </p>
+</div>
+
+<script>
+const STEPS = [
+ {t:"통합 프로토타입이 무엇인가", kind:"ok", kl:"동작함",
+  what:"메뉴·버튼이 실제로 눌리는 단 하나의 파일. 시연은 전부 여기서 한다.",
+  href:"app.html", label:"app.html 열기",
+  check:["왼쪽 메뉴 7개를 눌러 화면이 바뀌는지","표 열 제목을 눌러 정렬이 바뀌는지","기간 프리셋·일별/월별 토글이 먹는지"],
+  note:{k:"", v:"화면 14개·상태 18개가 전부 이 파일 안에서 조작으로 이어진다. 상태 파일은 19개이고 그중 invest-profit--datepicker는 폐기 결정분이라 통합본에 없다."}},
+
+ {t:"정적 화면은 왜 안 움직이나", kind:"warn", kl:"설계상 정상",
+  what:"화면 한 장을 그대로 굳혀 놓은 스냅샷. Figma로 넘기기 위한 것이라 JS가 없다.",
+  href:"merchants.html", label:"merchants.html 열기",
+  check:["필터·검색이 눌리지 않는 것을 확인","같은 화면을 app.html에서 열면 동작하는 것과 대조"],
+  note:{k:"warn", v:"여기서 기능이 안 되는 건 결함이 아니다. 기능 확인은 항상 app.html에서 한다. 1 프레임 = 1 화면이어야 Figma 임포트가 성립한다."}},
+
+ {t:"검색이 실제로 도는지", kind:"ok", kl:"동작함",
+  what:"가맹점 화면에서 검색어를 넣으면 표가 실제로 걸러진다.",
+  href:"app.html#merchants", label:"가맹점 화면 열기",
+  check:["검색어에 '김성호' 입력 후 검색 → 16건이 1건으로","적용된 조건 칩이 뜨는지","초기화를 누르면 16건으로 복귀"],
+  note:{k:"", v:"검색어는 가맹점ID·상호·사업자번호·대표자명·종목 5개 열을 훑는다. 토스트·조건칩·페이지네이션이 함께 움직인다."}},
+
+ {t:"업종 필터 — 네이티브 select", kind:"ok", kl:"원본 방식",
+  what:"업종 드롭다운은 통합본·정적 화면 모두 네이티브 select다. 눌러보면 열리고 표가 걸러진다.",
+  href:"app.html#merchants", label:"직접 눌러보기",
+  check:["업종 드롭다운을 눌러 목록이 열리고 표가 걸러지는지","키보드 Tab으로도 닿는지","merchants.html의 같은 필터와 생김새가 같은지"],
+  note:{k:"", v:"실제 어드민에는 커스텀 드롭다운이 0건이고 전부 네이티브 select다. 옵션 목록은 원장에 실재하는 업종만 담는다 — 운영 어드민에 업종 필터 자체가 없어 가져올 코드 목록이 없다. 업종 필터를 유지할지, 유지하면 코드 목록을 어디서 받을지는 inquiry.html 부록 D-12로 열려 있다."}},
+
+ {t:"엑셀은 실물이 내려온다", kind:"ok", kl:"실물 있음",
+  what:"화면 재현이 아니라 진짜 .xlsx 파일 4개.",
+  href:"assets/xlsx/투자자산현황_2026-08-27_2026-08-27.xlsx", label:"엑셀 하나 받아보기",
+  check:["파일이 실제로 열리는지","시트 헤더가 화면 표와 같은지","app.html에서 엑셀 다운로드 버튼을 눌러도 같은 파일이 오는지"],
+  note:{k:"", v:"투자자산 현황 · 가맹점별 투자자산 · 투자수익 현황 · 일별 투자수익 4종. 다운로드 버튼이 내려주는 파일과 바이트가 같다. 시트 첫 줄에 예시값 고지가 들어간다."}},
+
+ {t:"계약서·증명서도 실물", kind:"ok", kl:"실물 있음",
+  what:"계약서·재양도합의서·증명서가 실물 PDF로 걸려 있다.",
+  href:"archive.html#todo", label:"문서 목록 보기",
+  check:["재양도합의서 PDF가 열리는지","견본 표기가 지면에 있는지","서명란이 빈칸인지"],
+  note:{k:"warn", v:"PDF 20개 + 묶음 zip 2개. 전 62면에 견본 머리띠와 워터마크가 있고 수수료율 자리는 공란이다. 실제 계약 효력이 있는 문서로 오인될 여지를 막는 구성이다."}},
+
+ {t:"용어 — 여기부터 읽으면 된다", kind:"ok", kl:"대표 정의 기준",
+  what:"대표님 정의를 기준으로 삼은 교재. 용어 50건이 사전순이 아니라 이해가 쌓이는 순서로 놓여 있다.",
+  href:"glossary.html", label:"glossary.html 열기",
+  check:["맨 위 전체 그림에서 원천 데이터가 화면 숫자까지 어떻게 흘러가는지","그 다음 '지금은 그림 가운데가 비어 있다' 경고를 읽을 것","용어 하나를 골라 한마디 설명·계산 예시·값의 출처·화면 위치가 다 있는지","맨 아래 물어야 할 것 26건을 복사할 수 있는지"],
+  note:{k:"", v:"용어마다 7가지가 붙는다 — 한마디로 뭐냐 / 어떻게 계산하나(기호를 우리말로 풀고 숫자 예시) / 이 값은 어디서 오나 / 화면 어디에 보이나 / 다른 용어와 어떻게 이어지나 / 기획할 때 정해야 할 것. 값의 출처는 색으로 갈린다 — 초록은 기존 어드민에 있어 가져다 쓰면 되고, 주황 36건은 페이허그에 없어 새로 만들어야 한다."}},
+
+ {t:"대표님께 보낼 문의서", kind:"ok", kl:"복사 준비됨",
+  what:"대표님 정의와 현행 화면 사이에서 값이 안 맞거나 참조가 끊기는 지점.",
+  href:"inquiry.html", label:"inquiry.html 열기",
+  check:["최우선 문항이 맨 위에 있는지","버튼 하나로 전문이 복사되는지","개발 확인 항목이 따로 갈려 있는지"],
+  note:{k:"", v:"대표 문항 Q-1~Q-7 7건 — 먼저 회신이 필요한 3건과 나머지 4건으로 갈린다. 개발·백엔드 부록은 30건(선결 병목 2 · 신설 목록 12 · 데이터·화면·표기 16)이고 대표님께 보내는 본문에는 들어가지 않는다."}},
+
+ {t:"투자자에게 무엇을 보여주는가", kind:"ok", kl:"현행 명세",
+  what:"화면별로 투자자가 할 수 있는 행위와, 그 값이 페이허그 어디서 나오는지.",
+  href:"capability.html", label:"capability.html 열기",
+  check:["노출 불가·주의 항목이 사유와 함께 적혀 있는지","개발 확인 질문을 복사할 수 있는지"],
+  note:{k:"", v:"투자자 행위 35건 · 데이터 49항목 · 노출 불가 11건 · 미구현 23건."}},
+
+ {t:"숫자가 서로 맞는가", kind:"ok", kl:"5자 대조",
+  what:"화면·통합본·엑셀이 같은 가맹점에 대해 같은 숫자를 말해야 한다.",
+  href:"app.html", label:"투자 자산 화면 열기",
+  check:["비중 합계가 100.0%로 닫히는지","정렬·페이지를 바꿔도 100.0%가 유지되는지","투자 수익 현황의 투자자산 대비 Ty수익율이 2.24%인지","같은 값이 엑셀에도 있는지"],
+  note:{k:"", v:"정적 HTML ↔ app.html ↔ .xlsx 23건 일치, 불일치 0. 일별 표는 7행 전건이 할인율 0.11% 한 값에서 나온다. 요율은 확정값이 아니라 화면 숫자는 전부 예시값이다."}},
+
+ {t:"아직 열려 있는 것", kind:"warn", kl:"판단·회신 대기",
+  what:"산출물 안에서 닫을 수 없고 판단이나 회신이 와야 닫히는 자리.",
+  href:"archive.html#todo", label:"작업 목록 보기",
+  check:["작업 목록에서 대기·결정 대기 항목이 무엇인지 훑어보기","화면 숫자 옆의 (예시) 표기가 살아 있는지"],
+  note:{k:"warn", v:"대표 정의 미적용 5건(차감항·나눗셈 축·S분모·기준금액 라벨·비중 축)은 inquiry.html 문항으로 등재돼 있다. 월별 카드의 기간 기준은 이번달과 6개월 두 해석이 갈려 사용자 판단 대기다. 수수료율은 C1 미확정이라 화면 숫자는 예시 표기를 유지한다."}}
+];
+
+const KEY="ph_review_v1";
+let st = {}; try{ st = JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){ st={}; }
+let cur = st.cur||0;
+
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(st)); }catch(e){} }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function render(){
+  const s = STEPS[cur];
+  const mark = (st.marks||{})[cur];
+  const kc = s.kind==="ok"?"k-ok":s.kind==="bad"?"k-bad":"k-warn";
+  document.getElementById("card").innerHTML =
+    '<div class="stepno">STEP '+(cur+1)+' / '+STEPS.length+'</div>'+
+    '<h2>'+esc(s.t)+'</h2>'+
+    '<p class="what">'+esc(s.what)+'</p>'+
+    '<span class="kind '+kc+'">'+esc(s.kl)+'</span><br>'+
+    '<a class="open'+(s.kind==="bad"?" ghost":"")+'" href="'+s.href+'" target="_blank">'+esc(s.label)+' &rarr;</a>'+
+    '<h3>확인할 것</h3><ul>'+s.check.map(c=>'<li>'+esc(c)+'</li>').join("")+'</ul>'+
+    (s.note?'<div class="note '+(s.note.k||"")+'">'+esc(s.note.v)+'</div>':"")+
+    '<div class="nav">'+
+      '<button id="prev"'+(cur===0?" disabled":"")+'>이전</button>'+
+      '<button class="ok" id="ok">'+(mark==="ok"?"확인함 ✓":"확인")+'</button>'+
+      '<button class="hold" id="hold">'+(mark==="hold"?"보류함":"보류")+'</button>'+
+      '<span class="spacer"></span>'+
+      '<button id="next"'+(cur===STEPS.length-1?" disabled":"")+'>다음</button>'+
+    '</div>';
+
+  document.getElementById("prev").onclick=()=>{ if(cur>0){cur--; st.cur=cur; save(); render();} };
+  document.getElementById("next").onclick=()=>{ if(cur<STEPS.length-1){cur++; st.cur=cur; save(); render();} };
+  document.getElementById("ok").onclick=()=>mark_it("ok");
+  document.getElementById("hold").onclick=()=>mark_it("hold");
+
+  const marks = st.marks||{};
+  const done = Object.values(marks).filter(v=>v==="ok").length;
+  const held = Object.values(marks).filter(v=>v==="hold").length;
+  document.getElementById("bar").style.width = (done/STEPS.length*100)+"%";
+  document.getElementById("pcount").textContent = done+" / "+STEPS.length+" 확인";
+  document.getElementById("pheld").textContent = held?("보류 "+held+"건"):"";
+
+  document.getElementById("dots").innerHTML = STEPS.map((_,i)=>{
+    const m=marks[i]; const c=["dot"];
+    if(i===cur)c.push("cur"); if(m==="ok")c.push("done"); if(m==="hold")c.push("held");
+    return '<div class="'+c.join(" ")+'" data-i="'+i+'">'+(i+1)+'</div>';
+  }).join("");
+  [...document.querySelectorAll(".dot")].forEach(d=>d.onclick=()=>{ cur=+d.dataset.i; st.cur=cur; save(); render(); });
+}
+
+function mark_it(v){
+  st.marks = st.marks||{};
+  st.marks[cur] = (st.marks[cur]===v)? null : v;
+  save();
+  if(st.marks[cur]==="ok" && cur<STEPS.length-1){ cur++; st.cur=cur; }
+  render();
+}
+
+render();
+</script>
+</body>
+</html>

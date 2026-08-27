@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1440">
-<title>PayHug Admin — 투자 자산</title>
+<title>PayHug Admin — 투자 자산 (2페이지)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -27,6 +27,12 @@
   .tbl tr.total-row td {
     background: var(--gray-50); border-top: 1px solid var(--gray-100);
     font-weight: 700; color: var(--gray-900);
+  }
+
+  /* ── 상태 뱃지 (제안서 화면 구분용) ── */
+  .page-title .state-badge {
+    vertical-align: middle; position: relative; top: -2px; margin-left: 8px;
+    font-size: 12px; line-height: 16px; font-weight: 500;
   }
 </style>
 </head>
@@ -109,7 +115,7 @@
   <main class="content">
     <div class="page-header row-between">
       <div>
-        <h1 class="page-title">투자 자산</h1>
+        <h1 class="page-title">투자 자산 <span class="badge badge-gray state-badge">2페이지</span></h1>
         <p class="page-sub">투자자산 현황과 가맹점별 투자 내역.</p>
       </div>
       <div class="base-date">기준일 <span class="mono">2026-08-27</span></div>
@@ -205,7 +211,7 @@
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             엑셀 다운로드
           </a>
-          <a class="btn btn-outline" href="invest-assets--cert-confirm.html">
+          <a class="btn btn-outline" href="certificate.html">
             <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             증명서 다운로드
           </a>
@@ -225,79 +231,79 @@
           </thead>
           <tbody>
             <tr>
-              <td><span class="name">김성호떡볶이 본점</span></td>
-              <td class="num"><span class="strong">312,400,000</span></td>
-              <td class="num">10.8일</td>
-              <td class="num">0.31%</td>
-              <td class="num">3.72%</td>
-              <td class="num">20.4%</td>
+              <td><span class="name">청춘포차 신촌점</span></td>
+              <td class="num"><span class="strong">48,900,000</span></td>
+              <td class="num">11.3일</td>
+              <td class="num">0.44%</td>
+              <td class="num">3.55%</td>
+              <td class="num">3.2%</td>
             </tr>
             <tr>
-              <td><span class="name">달빛곱창 홍대점</span></td>
-              <td class="num"><span class="strong">268,900,000</span></td>
-              <td class="num">11.5일</td>
-              <td class="num">0.55%</td>
-              <td class="num">3.49%</td>
-              <td class="num">17.7%</td>
+              <td><span class="name">왕십리곱창타운</span></td>
+              <td class="num"><span class="strong">42,300,000</span></td>
+              <td class="num">10.6일</td>
+              <td class="num">0.26%</td>
+              <td class="num">3.79%</td>
+              <td class="num">2.8%</td>
             </tr>
             <tr>
-              <td><span class="name">성호분식 2호점</span></td>
-              <td class="num"><span class="strong">197,300,000</span></td>
-              <td class="num">12.1일</td>
-              <td class="num">0.28%</td>
-              <td class="num">3.32%</td>
-              <td class="num">13.0%</td>
+              <td><span class="name">소소한밥상</span></td>
+              <td class="num"><span class="strong">37,600,000</span></td>
+              <td class="num">12.2일</td>
+              <td class="num">0.58%</td>
+              <td class="num">3.29%</td>
+              <td class="num">2.5%</td>
             </tr>
             <tr>
-              <td><span class="name">바다마루 횟집</span></td>
-              <td class="num"><span class="strong">152,600,000</span></td>
-              <td class="num">10.2일</td>
-              <td class="num">0.47%</td>
-              <td class="num">3.94%</td>
-              <td class="num">10.0%</td>
+              <td><span class="name">대박국수 사당점</span></td>
+              <td class="num"><span class="strong">31,400,000</span></td>
+              <td class="num">11.7일</td>
+              <td class="num">0.33%</td>
+              <td class="num">3.43%</td>
+              <td class="num">2.1%</td>
             </tr>
             <tr>
-              <td><span class="name">한강커피 잠원점</span></td>
-              <td class="num"><span class="strong">121,800,000</span></td>
-              <td class="num">11.9일</td>
-              <td class="num">0.62%</td>
-              <td class="num">3.37%</td>
-              <td class="num">8.0%</td>
+              <td><span class="name">정든수산</span></td>
+              <td class="num"><span class="strong">26,800,000</span></td>
+              <td class="num">10.9일</td>
+              <td class="num">0.51%</td>
+              <td class="num">3.68%</td>
+              <td class="num">1.8%</td>
             </tr>
             <tr>
-              <td><span class="name">김밥나라</span></td>
-              <td class="num"><span class="strong">98,200,000</span></td>
-              <td class="num">10.5일</td>
-              <td class="num">0.19%</td>
-              <td class="num">3.82%</td>
-              <td class="num">6.4%</td>
+              <td><span class="name">착한고기 은평점</span></td>
+              <td class="num"><span class="strong">21,500,000</span></td>
+              <td class="num">12.6일</td>
+              <td class="num">0.67%</td>
+              <td class="num">3.19%</td>
+              <td class="num">1.4%</td>
             </tr>
             <tr>
-              <td><span class="name">초록치킨 서초점</span></td>
-              <td class="num"><span class="strong">76,100,000</span></td>
-              <td class="num">12.4일</td>
-              <td class="num">0.71%</td>
-              <td class="num">3.24%</td>
-              <td class="num">5.0%</td>
+              <td><span class="name">커피한잔 마포점</span></td>
+              <td class="num"><span class="strong">17,200,000</span></td>
+              <td class="num">11.1일</td>
+              <td class="num">0.22%</td>
+              <td class="num">3.62%</td>
+              <td class="num">1.1%</td>
             </tr>
             <tr>
-              <td><span class="name">골목냉면</span></td>
-              <td class="num"><span class="strong">57,200,000</span></td>
-              <td class="num">11.0일</td>
-              <td class="num">0.38%</td>
-              <td class="num">3.65%</td>
-              <td class="num">3.8%</td>
+              <td><span class="name">우리동네반찬</span></td>
+              <td class="num"><span class="strong">12,900,000</span></td>
+              <td class="num">10.4일</td>
+              <td class="num">0.35%</td>
+              <td class="num">3.86%</td>
+              <td class="num">0.8%</td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="pagination">
-        <button class="page-arrow" disabled>
+        <button class="page-arrow">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
         </button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-arrow">
+        <button class="page-btn">1</button>
+        <button class="page-btn active">2</button>
+        <button class="page-arrow" disabled>
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </button>
       </div>

@@ -3,37 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1440">
-<title>PayHug Admin — 정산채권 양수</title>
+<title>PayHug Admin — 투자자산 현황 엑셀</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/base.css">
-<style>
-  /* 화면 전용 — 색상은 base.css 변수만 사용 */
-  .notice-green { background: var(--primary-50); border-color: var(--primary-200); color: var(--primary-700); }
-  .chk { width: 16px; height: 16px; accent-color: var(--primary); flex-shrink: 0; cursor: pointer; }
-  .sign-row {
-    display: flex; align-items: center; gap: 16px;
-    padding: 16px 24px; border-bottom: 1px solid var(--gray-50);
-  }
-  .sign-row:last-child { border-bottom: 0; }
-  .sign-row.selected { background: var(--primary-50); }
-  .sign-row .m-name { font-size: 14px; font-weight: 600; color: var(--gray-900); }
-  .sign-row .m-date { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
-  .sign-row .m-date .mono { color: var(--gray-500); }
-  .doc-link { font-size: 14px; font-weight: 500; color: var(--primary-600); text-decoration: none; white-space: nowrap; }
-  .doc-link:hover { text-decoration: underline; }
-  .action-bar {
-    position: fixed; left: 240px; right: 0; bottom: 0; z-index: 40;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 32px; background: #fff;
-    border-top: 1px solid var(--gray-200); box-shadow: var(--shadow-card);
-  }
-  .action-bar .sel-count { font-size: 14px; color: var(--gray-600); }
-  .action-bar .sel-count b { color: var(--gray-900); }
-</style>
+<link rel="stylesheet" href="assets/sheet.css">
 </head>
-<body data-active="receivables">
+<body data-active="invest-assets">
 <div class="page">
 
   <!-- ═══════════ 사이드바 (수정 금지 — 화면마다 동일) ═══════════ -->
@@ -109,60 +86,67 @@
   </aside>
 
   <!-- ═══════════ 콘텐츠 영역 ═══════════ -->
-  <main class="content" style="padding-bottom:120px">
+  <main class="content">
+    <a class="back-link" href="invest-assets.html">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      투자 자산
+    </a>
     <div class="page-header">
-      <h1 class="page-title">정산채권 양수</h1>
-      <p class="page-sub">정산금채권 양수도 계약서 전자서명.</p>
+      <h1 class="page-title">엑셀 미리보기 — 투자자산 현황</h1>
+      <p class="page-sub">투자 자산 &gt; 현황 표를 엑셀로 내려받은 결과 미리보기.</p>
     </div>
 
-    <!-- 안내 배너 -->
-    <div class="notice notice-green">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      <span>서명 대기 중인 정산금채권 양수도 계약 <b class="mono">3건</b>. 계약서 내용 확인 후 서명 진행.</span>
+    <div class="notice notice-amber">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+      <span>※ 예시값 — 표기 금액·요율·상호는 전부 예시이며 실제 거래 기록이 아니다. 수수료율은 미확정이고 할인율 0.11%는 예정값이다.</span>
     </div>
 
-    <!-- 서명 대기 목록 -->
-    <div class="card" style="padding:0; overflow:hidden">
-      <div style="padding:16px 24px; border-bottom:1px solid var(--gray-100)">
-        <span class="card-title" style="margin:0">서명 대기 목록</span>
+    <div class="file-bar">
+      <div class="fb-left">
+        <div class="fb-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M3 15h18M9 5v14M15 5v14M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+        <div>
+          <div class="fb-name">투자자산현황_2026-08-27_2026-08-27.xlsx</div>
+          <div class="fb-meta">
+            <span>5.8 KB</span><span class="dot">·</span>
+            <span>생성일시 <span class="mono">2026-08-27 21:15</span></span><span class="dot">·</span>
+            <span>시트 1개</span>
+          </div>
+        </div>
       </div>
+      <a class="btn btn-primary" href="assets/xlsx/투자자산현황_2026-08-27_2026-08-27.xlsx" download>
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        엑셀 파일 내려받기
+      </a>
+    </div>
 
-      <div class="sign-row">
-        <input type="checkbox" class="chk">
-        <div style="flex:1; min-width:0">
-          <div class="m-name">김성호떡볶이 본점</div>
-          <div class="m-date">계약 생성일 <span class="mono">2026-08-25</span></div>
-        </div>
-        <span class="badge badge-amber">서명 대기</span>
-        <a class="doc-link" href="assets/docs/계약서_서명대기_M2026-0001.pdf" target="_blank" rel="noopener">계약서 보기</a>
+    <div class="sheet-frame">
+      <div class="sheet-tabs">
+        <span class="sheet-tab active">투자자산 현황</span>
       </div>
-      <div class="sign-row">
-        <input type="checkbox" class="chk">
-        <div style="flex:1; min-width:0">
-          <div class="m-name">달빛곱창 홍대점</div>
-          <div class="m-date">계약 생성일 <span class="mono">2026-08-26</span></div>
-        </div>
-        <span class="badge badge-amber">서명 대기</span>
-        <a class="doc-link" href="assets/docs/계약서_서명대기_M2026-0002.pdf" target="_blank" rel="noopener">계약서 보기</a>
-      </div>
-      <div class="sign-row">
-        <input type="checkbox" class="chk">
-        <div style="flex:1; min-width:0">
-          <div class="m-name">바다마루 횟집</div>
-          <div class="m-date">계약 생성일 <span class="mono">2026-08-27</span></div>
-        </div>
-        <span class="badge badge-amber">서명 대기</span>
-        <a class="doc-link" href="assets/docs/계약서_서명대기_M2026-0004.pdf" target="_blank" rel="noopener">계약서 보기</a>
+      <div class="sheet-scroll">
+        <table class="sheet">
+          <colgroup><col style="width:44px"><col style="width:190px"><col style="width:175px"><col style="width:130px"><col style="width:145px"><col style="width:130px"><col style="width:120px"><col></colgroup>
+          <thead>
+            <tr class="col-head"><th class="corner"></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th></tr>
+          </thead>
+          <tbody>
+            <tr><th class="row-head">1</th><td class="c-title" colspan="7">투자자산 현황 — 기준일 2026-08-27 / ㈜테스트인베스트</td></tr>
+            <tr><th class="row-head">2</th><td class="c-note" colspan="7">※ 예시값 — 표기 금액·요율·상호는 전부 예시이며 실제 거래 기록이 아니다. 수수료율은 미확정이고 할인율 0.11%는 예정값이다.</td></tr>
+            <tr><th class="row-head">3</th><td class="c-head">자산 구분</td><td class="c-head r">금액 (원)</td><td class="c-head r">W금융일수</td><td class="c-head r">S입금부족율</td><td class="c-head r">Ty수익율</td><td class="c-head r">비중</td><td class="c-head">보관</td></tr>
+            <tr><th class="row-head">4</th><td>투자실행액</td><td class="c-num">1,523,100,000</td><td class="c-num">11.3</td><td class="c-num">0.42%</td><td class="c-num">3.57%</td><td class="c-num">93.5%</td><td>㈜페이허그</td></tr>
+            <tr><th class="row-head">5</th><td>순현금</td><td class="c-num">105,300,000</td><td></td><td></td><td></td><td class="c-num">6.5%</td><td>㈜쿠콘</td></tr>
+            <tr class="r-total"><th class="row-head">6</th><td>합계 (투자자산)</td><td class="c-num">1,628,400,000</td><td></td><td></td><td></td><td class="c-num">100.0%</td><td></td></tr>
+            <tr><th class="row-head">7</th><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td></tr>
+            <tr><th class="row-head">8</th><td class="c-note" colspan="7">※ 합계(투자자산) = 투자실행액 + 순현금. W금융일수·S입금부족율·Ty수익율은 투자실행액에만 산정.</td></tr>
+            <tr><th class="row-head">9</th><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td></tr>
+            <tr><th class="row-head">10</th><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td><td class="c-empty"></td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
+    <p class="sheet-caption">화면의 표를 그대로 엑셀 양식으로 내려받은 결과. 서식·열 순서는 화면과 동일.</p>
 
   </main>
-
-  <!-- 하단 고정 액션 영역 -->
-  <div class="action-bar">
-    <span class="sel-count">선택 <b class="mono">0</b>건</span>
-    <button class="btn btn-primary" style="padding:12px 40px; font-size:16px; border-radius:12px" disabled>서명하기</button>
-  </div>
 
 </div>
 </body>

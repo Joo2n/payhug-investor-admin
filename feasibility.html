@@ -1,0 +1,1143 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PayHug 투자자 어드민 — 구현 가능성 판정</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237FE141'/%3E%3Cpath d='M9 21V11h5.2a3.4 3.4 0 0 1 0 6.8H12V21H9Zm3-5.9h2a1.3 1.3 0 0 0 0-2.6h-2v2.6Zm7 5.9V11h2.9v10H19Z' fill='%23163300'/%3E%3C/svg%3E">
+<style>
+  /* feasibility.html 전용 — 색상은 base.css 변수만 사용 */
+  body { background: var(--gray-50); overflow-x: hidden; }
+  /* 좁은 폭에서 긴 코드 토큰이 줄바꿈되지 않아 가로로 삐져나오는 것을 막는다 */
+  code { overflow-wrap: anywhere; word-break: break-word; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 48px 32px 96px; }
+
+  /* 헤더 */
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+    font-size: 12px; line-height: 16px; color: var(--gray-400); margin-bottom: 20px;
+  }
+  .back-link:hover { color: var(--primary-600); }
+  .hero { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .hero .logo-mark { display: block; width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; }
+  .hero h1 { font-size: 26px; line-height: 34px; font-weight: 700; color: var(--gray-900); margin: 0; }
+  .hero h1 em { font-style: normal; color: var(--primary-600); }
+  .hero .sub { font-size: 14px; line-height: 20px; color: var(--secondary); margin: 4px 0 0; }
+  .hero-date {
+    margin-left: auto; align-self: flex-start;
+    font-size: 12px; line-height: 16px; color: var(--gray-400);
+    font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+    background: #fff; border: 1px solid var(--gray-200); border-radius: 6px; padding: 4px 10px;
+  }
+
+  /* 결론 배너 */
+  .verdict {
+    margin-top: 26px; background: #fff; border: 1px solid var(--gray-100);
+    border-radius: 18px; box-shadow: var(--shadow-card); overflow: hidden;
+  }
+  .verdict-top { padding: 26px 28px 22px; border-left: 5px solid var(--primary-400); }
+  .verdict-top .lead { font-size: 21px; line-height: 30px; font-weight: 700; color: var(--gray-900); margin: 0; }
+  .verdict-top .lead b { color: var(--primary-700); }
+  .verdict-top .lead .weak { color: var(--amber-700); }
+  .verdict-top p.note { font-size: 13px; line-height: 21px; color: var(--gray-600); margin: 12px 0 0; }
+  .verdict-grid { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--gray-100); }
+  .verdict-grid > div { padding: 18px 28px; }
+  .verdict-grid > div + div { border-left: 1px solid var(--gray-100); }
+  .vg-label { font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: 0.06em; color: var(--gray-400); }
+  .vg-val { font-size: 24px; line-height: 32px; font-weight: 700; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .vg-val .u { font-size: 12px; font-weight: 400; color: var(--gray-400); margin-left: 3px; }
+  .vg-desc { font-size: 12px; line-height: 18px; color: var(--gray-500); margin-top: 4px; }
+  .vg-e .vg-val { color: var(--red-700); }
+  .vg-d .vg-val { color: var(--violet-700); }
+
+  /* 고지 밴드 */
+  .disclaim {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--amber-50); border: 1px solid var(--amber-200); border-radius: 12px;
+    padding: 14px 18px; margin-top: 18px;
+    font-size: 13px; line-height: 20px; color: var(--amber-700);
+  }
+  .disclaim svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }
+  .disclaim ul { margin: 0; padding-left: 16px; }
+  .disclaim li + li { margin-top: 3px; }
+  .disclaim code { font-family: var(--font-mono); font-size: 12px; }
+
+  /* 섹션 */
+  .sec { margin-top: 52px; }
+  .sec-head { display: flex; align-items: baseline; gap: 10px; margin: 0 0 4px; flex-wrap: wrap; }
+  .sec-no {
+    font-family: var(--font-mono); font-size: 12px; line-height: 18px; font-weight: 700;
+    color: var(--primary-600); background: var(--primary-50);
+    border-radius: 6px; padding: 2px 8px; flex-shrink: 0;
+  }
+  .sec-head h2 { font-size: 20px; line-height: 28px; font-weight: 700; color: var(--gray-900); margin: 0; }
+  .sec-lead { font-size: 13px; line-height: 21px; color: var(--secondary); margin: 8px 0 16px; }
+  .sub-head { font-size: 14px; line-height: 20px; font-weight: 700; color: var(--gray-700); margin: 26px 0 10px; }
+  .sub-head .cnt { font-weight: 400; color: var(--gray-400); font-size: 12px; margin-left: 6px; }
+
+  .panel {
+    background: #fff; border: 1px solid var(--gray-100); border-radius: 16px;
+    box-shadow: var(--shadow-card); padding: 24px; margin-top: 16px;
+  }
+  .panel.tight { padding: 0; overflow: hidden; }
+
+  /* 표 공통 */
+  .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .dt { width: 100%; border-collapse: collapse; font-size: 13px; line-height: 19px; min-width: 900px; }
+  .dt thead { background: var(--gray-50); }
+  .dt th {
+    text-align: left; padding: 10px 14px; font-size: 11px; line-height: 16px; font-weight: 700;
+    color: var(--gray-500); letter-spacing: 0.02em; border-bottom: 1px solid var(--gray-200);
+    white-space: nowrap; position: sticky; top: 0; background: var(--gray-50); z-index: 1;
+  }
+  .dt td { padding: 11px 14px; color: var(--gray-700); border-bottom: 1px solid var(--gray-100); vertical-align: top; }
+  .dt tbody tr:last-child td { border-bottom: 0; }
+  .dt td.k { font-weight: 600; color: var(--gray-900); }
+  .dt td.c { text-align: center; white-space: nowrap; }
+  .dt td.no { font-family: var(--font-mono); font-size: 11px; color: var(--gray-300); text-align: right; white-space: nowrap; }
+  .dt code { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); background: var(--gray-50); border-radius: 3px; padding: 0 3px; }
+  .dt .muted { color: var(--gray-400); }
+  .dt tbody tr.hit-off { display: none; }
+
+  /* 등급 뱃지 */
+  .g { display: inline-block; padding: 2px 8px; border-radius: 5px; font-size: 11px; line-height: 16px; font-weight: 700; white-space: nowrap; }
+  .g-A { background: var(--emerald-100); color: var(--emerald-800); }
+  .g-B { background: var(--blue-100);    color: var(--blue-700); }
+  .g-C { background: var(--amber-100);   color: var(--amber-800); }
+  .g-D { background: var(--violet-100);  color: var(--violet-700); }
+  .g-E { background: var(--red-100);     color: var(--red-800); }
+  .g-U { background: var(--gray-200);    color: var(--gray-600); }
+  .g-N { background: var(--gray-100);    color: var(--gray-400); }
+
+  /* 조작 바 */
+  .toolbar {
+    position: sticky; top: 0; z-index: 20; margin-top: 26px;
+    background: rgba(255,255,255,0.94); backdrop-filter: blur(6px);
+    border: 1px solid var(--gray-200); border-radius: 14px;
+    padding: 12px 16px; box-shadow: var(--shadow-card);
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  .tb-search {
+    flex: 1 1 220px; min-width: 180px; border: 1px solid var(--gray-200); border-radius: 8px;
+    padding: 8px 12px; font-size: 13px; line-height: 20px; font-family: var(--font-sans);
+    color: var(--gray-900); background: #fff; outline: none;
+  }
+  .tb-search:focus { border-color: var(--primary-400); box-shadow: 0 0 0 3px var(--primary-50); }
+  .tb-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    border: 1px solid var(--gray-200); background: #fff; border-radius: 999px;
+    padding: 6px 12px; font-size: 12px; line-height: 16px; font-weight: 600; color: var(--gray-500);
+    cursor: pointer; font-family: var(--font-sans); transition: all .15s var(--ease-default);
+  }
+  .chip:hover { border-color: var(--gray-300); color: var(--gray-700); }
+  .chip[aria-pressed="true"] { background: var(--gray-900); border-color: var(--gray-900); color: #fff; }
+  .chip[aria-pressed="true"].c-A { background: var(--emerald-600); border-color: var(--emerald-600); }
+  .chip[aria-pressed="true"].c-B { background: var(--blue-700);    border-color: var(--blue-700); }
+  .chip[aria-pressed="true"].c-C { background: var(--amber-600);   border-color: var(--amber-600); }
+  .chip[aria-pressed="true"].c-D { background: var(--violet-700);  border-color: var(--violet-700); }
+  .chip[aria-pressed="true"].c-E { background: var(--red-600);     border-color: var(--red-600); }
+  .chip .n { font-weight: 400; opacity: .75; margin-left: 4px; font-variant-numeric: tabular-nums; }
+  .tb-count { font-size: 12px; line-height: 16px; color: var(--gray-400); font-variant-numeric: tabular-nums; white-space: nowrap; margin-left: auto; }
+  .tb-count b { color: var(--gray-700); font-weight: 700; }
+
+  /* 분포 막대 */
+  .bar-row { display: grid; grid-template-columns: 92px 1fr; gap: 14px; align-items: center; margin-bottom: 12px; }
+  .bar-row:last-child { margin-bottom: 0; }
+  .bar-name { font-size: 12px; line-height: 16px; font-weight: 600; color: var(--gray-700); text-align: right; }
+  .bar-name .bn-sub { display: block; font-size: 11px; font-weight: 400; color: var(--gray-400); }
+  .bar { display: flex; height: 26px; border-radius: 6px; overflow: hidden; background: var(--gray-100); }
+  .seg { display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; min-width: 0; }
+  .seg span { white-space: nowrap; overflow: hidden; }
+  .s-A { background: var(--emerald-600); }
+  .s-B { background: var(--blue-700); }
+  .s-C { background: var(--amber-500); }
+  .s-D { background: var(--violet-700); }
+  .s-E { background: var(--red-600); }
+  .s-U { background: var(--gray-400); }
+  .s-N { background: var(--gray-300); color: var(--gray-600); }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--gray-100); }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--gray-500); }
+  .legend-chip { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+  /* 병목 카드 */
+  .bn { border-radius: 16px; padding: 22px 24px; margin-top: 16px; }
+  .bn-1 { background: var(--amber-50); border: 1px solid var(--amber-200); }
+  .bn-2 { background: var(--violet-50); border: 1px solid var(--violet-200); }
+  .bn-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .bn-tag {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: .04em;
+    border-radius: 6px; padding: 3px 9px;
+  }
+  .bn-1 .bn-tag { background: var(--amber-200); color: var(--amber-800); }
+  .bn-2 .bn-tag { background: var(--violet-200); color: var(--violet-700); }
+  .bn-head h3 { font-size: 17px; line-height: 24px; font-weight: 700; color: var(--gray-900); margin: 0; }
+  .bn p { font-size: 13px; line-height: 21px; color: var(--gray-700); margin: 12px 0 0; }
+  .bn .analogy {
+    background: #fff; border-radius: 10px; padding: 13px 16px; margin-top: 14px;
+    font-size: 13px; line-height: 21px; color: var(--gray-700);
+  }
+  .bn .analogy b { color: var(--gray-900); }
+  .bn .analogy .lbl { display: block; font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--gray-400); margin-bottom: 5px; }
+  .bn .mini { width: 100%; border-collapse: collapse; font-size: 12.5px; line-height: 19px; margin-top: 14px; background: #fff; border-radius: 10px; overflow: hidden; min-width: 520px; }
+  .bn .mini th { text-align: left; padding: 9px 13px; font-size: 11px; font-weight: 700; color: var(--gray-500); background: var(--gray-50); white-space: nowrap; }
+  .bn .mini td { padding: 9px 13px; color: var(--gray-700); border-top: 1px solid var(--gray-100); vertical-align: top; }
+  .bn .mini td:first-child { font-weight: 600; color: var(--gray-900); white-space: nowrap; }
+  .bn .mini code { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+
+  /* 순서도 */
+  .flow-wrap { margin-top: 16px; background: #fff; border: 1px solid var(--gray-100); border-radius: 16px; box-shadow: var(--shadow-card); padding: 22px 10px; }
+  .flow-wrap svg { display: block; margin: 0 auto; }
+  .flow-inner { min-width: 900px; }
+
+  /* 순서 리스트 */
+  .steps { counter-reset: st; list-style: none; margin: 16px 0 0; padding: 0; }
+  .steps li {
+    counter-increment: st; position: relative; padding: 14px 18px 14px 56px;
+    background: #fff; border: 1px solid var(--gray-100); border-radius: 12px; margin-bottom: 10px;
+    box-shadow: var(--shadow-card);
+  }
+  .steps li::before {
+    content: counter(st); position: absolute; left: 18px; top: 14px;
+    width: 24px; height: 24px; border-radius: 8px;
+    background: var(--primary-50); color: var(--primary-700);
+    font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .steps .st-t { font-size: 14px; line-height: 21px; font-weight: 700; color: var(--gray-900); }
+  .steps .st-d { font-size: 12.5px; line-height: 20px; color: var(--gray-500); margin-top: 4px; }
+  .steps .st-d code { font-family: var(--font-mono); font-size: 11px; color: var(--gray-400); }
+  .steps li.now { border-color: var(--primary-300); background: var(--primary-50); }
+  .steps li.now::before { background: var(--primary-400); color: var(--navy); }
+
+  /* E등급 카드 */
+  .ecard { background: #fff; border: 1px solid var(--red-200); border-radius: 16px; box-shadow: var(--shadow-card); margin-top: 16px; overflow: hidden; }
+  .ecard-head { display: flex; align-items: center; gap: 10px; padding: 16px 22px; background: var(--red-50); border-bottom: 1px solid var(--red-100); flex-wrap: wrap; }
+  .ecard-head .eid { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: #fff; background: var(--red-600); border-radius: 6px; padding: 3px 9px; }
+  .ecard-head h4 { font-size: 15px; line-height: 22px; font-weight: 700; color: var(--gray-900); margin: 0; }
+  .ecard dl { margin: 0; padding: 4px 22px 18px; }
+  .ecard dt { font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: .05em; color: var(--gray-400); margin-top: 14px; }
+  .ecard dd { margin: 4px 0 0; font-size: 13px; line-height: 21px; color: var(--gray-700); }
+  .ecard dd code { font-family: var(--font-mono); font-size: 11.5px; color: var(--gray-500); background: var(--gray-50); border-radius: 3px; padding: 0 3px; }
+  .ecard dd b { color: var(--gray-900); }
+
+  /* 개발 문의 */
+  .q-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+  .btn-copy {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--gray-900); color: #fff; border: 0; border-radius: 9px;
+    padding: 10px 16px; font-size: 13px; line-height: 18px; font-weight: 600;
+    font-family: var(--font-sans); cursor: pointer; transition: background .15s var(--ease-default);
+  }
+  .btn-copy:hover { background: var(--gray-700); }
+  .btn-copy svg { width: 14px; height: 14px; }
+  .btn-copy.ok { background: var(--emerald-600); }
+  .q-hint { font-size: 12px; line-height: 18px; color: var(--gray-400); }
+  .qgrp { margin-top: 20px; }
+  .qgrp > h4 {
+    font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .06em;
+    color: var(--gray-400); margin: 0 0 8px; display: flex; align-items: center; gap: 10px;
+  }
+  .qgrp > h4::after { content: ""; flex: 1; height: 1px; background: var(--gray-200); }
+  .qlist { list-style: none; margin: 0; padding: 0; }
+  .qlist li { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--gray-100); min-width: 0; }
+  .qlist li:last-child { border-bottom: 0; }
+  .qlist .qid {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--primary-700);
+    background: var(--primary-50); border-radius: 5px; padding: 2px 7px; height: fit-content; flex-shrink: 0;
+  }
+  .qlist .qtx { font-size: 13px; line-height: 21px; color: var(--gray-700); min-width: 0; flex: 1; overflow-wrap: anywhere; word-break: break-word; }
+  .qlist .qtx code { font-family: var(--font-mono); font-size: 11.5px; color: var(--gray-500); background: var(--gray-50); border-radius: 3px; padding: 0 3px; }
+
+  /* 각주 */
+  .foot { margin-top: 20px; font-size: 12.5px; line-height: 21px; color: var(--gray-500); }
+  .foot ul { margin: 8px 0 0; padding-left: 18px; }
+  .foot li + li { margin-top: 4px; }
+  .foot b { color: var(--gray-700); }
+  .note-band {
+    margin-top: 14px; background: var(--gray-100); border-radius: 12px; padding: 14px 18px;
+    font-size: 12.5px; line-height: 20px; color: var(--gray-600);
+  }
+  .note-band b { color: var(--gray-800); }
+
+  .empty-msg { display: none; padding: 24px; text-align: center; font-size: 13px; color: var(--gray-400); }
+  .empty-msg.on { display: block; }
+
+  .ecard dd, .steps .st-d, .bn p, .bn .analogy, .foot li, .note-band, .sec-lead { overflow-wrap: anywhere; }
+
+  @media (max-width: 860px) {
+    .wrap { padding: 32px 18px 72px; }
+    .verdict-grid { grid-template-columns: 1fr; }
+    .verdict-grid > div + div { border-left: 0; border-top: 1px solid var(--gray-100); }
+    .hero-date { margin-left: 0; }
+    .bar-row { grid-template-columns: 72px 1fr; gap: 10px; }
+    .toolbar { position: static; }
+    .tb-count { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back-link" href="index.html">
+    <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M7.5 2.5 4 6l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    화면 설계(안) 랜딩
+  </a>
+
+  <div class="hero">
+    <img class="logo-mark" src="assets/logo-icon.png" alt="">
+    <div>
+      <h1>투자자 어드민 <em>구현 가능성 판정</em></h1>
+      <p class="sub">용어 50 · 화면 14 · 상태 19 · 기능 35 · 산출물 6 — 총 124건을 A~E 5등급으로 판정</p>
+    </div>
+    <div class="hero-date">2026-08-27</div>
+  </div>
+
+  <!-- ── 결론 ── -->
+  <div class="verdict">
+    <div class="verdict-top">
+      <p class="lead"><b>못 만드는 것은 없다.</b> 다만 <span class="weak">지금 당장 만들 수 있는 것도 거의 없다.</span></p>
+      <p class="note">
+        기술적으로 불가능하다고 판정된 항목은 <b>0건</b>. 재료는 대부분 페이허그 안에 이미 있다 — 특히 매출 원장에 정산금채권 축의 재료 8종이 전부 실재한다.
+        막고 있는 것은 기술이 아니라 <b>정의 회신 3건</b>과 <b>외부 계약 2건</b>이다.
+      </p>
+    </div>
+    <div class="verdict-grid">
+      <div class="vg-e">
+        <div class="vg-label">정의가 없어 착수를 못 함</div>
+        <div class="vg-val">3<span class="u">건 · E등급</span></div>
+        <div class="vg-desc">채권매입수수료 정의 · 미지급금/과지급금 정의 · ⑥ 지표의 ③. 대표 회신이 있어야 열린다. 개발 문제가 아니다.</div>
+      </div>
+      <div class="vg-d">
+        <div class="vg-label">외부에 의존</div>
+        <div class="vg-val">11<span class="u">건 · D등급</span></div>
+        <div class="vg-desc">쿠콘 투자자별 가상계좌 · 전자서명 인증서 벤더. 계약·발급이 선행이라 리드타임이 길다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaim">
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 6v3.5M8 11.5h.01M8 1.5 1.5 13.5h13L8 1.5Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <ul>
+      <li><b>백엔드를 보지 못했다.</b> 확인한 것은 프론트 레포 2개(<code>payhug-admin-web</code>·<code>payhug-merchant-web</code>)뿐이다. 판정 근거는 "화면이 받아 쓰는 필드가 무엇인가"이고, 그 필드 뒤에 무엇이 있는지는 개발 회신으로만 닫힌다.</li>
+      <li><b>공수·기간은 추정하지 않았다.</b> 이 문서는 "얼마나 걸리나"가 아니라 "재료가 있나 없나"만 답한다.</li>
+      <li>C1(수수료율)·C2(지급 캘린더)·C4(예상 지급 차액) 미확정 유지. 6대 개념 병합 0건. 조사는 읽기뿐이고 변경·커밋 0건.</li>
+    </ul>
+  </div>
+
+  <!-- ── 1. 병목 ── -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">1</span><h2>알려진 병목 2건</h2></div>
+    <p class="sec-lead">이 둘이 나머지 대부분을 붙잡고 있다. 먼저 읽어야 할 것.</p>
+
+    <div class="bn bn-1">
+      <div class="bn-head">
+        <span class="bn-tag">병목 ①</span>
+        <h3>정산금채권 단위가 없다</h3>
+        <span class="g g-C" style="margin-left:auto">C 데이터 구조 추가 필요</span>
+      </div>
+      <p>대표 정의의 <b>모든 산식</b>이 <code>정산금채권 ID = 가맹점ID &amp; 플랫폼ID &amp; 매출일자</code> 단위로 서 있다. 그런데 현행 시스템에는 그 단위가 없다. 정산 묶음은 <code>가맹점 × 매출일</code>까지다(<code>types/settlement.ts:33-45</code> <code>Batch</code> — 필드 12개 전수 확인, 플랫폼 관련 필드 0개).</p>
+      <div class="analogy">
+        <span class="lbl">비유하면</span>
+        지금은 <b>"8월 24일 김밥나라 정산 한 봉투"</b>에 카드 건과 배달 건이 섞여 들어가 통째로 이체된다. 대표 정의는 그 봉투를 <b>"김밥나라 × 하나카드 × 8월 24일"</b>, <b>"김밥나라 × 배달의민족 × 8월 24일"</b>처럼 플랫폼별로 갈라 놓기를 요구한다. 봉투를 가르지 않으면 채권 1건마다 금융일수를 세거나 입금이 얼마 부족했는지를 따질 자리가 없다.
+      </div>
+      <p><b>다만 "재료가 없다"는 뜻은 아니다.</b> 봉투 안의 낱장 영수증(거래 원장 <code>LedgerItem</code>, <code>hooks/usePurchaseLedger.ts:40-79</code>)에는 가를 근거가 전부 붙어 있다.</p>
+      <div class="scroll">
+      <table class="mini">
+        <thead><tr><th>채권 축이 필요로 하는 것</th><th>원장의 필드</th><th>줄</th></tr></thead>
+        <tbody>
+          <tr><td>가맹점ID</td><td><code>bizNo</code></td><td><code>:41</code></td></tr>
+          <tr><td>플랫폼ID</td><td><code>salesSource</code>(CARD/BM/YO/CPE) + <code>cardCorp</code>(카드사명)</td><td><code>:42</code> · <code>:63</code></td></tr>
+          <tr><td>매출일자</td><td><code>transactionDt</code></td><td><code>:47</code></td></tr>
+          <tr><td>정산예정일</td><td><code>payoutDt</code></td><td><code>:51</code></td></tr>
+          <tr><td>순지급액</td><td><code>netPayoutAmt</code></td><td><code>:55</code></td></tr>
+          <tr><td>채권매입수수료</td><td><code>marginFee</code></td><td><code>:66</code></td></tr>
+          <tr><td>투자자 요율</td><td><code>feeBreakdown.investorRate</code></td><td><code>:20</code></td></tr>
+          <tr><td>선정산 대상 여부</td><td><code>isPreSettlementTarget</code></td><td><code>:65</code></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>즉 <b><code>GROUP BY (bizNo, salesSource·cardCorp, transactionDt)</code> 하면 정산금채권이 그대로 나온다.</b> 없는 것은 재료가 아니라 <b>그 축으로 묶어 적재하는 자리</b>와 <b>투자자 단위로 횡단 조회하는 경로</b>다. 현행 조회 API는 <code>bizNo</code>가 필수인 단건 조회다(<code>hooks/usePurchaseLedger.ts:214-227</code>). 그래서 E가 아니라 <b>C</b>다.</p>
+    </div>
+
+    <div class="bn bn-2">
+      <div class="bn-head">
+        <span class="bn-tag">병목 ②</span>
+        <h3>투자자별 쿠콘 가상계좌가 0건</h3>
+        <span class="g g-D" style="margin-left:auto">D 외부 의존</span>
+      </div>
+      <p>대표 정의의 <code>순현금 = 유동화투자자에게 할당된 쿠콘제공 가상계좌의 현금잔액</code>.</p>
+      <div class="scroll">
+      <table class="mini">
+        <thead><tr><th>항목</th><th>실측</th></tr></thead>
+        <tbody>
+          <tr><td><code>가상계좌</code>·<code>virtual</code> 문자열</td><td><b>0건</b> — <code>app</code>·<code>components</code>·<code>lib</code>·<code>hooks</code>·<code>services</code>·<code>types</code> 전수</td></tr>
+          <tr><td>쿠콘 연동</td><td><b>실재</b> — <code>services/cooconService.ts</code> 엔드포인트 4종</td></tr>
+          <tr><td>잔액 조회</td><td><code>POST /coocon/deposit-pg/balance</code>(<code>:16</code>) — <b>모 계좌 1개뿐.</b> 계좌 선택 셀렉터 없음</td></tr>
+          <tr><td>두 번째 잔액 경로</td><td>가맹점 락계좌 스냅샷 — 하나은행 빠른조회, 하루 2회 배치. <b>가맹점 명의 계좌이지 투자자 계좌가 아님</b></td></tr>
+          <tr><td>투자자와 계좌를 잇는 필드</td><td><b>0건</b></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="analogy">
+        <span class="lbl">비유하면</span>
+        은행 연결선은 깔려 있는데, 그 선 끝에 달린 통장이 <b>페이허그 이름으로 된 큰 통장 하나뿐</b>이다. 투자자 이름으로 된 통장이 없으니 "이 투자자 통장에 지금 얼마 있나"를 물을 대상 자체가 없다.
+      </div>
+      <p>투자자 화면의 <code>가상계좌</code>(<code>coocon.html:135</code>·<code>:139</code>)는 <b>쿠콘 외부 사이트의 메뉴 이름</b>이지 페이허그가 만든 개념이 아니다. 쿠콘이 투자자 단위 가상계좌·잔액조회 상품을 제공하는지부터 확인해야 하고(<b>D-13</b>), 제공한다 해도 계좌 개설·자정 스냅샷 배치가 뒤따른다.</p>
+      <p><b>이 하나가 막는 것 — 11건.</b> 순현금 · 쿠콘 가상계좌 · EC · PSC · 비중 · 투자자산 · ⑤ 투자자산 대비 ty수익율 · 투자 자산 화면 현황표 2행 · 엑셀 <code>xls-assets-status</code>.</p>
+    </div>
+  </section>
+
+  <!-- ── 2. 순서도 ── -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">2</span><h2>막고 있는 것 순서도</h2></div>
+    <p class="sec-lead">위가 없으면 아래가 못 선다. 오른쪽 옆줄은 이 흐름과 무관해서 오늘 착수할 수 있다.</p>
+
+    <div class="flow-wrap">
+      <div class="scroll">
+      <div class="flow-inner">
+      <svg viewBox="0 0 940 690" width="940" height="690" role="img" aria-label="투자자 어드민 개발 선행관계 순서도">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#99a1af"/>
+          </marker>
+          <marker id="arR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#e7000b"/>
+          </marker>
+        </defs>
+
+        <!-- 0층 E -->
+        <rect x="16" y="14" width="660" height="104" rx="14" fill="#fef2f2" stroke="#fecaca"/>
+        <text x="32" y="38" font-family="ui-monospace,Menlo,monospace" font-size="11" font-weight="700" fill="#c10007">0층 · 대표 회신 없이는 시작 못 함</text>
+        <g font-family="'Noto Sans KR',sans-serif">
+          <rect x="32" y="50" width="196" height="52" rx="9" fill="#fff" stroke="#e7000b" stroke-width="1.5"/>
+          <text x="44" y="70" font-size="11" font-weight="700" fill="#e7000b">E-1</text>
+          <text x="74" y="70" font-size="12.5" font-weight="700" fill="#101828">채권매입수수료 정의</text>
+          <text x="44" y="88" font-size="11" fill="#6a7282">기준금액·요율이 없다</text>
+
+          <rect x="240" y="50" width="196" height="52" rx="9" fill="#fff" stroke="#e7000b" stroke-width="1.5"/>
+          <text x="252" y="70" font-size="11" font-weight="700" fill="#e7000b">E-2</text>
+          <text x="282" y="70" font-size="12.5" font-weight="700" fill="#101828">미지급금·과지급금</text>
+          <text x="252" y="88" font-size="11" fill="#6a7282">정의문 자체가 없다</text>
+
+          <rect x="448" y="50" width="212" height="52" rx="9" fill="#fff" stroke="#e7000b" stroke-width="1.5"/>
+          <text x="460" y="70" font-size="11" font-weight="700" fill="#e7000b">E-3</text>
+          <text x="490" y="70" font-size="12.5" font-weight="700" fill="#101828">⑥ 지표의 ③이 무엇인가</text>
+          <text x="460" y="88" font-size="11" fill="#6a7282">이 한 칸만 막는다</text>
+        </g>
+        <!-- E 화살표 -->
+        <path d="M130 102 L130 150" stroke="#e7000b" stroke-width="1.4" fill="none" marker-end="url(#arR)" stroke-dasharray="4 3"/>
+        <text x="138" y="130" font-family="'Noto Sans KR',sans-serif" font-size="10.5" fill="#c10007">SM · PSM · ④ · ⑤</text>
+        <path d="M338 102 L338 150" stroke="#e7000b" stroke-width="1.4" fill="none" marker-end="url(#arR)" stroke-dasharray="4 3"/>
+        <text x="346" y="130" font-family="'Noto Sans KR',sans-serif" font-size="10.5" fill="#c10007">SB · SLi · S입금부족율</text>
+
+        <!-- 1층 -->
+        <rect x="16" y="156" width="660" height="150" rx="14" fill="#fffbeb" stroke="#fee685"/>
+        <text x="32" y="180" font-family="ui-monospace,Menlo,monospace" font-size="11" font-weight="700" fill="#bb4d00">1층 · 원천·구조 — 여기가 없으면 위층 전부 못 섬</text>
+        <g font-family="'Noto Sans KR',sans-serif">
+          <rect x="32" y="192" width="240" height="46" rx="9" fill="#fff" stroke="#e17100" stroke-width="2"/>
+          <text x="44" y="211" font-size="11" font-weight="700" fill="#bb4d00">N-1 · C</text>
+          <text x="98" y="211" font-size="12.5" font-weight="700" fill="#101828">정산금채권 객체</text>
+          <text x="44" y="228" font-size="10.5" fill="#6a7282">최대 병목. 재료는 원장에 다 있음</text>
+
+          <rect x="32" y="248" width="152" height="44" rx="9" fill="#fff" stroke="#fee685"/>
+          <text x="44" y="266" font-size="11" font-weight="700" fill="#bb4d00">N-2 · C</text>
+          <text x="44" y="282" font-size="11.5" fill="#101828">채권 단위 입금 대사</text>
+
+          <rect x="194" y="248" width="152" height="44" rx="9" fill="#fff" stroke="#fee685"/>
+          <text x="206" y="266" font-size="11" font-weight="700" fill="#bb4d00">N-4 · C</text>
+          <text x="206" y="282" font-size="11.5" fill="#101828">재양도합의서·효력기간</text>
+
+          <rect x="356" y="248" width="152" height="44" rx="9" fill="#fff" stroke="#fee685"/>
+          <text x="368" y="266" font-size="11" font-weight="700" fill="#bb4d00">N-6 · C</text>
+          <text x="368" y="282" font-size="11.5" fill="#101828">채권 단위 금융일수</text>
+
+          <rect x="518" y="192" width="142" height="100" rx="9" fill="#f5f3ff" stroke="#ddd6ff" stroke-width="2"/>
+          <text x="530" y="212" font-size="11" font-weight="700" fill="#7008e7">N-3 · D</text>
+          <text x="530" y="230" font-size="11.5" font-weight="700" fill="#101828">투자자별</text>
+          <text x="530" y="246" font-size="11.5" font-weight="700" fill="#101828">쿠콘 가상계좌</text>
+          <text x="530" y="266" font-size="10.5" fill="#6a7282">외부. 위 셋과</text>
+          <text x="530" y="280" font-size="10.5" fill="#6a7282">병렬로 진행</text>
+        </g>
+        <path d="M60 238 L60 248" stroke="#99a1af" stroke-width="1.3" marker-end="url(#ar)"/>
+        <path d="M152 238 L152 244 L222 244 L222 248" stroke="#99a1af" stroke-width="1.3" fill="none" marker-end="url(#ar)"/>
+        <path d="M244 238 L244 244 L384 244 L384 248" stroke="#99a1af" stroke-width="1.3" fill="none" marker-end="url(#ar)"/>
+        <path d="M338 306 L338 336" stroke="#99a1af" stroke-width="1.4" marker-end="url(#ar)"/>
+
+        <!-- 2층 -->
+        <rect x="16" y="342" width="660" height="66" rx="14" fill="#f9fafb" stroke="#e5e7eb"/>
+        <g font-family="'Noto Sans KR',sans-serif">
+          <text x="32" y="366" font-family="ui-monospace,Menlo,monospace" font-size="11" font-weight="700" fill="#6a7282">2층 · 배치</text>
+          <text x="120" y="366" font-size="11" fill="#99a1af">N-1 · N-2 · N-3 가 다 있어야 돎</text>
+          <rect x="32" y="374" width="628" height="24" rx="7" fill="#fff" stroke="#e5e7eb"/>
+          <text x="44" y="390" font-size="11" font-weight="700" fill="#bb4d00">N-5 · C</text>
+          <text x="98" y="390" font-size="12" font-weight="700" fill="#101828">자정 마감 배치</text>
+          <text x="196" y="390" font-size="11" fill="#6a7282">SB · SA · SM · SMR · SD · EC 산출·저장</text>
+        </g>
+        <path d="M338 408 L338 434" stroke="#99a1af" stroke-width="1.4" marker-end="url(#ar)"/>
+
+        <!-- 3층 -->
+        <rect x="16" y="440" width="660" height="52" rx="14" fill="#f9fafb" stroke="#e5e7eb"/>
+        <g font-family="'Noto Sans KR',sans-serif">
+          <text x="32" y="462" font-family="ui-monospace,Menlo,monospace" font-size="11" font-weight="700" fill="#6a7282">3층 · 기간 집계</text>
+          <rect x="150" y="450" width="510" height="26" rx="7" fill="#fff" stroke="#dbeafe"/>
+          <text x="162" y="467" font-size="11" font-weight="700" fill="#1447e6">N-7 · B</text>
+          <text x="216" y="467" font-size="12" font-weight="700" fill="#101828">기간 집계</text>
+          <text x="286" y="467" font-size="11" fill="#6a7282">PSA · PSM · PSMR · PSD · PSC</text>
+        </g>
+        <path d="M338 492 L338 518" stroke="#99a1af" stroke-width="1.4" marker-end="url(#ar)"/>
+
+        <!-- 4층 -->
+        <rect x="16" y="524" width="660" height="62" rx="14" fill="#f9fafb" stroke="#e5e7eb"/>
+        <g font-family="'Noto Sans KR',sans-serif">
+          <text x="32" y="546" font-family="ui-monospace,Menlo,monospace" font-size="11" font-weight="700" fill="#6a7282">4층 · 지표 — 나눗셈만 남음</text>
+          <rect x="32" y="552" width="200" height="26" rx="7" fill="#fff" stroke="#dbeafe"/>
+          <text x="44" y="569" font-size="11" font-weight="700" fill="#1447e6">N-8 · B</text>
+          <text x="98" y="569" font-size="11.5" fill="#101828">w금융일수</text>
+          <rect x="244" y="552" width="200" height="26" rx="7" fill="#fff" stroke="#dbeafe"/>
+          <text x="256" y="569" font-size="11" font-weight="700" fill="#1447e6">N-9 · B</text>
+          <text x="310" y="569" font-size="11.5" fill="#101828">S입금부족율</text>
+          <rect x="456" y="552" width="204" height="26" rx="7" fill="#fff" stroke="#dbeafe"/>
+          <text x="468" y="569" font-size="11" font-weight="700" fill="#1447e6">N-10 · B</text>
+          <text x="528" y="569" font-size="11.5" fill="#101828">ty수익율 ④⑤</text>
+        </g>
+        <path d="M338 586 L338 610" stroke="#99a1af" stroke-width="1.4" marker-end="url(#ar)"/>
+
+        <!-- 5층 -->
+        <rect x="16" y="616" width="660" height="56" rx="14" fill="#f5f3ff" stroke="#ddd6ff"/>
+        <g font-family="'Noto Sans KR',sans-serif">
+          <text x="32" y="638" font-family="ui-monospace,Menlo,monospace" font-size="11" font-weight="700" fill="#7008e7">5층 · 산출물</text>
+          <rect x="150" y="628" width="510" height="26" rx="7" fill="#fff" stroke="#ddd6ff"/>
+          <text x="162" y="645" font-size="11" font-weight="700" fill="#7008e7">N-12 · D</text>
+          <text x="222" y="645" font-size="12" font-weight="700" fill="#101828">투자자산 증명서</text>
+          <text x="330" y="645" font-size="11" fill="#6a7282">전자서명 벤더 선정이 별도 선행</text>
+        </g>
+
+        <!-- 옆줄 -->
+        <rect x="696" y="156" width="228" height="230" rx="14" fill="#f4fdf0" stroke="#cef4a7"/>
+        <text x="712" y="180" font-family="ui-monospace,Menlo,monospace" font-size="11" font-weight="700" fill="#3a7a15">옆줄 · 오늘 착수 가능</text>
+        <text x="712" y="196" font-family="'Noto Sans KR',sans-serif" font-size="10.5" fill="#4a5565">위 흐름과 선행 관계 없음</text>
+        <g font-family="'Noto Sans KR',sans-serif">
+          <rect x="712" y="210" width="196" height="46" rx="9" fill="#fff" stroke="#b0eb75" stroke-width="2"/>
+          <text x="724" y="229" font-size="11" font-weight="700" fill="#3a7a15">N-11 · C</text>
+          <text x="724" y="246" font-size="11.5" font-weight="700" fill="#101828">투자자 조회 스코프</text>
+
+          <rect x="712" y="264" width="196" height="38" rx="9" fill="#fff" stroke="#cef4a7"/>
+          <text x="724" y="281" font-size="11" font-weight="700" fill="#009966">A</text>
+          <text x="748" y="281" font-size="11.5" fill="#101828">라벨 정정 3건</text>
+          <text x="724" y="295" font-size="10.5" fill="#6a7282">입금일자 → 정산예정일 등</text>
+
+          <rect x="712" y="310" width="196" height="60" rx="9" fill="#fff" stroke="#cef4a7"/>
+          <text x="724" y="328" font-size="11" font-weight="700" fill="#009966">A</text>
+          <text x="748" y="328" font-size="11.5" fill="#101828">이미 돌아가는 부품</text>
+          <text x="724" y="344" font-size="10.5" fill="#6a7282">로그인 · 로그아웃</text>
+          <text x="724" y="358" font-size="10.5" fill="#6a7282">날짜필터 · 엑셀 생성</text>
+        </g>
+      </svg>
+      </div>
+      </div>
+    </div>
+
+    <div class="sub-head">그래서 뭐부터 하나</div>
+    <ol class="steps">
+      <li class="now">
+        <div class="st-t">대표께 E-1 · E-2 · E-3 회신을 받는다</div>
+        <div class="st-d">개발이 아무것도 못 하는 3건이다. 회신이 늦을수록 2층이 통째로 밀린다.</div>
+      </li>
+      <li class="now">
+        <div class="st-t">동시에 N-11 투자자 조회 스코프를 착수한다</div>
+        <div class="st-d">선행이 0건이다. 지금 투자자 계정은 이미 어드민에 로그인해 가맹점 단위 선정산 결과를 본다(<code>app/settlement/overview/page.tsx:282·314·326</code>). 신규 화면과 무관하게 먼저 막아야 할 구멍이다.</div>
+      </li>
+      <li class="now">
+        <div class="st-t">동시에 쿠콘에 가상계좌 가능 여부를 묻는다</div>
+        <div class="st-d">외부 답이라 리드타임이 길다. 안 되면 순현금 계열 11건의 설계를 통째로 바꿔야 한다.</div>
+      </li>
+      <li>
+        <div class="st-t">N-1 정산금채권 객체를 설계한다</div>
+        <div class="st-d">축(<code>가맹점ID × 플랫폼ID × 매출일자</code>)은 이미 확정돼 있어 회신을 기다릴 필요가 없다. 다만 플랫폼ID 체계 4종 중 무엇을 쓸지(<b>D-09</b>)는 먼저 정해야 한다.</div>
+      </li>
+      <li>
+        <div class="st-t">회신이 오면 N-2 → N-5 → N-7 → 지표를 순서대로</div>
+        <div class="st-d">이 줄은 앞이 없으면 뒤가 못 선다.</div>
+      </li>
+      <li>
+        <div class="st-t">전자서명 벤더를 병렬로 정한다</div>
+        <div class="st-d">증명서 발급과 계약 서명 두 화면이 여기 걸린다.</div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ── 3. 분포 ── -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">3</span><h2>등급 분포 한눈표</h2></div>
+    <p class="sec-lead">A+B 73건(59%)은 페이허그 안의 재료로 선다. C 35건은 저장 구조가 먼저고, D 11건은 밖에서 답이 와야 하며, E 3건은 정의가 와야 한다.</p>
+
+    <div class="panel">
+      <div class="bar-row">
+        <div class="bar-name">전체<span class="bn-sub">124건</span></div>
+        <div class="bar">
+          <div class="seg s-A" style="width:30.6%"><span>A 38</span></div>
+          <div class="seg s-B" style="width:28.2%"><span>B 35</span></div>
+          <div class="seg s-C" style="width:28.2%"><span>C 35</span></div>
+          <div class="seg s-D" style="width:8.9%"><span>D 11</span></div>
+          <div class="seg s-E" style="width:2.4%"><span>E 3</span></div>
+          <div class="seg s-U" style="width:0.8%"><span></span></div>
+          <div class="seg s-N" style="width:0.8%"><span></span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-name">용어<span class="bn-sub">50건</span></div>
+        <div class="bar">
+          <div class="seg s-A" style="width:18%"><span>9</span></div>
+          <div class="seg s-B" style="width:46%"><span>B 23</span></div>
+          <div class="seg s-C" style="width:20%"><span>10</span></div>
+          <div class="seg s-D" style="width:8%"><span>4</span></div>
+          <div class="seg s-E" style="width:6%"><span>3</span></div>
+          <div class="seg s-U" style="width:2%"><span></span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-name">화면<span class="bn-sub">14건</span></div>
+        <div class="bar">
+          <div class="seg s-A" style="width:14.3%"><span>2</span></div>
+          <div class="seg s-B" style="width:7.1%"><span>1</span></div>
+          <div class="seg s-C" style="width:64.3%"><span>C 9</span></div>
+          <div class="seg s-D" style="width:7.1%"><span>1</span></div>
+          <div class="seg s-N" style="width:7.2%"><span></span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-name">상태<span class="bn-sub">19건</span></div>
+        <div class="bar">
+          <div class="seg s-A" style="width:63.2%"><span>A 12</span></div>
+          <div class="seg s-B" style="width:10.5%"><span>2</span></div>
+          <div class="seg s-C" style="width:21%"><span>4</span></div>
+          <div class="seg s-D" style="width:5.3%"><span>1</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-name">기능<span class="bn-sub">35건</span></div>
+        <div class="bar">
+          <div class="seg s-A" style="width:42.9%"><span>A 15</span></div>
+          <div class="seg s-B" style="width:25.7%"><span>B 9</span></div>
+          <div class="seg s-C" style="width:20%"><span>7</span></div>
+          <div class="seg s-D" style="width:11.4%"><span>4</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-name">산출물<span class="bn-sub">6건</span></div>
+        <div class="bar">
+          <div class="seg s-C" style="width:83.3%"><span>C 5</span></div>
+          <div class="seg s-D" style="width:16.7%"><span>1</span></div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><span class="legend-chip" style="background:var(--emerald-600)"></span>A 바로 됨 — 값도 화면도 이미 있음 · 38</div>
+        <div class="legend-item"><span class="legend-chip" style="background:var(--blue-700)"></span>B 계산만 추가 — 재료가 다 있고 식만 새로 · 35</div>
+        <div class="legend-item"><span class="legend-chip" style="background:var(--amber-500)"></span>C 데이터 구조 추가 — 저장 자리·조회 경로부터 · 35</div>
+        <div class="legend-item"><span class="legend-chip" style="background:var(--violet-700)"></span>D 외부 의존 — 쿠콘·전자서명 · 11</div>
+        <div class="legend-item"><span class="legend-chip" style="background:var(--red-600)"></span>E 착수 불가 — 선결이 안 풀림 · 3</div>
+        <div class="legend-item"><span class="legend-chip" style="background:var(--gray-400)"></span>확인불가 — 근거를 못 봄 · 1</div>
+        <div class="legend-item"><span class="legend-chip" style="background:var(--gray-300)"></span>해당없음 — 실서비스 아님 · 1</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 4. E등급 ── -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">4</span><h2>E등급 — 착수 불가 3건</h2></div>
+    <p class="sec-lead">이 셋은 개발 문제가 아니다. 무엇을 만들지가 안 정해져서 시작을 못 한다.</p>
+
+    <div class="ecard">
+      <div class="ecard-head"><span class="eid">E-1</span><h4>채권매입수수료의 기준금액·요율</h4><span class="g g-E" style="margin-left:auto">E 착수 불가</span></div>
+      <dl>
+        <dt>대상</dt>
+        <dd>대표 정의 <code>투자수익 Mi = 채권매입수수료 − max(0, 미지급금−과지급금)</code>의 첫 항</dd>
+        <dt>근거</dt>
+        <dd><code>ceo_definitions.md</code> 전문에 채권매입수수료의 정의문·기준금액·요율이 없다. 다른 용어(투자실행액 L10 · 순현금 L12 · 금융일수 L19 · 대상정산금채권 L16 · 표본집합 L22)에는 전부 정의문이 붙어 있다.</dd>
+        <dt>무엇이 없나</dt>
+        <dd>산식을 맞추면 <code>r = 할인율 ÷ (1 − 할인율) = 0.110121%</code>로 0.11%와 다른 값이 나온다. 재양도합의서 제8조는 <code>산정 기준: 정산금채권 양수액 / 요율: ____%</code> 공란(16건 전건).</dd>
+        <dt>무엇이 풀려야 하나</dt>
+        <dd>① 두 요율이 별개 값인가 ② 채권매입수수료의 기준금액이 양수액인가 순지급액인가 ③ 대표 정의의 <code>채권매입수수료</code>가 <b>투자자 몫만</b>인가 5인이 나눠 갖는 <b>통 전체</b>인가</dd>
+        <dt>풀리면 열리는 것</dt>
+        <dd>투자수익(SM) · PSM · PSMR · ④ · ⑤ · <b>투자 수익 화면의 금액 열 전부</b></dd>
+        <dt>갈리는 폭</dt>
+        <dd>투자자 몫(0.11%)이냐 통 전체(1.00%)냐에 따라 화면 수익률이 <b>3.56% vs 32.35%</b> — 9배</dd>
+        <dt>참고</dt>
+        <dd>값 자체(<code>marginFee</code> · <code>Payout.margin</code> · 요율 <code>MARGIN × INVESTOR</code>)는 코드에 <b>실재한다</b>. 없는 것은 "대표 정의가 그중 어느 것을 가리키는가".</dd>
+      </dl>
+    </div>
+
+    <div class="ecard">
+      <div class="ecard-head"><span class="eid">E-2</span><h4>미지급금 · 과지급금의 정의</h4><span class="g g-E" style="margin-left:auto">E 착수 불가</span></div>
+      <dl>
+        <dt>대상</dt>
+        <dd><code>SB = 순지급액 − max(0, 미지급금−과지급금)</code> · <code>Mi = 채권매입수수료 − max(0, …)</code> · <code>SLi = 미지급액 − 과지급액</code></dd>
+        <dt>근거</dt>
+        <dd>대표 정의서 57행에 이 둘의 정의문만 없다. 운영 코드에도 <code>미지급금</code>·<code>과지급금</code> 문자열 <b>0건</b>(전수 확인).</dd>
+        <dt>무엇이 없나</dt>
+        <dd>① 정의문 ② 채권 단위 실입금액을 붙일 대사 로직. 락계좌 입금은 은행 거래 원본만 들어온다(<code>components/LockAccountDeposits.tsx</code> <code>DepositItem</code> — <code>platformCode</code>·<code>tranDate</code>·<code>inAmount</code>·<code>outAmount</code>). 현행 "락계좌 검증"은 <b>계좌번호 일치 검증</b>이지 금액 대사가 아니다(<code>types/merchant.ts:120-135</code>).</dd>
+        <dt>무엇이 풀려야 하나</dt>
+        <dd>방향과 주체. 정책서 6대 개념의 <code>미지급금</code>은 <b>페이허그 → 가맹점</b>(못 준 돈)이고, 대표 정의는 자리로 보아 <b>플랫폼 → 락계좌</b>(덜 들어온 돈)로 읽힌다. 반대로 붙이면 상환액이 거꾸로 계산된다.</dd>
+        <dt>풀리면 열리는 것</dt>
+        <dd>상환액(SB) · SLi · S입금부족율 · 투자수익(SM) · N-2 대사 로직의 설계</dd>
+        <dt>현재 처리</dt>
+        <dd><b>제7의 축으로 격리. 6대 개념과 병합 0건 유지.</b></dd>
+        <dt>확정용 테스트</dt>
+        <dd><code>04_EXCEPTION_CASES.md</code> §4 쿠팡이츠 건(당사 172,200원 vs 플랫폼 158,108원, 차액 14,092원)에 두 정의를 각각 대입하면 바로 갈린다.</dd>
+      </dl>
+    </div>
+
+    <div class="ecard">
+      <div class="ecard-head"><span class="eid">E-3</span><h4>⑥ 지표의 <code style="font-size:13px">③</code>이 무엇인가</h4><span class="g g-E" style="margin-left:auto">E 착수 불가</span></div>
+      <dl>
+        <dt>대상</dt>
+        <dd><code>⑥ = (④ / ③) × 365 / ⑤</code> — 일별 투자수익 표의 마지막 열</dd>
+        <dt>근거</dt>
+        <dd>원문에 <code>①</code>·<code>③</code>의 정의문이 없다. 참조한 <code>[1번 이미지]</code>·<code>[2번 이미지]</code>가 <code>ceo_definitions.docx</code>에 첨부돼 있지 않다(docx 내 <code>word/media/</code> 없음).</dd>
+        <dt>부분 해소</dt>
+        <dd><code>marker_legend.md</code>가 캡처 2장의 번호 마커로 대응을 복원했다 — ⑥의 내부 ④③⑤ = 일별 표의 4·3·5(투자수익·투자실행금·w금융일수). 이대로면 <code>⑥ = (투자수익 ÷ 투자실행금) × 365 ÷ w금융일수</code>로 계산이 성립한다.</dd>
+        <dt>왜 아직 E인가</dt>
+        <dd>복원은 캡처에서 역산한 것이고 대표 확인을 받지 못했다. <b>확인되면 등급 B(계산만 추가)로 내려간다.</b></dd>
+        <dt>막는 범위</dt>
+        <dd><b>이 한 칸뿐.</b> 다른 항목을 막지 않는다.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ── 5. 판정 전량 ── -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">5</span><h2>판정 전량 124건</h2></div>
+    <p class="sec-lead">등급 뱃지를 눌러 거르거나 검색어로 찾는다. 근거의 파일 경로는 전부 <code>/Users/semi/cursor/payhug-admin-web/</code> 기준이고, <b>물을 것</b>은 §6 개발 문의 ID다.</p>
+
+    <div class="toolbar">
+      <input type="search" class="tb-search" id="q" placeholder="용어·화면·기능·필드명으로 검색 (예: 순지급액, payoutDt, 쿠콘)" aria-label="판정 항목 검색">
+      <div class="tb-chips" id="chips">
+        <button type="button" class="chip c-A" data-g="A" aria-pressed="true">A 바로 됨<span class="n">38</span></button>
+        <button type="button" class="chip c-B" data-g="B" aria-pressed="true">B 계산만<span class="n">35</span></button>
+        <button type="button" class="chip c-C" data-g="C" aria-pressed="true">C 구조 추가<span class="n">35</span></button>
+        <button type="button" class="chip c-D" data-g="D" aria-pressed="true">D 외부<span class="n">11</span></button>
+        <button type="button" class="chip c-E" data-g="E" aria-pressed="true">E 착수 불가<span class="n">3</span></button>
+        <button type="button" class="chip" data-g="U" aria-pressed="true">확인불가<span class="n">1</span></button>
+        <button type="button" class="chip" data-g="N" aria-pressed="true">해당없음<span class="n">1</span></button>
+      </div>
+      <div class="tb-count" id="cnt"><b>124</b> / 124건</div>
+    </div>
+
+    <!-- 용어 -->
+    <div class="sub-head">5-1. 용어 <span class="cnt">50건</span></div>
+    <div class="panel tight">
+      <div class="scroll">
+      <table class="dt">
+        <thead><tr><th style="width:36px"></th><th style="width:150px">대상</th><th style="width:74px">등급</th><th>근거</th><th>무엇이 없나</th><th style="width:120px">선행</th><th style="width:82px">물을 것</th></tr></thead>
+        <tbody id="tb-term">
+          <tr data-g="C"><td class="no">1</td><td class="k">정산금채권</td><td class="c"><span class="g g-C">C</span></td><td>재료 8종이 <code>hooks/usePurchaseLedger.ts:40-79</code> <code>LedgerItem</code>에 전수 실재. 현행 묶음은 <code>types/settlement.ts:33-45</code> <code>Batch</code>(가맹점×매출일)</td><td>그 축으로 묶어 적재하는 테이블. 플랫폼 차원 자체</td><td class="muted">—</td><td>D-01 D-02</td></tr>
+          <tr data-g="C"><td class="no">2</td><td class="k">정산금채권 ID</td><td class="c"><span class="g g-C">C</span></td><td>채번 규칙은 Figma 정산채권DB <code>529:2950</code>(가맹점ID+거래일자+카드사명). 운영 어드민에 대응 필드 <b>0건</b></td><td>채번 규칙과 그 값을 담을 컬럼</td><td>정산금채권 · 플랫폼ID</td><td>D-02 D-09</td></tr>
+          <tr data-g="B"><td class="no">3</td><td class="k">플랫폼ID</td><td class="c"><span class="g g-B">B</span></td><td>값은 있으나 <b>4체계 병존</b> — <code>salesSource</code>(<code>PreSettlementTab.tsx:30-33</code>) · <code>platformType</code>(<code>types/merchant.ts:138</code>) · <code>platformCode</code>(<code>LockAccountDeposits.tsx:27-42</code>) · <code>cardCorp</code>(<code>usePurchaseLedger.ts:63</code>)</td><td>4체계를 하나로 정규화하는 매핑</td><td class="muted">—</td><td>D-09</td></tr>
+          <tr data-g="A"><td class="no">4</td><td class="k">매출일자</td><td class="c"><span class="g g-A">A</span></td><td><code>transactionDt</code>(<code>usePurchaseLedger.ts:47</code>), 배치 축 <code>Batch.targetDate</code>(<code>types/settlement.ts:36</code>). 화면 라벨 <b>거래일</b>(건별) · <b>매출일</b>(배치, <code>BatchDetailTab.tsx:398</code>)</td><td>라벨만 다름</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="A"><td class="no">5</td><td class="k">선정산일</td><td class="c"><span class="g g-A">A</span></td><td><code>Batch.closedAt</code>(<code>types/settlement.ts:43</code>). 화면 라벨 <b>정산일</b>(<code>BatchDetailTab.tsx:423</code>)</td><td>라벨만 다름. 하루 2회 지급이라 같은 날 배치 2건 — 어느 쪽을 선정산일로 볼지 미정</td><td class="muted">—</td><td>D-06</td></tr>
+          <tr data-g="U"><td class="no">6</td><td class="k">정산예정일</td><td class="c"><span class="g g-U">확인불가</span></td><td><code>payoutDt</code> 실재 — <code>usePurchaseLedger.ts:51</code>(원장) · <code>types/settlement.ts:622</code>(누락 건). 카드 분은 여신협회 매입내역 스크래핑 원본값</td><td><b>배달플랫폼 분이 실제로 채워지는지 알 수 없다.</b> 수기 입력 모달의 지급예정일 인풋은 카드 탭에만 있고 배달 탭에 날짜 필드가 없다. 또 <code>payoutDt</code>가 선정산 도메인에 없어 조인이 필요하다</td><td class="muted">—</td><td>D-04 D-05</td></tr>
+          <tr data-g="A"><td class="no">7</td><td class="k">순지급액</td><td class="c"><span class="g g-A">A</span></td><td><code>netPayoutAmt</code> — <code>types/settlement.ts:110·222·324·419·624</code>, 원장 <code>usePurchaseLedger.ts:55</code>. 화면 KPI <b>순 지급액</b>(<code>app/page.tsx:203-205</code>, sub <code>매출 - 수수료</code>)</td><td>없음. <b>대표 정의 전 산식의 바닥값이 그대로 실재한다</b></td><td class="muted">—</td><td>D-03</td></tr>
+          <tr data-g="C"><td class="no">8</td><td class="k">금융일수</td><td class="c"><span class="g g-C">C</span></td><td>두 끝점(<code>closedAt</code>·<code>payoutDt</code>)이 둘 다 실재. 뺄셈만 하면 됨</td><td>붙일 자리 — 채권 1건 단위 레코드. 셈법(편면/양편) 미확정은 정의 문제</td><td>정산금채권</td><td>D-05 D-06</td></tr>
+          <tr data-g="A"><td class="no">9</td><td class="k">유동화투자자</td><td class="c"><span class="g g-A">A</span></td><td><code>userType = INVESTOR</code> — <code>lib/permissions.ts:11</code>, 회원 등록 셀렉트 <code>app/partners/page.tsx:34</code>, 배분 역할 <code>settlement/policies/page.tsx:42</code>, 서명자 역할 <code>merchants/[id]/page.tsx:1590</code>. <b>이미 어드민에 로그인한다</b></td><td>대외 명칭 통일(투자자 / 유동화기관 / 수익권자 / 채권매입업체 4종 병존)</td><td class="muted">—</td><td>D-31</td></tr>
+          <tr data-g="C"><td class="no">10</td><td class="k">재양도 합의서</td><td class="c"><span class="g g-C">C</span></td><td>어드민에 언급 1곳 — <code>merchants/[id]/page.tsx:957</code> "재양도 합의서가 '투자자 없음' 버전으로 작성됩니다". 백엔드가 계약서 생성 시 분기하는 문서로 <b>존재는 한다</b></td><td>계약 유형 목록에 없다. <code>CONTRACT_TYPE_LABELS</code>(<code>:107-111</code>)는 3종뿐</td><td class="muted">—</td><td>D-16</td></tr>
+          <tr data-g="C"><td class="no">11</td><td class="k">효력기간</td><td class="c"><span class="g g-C">C</span></td><td>대응 필드 <b>0건</b>. 투자자 매칭(<code>PUT /admin/merchants/{id}/assign-investor</code>, <code>:435</code>)만 있고 기간 개념이 없다</td><td>효력 시작일·종료일 컬럼. 해지·만료 기록 자리도 없음</td><td>재양도 합의서</td><td>D-17 D-18</td></tr>
+          <tr data-g="C"><td class="no">12</td><td class="k">대상정산금채권</td><td class="c"><span class="g g-C">C</span></td><td>모집단의 절반은 실재 — 투자자 매칭(<code>referredByInvestorId</code>, <code>:92</code>) · 투자자 목록(<code>GET /admin/investors</code>, <code>:277</code>) · <b>가맹점 승인 게이트</b>(<code>:413-414</code> "승인 전 투자자를 먼저 매칭해주세요")</td><td>나머지 절반 — <code>선정산일자가 효력기간에 속하는가</code> 조건. 효력기간이 없어 모집단을 못 닫는다</td><td>효력기간 · 정산금채권</td><td>D-17</td></tr>
+          <tr data-g="B"><td class="no">13</td><td class="k">유동화투자자의 할인율</td><td class="c"><span class="g g-B">B</span></td><td><b>담을 자리가 이미 있다</b> — 정책 요율행 첫 줄이 <code>{feeType:"MARGIN", targetRole:"INVESTOR"}</code>(<code>settlement/policies/page.tsx:108·120</code>), 저장 시 <code>investorId</code> 필수(<code>:332</code>), 화면 노출 <code>investorRate</code>(<code>sales/[bizNo]/page.tsx:1196</code>)</td><td>그 요율이 대표 정의의 <b>할인율</b>과 같은 값인지. 어드민의 <code>할인율</code>이라는 낱말은 딴 것 — <code>discountRatePct</code>(<code>merchants/[id]/page.tsx:674</code>)는 예상 매출 정산 시의 리스크 할인이다</td><td><b>E-1</b></td><td>D-27</td></tr>
+          <tr data-g="B"><td class="no">14</td><td class="k">Ai</td><td class="c"><span class="g g-B">B</span></td><td><code>순지급액 × (1−할인율)</code>. 두 재료 다 실재</td><td>원 단위 처리 규약(반올림 vs 버림)</td><td>할인율 · 정산금채권</td><td>D-26</td></tr>
+          <tr data-g="A"><td class="no">15</td><td class="k">채권매입수수료</td><td class="c"><span class="g g-A">A</span></td><td>유형 코드 <code>MARGIN</code> — 라벨 <code>lib/settlementLabels.ts:9-15</code>. 금액 <code>marginFeeAmt</code> · <code>Payout.margin</code>(<code>types/settlement.ts:50</code>) · <code>LedgerItem.marginFee</code>(<code>:66</code>). 화면 열 <b>채권매입</b>. <b><code>role === "INVESTOR"</code> 행이 곧 투자자 몫</b>(<code>BatchDetailTab.tsx:609-675</code>)</td><td>값은 다 있다. 없는 것은 "대표 정의가 통 전체를 가리키는가 투자자 몫만인가"</td><td><b>E-1</b></td><td>D-27 D-28</td></tr>
+          <tr data-g="C"><td class="no">16</td><td class="k">회수되지 않은 순지급액</td><td class="c"><span class="g g-C">C</span></td><td>순지급액은 실재. <b>회수 여부</b>를 가르는 값이 없음</td><td>채권 단위 입금 대사 결과. 어드민의 "잔액처럼 보이는" 필드 4종은 전부 다른 것 — 이관 부채 · 미회수 이월 · 광고비 누적 · 현장결제 미회수</td><td>N-2</td><td>D-07 D-08</td></tr>
+          <tr data-g="B"><td class="no">17</td><td class="k">투자 실행액</td><td class="c"><span class="g g-B">B</span></td><td>산식 = 회수되지 않은 순지급액 합계 × (1−할인율). 곱셈·합계뿐</td><td>입력값(회수되지 않은 순지급액)</td><td>회수되지 않은 순지급액 · 할인율</td><td class="muted">—</td></tr>
+          <tr data-g="D"><td class="no">18</td><td class="k">순현금</td><td class="c"><span class="g g-D">D</span></td><td>쿠콘 연동 실재(<code>services/cooconService.ts</code>). 잔액은 모 계좌 1개(<code>:16</code>)</td><td><b>투자자별 가상계좌.</b> 병목 ②</td><td>N-3</td><td>D-13 D-14</td></tr>
+          <tr data-g="D"><td class="no">19</td><td class="k">쿠콘 가상계좌</td><td class="c"><span class="g g-D">D</span></td><td><code>가상계좌</code>·<code>virtual</code> 전수 0건. 투자자 화면의 가상계좌(<code>coocon.html:135·139</code>)는 <b>쿠콘 외부 사이트 메뉴명</b></td><td>계좌 자체</td><td class="muted">—</td><td>D-13 D-15</td></tr>
+          <tr data-g="C"><td class="no">20</td><td class="k">Di</td><td class="c"><span class="g g-C">C</span></td><td>금융일수와 동일</td><td>채권 1건 단위 자리</td><td>정산금채권</td><td>D-04 D-06</td></tr>
+          <tr data-g="B"><td class="no">21</td><td class="k">w금융일수 (잔액 기준)</td><td class="c"><span class="g g-B">B</span></td><td><code>Σ Ai×Di / Σ Ai</code> — 가중평균</td><td>입력값. <b>현행 화면은 투자금액 가중이라 대표 정의(Ai 가중)와 가중치가 다르다</b></td><td>Ai · Di</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">22</td><td class="k">ty수익율 (잔액 기준)</td><td class="c"><span class="g g-B">B</span></td><td><code>할인율 × (365 / w금융일수)</code> — 나눗셈</td><td>입력값</td><td>할인율 · w금융일수</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">23</td><td class="k">비중</td><td class="c"><span class="g g-B">B</span></td><td>나눗셈</td><td>입력값. <b>같은 열 이름인데 두 표의 분모가 다르다</b> — 현황표는 투자자산, 가맹점별표는 투자실행액(<code>xls-assets-merchant.html:149</code> 각주)</td><td>투자 실행액 · 순현금(D)</td><td class="muted">기획 S-3</td></tr>
+          <tr data-g="A"><td class="no">24</td><td class="k">자산 구분</td><td class="c"><span class="g g-A">A</span></td><td>고정 3행(투자실행액·순현금·합계). 화면 상수</td><td>없음</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="A"><td class="no">25</td><td class="k">보관</td><td class="c"><span class="g g-A">A</span></td><td>고정 문자열(㈜페이허그 / ㈜쿠콘)</td><td>값은 없어도 된다. 다만 "보관 주체" 개념이 정책서·계약서에 정의된 바 없다</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">26</td><td class="k">투자자산</td><td class="c"><span class="g g-B">B</span></td><td>덧셈</td><td>입력값. <code>잔액(투자실행액+순현금)</code>인가 <code>유량(PSA+PSC)</code>인가 미정</td><td>투자 실행액 · 순현금(D)</td><td class="muted">—</td></tr>
+          <tr data-g="C"><td class="no">27</td><td class="k">가맹점별 투자금액</td><td class="c"><span class="g g-C">C</span></td><td><b>가맹점 단위 누적 원금 잔액 필드가 0개</b> — <code>MerchantListItem</code>(<code>types/merchant.ts:16-34</code>) · <code>MerchantDetail</code>(<code>merchants/[id]/page.tsx:79-96</code>). 투자자 관련 필드는 관계값 3개뿐</td><td>원금 잔액 컬럼</td><td>정산금채권 · N-2</td><td>D-01</td></tr>
+          <tr data-g="A"><td class="no">28</td><td class="k">기준일자</td><td class="c"><span class="g g-A">A</span></td><td>조회 시점 날짜. 화면 규정만</td><td>표마다 따로 둘지 화면에 하나만 둘지 미정</td><td class="muted">—</td><td class="muted">기획 S-5</td></tr>
+          <tr data-g="E"><td class="no">29</td><td class="k">미지급금</td><td class="c"><span class="g g-E">E</span></td><td>정의문 부재 + 코드 <b>0건</b></td><td>정의 · 채권 단위 실입금액</td><td class="muted">—</td><td>D-07 D-08</td></tr>
+          <tr data-g="E"><td class="no">30</td><td class="k">과지급금</td><td class="c"><span class="g g-E">E</span></td><td>동일</td><td>동일</td><td class="muted">—</td><td>D-07 D-08</td></tr>
+          <tr data-g="B"><td class="no">31</td><td class="k">SLi</td><td class="c"><span class="g g-B">B</span></td><td><code>미지급액 − 과지급액</code> — 뺄셈</td><td>입력값 2개</td><td><b>E-2</b></td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">32</td><td class="k">SAi</td><td class="c"><span class="g g-B">B</span></td><td><code>순지급액 × (1−할인율)</code>, 표본집합 한정</td><td>입력값</td><td>할인율 · 표본집합</td><td class="muted">—</td></tr>
+          <tr data-g="C"><td class="no">33</td><td class="k">표본집합</td><td class="c"><span class="g g-C">C</span></td><td><code>선정산일 D-20 ~ D-11</code> 구간 필터</td><td>필터 대상인 채권 레코드</td><td>정산금채권 · 선정산일</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">34</td><td class="k">S입금부족율</td><td class="c"><span class="g g-B">B</span></td><td><code>Σ SLi / Σ SAi</code> — 나눗셈</td><td>입력값. <b>현행 각주는 분모를 선정산금액이라 적어 대표 정의(순지급액×(1−할인율))와 다르다</b></td><td>SLi(E-2) · SAi</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">35</td><td class="k">상환액 (SB)</td><td class="c"><span class="g g-B">B</span></td><td><code>Σ(순지급액 − max(0, 미지급금−과지급금))</code> — 합계·뺄셈</td><td>차감항 2개</td><td><b>E-2</b> · N-5</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">36</td><td class="k">투자실행금 (SA)</td><td class="c"><span class="g g-B">B</span></td><td><code>Σ(순지급액 × (1−할인율))</code> — 정산예정일이 D-1인 채권 합</td><td>채권 모집단</td><td>정산금채권 · N-5</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">37</td><td class="k">투자수익 (SM)</td><td class="c"><span class="g g-B">B</span></td><td><code>Σ(채권매입수수료 − max(0, …))</code></td><td>첫 항의 정체 + 차감항</td><td><b>E-1 E-2</b> · N-5</td><td>D-27</td></tr>
+          <tr data-g="B"><td class="no">38</td><td class="k">투자수익율 (SMR)</td><td class="c"><span class="g g-B">B</span></td><td><code>SM / SA</code> — 나눗셈</td><td>입력값</td><td>SM · SA</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">39</td><td class="k">w금융일수 (SD)</td><td class="c"><span class="g g-B">B</span></td><td><code>Σ(Ai×Di) / Σ Ai</code></td><td>입력값</td><td>Ai · Di</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">40</td><td class="k">ty수익율 (일별)</td><td class="c"><span class="g g-B">B</span></td><td><code>SMR × 365 / SD</code></td><td>입력값</td><td>SMR · SD</td><td class="muted">—</td></tr>
+          <tr data-g="D"><td class="no">41</td><td class="k">순현금 (EC)</td><td class="c"><span class="g g-D">D</span></td><td>자정 마감 시점 가상계좌 잔액</td><td>계좌 + 스냅샷 배치. <b>원문 안에서 어긋남</b> — 배치 산출 목록은 <code>평균순현금</code>, 정의문은 <code>EC(자정 잔액)</code>·<code>PSC(EC들의 합)</code></td><td>N-3</td><td>D-14</td></tr>
+          <tr data-g="B"><td class="no">42</td><td class="k">투자 실행금 (PSA)</td><td class="c"><span class="g g-B">B</span></td><td>SA의 기간 합계</td><td>일별 레코드</td><td>N-5</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">43</td><td class="k">투자수익 (PSM)</td><td class="c"><span class="g g-B">B</span></td><td>SM의 기간 합계</td><td>일별 레코드</td><td>N-5 · <b>E-1</b></td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">44</td><td class="k">PSMR</td><td class="c"><span class="g g-B">B</span></td><td><code>PSM / PSA</code></td><td>입력값</td><td>PSM · PSA</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">45</td><td class="k">PSD</td><td class="c"><span class="g g-B">B</span></td><td><code>Σ(Api×Dpi) / PSA</code> — 가중평균</td><td>입력값</td><td>N-5</td><td class="muted">—</td></tr>
+          <tr data-g="D"><td class="no">46</td><td class="k">PSC</td><td class="c"><span class="g g-D">D</span></td><td>기간 EC 합계</td><td>계좌 + 스냅샷</td><td>N-3 · EC</td><td>D-14</td></tr>
+          <tr data-g="B"><td class="no">47</td><td class="k">④ 투자실행금액 대비 ty수익율</td><td class="c"><span class="g g-B">B</span></td><td><code>PSMR × 365 / PSD</code></td><td>입력값</td><td>PSMR · PSD</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">48</td><td class="k">⑤ 투자자산 대비 ty수익율</td><td class="c"><span class="g g-B">B</span></td><td><code>(④ × PSA) / (PSA + PSC)</code></td><td>입력값. <b>현행 화면은 분모를 기준일 잔액 1개(스톡)로 계산해 3.32%가 나오고, 대표 정의(기간 EC 합=유량)대로면 2.24%.</b> 화면 쪽 오류로 확정, 정정 대상</td><td>④ · PSC(D)</td><td class="muted">—</td></tr>
+          <tr data-g="E"><td class="no">49</td><td class="k">⑥ 일별 투자실행금액 대비 ty수익율</td><td class="c"><span class="g g-E">E</span></td><td><code>(④/③) × 365 / ⑤</code>의 <code>③</code>이 미정의</td><td>번호가 가리키는 자리</td><td class="muted">—</td><td class="muted">대표 회신</td></tr>
+          <tr data-g="A"><td class="no">50</td><td class="k">검색대상기간</td><td class="c"><span class="g g-A">A</span></td><td><code>components/DateRangeFilter.tsx</code> — from~to 입력 + <b>프리셋 7종 실재</b>(오늘·어제·이번 주·지난 주·이번 달·지난 달·최근 3개월, <code>:23-61</code>)</td><td>없음. 부품 그대로 재사용</td><td class="muted">—</td><td class="muted">—</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div class="note-band"><b>요율 숫자는 코드에 없다.</b> <code>0.25</code>·<code>0.11</code> 리터럴 0건. 값은 전부 DB <code>PolicyRate.rateBps</code>에서 내려온다(<code>GET /admin/settlement/policies</code>). 단위 규약 1% = 100bps, 이체수수료만 원(₩) 정액. <b>C1(수수료율) 미확정 유지 — 어느 값도 채택하지 않는다.</b></div>
+
+    <!-- 화면 -->
+    <div class="sub-head">5-2. 화면 <span class="cnt">14건</span></div>
+    <div class="panel tight">
+      <div class="scroll">
+      <table class="dt">
+        <thead><tr><th style="width:36px"></th><th style="width:140px">화면</th><th style="width:74px">등급</th><th>근거</th><th>무엇이 없나</th><th style="width:110px">선행</th><th style="width:82px">물을 것</th></tr></thead>
+        <tbody id="tb-screen">
+          <tr data-g="A"><td class="no">1</td><td class="k">로그인<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">login.html</span></td><td class="c"><span class="g g-A">A</span></td><td><code>POST /auth/login</code>(<code>services/authService.ts:22-24</code>) + <code>admin_access_token</code> 쿠키 + <code>isAllowedLoginUserType</code>(<code>lib/permissions.ts:26</code>)에 <b>INVESTOR 이미 포함</b>. 입력 항목도 동일(<code>app/login/page.tsx:132·149</code>)</td><td>실패·잠금 상태 미설계. 비밀번호 찾기 대상 화면 없음</td><td class="muted">—</td><td>D-31</td></tr>
+          <tr data-g="C"><td class="no">2</td><td class="k">투자 자산<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">invest-assets.html</span></td><td class="c"><span class="g g-C">C</span></td><td>7열 중 실데이터로 채울 수 있는 것은 <b>가맹점명 하나</b></td><td>투자실행액·순현금·W금융일수·S입금부족율·ty수익율·비중의 원천 전부</td><td>N-1 N-2 N-3</td><td>D-01 D-13</td></tr>
+          <tr data-g="D"><td class="no">3</td><td class="k">가맹점별 투자자산 증명서<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">certificate.html</span></td><td class="c"><span class="g g-D">D</span></td><td>전자문서 형태는 정의됨. <b>인증서 서명 모듈이 레포 전체에 0건</b> — 존재하는 것은 직인 이미지 기반 자체 다자간 서명뿐(<code>app/partners/page.tsx:521·599</code>)</td><td>서명 벤더 · 검증 회신전문 수신 경로</td><td>N-8 N-9 N-10 · 서명 벤더</td><td>D-19 D-20</td></tr>
+          <tr data-g="C"><td class="no">4</td><td class="k">투자 수익<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">invest-profit.html</span></td><td class="c"><span class="g g-C">C</span></td><td>조회·필터·엑셀 골격은 부품 실재. 표를 채울 원자료의 가장 가까운 실물은 <b>배분 원장</b> — <code>GET /admin/settlement/batch-payouts?dateFrom&amp;dateTo</code>(<code>hooks/useSettlementOverview.ts:276</code>), 행 타입 <code>BatchPayoutRow</code>(<code>types/settlement.ts:60-73</code>). <code>role==="INVESTOR"</code> 행을 <code>targetDate</code>로 묶으면 일별 표의 뼈대가 선다. <b>현재 이 엔드포인트는 엑셀 생성에만 쓰이고 화면이 없다</b></td><td>원장은 <code>정액 합산 + 다자 배분율</code> 구조이고 스토리보드는 <code>할인 매입한 채권의 상환 결과</code> 구조 — 두 모델이 만나지 않는다. 상환액·투자실행금·할인율 축이 없다</td><td>N-1 N-5 N-7 · <b>E-1 E-2</b></td><td>D-28 D-29</td></tr>
+          <tr data-g="A"><td class="no">5</td><td class="k">쿠콘 관리 현금<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">coocon.html</span></td><td class="c"><span class="g g-A">A</span></td><td>페이허그가 보여주는 데이터 <b>0건</b>. 외부 링크 1개 + 안내 문구가 전부라 지금도 만들 수 있다</td><td><b>쿠콘 계정 스코프.</b> 투자자에게 We-bank 계정을 발급하면 페이허그 전체 자금 이동이 열린다. <code>We-bank</code>·<code>펌뱅킹</code>·<code>오픈뱅킹</code> 문자열 레포 전수 0건</td><td class="muted">계정 발급은 D</td><td>D-15</td></tr>
+          <tr data-g="C"><td class="no">6</td><td class="k">가맹점<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">merchants.html</span></td><td class="c"><span class="g g-C">C</span></td><td>7열 중 4열 실재 — 가맹점ID(<code>types/merchant.ts:17-18</code>)·가맹점명(<code>:20</code>)·사업자번호(<code>:19</code>)·대표자(<code>:21</code>). 검색 4항목도 동일한 것이 실재(<code>app/manage/page.tsx:249-255</code>)</td><td>업종·종목은 <b>상세에만 있고 목록 타입·목록 API에 없다</b>. <b>채권매매업체ID는 필드 자체가 없다.</b> 필터 2종도 운영 어드민에 없다. 검색이 <b>클라이언트 필터</b>라 전체 목록이 브라우저로 내려온다(<code>:121-131</code>)</td><td>N-11</td><td>D-22 D-23 D-24</td></tr>
+          <tr data-g="B"><td class="no">7</td><td class="k">정산채권 양수<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">acquisition.html</span></td><td class="c"><span class="g g-B">B</span></td><td><b>9개 화면 중 기존 구현에 가장 가깝다.</b> 다자간 서명 플로우가 이미 돈다 — <code>GET /admin/contracts/{id}/signing-status</code>(<code>merchants/[id]/page.tsx:246</code>) · <code>POST /admin/contracts/{id}/sign</code>(<code>:582</code>) · 서명 현황 UI(<code>:1576-1622</code>). <b>서명자 역할에 INVESTOR가 이미 있고</b>(<code>:1590</code>) 본인 차례일 때만 버튼이 뜬다(<code>:1588</code>)</td><td>투자자 시점의 서명 대기 목록 화면. 인증서 기반 서명 수단. <b>문서 명칭이 계약 골격과 어긋난다</b> — 투자자가 당사자인 문서는 재양도 합의서다</td><td class="muted">서명 벤더(D)</td><td>D-16 D-19</td></tr>
+          <tr data-g="C"><td class="no">8</td><td class="k">계약기록<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">contracts.html</span></td><td class="c"><span class="g g-C">C</span></td><td>3열(MID·가맹점·재양도합의서)까지 요구 정의 있음</td><td>문서 유형 목록에 재양도합의서·양수도계약서·증명서 <b>없음</b>(<code>merchants/[id]/page.tsx:101-111</code>). 첨부 다운로드는 <b>단건</b>이고 pdf·image 2종만(<code>AttachmentPreviewModal.tsx:5·41·49-50</code>). 일괄 압축 경로 없음. 서명일·검증 2열은 출처 없음</td><td>N-4</td><td>D-16 D-20 D-21</td></tr>
+          <tr data-g="C"><td class="no">9</td><td class="k">비밀번호 변경<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">password.html</span></td><td class="c"><span class="g g-C">C</span></td><td><b>운영 어드민 전체에 본인 비밀번호 변경이 없다.</b> 있는 것은 관리자가 가맹점 비밀번호를 초기화하는 <code>PUT /admin/merchants/{id}/reset-password</code>(<code>services/merchantService.ts:290</code>)뿐</td><td>신규 API. 비밀번호 규칙·세션 무효화 정책</td><td class="muted">—</td><td>D-25</td></tr>
+          <tr data-g="N"><td class="no">10</td><td class="k">랜딩 갤러리<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">index.html</span></td><td class="c"><span class="g g-N">해당없음</span></td><td>검토용 갤러리</td><td>실서비스 미포함. 구현 시 삭제 대상</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="C"><td class="no">11</td><td class="k">엑셀 미리보기 ①<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">xls-assets-status.html</span></td><td class="c"><span class="g g-C">C</span></td><td>생성 부품 실재 — <code>lib/excel.ts</code> <code>downloadExcel:57</code>·<code>downloadExcelSheets:72</code></td><td>내려받을 데이터. 대응 화면을 따름</td><td>화면 2</td><td>D-32</td></tr>
+          <tr data-g="C"><td class="no">12</td><td class="k">엑셀 미리보기 ②<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">xls-assets-merchant.html</span></td><td class="c"><span class="g g-C">C</span></td><td>동일</td><td>동일</td><td>화면 2</td><td>D-32</td></tr>
+          <tr data-g="C"><td class="no">13</td><td class="k">엑셀 미리보기 ③<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">xls-profit-status.html</span></td><td class="c"><span class="g g-C">C</span></td><td>동일. 빈 시트를 만들지 않고 전부 비면 <code>데이터 없음</code> 시트 1장만 남겨(<code>:79-81</code>) 스코프로 일부가 빠지는 상황과 궁합이 좋다</td><td>동일</td><td>화면 4</td><td>D-32</td></tr>
+          <tr data-g="C"><td class="no">14</td><td class="k">엑셀 미리보기 ④<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">xls-profit-daily.html</span></td><td class="c"><span class="g g-C">C</span></td><td>동일</td><td>동일</td><td>화면 4</td><td>D-32</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <!-- 상태 -->
+    <div class="sub-head">5-3. 상태 변형 <span class="cnt">19건 · 실측 파일 기준</span></div>
+    <div class="panel tight">
+      <div class="scroll">
+      <table class="dt" style="min-width:640px">
+        <thead><tr><th style="width:36px"></th><th style="width:220px">상태 파일</th><th style="width:74px">등급</th><th>근거 · 무엇이 없나</th></tr></thead>
+        <tbody id="tb-state">
+          <tr data-g="A"><td class="no">1</td><td class="k"><code>acquisition--confirm</code></td><td class="c"><span class="g g-A">A</span></td><td>서명 확인 모달. 프론트 상태뿐</td></tr>
+          <tr data-g="D"><td class="no">2</td><td class="k"><code>acquisition--signing</code></td><td class="c"><span class="g g-D">D</span></td><td>인증서 서명 진행 3단계 — 서명 벤더 없이는 단계 자체가 정의 안 됨</td></tr>
+          <tr data-g="A"><td class="no">3</td><td class="k"><code>acquisition--done</code></td><td class="c"><span class="g g-A">A</span></td><td>완료 표시</td></tr>
+          <tr data-g="A"><td class="no">4</td><td class="k"><code>contracts--all</code></td><td class="c"><span class="g g-A">A</span></td><td>헤더 체크박스 전체 선택</td></tr>
+          <tr data-g="C"><td class="no">5</td><td class="k"><code>contracts--downloaded</code></td><td class="c"><span class="g g-C">C</span></td><td>일괄 다운로드 완료 토스트 — 일괄 다운로드 경로 자체가 없음</td></tr>
+          <tr data-g="A"><td class="no">6</td><td class="k"><code>contracts--empty</code></td><td class="c"><span class="g g-A">A</span></td><td>빈 상태</td></tr>
+          <tr data-g="A"><td class="no">7</td><td class="k"><code>coocon--confirm</code></td><td class="c"><span class="g g-A">A</span></td><td>외부 이동 확인 모달</td></tr>
+          <tr data-g="A"><td class="no">8</td><td class="k"><code>invest-assets--cert-confirm</code></td><td class="c"><span class="g g-A">A</span></td><td>발급 확인 모달(문구뿐). <b>발급 실행은 D</b></td></tr>
+          <tr data-g="C"><td class="no">9</td><td class="k"><code>invest-assets--download</code></td><td class="c"><span class="g g-C">C</span></td><td>엑셀 완료 토스트 — 내려받을 데이터가 없음</td></tr>
+          <tr data-g="A"><td class="no">10</td><td class="k"><code>invest-assets--empty</code></td><td class="c"><span class="g g-A">A</span></td><td>빈 상태</td></tr>
+          <tr data-g="B"><td class="no">11</td><td class="k"><code>invest-assets--page2</code></td><td class="c"><span class="g g-B">B</span></td><td>페이지네이션 — 서버 페이징 신설 필요, 패턴은 실재(<code>usePurchaseLedger.ts</code> <code>page</code>/<code>size:20</code>)</td></tr>
+          <tr data-g="A"><td class="no">12</td><td class="k"><code>invest-profit--datepicker</code></td><td class="c"><span class="g g-A">A</span></td><td><code>components/DateRangeFilter.tsx</code> 그대로</td></tr>
+          <tr data-g="A"><td class="no">13</td><td class="k"><code>invest-profit--empty</code></td><td class="c"><span class="g g-A">A</span></td><td>빈 상태</td></tr>
+          <tr data-g="C"><td class="no">14</td><td class="k"><code>invest-profit--monthly</code></td><td class="c"><span class="g g-C">C</span></td><td>월별 산식이 어디에도 없음 + 월 단위 집계 신설</td></tr>
+          <tr data-g="A"><td class="no">15</td><td class="k"><code>merchants--empty</code></td><td class="c"><span class="g g-A">A</span></td><td>빈 상태</td></tr>
+          <tr data-g="B"><td class="no">16</td><td class="k"><code>merchants--filtered</code></td><td class="c"><span class="g g-B">B</span></td><td>조건 칩 — 필터 2종(업종·채권매입업체)이 운영 어드민에 없어 신설</td></tr>
+          <tr data-g="A"><td class="no">17</td><td class="k"><code>password--weak</code></td><td class="c"><span class="g g-A">A</span></td><td>프론트 규칙 검증</td></tr>
+          <tr data-g="A"><td class="no">18</td><td class="k"><code>password--error</code></td><td class="c"><span class="g g-A">A</span></td><td>확인값 불일치 — 프론트 검증</td></tr>
+          <tr data-g="C"><td class="no">19</td><td class="k"><code>password--done</code></td><td class="c"><span class="g g-C">C</span></td><td>변경 완료 — API가 없음</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <!-- 기능 -->
+    <div class="sub-head">5-4. 기능 <span class="cnt">35건</span></div>
+    <div class="panel tight">
+      <div class="scroll">
+      <table class="dt">
+        <thead><tr><th style="width:36px"></th><th style="width:190px">행위</th><th style="width:74px">등급</th><th>근거</th><th>무엇이 없나</th><th style="width:82px">물을 것</th></tr></thead>
+        <tbody id="tb-func">
+          <tr data-g="A"><td class="no">1</td><td class="k">로그인한다</td><td class="c"><span class="g g-A">A</span></td><td><code>POST /auth/login</code> + INVESTOR 허용(<code>lib/permissions.ts:11·26</code>)</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="C"><td class="no">2</td><td class="k">비밀번호 찾기로 이동한다</td><td class="c"><span class="g g-C">C</span></td><td>대상 화면·인증 수단 미설계. 스토리보드에도 없음</td><td>화면·API 전부</td><td>D-25</td></tr>
+          <tr data-g="B"><td class="no">3</td><td class="k">현황표를 엑셀로 내려받는다</td><td class="c"><span class="g g-B">B</span></td><td>부품 실재(<code>lib/excel.ts:57</code>)</td><td>데이터</td><td>D-32</td></tr>
+          <tr data-g="B"><td class="no">4</td><td class="k">가맹점별표를 엑셀로 내려받는다</td><td class="c"><span class="g g-B">B</span></td><td>동일</td><td>데이터</td><td>D-32</td></tr>
+          <tr data-g="D"><td class="no">5</td><td class="k">투자자산 증명서를 발급한다</td><td class="c"><span class="g g-D">D</span></td><td>절차는 정의됨(전자문서 → 페이허그 인증서 서명 → 발행기관 검증회신전문 동봉 → 다운로드)</td><td>인증서 서명 모듈</td><td>D-19 D-20</td></tr>
+          <tr data-g="B"><td class="no">6</td><td class="k">가맹점별표 페이지를 넘긴다</td><td class="c"><span class="g g-B">B</span></td><td>서버 페이징 패턴 실재</td><td>서버 페이징 신설. 페이지 크기·정렬 기준 미정</td><td>D-24</td></tr>
+          <tr data-g="D"><td class="no">7</td><td class="k">발급 문서를 미리 본다</td><td class="c"><span class="g g-D">D</span></td><td>5번 선행</td><td>서명값이 없으면 미리볼 문서가 없음</td><td>D-19</td></tr>
+          <tr data-g="D"><td class="no">8</td><td class="k">증명서를 PDF로 내려받는다</td><td class="c"><span class="g g-D">D</span></td><td>요구는 <b>3종 묶음</b>(전자문서 + 서명값 + 검증회신전문). 화면은 단일 버튼 1개</td><td>서명·검증 경로</td><td>D-20 D-21</td></tr>
+          <tr data-g="A"><td class="no">9</td><td class="k">기간 프리셋을 고른다</td><td class="c"><span class="g g-A">A</span></td><td><code>DateRangeFilter.tsx:23-61</code> 프리셋 7종 실재</td><td>원 요구는 2종(일주일·금월)이라 구성 조정만</td><td class="muted">—</td></tr>
+          <tr data-g="A"><td class="no">10</td><td class="k">시작·종료일을 직접 고른다</td><td class="c"><span class="g g-A">A</span></td><td>동일 부품</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="A"><td class="no">11</td><td class="k">조회한다</td><td class="c"><span class="g g-A">A</span></td><td>공용 필터 패턴</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="A"><td class="no">12</td><td class="k">조건을 초기화한다</td><td class="c"><span class="g g-A">A</span></td><td>공용 필터 패턴</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="C"><td class="no">13</td><td class="k">일별·월별을 전환한다</td><td class="c"><span class="g g-C">C</span></td><td>월별 산식이 스토리보드 어디에도 없고 운영 어드민에도 일별/월별 전환이 없다</td><td>월 집계 산식 + 집계 경로</td><td>D-29</td></tr>
+          <tr data-g="B"><td class="no">14</td><td class="k">수익현황을 엑셀로 내려받는다</td><td class="c"><span class="g g-B">B</span></td><td>부품 실재</td><td>데이터</td><td>D-32</td></tr>
+          <tr data-g="B"><td class="no">15</td><td class="k">일별표를 엑셀로 내려받는다</td><td class="c"><span class="g g-B">B</span></td><td>부품 실재</td><td>데이터</td><td>D-32</td></tr>
+          <tr data-g="A"><td class="no">16</td><td class="k">쿠콘 We-bank로 이동한다</td><td class="c"><span class="g g-A">A</span></td><td>외부 링크 + 확인 모달. 지금도 만들 수 있다</td><td>계정 스코프는 별건(D)</td><td>D-15</td></tr>
+          <tr data-g="B"><td class="no">17</td><td class="k">업종으로 거른다</td><td class="c"><span class="g g-B">B</span></td><td><code>businessTypeMain</code> 필드 실재(<code>types/merchant.ts:58</code>)</td><td>목록 API·목록 타입에 없어 실어 보내야 함</td><td>D-22</td></tr>
+          <tr data-g="C"><td class="no">18</td><td class="k">채권매입업체로 거른다</td><td class="c"><span class="g g-C">C</span></td><td><b>대응 필드가 없다.</b> <code>referredByInvestorId</code>는 투자자이지 채권매입업체가 아니다</td><td>필드 자체</td><td>D-23</td></tr>
+          <tr data-g="A"><td class="no">19</td><td class="k">가맹점ID·명·사업자번호·대표자명으로 검색한다</td><td class="c"><span class="g g-A">A</span></td><td>동일 4항목 검색 실재(<code>app/manage/page.tsx:249-255</code>)</td><td>클라이언트 필터라 서버 전환 필요 — 스코프 문제와 한 몸</td><td>D-11 D-24</td></tr>
+          <tr data-g="A"><td class="no">20</td><td class="k">조건을 초기화한다</td><td class="c"><span class="g g-A">A</span></td><td>프론트 상태</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="C"><td class="no">21</td><td class="k">가맹점 목록 페이지를 넘긴다</td><td class="c"><span class="g g-C">C</span></td><td><b>현행 목록에 페이징이 없다.</b> <code>GET /admin/merchants</code>는 인자가 아예 없다(<code>services/merchantService.ts:39-41</code>)</td><td>서버 페이징 신설</td><td>D-24</td></tr>
+          <tr data-g="C"><td class="no">22</td><td class="k">서명 대기 계약서를 열람한다</td><td class="c"><span class="g g-C">C</span></td><td>첨부 미리보기 부품은 있음(<code>AttachmentPreviewModal.tsx:41·56</code>)</td><td>문서 유형에 재양도합의서·양수도계약서가 없어 내려줄 경로가 없음</td><td>D-16</td></tr>
+          <tr data-g="B"><td class="no">23</td><td class="k">서명할 가맹점을 선택한다</td><td class="c"><span class="g g-B">B</span></td><td>목록 UI. 선택 상태만</td><td>목록을 만드는 조건(어떤 가맹점이 대기로 뜨는가)</td><td>D-17</td></tr>
+          <tr data-g="A"><td class="no">24</td><td class="k">서명 확인 모달을 연다</td><td class="c"><span class="g g-A">A</span></td><td>프론트 모달</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="D"><td class="no">25</td><td class="k">전자서명한다</td><td class="c"><span class="g g-D">D</span></td><td>다자간 서명 플로우·INVESTOR 서명자 역할 실재. <b>PKI·공동인증·본인인증 벤더 연동 레포 전수 0건</b></td><td>인증서 수단. 직인 이미지 방식으로 갈 경우엔 B로 내려감</td><td>D-19</td></tr>
+          <tr data-g="A"><td class="no">26</td><td class="k">서명 후 계약기록으로 이동한다</td><td class="c"><span class="g g-A">A</span></td><td>화면 전환</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="A"><td class="no">27</td><td class="k">문서를 개별·전체 선택한다</td><td class="c"><span class="g g-A">A</span></td><td>체크박스 상태</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="C"><td class="no">28</td><td class="k">선택 문서를 일괄 내려받는다</td><td class="c"><span class="g g-C">C</span></td><td>현행 다운로드는 단건 + pdf·image 2종</td><td>압축 묶음 API. 회신전문 형식 미정</td><td>D-20 D-21</td></tr>
+          <tr data-g="B"><td class="no">29</td><td class="k">계약기록 페이지를 넘긴다</td><td class="c"><span class="g g-B">B</span></td><td>서버 페이징 신설</td><td class="muted">—</td><td>D-24</td></tr>
+          <tr data-g="A"><td class="no">30</td><td class="k">빈 상태에서 양수 화면으로 이동한다</td><td class="c"><span class="g g-A">A</span></td><td>화면 전환</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="A"><td class="no">31</td><td class="k">현재·새 비밀번호를 입력한다</td><td class="c"><span class="g g-A">A</span></td><td>프론트 폼</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="C"><td class="no">32</td><td class="k">비밀번호를 변경한다</td><td class="c"><span class="g g-C">C</span></td><td><b>본인 비밀번호 변경 API 0건</b></td><td>신규 API + 규칙 + 세션 무효화 정책</td><td>D-25</td></tr>
+          <tr data-g="A"><td class="no">33</td><td class="k">완료 후 로그인 화면으로 간다</td><td class="c"><span class="g g-A">A</span></td><td>화면 전환</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">34</td><td class="k">엑셀 파일을 내려받는다 (미리보기 4종)</td><td class="c"><span class="g g-B">B</span></td><td>부품 실재</td><td>데이터</td><td>D-32</td></tr>
+          <tr data-g="A"><td class="no">35</td><td class="k">로그아웃한다</td><td class="c"><span class="g g-A">A</span></td><td>운영 어드민 동일 패턴</td><td class="muted">—</td><td class="muted">—</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <!-- 산출물 -->
+    <div class="sub-head">5-5. 산출물 — 실제로 발급되나 <span class="cnt">6건</span></div>
+    <div class="panel tight">
+      <div class="scroll">
+      <table class="dt">
+        <thead><tr><th style="width:36px"></th><th style="width:200px">산출물</th><th style="width:74px">등급</th><th>근거</th><th>무엇이 없나</th><th style="width:110px">선행</th><th style="width:82px">물을 것</th></tr></thead>
+        <tbody id="tb-out">
+          <tr data-g="C"><td class="no">1</td><td class="k">엑셀 ① 투자자산 현황</td><td class="c"><span class="g g-C">C</span></td><td>생성 부품 실재(<code>lib/excel.ts:57·72</code>)</td><td>데이터 3행 중 2행(투자실행액·순현금)의 원천</td><td>N-1 N-3</td><td>D-32</td></tr>
+          <tr data-g="C"><td class="no">2</td><td class="k">엑셀 ② 가맹점별 투자자산</td><td class="c"><span class="g g-C">C</span></td><td>동일</td><td>가맹점별 원금 잔액</td><td>N-1 N-2</td><td>D-01</td></tr>
+          <tr data-g="C"><td class="no">3</td><td class="k">엑셀 ③ 투자수익 현황</td><td class="c"><span class="g g-C">C</span></td><td>동일</td><td>PSA · PSM · ④ · ⑤</td><td>N-5 N-7 · E-1</td><td>D-28</td></tr>
+          <tr data-g="C"><td class="no">4</td><td class="k">엑셀 ④ 일별 투자수익</td><td class="c"><span class="g g-C">C</span></td><td>동일. 뼈대는 <code>batch-payouts</code>의 <code>role="INVESTOR"</code> 행을 <code>targetDate</code>로 묶어 세울 수 있다</td><td>상환액·투자실행금·투자수익 열</td><td>N-5 · E-1 E-2</td><td>D-28</td></tr>
+          <tr data-g="D"><td class="no">5</td><td class="k">투자자산 증명서<span style="display:block;font-size:11px;color:var(--gray-400)">전자문서 + 서명값 + 검증회신전문</span></td><td class="c"><span class="g g-D">D</span></td><td>문서 형태 정의됨. <b>서명 모듈 0건</b></td><td>인증서 벤더 · 검증회신 수신 경로 · 검증 실패 처리</td><td>서명 벤더</td><td>D-19 D-20</td></tr>
+          <tr data-g="C"><td class="no">6</td><td class="k">재양도합의서 원본 + 검증회신전문 묶음</td><td class="c"><span class="g g-C">C</span></td><td>재양도합의서는 백엔드가 생성하는 문서로 존재(<code>merchants/[id]/page.tsx:957</code>)</td><td>문서 유형 등록 · 압축 묶음 API · 회신전문 형식(xml/txt/pdf)</td><td>N-4</td><td>D-16 D-20 D-21</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div class="empty-msg" id="noHit">조건에 맞는 항목이 없다. 등급 뱃지를 다시 켜거나 검색어를 지운다.</div>
+    <div class="note-band">엑셀 4종의 <code>※</code> 주석 4종(합계 정의·비중 분모·Ty수익율 산식·가중평균 표기)은 설계안이 새로 쓴 문장이고, 그중 <b>비중 분모</b>와 <b>Ty수익율의 첫 항</b>은 아직 미확정이다. <b>미확정 값을 확정된 주석처럼 인쇄하는 상태</b>이므로 구현 전 정리가 필요하다.</div>
+  </section>
+
+  <!-- ── 6. 개발 문의 ── -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">6</span><h2>개발에 물을 것 — 32건</h2></div>
+    <p class="sec-lead">판정을 확정하려면 아래가 있어야 한다. 평문으로 그대로 던질 수 있게 썼다.</p>
+
+    <div class="q-head">
+      <button type="button" class="btn-copy" id="copyAll">
+        <svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="4.5" y="4.5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M9.5 2.5h-7a1 1 0 0 0-1 1v7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <span id="copyLabel">32건 전건 복사</span>
+      </button>
+      <span class="q-hint">평문으로 복사된다. 메신저·이슈에 그대로 붙여 넣으면 된다.</span>
+    </div>
+
+    <div class="panel" id="qbox">
+      <div class="qgrp">
+        <h4>정산금채권 단위 — 병목 ①</h4>
+        <ul class="qlist">
+          <li><span class="qid">D-01</span><span class="qtx">현행 배치(<code>가맹점 × 매출일</code>)를 플랫폼 축으로 쪼개 <code>가맹점ID × 플랫폼ID × 매출일자</code> 단위 레코드를 만들 수 있습니까? 매출 원장(<code>/admin/purchase-ledger</code>)의 <code>bizNo</code>·<code>salesSource</code>·<code>cardCorp</code>·<code>transactionDt</code>로 묶으면 그 축이 나오는데, 결과를 테이블로 적재하는 방식입니까 조회 시점 집계로 충분합니까?</span></li>
+          <li><span class="qid">D-02</span><span class="qtx">Figma 정산채권DB(정산채권ID·양수가액·할인율·상환부족액)에 대응하는 운영 백엔드 테이블이 실제로 존재합니까? 존재하면 어느 테이블입니까?</span></li>
+          <li><span class="qid">D-03</span><span class="qtx">순지급액(<code>netPayoutAmt</code>)의 "총 매출액 − 총 수수료"에서 총 수수료에 페이허그 채권매입수수료가 포함됩니까? 포함되면 대표 정의의 순지급액과 다른 값이 되어 화면 금액이 통째로 밀립니다.</span></li>
+          <li><span class="qid">D-09</span><span class="qtx">플랫폼 식별자가 <code>salesSource</code>(CARD/BM/YO/CPE)·<code>platformType</code>(CARD/BAEMIN/YOGIYO/COUPANG)·<code>platformCode</code>(HANA_CARD…)·<code>cardCorp</code>(문자열) 4체계로 병존합니다. 정산금채권ID의 플랫폼ID로 어느 것을 씁니까? 4체계를 잇는 매핑 테이블이 있습니까?</span></li>
+          <li><span class="qid">D-10</span><span class="qtx"><code>/admin/purchase-ledger</code>가 <code>bizNo</code> 필수 단건 조회입니다. 투자자 1명에게 매칭된 가맹점 전체를 횡단 조회하는 경로를 신설할 수 있습니까?</span></li>
+        </ul>
+      </div>
+
+      <div class="qgrp">
+        <h4>날짜</h4>
+        <ul class="qlist">
+          <li><span class="qid">D-04</span><span class="qtx">배달플랫폼(배민·요기요·쿠팡이츠) 거래의 <code>payoutDt</code>(정산예정일)가 실제로 채워집니까? 카드는 여신협회 매입내역 스크래핑 원본값인데 배달 쪽 원천은 무엇입니까?</span></li>
+          <li><span class="qid">D-05</span><span class="qtx"><code>payoutDt</code>가 <code>LedgerItem</code>·<code>MissedTransaction</code> 두 타입에만 있습니다. 선정산 도메인(<code>Batch</code>·<code>PreSettlementMerchant</code>·<code>PreSettlementTransaction</code>)에서 정산예정일을 조회할 경로가 있습니까?</span></li>
+          <li><span class="qid">D-06</span><span class="qtx">지급이 하루 2회라 같은 날 배치가 2건 생깁니다(<code>closedAt</code> 타임스탬프). 채권의 선정산일을 오전·오후 어느 배치로 잡습니까?</span></li>
+        </ul>
+      </div>
+
+      <div class="qgrp">
+        <h4>입금 대사 — E-2와 한 몸</h4>
+        <ul class="qlist">
+          <li><span class="qid">D-07</span><span class="qtx">락계좌 입금(<code>platformCode</code>·<code>tranDate</code>·<code>inAmount</code>)과 채권 단위 예정액을 금액으로 대사하는 로직이 백엔드에 있습니까? 현행 "락계좌 검증"은 계좌번호 일치 검증(<code>PlatformDepositTarget.accountNumber</code>)으로 보입니다.</span></li>
+          <li><span class="qid">D-08</span><span class="qtx">카드사가 여러 매출일자 건을 묶어 1건으로 입금할 때, 입금 명세 원본에 매출일자별 내역이 들어옵니까? 안 들어오면 채권 1건 단위 대사가 성립하지 않습니다.</span></li>
+        </ul>
+      </div>
+
+      <div class="qgrp">
+        <h4>권한 · 스코프</h4>
+        <ul class="qlist">
+          <li><span class="qid">D-11</span><span class="qtx">투자자 계정(<code>userType = INVESTOR</code>)에 대한 API 응답 필터링을 백엔드가 보장합니까? <code>/admin/merchants</code>는 인자가 없어 범위가 전적으로 토큰 해석에 달려 있고, 프론트에 스코프 로직이 0줄입니다.</span></li>
+          <li><span class="qid">D-12</span><span class="qtx">서버사이드 미들웨어가 없습니다(<code>middleware.ts</code> 부재). 투자자에게 타 투자자 배분액·페이허그 마진·미배정 가맹점이 응답에 실려 내려오지 않는다는 보장이 있습니까?</span></li>
+          <li><span class="qid">D-30</span><span class="qtx">투자자 전용 메뉴를 신설하면 기존 참여자 공용 메뉴(가맹점관리·매출조회·정산현황 3탭)를 투자자에게 닫습니까, 병존시킵니까?</span></li>
+          <li><span class="qid">D-31</span><span class="qtx"><code>userType</code> 열거형의 원본이 백엔드(<code>payhug-core-api UserRoleUtil</code>)인데, <code>INVESTOR</code>만 분기하는 헬퍼(<code>isInvestorUser</code>)를 신설하는 방향이 맞습니까?</span></li>
+        </ul>
+      </div>
+
+      <div class="qgrp">
+        <h4>쿠콘 — 병목 ②</h4>
+        <ul class="qlist">
+          <li><span class="qid">D-13</span><span class="qtx">투자자별 쿠콘 가상계좌를 개설할 수 있습니까? 현행 잔액 조회는 <code>POST /coocon/deposit-pg/balance</code> 모 계좌 1건뿐입니다. 쿠콘 상품에 투자자 단위 가상계좌·잔액조회가 있습니까?</span></li>
+          <li><span class="qid">D-14</span><span class="qtx">자정 마감 시점 가상계좌 잔액 스냅샷을 보관하는 배치를 만들 수 있습니까? 보관 주기와 보존 기간은 어떻게 잡습니까?</span></li>
+          <li><span class="qid">D-15</span><span class="qtx">쿠콘 We-bank가 조회 범위를 계정 단위로 제한하는 기능을 제공합니까? 못 하면 투자자에게 페이허그 전체 자금 이동이 열립니다. 안 되면 페이허그가 발췌본을 제공하는 방식이 가능합니까?</span></li>
+        </ul>
+      </div>
+
+      <div class="qgrp">
+        <h4>계약 · 서명</h4>
+        <ul class="qlist">
+          <li><span class="qid">D-16</span><span class="qtx">재양도 합의서를 계약 문서 유형에 추가할 수 있습니까? 현행 <code>CONTRACT_TYPE_LABELS</code>는 3종(이용약관 동의서·선정산 이용계약서·이관 계약서)뿐입니다.</span></li>
+          <li><span class="qid">D-17</span><span class="qtx">재양도 합의서에 효력 시작일·종료일 필드를 둘 수 있습니까? 지금은 투자자 매칭(<code>assign-investor</code>)만 있고 기간 필드가 없습니다.</span></li>
+          <li><span class="qid">D-18</span><span class="qtx">투자자 계약의 해지·만료를 어디에 기록합니까? 해지된 투자자의 어드민 접근은 어떻게 차단합니까?</span></li>
+          <li><span class="qid">D-19</span><span class="qtx">전자서명을 어느 벤더·어느 방식으로 붙입니까? 현행 <code>POST /admin/contracts/{id}/sign</code>은 직인 이미지 기반 자체 방식이고 인증서 연동이 레포 전체에 0건입니다. 현행 플로우를 대체합니까, 별도 경로를 만듭니까?</span></li>
+          <li><span class="qid">D-20</span><span class="qtx">서명검증 회신전문의 형식(xml·txt·pdf)과 수신 방식(동기 처리·비동기 콜백)은 무엇입니까? 검증 실패 건은 목록에 남깁니까 숨깁니까?</span></li>
+          <li><span class="qid">D-21</span><span class="qtx">재양도합의서 파일과 검증회신전문을 묶어 내려주는 API(zip 등)를 신설합니까? 현행 첨부 다운로드는 단건이고 pdf·image 2종만 지원합니다.</span></li>
+        </ul>
+      </div>
+
+      <div class="qgrp">
+        <h4>가맹점 목록</h4>
+        <ul class="qlist">
+          <li><span class="qid">D-22</span><span class="qtx">가맹점 목록에 업종(<code>businessTypeMain</code>)·종목(<code>businessItemMain</code>)을 실을 수 있습니까? 현재 상세에만 있고 목록 타입·목록 API에 없습니다. 참고로 같은 필드의 라벨이 화면마다 다릅니다 — 가맹점 상세는 업태, 회원 관리는 종목.</span></li>
+          <li><span class="qid">D-23</span><span class="qtx">"채권매매업체ID"가 어느 테이블·어느 필드입니까? 가맹점 목록·상세 어디에도 대응 필드가 없습니다. 이 값이 총판(파트너)을 가리키는 것이 맞습니까?</span></li>
+          <li><span class="qid">D-24</span><span class="qtx">가맹점 목록에 서버 페이징이 있습니까? <code>GET /admin/merchants</code>는 인자가 없고 화면에 페이지네이션이 없어 전체가 브라우저로 내려옵니다.</span></li>
+        </ul>
+      </div>
+
+      <div class="qgrp">
+        <h4>값 · 계산</h4>
+        <ul class="qlist">
+          <li><span class="qid">D-26</span><span class="qtx"><code>순지급액 × (1 − 할인율)</code>의 원 단위 처리는 반올림입니까, <code>순지급액 − 버림(순지급액 × 할인율)</code>입니까?</span></li>
+          <li><span class="qid">D-27</span><span class="qtx">투자자 요율(<code>PolicyRate</code>의 <code>MARGIN × INVESTOR</code>, <code>rateBps</code>)이 대표 정의의 "유동화투자자의 할인율"과 같은 값입니까? 요율이 가맹점별로 다르게 저장됩니까, 투자자 단위 단일입니까?</span></li>
+          <li><span class="qid">D-28</span><span class="qtx">투자자 몫 배분액(<code>Payout.margin</code>의 <code>role = "INVESTOR"</code> 행)을 기간·가맹점 축으로 조회하는 경로가 <code>GET /admin/settlement/batch-payouts</code> 말고 또 있습니까? 이 엔드포인트는 현재 엑셀 생성에만 쓰입니다.</span></li>
+          <li><span class="qid">D-29</span><span class="qtx">월별 집계 전환 시 W금융일수·Ty수익율을 가중평균으로 재산정합니까, 일별 값의 단순평균입니까?</span></li>
+        </ul>
+      </div>
+
+      <div class="qgrp">
+        <h4>산출물</h4>
+        <ul class="qlist">
+          <li><span class="qid">D-25</span><span class="qtx">참여자 계정의 본인 비밀번호 변경 API가 백엔드에 있습니까? 어드민에는 관리자가 가맹점 비밀번호를 초기화하는 <code>PUT /admin/merchants/{id}/reset-password</code>만 있습니다. 비밀번호 규칙과 변경 후 세션 무효화 정책은 무엇입니까?</span></li>
+          <li><span class="qid">D-32</span><span class="qtx">엑셀 4종을 서버에서 생성합니까, 현행처럼 브라우저에서 ExcelJS로 만듭니까? 서버 생성이면 스코프 필터가 자동으로 걸립니다.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 7. 판정하지 않은 것 ── -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">7</span><h2>이 문서가 판정하지 않은 것</h2></div>
+    <div class="panel">
+      <div class="foot">
+        <ul>
+          <li><b>백엔드를 보지 못했다.</b> 판정 근거는 프론트 레포 2개뿐이다. 서버 테이블·응답 실물은 D-01~D-32의 회신으로만 닫힌다.</li>
+          <li><b>공수·기간을 추정하지 않았다.</b> "재료가 있나"만 답했다.</li>
+          <li><b>C1(수수료율)·C2(지급 캘린더)·C4(예상 지급 차액) 미확정 유지.</b> 대표 정의의 <code>0.11% 예정</code>도 정책값으로 채택하지 않았다.</li>
+          <li><b>6대 개념(미지급금·선정산 제외금액·바로이체·과지급·미회수금·환급) 병합 0건.</b> 대표 정의의 미지급금·과지급금은 제7의 축으로 격리했다.</li>
+          <li><b>계약 용어(과정산금·미정산금)와 운영 6개념의 매핑.</b> 근거가 없어 손대지 않았다.</li>
+          <li><code>payhug-admin-web</code>·<code>payhug-merchant-web</code> <b>읽기만 했다.</b> 변경·커밋·push 0건.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var GRADES = ["A", "B", "C", "D", "E", "U", "N"];
+  var on = {};
+  GRADES.forEach(function (g) { on[g] = true; });
+
+  var rows = Array.prototype.slice.call(document.querySelectorAll("tbody[id^='tb-'] tr[data-g]"));
+  var total = rows.length;
+  var cnt = document.getElementById("cnt");
+  var noHit = document.getElementById("noHit");
+  var q = document.getElementById("q");
+  var chips = Array.prototype.slice.call(document.querySelectorAll("#chips .chip"));
+
+  rows.forEach(function (r) {
+    r.setAttribute("data-txt", (r.textContent || "").toLowerCase().replace(/\s+/g, " "));
+  });
+
+  function apply() {
+    var term = (q.value || "").trim().toLowerCase();
+    var shown = 0;
+    rows.forEach(function (r) {
+      var okG = on[r.getAttribute("data-g")] === true;
+      var okT = term === "" || r.getAttribute("data-txt").indexOf(term) !== -1;
+      if (okG && okT) { r.classList.remove("hit-off"); shown++; }
+      else { r.classList.add("hit-off"); }
+    });
+    cnt.innerHTML = "<b>" + shown + "</b> / " + total + "건";
+    if (shown === 0) { noHit.classList.add("on"); } else { noHit.classList.remove("on"); }
+  }
+
+  chips.forEach(function (c) {
+    c.addEventListener("click", function () {
+      var g = c.getAttribute("data-g");
+      on[g] = !on[g];
+      c.setAttribute("aria-pressed", on[g] ? "true" : "false");
+      apply();
+    });
+  });
+
+  q.addEventListener("input", apply);
+  apply();
+
+  /* 개발 문의 전건 복사 */
+  var btn = document.getElementById("copyAll");
+  var label = document.getElementById("copyLabel");
+  var qbox = document.getElementById("qbox");
+
+  function buildText() {
+    var out = ["PayHug 투자자 어드민 — 개발 확인 문항 32건", "(구현 가능성 판정 feasibility 기준 · 2026-08-27)", ""];
+    Array.prototype.forEach.call(qbox.querySelectorAll(".qgrp"), function (grp) {
+      var h = grp.querySelector("h4");
+      out.push("[" + (h ? h.textContent.trim() : "") + "]");
+      Array.prototype.forEach.call(grp.querySelectorAll(".qlist li"), function (li) {
+        var id = li.querySelector(".qid");
+        var tx = li.querySelector(".qtx");
+        out.push((id ? id.textContent.trim() : "") + "  " + (tx ? tx.textContent.replace(/\s+/g, " ").trim() : ""));
+      });
+      out.push("");
+    });
+    return out.join("\n");
+  }
+
+  function flash(msg) {
+    var old = label.textContent;
+    label.textContent = msg;
+    btn.classList.add("ok");
+    window.setTimeout(function () {
+      label.textContent = old;
+      btn.classList.remove("ok");
+    }, 1800);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.top = "-1000px";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  btn.addEventListener("click", function () {
+    var text = buildText();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        flash("복사됨 · 32건");
+      })["catch"](function () {
+        flash(fallbackCopy(text) ? "복사됨 · 32건" : "복사 실패 — 직접 선택해 복사");
+      });
+    } else {
+      flash(fallbackCopy(text) ? "복사됨 · 32건" : "복사 실패 — 직접 선택해 복사");
+    }
+  });
+})();
+</script>
+</body>
+</html>

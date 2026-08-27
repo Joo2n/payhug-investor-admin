@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1440">
-<title>PayHug Admin — 투자 수익</title>
+<title>PayHug Admin — 투자 수익 (기간 선택)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,6 +25,48 @@
   .tbl-head .toggle { margin-bottom: 0; }
   .tbl tfoot td { background: var(--gray-50); border-top: 1px solid var(--gray-100); border-bottom: 0; font-weight: 700; color: var(--gray-900); }
   .tbl tfoot td .avg-note { font-size: 11px; font-weight: 400; color: var(--gray-400); margin-left: 4px; font-family: var(--font-sans); }
+
+  /* ── 상태 뱃지 (제안서 화면 구분용) ── */
+  .page-title .state-badge {
+    vertical-align: middle; position: relative; top: -2px; margin-left: 8px;
+    font-size: 12px; line-height: 16px; font-weight: 500;
+  }
+
+  /* ── 날짜 선택 달력 팝오버 ── */
+  .filter-field { position: relative; }
+  .input.is-focused { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(127,225,65,0.2); }
+  .datepicker {
+    position: absolute; top: calc(100% + 8px); left: 0; z-index: 40;
+    width: 272px; padding: 12px; background: #fff;
+    border: 1px solid var(--gray-200); border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+  }
+  .dp-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .dp-head .dp-title { font-size: 13px; line-height: 18px; font-weight: 700; color: var(--gray-900); }
+  .dp-nav { display: inline-flex; background: none; border: 0; padding: 4px; border-radius: 6px; color: var(--gray-400); }
+  .dp-nav:hover { background: var(--gray-100); color: var(--gray-600); }
+  .dp-nav svg { width: 16px; height: 16px; }
+  .dp-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+  .dp-dow { text-align: center; font-size: 11px; line-height: 16px; font-weight: 600; color: var(--gray-400); padding: 4px 0 6px; }
+  .dp-dow.sun { color: var(--red-500); }
+  .dp-dow.sat { color: var(--blue-700); }
+  .dp-cell {
+    height: 32px; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; line-height: 16px; color: var(--gray-700);
+    border: 0; background: none; border-radius: 6px; padding: 0;
+  }
+  .dp-cell:hover { background: var(--gray-100); }
+  .dp-cell.blank { visibility: hidden; }
+  .dp-cell.in-range { background: var(--primary-50); color: var(--primary-700); font-weight: 600; border-radius: 0; }
+  .dp-cell.range-start { background: var(--primary); color: #fff; font-weight: 700; border-radius: 6px 0 0 6px; }
+  .dp-cell.range-end { background: var(--primary); color: #fff; font-weight: 700; border-radius: 0 6px 6px 0; }
+  .dp-cell.today { box-shadow: inset 0 0 0 2px var(--primary-700); }
+  .dp-foot {
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--gray-100);
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 11px; line-height: 16px; color: var(--secondary);
+  }
+  .dp-foot .mono { color: var(--gray-700); font-weight: 600; }
 </style>
 </head>
 <body data-active="invest-returns">
@@ -105,7 +147,7 @@
   <!-- ═══════════ 콘텐츠 영역 ═══════════ -->
   <main class="content">
     <div class="page-header">
-      <h1 class="page-title">투자 수익</h1>
+      <h1 class="page-title">투자 수익 <span class="badge badge-gray state-badge">기간 선택</span></h1>
       <p class="page-sub">기간별 투자 수익 현황 조회 · 수익 산정 기준 안내.</p>
     </div>
 
@@ -119,7 +161,68 @@
       <div class="filter-row">
         <div class="filter-field">
           <label>시작일</label>
-          <input type="date" class="input" value="2026-08-21">
+          <input type="date" class="input is-focused" value="2026-08-21">
+          <div class="datepicker">
+            <div class="dp-head">
+              <button class="dp-nav" aria-label="이전 달">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+              </button>
+              <span class="dp-title">2026년 8월</span>
+              <button class="dp-nav" aria-label="다음 달">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+            <div class="dp-grid">
+            <div class="dp-dow sun">일</div>
+            <div class="dp-dow">월</div>
+            <div class="dp-dow">화</div>
+            <div class="dp-dow">수</div>
+            <div class="dp-dow">목</div>
+            <div class="dp-dow">금</div>
+            <div class="dp-dow sat">토</div>
+            <button class="dp-cell blank"></button>
+            <button class="dp-cell blank"></button>
+            <button class="dp-cell blank"></button>
+            <button class="dp-cell blank"></button>
+            <button class="dp-cell blank"></button>
+            <button class="dp-cell blank"></button>
+            <button class="dp-cell">1</button>
+            <button class="dp-cell">2</button>
+            <button class="dp-cell">3</button>
+            <button class="dp-cell">4</button>
+            <button class="dp-cell">5</button>
+            <button class="dp-cell">6</button>
+            <button class="dp-cell">7</button>
+            <button class="dp-cell">8</button>
+            <button class="dp-cell">9</button>
+            <button class="dp-cell">10</button>
+            <button class="dp-cell">11</button>
+            <button class="dp-cell">12</button>
+            <button class="dp-cell">13</button>
+            <button class="dp-cell">14</button>
+            <button class="dp-cell">15</button>
+            <button class="dp-cell">16</button>
+            <button class="dp-cell">17</button>
+            <button class="dp-cell">18</button>
+            <button class="dp-cell">19</button>
+            <button class="dp-cell">20</button>
+            <button class="dp-cell range-start">21</button>
+            <button class="dp-cell in-range">22</button>
+            <button class="dp-cell in-range">23</button>
+            <button class="dp-cell in-range">24</button>
+            <button class="dp-cell in-range">25</button>
+            <button class="dp-cell in-range">26</button>
+            <button class="dp-cell range-end today">27</button>
+            <button class="dp-cell">28</button>
+            <button class="dp-cell">29</button>
+            <button class="dp-cell">30</button>
+            <button class="dp-cell">31</button>
+            </div>
+            <div class="dp-foot">
+              <span>선택 기간</span>
+              <span class="mono">2026-08-21 ~ 2026-08-27</span>
+            </div>
+          </div>
         </div>
         <div class="filter-tilde">~</div>
         <div class="filter-field">

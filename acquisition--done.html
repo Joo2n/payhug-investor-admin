@@ -3,13 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1440">
-<title>PayHug Admin — 정산채권 양수</title>
+<title>PayHug Admin — 정산채권 양수 · 서명 완료</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/base.css">
 <style>
   /* 화면 전용 — 색상은 base.css 변수만 사용 */
+  /* 상태 표시 뱃지 — 제안서 화면 구분용 */
+  .state-flag {
+    display: inline-block; margin-left: 10px; vertical-align: middle;
+    padding: 4px 10px; border-radius: 9999px;
+    background: var(--gray-100); color: var(--gray-500);
+    font-size: 12px; line-height: 16px; font-weight: 500;
+  }
   .notice-green { background: var(--primary-50); border-color: var(--primary-200); color: var(--primary-700); }
   .chk { width: 16px; height: 16px; accent-color: var(--primary); flex-shrink: 0; cursor: pointer; }
   .sign-row {
@@ -31,6 +38,24 @@
   }
   .action-bar .sel-count { font-size: 14px; color: var(--gray-600); }
   .action-bar .sel-count b { color: var(--gray-900); }
+  .sign-row.done .m-name { color: var(--gray-500); }
+  .sign-row .chk:disabled { cursor: default; opacity: 0.6; }
+  /* 서명 완료 모달 */
+  .done-head { text-align: center; }
+  .done-icon {
+    width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 16px;
+    background: var(--emerald-100); color: var(--emerald-600);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .done-icon svg { width: 28px; height: 28px; }
+  .done-title { font-size: 18px; line-height: 28px; font-weight: 700; color: var(--gray-900); margin: 0 0 8px; }
+  .done-desc { font-size: 14px; line-height: 22px; color: var(--gray-500); margin: 0; }
+  .done-list { background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: 12px; padding: 8px 16px; }
+  .done-item { display: flex; align-items: center; gap: 8px; padding: 8px 0; }
+  .done-item + .done-item { border-top: 1px solid var(--gray-100); }
+  .done-item svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--emerald-600); }
+  .done-item .n { flex: 1; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gray-900); }
+  .done-item .d { font-size: 12px; line-height: 16px; color: var(--gray-400); }
 </style>
 </head>
 <body data-active="receivables">
@@ -111,39 +136,39 @@
   <!-- ═══════════ 콘텐츠 영역 ═══════════ -->
   <main class="content" style="padding-bottom:120px">
     <div class="page-header">
-      <h1 class="page-title">정산채권 양수</h1>
+      <h1 class="page-title">정산채권 양수 <span class="state-flag">서명 완료</span></h1>
       <p class="page-sub">정산금채권 양수도 계약서 전자서명.</p>
     </div>
 
     <!-- 안내 배너 -->
     <div class="notice notice-green">
       <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      <span>서명 대기 중인 정산금채권 양수도 계약 <b class="mono">3건</b>. 계약서 내용 확인 후 서명 진행.</span>
+      <span>서명 완료 <b class="mono">2건</b>. 서명 대기 잔여 <b class="mono">1건</b>.</span>
     </div>
 
     <!-- 서명 대기 목록 -->
     <div class="card" style="padding:0; overflow:hidden">
       <div style="padding:16px 24px; border-bottom:1px solid var(--gray-100)">
-        <span class="card-title" style="margin:0">서명 대기 목록</span>
+        <span class="card-title" style="margin:0">양수도 계약 목록</span>
       </div>
 
-      <div class="sign-row">
-        <input type="checkbox" class="chk">
+      <div class="sign-row done">
+        <input type="checkbox" class="chk" checked disabled>
         <div style="flex:1; min-width:0">
           <div class="m-name">김성호떡볶이 본점</div>
           <div class="m-date">계약 생성일 <span class="mono">2026-08-25</span></div>
         </div>
-        <span class="badge badge-amber">서명 대기</span>
-        <a class="doc-link" href="assets/docs/계약서_서명대기_M2026-0001.pdf" target="_blank" rel="noopener">계약서 보기</a>
+        <span class="badge badge-green">서명 완료</span>
+        <a class="doc-link" href="contracts.html">계약서 보기</a>
       </div>
-      <div class="sign-row">
-        <input type="checkbox" class="chk">
+      <div class="sign-row done">
+        <input type="checkbox" class="chk" checked disabled>
         <div style="flex:1; min-width:0">
           <div class="m-name">달빛곱창 홍대점</div>
           <div class="m-date">계약 생성일 <span class="mono">2026-08-26</span></div>
         </div>
-        <span class="badge badge-amber">서명 대기</span>
-        <a class="doc-link" href="assets/docs/계약서_서명대기_M2026-0002.pdf" target="_blank" rel="noopener">계약서 보기</a>
+        <span class="badge badge-green">서명 완료</span>
+        <a class="doc-link" href="contracts.html">계약서 보기</a>
       </div>
       <div class="sign-row">
         <input type="checkbox" class="chk">
@@ -162,6 +187,38 @@
   <div class="action-bar">
     <span class="sel-count">선택 <b class="mono">0</b>건</span>
     <button class="btn btn-primary" style="padding:12px 40px; font-size:16px; border-radius:12px" disabled>서명하기</button>
+  </div>
+
+  <!-- 서명 완료 모달 -->
+  <div class="modal-backdrop">
+    <div class="modal md">
+      <div class="modal-body" style="padding-top:32px">
+        <div class="done-head">
+          <div class="done-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <h3 class="done-title">서명 완료</h3>
+          <p class="done-desc">정산금채권 양수도 계약 <b class="mono">2건</b> 서명 완료.<br>서명값은 계약기록에 보관됨. 인증서 발행기관 검증 회신전문의 형식·보관 경로는 확인 대상.</p>
+        </div>
+
+        <div class="done-list">
+          <div class="done-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span class="n">김성호떡볶이 본점</span>
+            <span class="d mono">2026-08-25</span>
+          </div>
+          <div class="done-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span class="n">달빛곱창 홍대점</span>
+            <span class="d mono">2026-08-26</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline" href="contracts.html">계약기록 보기</a>
+        <a class="btn btn-primary" href="acquisition.html">확인</a>
+      </div>
+    </div>
   </div>
 
 </div>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1440">
-<title>PayHug Admin — 투자 자산</title>
+<title>PayHug Admin — 투자 자산 (증명서 발급 확인)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -28,6 +28,22 @@
     background: var(--gray-50); border-top: 1px solid var(--gray-100);
     font-weight: 700; color: var(--gray-900);
   }
+
+  /* ── 상태 뱃지 (제안서 화면 구분용) ── */
+  .page-title .state-badge {
+    vertical-align: middle; position: relative; top: -2px; margin-left: 8px;
+    font-size: 12px; line-height: 16px; font-weight: 500;
+  }
+
+  /* ── 증명서 발급 정보 요약 ── */
+  .cert-desc { font-size: 14px; line-height: 22px; color: var(--gray-600); margin: 0; }
+  .cert-info {
+    margin: 0; padding: 14px 16px; background: var(--gray-50);
+    border: 1px solid var(--gray-200); border-radius: 12px;
+    display: grid; grid-template-columns: 76px 1fr; row-gap: 8px; column-gap: 12px;
+  }
+  .cert-info dt { font-size: 12px; line-height: 18px; color: var(--secondary); }
+  .cert-info dd { margin: 0; font-size: 13px; line-height: 18px; font-weight: 500; color: var(--gray-800); }
 </style>
 </head>
 <body data-active="invest-assets">
@@ -109,7 +125,7 @@
   <main class="content">
     <div class="page-header row-between">
       <div>
-        <h1 class="page-title">투자 자산</h1>
+        <h1 class="page-title">투자 자산 <span class="badge badge-gray state-badge">증명서 발급 확인</span></h1>
         <p class="page-sub">투자자산 현황과 가맹점별 투자 내역.</p>
       </div>
       <div class="base-date">기준일 <span class="mono">2026-08-27</span></div>
@@ -205,7 +221,7 @@
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             엑셀 다운로드
           </a>
-          <a class="btn btn-outline" href="invest-assets--cert-confirm.html">
+          <a class="btn btn-outline" href="certificate.html">
             <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             증명서 다운로드
           </a>
@@ -377,6 +393,31 @@
 
   </main>
 
+</div>
+
+<!-- ═══════════ 증명서 발급 확인 모달 (열린 상태) ═══════════ -->
+<div class="modal-backdrop">
+  <div class="modal md">
+    <div class="modal-header">
+      <h3>투자자산 증명서 발급</h3>
+      <button class="close" aria-label="닫기">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="cert-desc">기준일 2026-08-27 시점의 가맹점별 투자자산 내역으로 전자문서를 발급함. 발급 문서에 ㈜페이허그 인증서 서명값을 표시함. 인증서 발행기관 검증 회신전문은 확인 대상.</p>
+      <dl class="cert-info">
+        <dt>문서명</dt><dd>투자자산 증명서</dd>
+        <dt>기준일</dt><dd class="mono">2026-08-27</dd>
+        <dt>대상</dt><dd>가맹점 16개</dd>
+        <dt>작성자</dt><dd>㈜페이허그</dd>
+      </dl>
+    </div>
+    <div class="modal-footer">
+      <a class="btn btn-outline" href="invest-assets.html">취소</a>
+      <a class="btn btn-primary" href="certificate.html">발급</a>
+    </div>
+  </div>
 </div>
 </body>
 </html>

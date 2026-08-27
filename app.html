@@ -1,0 +1,2501 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>PayHug Admin — 통합 프로토타입</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/sheet.css">
+<style>
+  /* ── 화면 전환 골격 ───────────────────────────────────────── */
+  /* base.css 의 .modal-backdrop·.action-bar·.toast 가 display:flex 로 선언돼 있어
+     UA 기본값 [hidden]{display:none} 을 덮는다. 작성자 스타일로 다시 눌러 준다. */
+  [hidden] { display: none !important; }
+  .screen[hidden], [data-when][hidden], [data-when-not][hidden] { display: none !important; }
+  body[data-view="acquisition-list"] .content { padding-bottom: 120px; }
+
+  /* ── 상태 마커 (M-1 단일화: .badge + .state-badge) ────────── */
+  .page-title .state-badge {
+    vertical-align: middle; position: relative; top: -2px; margin-left: 8px;
+    font-size: 12px; line-height: 16px; font-weight: 600;
+  }
+
+  /* ── 페이지 헤더 변형 · 기준일 pill (투자 자산 전용) ───────── */
+  .page-header.row-between { align-items: flex-start; }
+  .base-date {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; background: #fff;
+    border: 1px solid var(--gray-200); border-radius: 8px;
+    font-size: 14px; line-height: 20px; color: var(--secondary); white-space: nowrap;
+  }
+  .base-date .mono { color: var(--gray-700); font-weight: 500; }
+
+  /* ── 표 카드 헤더·합계·하단 안내 ──────────────────────────── */
+  .tbl-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 16px 20px; border-bottom: 1px solid var(--gray-100);
+  }
+  .tbl-head h2 { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gray-900); margin: 0; }
+  .tbl-head .card-title { margin: 0; }
+  .tbl-head .left { display: flex; align-items: center; gap: 16px; }
+  .tbl-head .toggle { margin-bottom: 0; }
+  .tbl-head .actions { display: flex; align-items: center; gap: 8px; }
+  .tbl-head-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 1px solid var(--gray-100);
+  }
+  .tbl-foot-note {
+    padding: 12px 20px; border-top: 1px solid var(--gray-100); background: var(--gray-50);
+    font-size: 12px; line-height: 18px; color: var(--gray-500);
+  }
+  .tbl tr.total-row td {
+    background: var(--gray-50); border-top: 1px solid var(--gray-100);
+    font-weight: 700; color: var(--gray-900);
+  }
+  .tbl tfoot td { background: var(--gray-50); border-top: 1px solid var(--gray-100); border-bottom: 0; font-weight: 700; color: var(--gray-900); }
+  .tbl tfoot td .avg-note { font-size: 11px; font-weight: 400; color: var(--gray-400); margin-left: 4px; font-family: var(--font-sans); }
+  .tbl-count { font-size: 12px; color: var(--gray-400); margin-left: 8px; }
+  .sel-pill { margin-left: 8px; font-weight: 600; }
+
+  /* ── 열 정렬 (통합본 추가 컨트롤) ─────────────────────────── */
+  .tbl th.sortable { cursor: pointer; user-select: none; white-space: nowrap; }
+  .tbl th.sortable:hover { color: var(--gray-900); }
+  .tbl th .sort-mark { display: inline-block; margin-left: 4px; color: var(--gray-300); font-size: 10px; }
+  .tbl th.sorted .sort-mark { color: var(--primary-600); }
+
+  /* ── 체크박스·선택 행 ─────────────────────────────────────── */
+  .chk { width: 16px; height: 16px; accent-color: var(--primary); flex-shrink: 0; cursor: pointer; vertical-align: middle; }
+  .chk:disabled { cursor: default; opacity: 0.6; }
+  .tbl tbody tr.selected td { background: var(--primary-50); }
+
+  /* ── 빈 상태 (M-3 단일화) ─────────────────────────────────── */
+  .empty-state { padding: 64px 24px; text-align: center; }
+  .empty-state .empty-ico {
+    width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 16px;
+    background: var(--gray-100); color: var(--gray-400);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .empty-state .empty-ico svg { width: 28px; height: 28px; }
+  .empty-state .empty-title { font-size: 16px; line-height: 24px; font-weight: 700; color: var(--gray-700); margin: 0 0 6px; }
+  .empty-state .empty-desc { font-size: 13px; line-height: 20px; color: var(--gray-400); margin: 0 0 20px; }
+  .empty-state .empty-desc:last-child { margin-bottom: 0; }
+
+  /* ── 안내 배너 초록 (L-4) ─────────────────────────────────── */
+  .notice-green { background: var(--primary-50); border-color: var(--primary-200); color: var(--primary-700); }
+
+  /* ── 파일 링크 ────────────────────────────────────────────── */
+  .file-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; color: var(--primary-600); text-decoration: none; cursor: pointer; }
+  .file-link:hover { text-decoration: underline; }
+  .file-link svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  /* ── 투자 수익 지표 블록 ──────────────────────────────────── */
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+  .card-head .card-title { margin: 0; }
+  .stat-grid { display: grid; grid-template-columns: 1.1fr 1.15fr 1fr 1.7fr; }
+  .stat-grid > .stat { padding: 0 24px; min-width: 0; }
+  .stat-grid > .stat:first-child { padding-left: 0; }
+  .stat-grid > .stat + .stat { border-left: 1px solid var(--gray-100); }
+  .stat .ty-split { display: flex; }
+  .stat .ty-split > div + div { border-left: 1px solid var(--gray-100); padding-left: 20px; margin-left: 20px; }
+  .stat .ty-label { font-size: 11px; line-height: 15px; color: var(--secondary); margin-bottom: 2px; white-space: nowrap; }
+  .stat .stat-period { font-size: 16px; line-height: 28px; font-weight: 700; color: var(--gray-900); }
+
+  /* ── 조건 칩 ──────────────────────────────────────────────── */
+  .chip-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .chip-label { font-size: 12px; line-height: 16px; color: var(--secondary); }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 9999px;
+    background: var(--primary-50); border: 1px solid var(--primary-200); color: var(--primary-700);
+    font-size: 12px; line-height: 16px; font-weight: 500;
+  }
+  .chip button { display: flex; background: none; border: 0; padding: 0; color: var(--primary-600); cursor: pointer; }
+  .chip svg { width: 12px; height: 12px; }
+  .chip-clear { background: none; border: 0; padding: 0; cursor: pointer; font-size: 12px; line-height: 16px; color: var(--gray-500); text-decoration: underline; }
+
+  /* ── 역전 범위 안내문 (DateRangeFilter.tsx:138-140 대응) ──── */
+  .range-warn { margin: 8px 0 0; font-size: 12px; line-height: 16px; color: var(--red-500); }
+
+  /* ── 메뉴 그룹 접힘 (AdminLayout.tsx:486, 494) ─────────────── */
+  .nav-group-label { background: none; border: 0; width: 100%; text-align: left; cursor: pointer; font-family: inherit; }
+  .nav-group-label svg { transition: transform 0.2s cubic-bezier(.4, 0, .2, 1); }
+  .nav-group.collapsed .nav-group-label svg { transform: rotate(-90deg); }
+  .nav-group.collapsed .nav-item { display: none; }
+
+  /* ── 인라인 스피너 (CommonLoading.tsx:78-95 실측 규격) ─────── */
+  @keyframes commonSpinner { to { transform: rotate(360deg); } }
+  .spinner-inline {
+    display: inline-block; width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid rgba(0,0,0,0.08); border-top-color: #65c826;
+    animation: commonSpinner 0.6s linear infinite; vertical-align: -4px;
+  }
+  .btn .spinner-inline { border-color: rgba(255,255,255,0.35); border-top-color: #fff; margin-right: 6px; }
+
+  /* ── 토스트 닫기 (Toast.tsx:45-51 — duration 0 일 때만 렌더) ─ */
+  .toast .t-close { flex-shrink: 0; display: flex; padding: 2px; border: 0; background: none; border-radius: 4px; cursor: pointer; color: var(--green-600); }
+  .toast .t-close:hover { color: var(--green-800); }
+  .toast-info .t-close { color: var(--primary-600); }
+  .toast .t-close svg { width: 16px; height: 16px; }
+
+  /* ── 필터 입력 포커스 ─────────────────────────────────────── */
+  .filter-field { position: relative; }
+  .input.is-focused { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(127,225,65,0.2); }
+
+  /* ── 서명 목록·하단 액션바 ────────────────────────────────── */
+  .sign-row { display: flex; align-items: center; gap: 16px; padding: 16px 24px; border-bottom: 1px solid var(--gray-50); }
+  .sign-row:last-child { border-bottom: 0; }
+  .sign-row.selected { background: var(--primary-50); }
+  .sign-row .m-name { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+  .sign-row .m-date { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+  .sign-row .m-date .mono { color: var(--gray-500); }
+  .sign-row.done .m-name { color: var(--gray-500); }
+  .doc-link { font-size: 14px; font-weight: 500; color: var(--primary-600); text-decoration: none; white-space: nowrap; cursor: pointer; }
+  .doc-link:hover { text-decoration: underline; }
+  .action-bar {
+    position: fixed; left: 240px; right: 0; bottom: 0; z-index: 40;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 32px; background: #fff;
+    border-top: 1px solid var(--gray-200); box-shadow: var(--shadow-card);
+  }
+  .action-bar .sel-count { font-size: 14px; color: var(--gray-600); }
+  .action-bar .sel-count b { color: var(--gray-900); }
+
+  /* ── 인증서 서명 진행 인디케이터 ──────────────────────────── */
+  @keyframes ph-spin { to { transform: rotate(360deg); } }
+  .spin-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 8px 0 4px; }
+  .spinner { width: 56px; height: 56px; border-radius: 50%; border: 4px solid var(--gray-100); border-top-color: var(--primary); animation: ph-spin 0.9s linear infinite; }
+  .spin-label { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gray-900); }
+  .step-list { border: 1px solid var(--gray-100); background: var(--gray-50); border-radius: 12px; padding: 8px 16px; }
+  .step { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; }
+  .step + .step { border-top: 1px solid var(--gray-100); }
+  .step-num {
+    width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; background: var(--gray-200); color: var(--gray-500);
+  }
+  .step-num svg { width: 12px; height: 12px; }
+  .step.done .step-num { background: var(--emerald-100); color: var(--emerald-700); }
+  .step.now .step-num { background: var(--primary); color: #fff; }
+  .step-text { font-size: 14px; line-height: 20px; color: var(--gray-400); }
+  .step.done .step-text { color: var(--gray-600); }
+  .step.now .step-text { color: var(--gray-900); font-weight: 600; }
+  .step-note { display: block; font-size: 12px; line-height: 16px; font-weight: 400; color: var(--gray-400); margin-top: 2px; }
+
+  /* ── 모달 부속 ────────────────────────────────────────────── */
+  .modal-guide { font-size: 12px; line-height: 18px; color: var(--gray-400); margin: 0; }
+  [data-modal="acquisition-signing"] .modal-guide { color: var(--gray-500); text-align: center; }
+  .modal .done-head { text-align: center; }
+  .modal .done-icon {
+    width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 16px;
+    background: var(--emerald-100); color: var(--emerald-600);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal .done-icon svg { width: 28px; height: 28px; }
+  .modal .done-title { font-size: 18px; line-height: 28px; font-weight: 700; color: var(--gray-900); margin: 0 0 8px; }
+  .modal .done-desc { font-size: 14px; line-height: 22px; color: var(--gray-500); margin: 0; }
+  .modal .done-list { background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: 12px; padding: 8px 16px; }
+  .modal .done-item { display: flex; align-items: center; gap: 8px; padding: 8px 0; }
+  .modal .done-item + .done-item { border-top: 1px solid var(--gray-100); }
+  .modal .done-item svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--emerald-600); }
+  .modal .done-item .n { flex: 1; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gray-900); }
+  .modal .done-item .d { font-size: 12px; line-height: 16px; color: var(--gray-400); }
+  .modal-sign-list { background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: 12px; padding: 8px 16px; }
+  .modal-sign-list .row-between { padding: 6px 0; }
+  .modal-sign-list .row-between + .row-between { border-top: 1px solid var(--gray-100); }
+  .modal-sign-list .n { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+  .modal-sign-list .d { font-size: 12px; color: var(--gray-400); }
+  .cert-desc { font-size: 13px; line-height: 20px; color: var(--gray-600); margin: 0; }
+  .cert-info { margin: 0; font-size: 13px; line-height: 20px; }
+  .cert-info dt { float: left; clear: left; width: 88px; color: var(--gray-500); padding: 5px 0; }
+  .cert-info dd { margin: 0 0 0 88px; color: var(--gray-800); font-weight: 500; padding: 5px 0; }
+  .url-box { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 12px 16px; }
+  .url-box .k { display: block; font-size: 12px; line-height: 16px; color: var(--secondary); margin-bottom: 4px; }
+  .url-box .v { font-size: 13px; line-height: 20px; color: var(--gray-800); word-break: break-all; }
+
+  /* ── 토스트 2행 구성 ──────────────────────────────────────── */
+  .toast .t-ico { width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px; }
+  .toast .t-main { margin: 0; font-size: 15px; line-height: 22px; font-weight: 700; }
+  .toast .t-sub { margin: 2px 0 0; font-size: 13px; line-height: 18px; font-weight: 400; opacity: 0.85; }
+  .btn-excel.is-done { background: var(--emerald-700); }
+  .btn-excel.is-done:hover { background: var(--emerald-700); }
+  .btn-excel.armed { box-shadow: 0 0 0 3px var(--emerald-100), var(--shadow-card); font-weight: 600; }
+
+  /* ── 쿠콘 링크 카드 ───────────────────────────────────────── */
+  .link-wrap { max-width: 640px; margin: 40px auto 0; }
+  .link-card { padding: 48px 40px; text-align: center; }
+  .link-icon {
+    width: 56px; height: 56px; border-radius: 16px; margin: 0 auto 20px;
+    background: var(--primary-50); color: var(--primary-600);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .link-icon svg { width: 26px; height: 26px; }
+  .link-title { font-size: 18px; line-height: 28px; font-weight: 700; color: var(--gray-900); margin: 0 0 8px; }
+  .link-desc { font-size: 14px; line-height: 22px; color: var(--gray-500); margin: 0 0 24px; }
+  .link-foot { font-size: 12px; line-height: 16px; color: var(--gray-400); margin: 16px 0 0; }
+  .ref-list { display: flex; flex-direction: column; gap: 10px; }
+  .ref-item { display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 20px; color: var(--gray-700); }
+  .ref-item svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--emerald-600); }
+
+  /* ── 비밀번호 변경 폼 ─────────────────────────────────────── */
+  .pw-card { max-width: 480px; margin: 0 auto; }
+  .pw-field { margin-bottom: 20px; }
+  .pw-field label { display: block; font-size: 14px; font-weight: 600; color: var(--gray-700); margin-bottom: 6px; }
+  .pw-field .input { width: 100%; padding: 10px 16px; border-radius: 12px; background: #fff; border-color: var(--gray-300); }
+  .pw-field .hint { font-size: 12px; line-height: 16px; color: var(--gray-400); margin-top: 6px; }
+  .pw-note { max-width: 480px; margin: 12px auto 0; font-size: 12px; line-height: 16px; color: var(--gray-400); text-align: center; }
+  .input-wrap { position: relative; }
+  .pw-field.has-error .input { border-color: var(--red-500); box-shadow: 0 0 0 2px rgba(239,68,68,0.15); padding-right: 44px; }
+  .warn-ico { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--red-500); pointer-events: none; }
+  .err-msg { display: flex; align-items: center; gap: 4px; font-size: 12px; line-height: 16px; font-weight: 500; color: var(--red-600); margin: 6px 0 0; }
+  .err-msg svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .rule-list {
+    list-style: none; margin: 10px 0 0; padding: 12px 14px;
+    background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 10px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px;
+  }
+  .rule-list li { display: flex; align-items: center; gap: 6px; font-size: 12px; line-height: 18px; }
+  .rule-list li svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .rule-list li.ok { color: var(--emerald-700); font-weight: 500; }
+  .rule-list li.ng { color: var(--red-600); font-weight: 500; }
+  .done-card { max-width: 480px; margin: 0 auto; padding: 44px 32px 32px; text-align: center; }
+  .done-card .done-ico {
+    width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 20px;
+    background: var(--emerald-50); color: var(--emerald-600);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .done-card .done-ico svg { width: 34px; height: 34px; }
+  .done-card .done-title { font-size: 20px; line-height: 28px; font-weight: 700; color: var(--gray-900); margin: 0 0 8px; }
+  .done-card .done-desc { font-size: 14px; line-height: 22px; color: var(--gray-500); margin: 0 0 28px; }
+  .done-card .done-btn { width: 100%; padding: 12px 0; border-radius: 12px; }
+
+  /* ── 증명서 ───────────────────────────────────────────────── */
+  .cert-layout { display: flex; align-items: flex-start; gap: 24px; }
+  .cert-main { flex: 1; min-width: 0; }
+  .cert-aside { width: 300px; flex-shrink: 0; }
+  .doc-card {
+    background: #fff; border: 1px solid var(--gray-200); border-radius: 4px;
+    box-shadow: var(--shadow-card);
+    max-width: 720px; margin: 0 auto; padding: 64px 72px;
+    min-height: 1018px; display: flex; flex-direction: column;
+  }
+  .doc-title {
+    text-align: center; font-size: 24px; line-height: 32px; font-weight: 700;
+    color: var(--gray-900); letter-spacing: 0.25em; text-indent: 0.25em; margin: 0 0 32px;
+  }
+  .doc-meta { display: flex; justify-content: flex-end; gap: 24px; font-size: 13px; line-height: 20px; color: var(--gray-600); margin-bottom: 16px; }
+  .doc-meta .k { font-weight: 600; color: var(--gray-500); margin-right: 6px; }
+  .doc-tbl { width: 100%; border-collapse: collapse; font-size: 13px; line-height: 18px; }
+  .doc-tbl th, .doc-tbl td { border: 1px solid var(--gray-200); padding: 8px 12px; color: var(--gray-700); }
+  .doc-tbl th { background: var(--gray-50); text-align: center; font-size: 12px; font-weight: 600; color: var(--gray-600); }
+  .doc-tbl td.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .doc-tbl tfoot td { background: var(--gray-50); font-weight: 700; color: var(--gray-900); }
+  .doc-sign { margin-top: auto; padding-top: 48px; text-align: center; border-top: 1px solid var(--gray-100); }
+  .doc-sign .author { font-size: 15px; line-height: 22px; font-weight: 600; color: var(--gray-900); margin: 24px 0 16px; }
+  .doc-sign .sig-label { font-size: 11px; font-weight: 600; color: var(--gray-500); margin-bottom: 4px; }
+  .doc-sign .sig-value { font-family: var(--font-mono); font-size: 10px; line-height: 14px; color: var(--gray-400); word-break: break-all; max-width: 440px; margin: 0 auto 16px; }
+  .issue-note { font-size: 13px; line-height: 20px; color: var(--gray-600); margin: 0 0 16px; }
+  .doc-notice { font-size: 12px; line-height: 18px; color: var(--amber-700); background: var(--amber-50); border: 1px solid var(--amber-200); border-radius: 8px; padding: 8px 12px; margin: 0 0 16px; }
+  .issue-meta { margin: 0 0 20px; font-size: 12px; line-height: 18px; }
+  .issue-meta div { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--gray-100); }
+  .issue-meta div:last-child { border-bottom: 0; }
+  .issue-meta .k { color: var(--gray-500); }
+  .issue-meta .v { color: var(--gray-700); font-weight: 500; }
+
+  /* ── 로그인 (사이드바 없는 독립 화면) ─────────────────────── */
+  .login-wrap {
+    min-height: 100vh; background: var(--gray-50);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 16px;
+  }
+  .login-card { width: 100%; max-width: 400px; padding: 36px 32px 28px; }
+  .login-logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px; }
+  .login-logo .logo-mark { display: block; width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; }
+  .login-logo .wordmark { font-size: 22px; line-height: 30px; font-weight: 700; color: var(--gray-900); white-space: nowrap; }
+  .login-logo .wordmark em { font-style: normal; color: var(--primary-600); }
+  .login-sub { text-align: center; font-size: 13px; line-height: 20px; color: var(--secondary); margin: 0 0 28px; }
+  .login-field { margin-bottom: 16px; }
+  .login-field label { display: block; font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 6px; }
+  .login-field .input { width: 100%; padding: 11px 16px; border-radius: 12px; background: #fff; border-color: var(--gray-300); }
+  .login-submit { width: 100%; padding: 12px 0; border-radius: 12px; margin-top: 8px; }
+  .login-links { text-align: center; margin-top: 16px; }
+  .login-links a { font-size: 12px; line-height: 16px; color: var(--gray-500); text-decoration: none; cursor: pointer; }
+  .login-links a:hover { color: var(--gray-700); text-decoration: underline; }
+  .login-links .link-off { font-size: 12px; line-height: 16px; color: var(--gray-300); text-decoration: none; cursor: not-allowed; }
+  .login-note { width: 100%; max-width: 400px; margin: 20px 0 0; font-size: 12px; line-height: 18px; color: var(--gray-400); text-align: center; }
+
+  /* ── 랜딩 갤러리 ──────────────────────────────────────────── */
+  .wrap { max-width: 1024px; margin: 0 auto; padding: 56px 32px 64px; }
+  .hero { display: flex; align-items: center; gap: 16px; }
+  .hero .logo-mark { display: block; width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; }
+  .hero h1 { font-size: 26px; line-height: 34px; font-weight: 700; color: var(--gray-900); margin: 0; }
+  .hero h1 em { font-style: normal; color: var(--primary-600); }
+  .hero .sub { font-size: 14px; line-height: 20px; color: var(--secondary); margin: 4px 0 0; }
+  .hero-date {
+    margin-left: auto; align-self: flex-start; font-size: 12px; line-height: 16px; color: var(--gray-400);
+    font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+    background: #fff; border: 1px solid var(--gray-200); border-radius: 6px; padding: 4px 10px;
+  }
+  .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 20px; }
+  .shot-card {
+    display: block; text-decoration: none; cursor: pointer; text-align: left; width: 100%;
+    background: #fff; border-radius: 16px; padding: 20px 24px;
+    box-shadow: var(--shadow-card); border: 1px solid var(--gray-100);
+    transition: box-shadow 0.15s var(--ease-default), border-color 0.15s var(--ease-default), transform 0.15s var(--ease-default);
+  }
+  .shot-card:hover { box-shadow: var(--shadow-card-hover); border-color: var(--primary-200); transform: translateY(-2px); }
+  .shot-top { display: flex; align-items: center; gap: 12px; }
+  .shot-icon {
+    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+    background: var(--primary-50); color: var(--primary-600);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .shot-icon svg { width: 18px; height: 18px; }
+  .shot-name { font-size: 16px; line-height: 22px; font-weight: 700; color: var(--gray-900); }
+  .shot-file { font-size: 11px; line-height: 15px; color: var(--gray-400); font-family: var(--font-mono); margin-top: 1px; }
+  .shot-top .badge.sm { margin-left: auto; flex-shrink: 0; }
+  .shot-desc { font-size: 13px; line-height: 19px; color: var(--gray-500); margin: 12px 0 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 10px; margin: 36px 0 0; }
+  .sec-head h2 { font-size: 16px; line-height: 24px; font-weight: 700; color: var(--gray-900); margin: 0; }
+  .sec-head .sec-note { font-size: 12px; line-height: 16px; color: var(--gray-400); }
+  .foot-note { text-align: center; font-size: 12px; line-height: 16px; color: var(--gray-400); margin-top: 44px; }
+
+  /* ── 통합본 전용 크롬: 화면·상태 이동 도크 ────────────────── */
+  .dock { position: fixed; right: 16px; bottom: 16px; z-index: 95; font-family: var(--font-sans); }
+  .dock-toggle {
+    display: flex; align-items: center; gap: 8px; cursor: pointer;
+    background: var(--sidebar-bg); color: #fff; border: 0; border-radius: 9999px;
+    padding: 10px 18px; font-size: 13px; line-height: 18px; font-weight: 600;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.25);
+  }
+  .dock-toggle .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+  .dock-panel {
+    position: absolute; right: 0; bottom: 52px; width: 320px;
+    background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; padding: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15), 0 8px 10px -6px rgba(0,0,0,0.1);
+  }
+  .dock-panel h3 { font-size: 12px; line-height: 16px; font-weight: 700; color: var(--gray-500); margin: 0 0 8px; }
+  .dock-panel h3 + h3 { margin-top: 16px; }
+  .dock-panel select { width: 100%; }
+  .dock-states { display: flex; flex-wrap: wrap; gap: 6px; }
+  .dock-states button {
+    cursor: pointer; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 8px;
+    padding: 6px 10px; font-size: 12px; line-height: 16px; color: var(--gray-700);
+  }
+  .dock-states button:hover { background: var(--gray-100); }
+  .dock-states button.on { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+  .dock-hint { font-size: 11px; line-height: 16px; color: var(--gray-400); margin: 12px 0 0; }
+  .dock-hint code { font-family: var(--font-mono); color: var(--gray-600); }
+</style>
+</head>
+<!--
+  통합 프로토타입 — 화면 14 · 상태 18을 한 파일에서 조작한다.
+  개별 HTML 34개는 Figma 임포트용 정적 원본으로 별도 보존한다(이 파일이 대체하지 않는다).
+  화면은 데이터 모델에서만 그린다. 표·합계·비중은 조작 결과로 계산되며 하드코딩하지 않는다.
+  딥링크: #<화면>/<상태>  예) #invest-assets/page2 · #acquisition-list/signing
+-->
+<body data-active="invest-assets" data-view="invest-assets">
+<div class="page">
+
+  <!-- ═══════════ 사이드바 (개별 화면 32개와 동일 마크업) ═══════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <a href="#">
+        <span class="logo-mark" role="img" aria-label="PayHug"></span>
+        <span class="wordmark">PayHug <em>Admin</em></span>
+      </a>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group" data-group="invest">
+        <button type="button" class="nav-group-label" data-act="nav-group" aria-expanded="true">
+          <span>투자</span>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <a class="nav-item" data-menu="invest-assets" href="invest-assets.html">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <span>투자 자산</span>
+        </a>
+        <a class="nav-item" data-menu="invest-returns" href="invest-profit.html">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+          <span>투자 수익</span>
+        </a>
+      </div>
+
+      <div class="nav-group" data-group="merchant">
+        <button type="button" class="nav-group-label" data-act="nav-group" aria-expanded="true">
+          <span>가맹점</span>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <a class="nav-item" data-menu="merchants" href="merchants.html">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          <span>가맹점</span>
+        </a>
+        <a class="nav-item" data-menu="receivables" href="acquisition.html">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          <span>정산채권 양수</span>
+        </a>
+        <a class="nav-item" data-menu="contracts" href="contracts.html">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>계약기록</span>
+        </a>
+      </div>
+
+      <div class="nav-group" data-group="manage">
+        <button type="button" class="nav-group-label" data-act="nav-group" aria-expanded="true">
+          <span>관리</span>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <a class="nav-item" data-menu="kcoon" href="coocon.html">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>쿠콘 관리 현금</span>
+          <svg class="ext" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+        <a class="nav-item" data-menu="password" href="password.html">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          <span>비밀번호 변경</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-profile">
+      <div class="avatar">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+      </div>
+      <div class="info">
+        <p class="name">㈜테스트인베스트</p>
+        <button class="logout">로그아웃</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════ 콘텐츠 영역 ═══════════ -->
+  <main class="content">
+      <!-- ═════════ 투자 자산 ═════════ -->
+      <section class="screen" data-screen="invest-assets" data-state="default" hidden>
+        <div class="page-header row-between">
+          <div>
+            <h1 class="page-title">투자 자산<span data-state-mark></span></h1>
+            <p class="page-sub">투자자산 현황과 가맹점별 투자 내역.</p>
+          </div>
+          <div class="base-date">기준일 <span class="mono">2026-08-27</span></div>
+        </div>
+
+        <div class="summary-grid" data-mount="ia-summary"></div>
+
+        <div class="tbl-wrap mb-6">
+          <div class="tbl-head">
+            <h2>현황</h2>
+            <div class="actions">
+              <button class="btn btn-excel" data-act="xls-open" data-xls="assets-status"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            엑셀 다운로드</button>
+            </div>
+          </div>
+          <div class="tbl-scroll" data-mount="ia-status-wrap"><table class="tbl" data-mount="ia-status"></table></div>
+        </div>
+
+        <div class="tbl-wrap mb-6">
+          <div class="tbl-head">
+            <h2>가맹점별 투자자산</h2>
+            <div class="actions">
+              <button class="btn btn-excel" data-act="xls-open" data-xls="assets-merchant" data-mount="ia-xls-merchant"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            엑셀 다운로드</button>
+              <button class="btn btn-outline" data-act="cert-open" data-mount="ia-cert"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                증명서 다운로드</button>
+            </div>
+          </div>
+          <div data-mount="ia-merch"></div>
+          <div data-mount="ia-merch-page"></div>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title">수익 산정 기준 (예시)</h2>
+          <div class="formula-grid">
+            <div class="formula-card">
+              <div class="formula-head">
+                <span class="badge badge-primary">수수료 배분형</span>
+              </div>
+              <div class="formula-row">
+                <div class="formula-term strong">
+                  <div class="t-label">배분 대상</div>
+                  <div class="t-value">투자자 배분액</div>
+                </div>
+                <span class="formula-op">=</span>
+                <div class="formula-term">
+                  <div class="t-label">기준 금액</div>
+                  <div class="t-value">선정산 거래액</div>
+                </div>
+                <span class="formula-op">×</span>
+                <div class="formula-term emerald strong">
+                  <div class="t-label">배분 요율</div>
+                  <div class="t-value">0.11%</div>
+                  <div class="t-sub">VAT 면제</div>
+                </div>
+              </div>
+            </div>
+            <div class="formula-card">
+              <div class="formula-head">
+                <span class="badge badge-blue">조달이자형</span>
+              </div>
+              <div class="formula-row">
+                <div class="formula-term strong">
+                  <div class="t-label">산정 결과</div>
+                  <div class="t-value">투자 수익</div>
+                </div>
+                <span class="formula-op">=</span>
+                <div class="formula-term">
+                  <div class="t-label">기준 금액</div>
+                  <div class="t-value">투자실행금</div>
+                </div>
+                <span class="formula-op">×</span>
+                <div class="formula-term emerald strong">
+                  <div class="t-label">조달 이자율</div>
+                  <div class="t-value">연 12%</div>
+                </div>
+                <span class="formula-op">×</span>
+                <div class="formula-term">
+                  <div class="t-label">기간</div>
+                  <div class="t-value">사용일수</div>
+                </div>
+                <span class="formula-op">÷</span>
+                <div class="formula-term muted">
+                  <div class="t-label">연 환산 일수</div>
+                  <div class="t-value">365</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="formula-caption">산식·요율은 예시이며, 개별 계약 조건에 따라 확정됨.</p>
+        </div>
+
+        <div class="terms-note">
+          <span class="tn-title">용어 안내</span>
+          <dl>
+            <dt>금융일수</dt><dd>양수일로부터 지급예정일까지의 한편 넣기 일수</dd>
+            <dt>W금융일수</dt><dd>취소 등이 없다는 가정하에, 보유한 정산채권들의 투자금액을 가중한 금융일수 평균</dd>
+            <dt>S입금부족율</dt><dd>20일 전일자부터 11일 전일자까지인 기간의 거래금액을 샘플로 한 '입금부족액/선정산금액'</dd>
+            <dt>Ty수익율</dt><dd>할인율 × (365 / w금융일수)</dd>
+          </dl>
+        </div>
+      </section>
+
+      <!-- ═════════ 투자자산 증명서 ═════════ -->
+      <section class="screen" data-screen="certificate" data-state="default" hidden>
+        <a class="back-link" href="invest-assets.html" data-nav="invest-assets"><svg style="width:14px;height:14px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 자산</a>
+        <div class="page-header">
+          <h1 class="page-title">가맹점별 투자자산 증명서<span data-state-mark></span></h1>
+          <p class="page-sub">전자서명이 포함된 발급 문서 미리보기.</p>
+        </div>
+        <div class="cert-layout">
+          <div class="cert-main">
+            <div class="doc-card">
+              <h2 class="doc-title">투자자산 현황</h2>
+              <div class="doc-meta">
+                <span><span class="k">투자자</span>㈜테스트인베스트</span>
+                <span><span class="k">작성일자</span><span class="mono">2026-08-27</span></span>
+              </div>
+              <p class="doc-notice">※ 예시값 — 표기 금액·요율·상호는 전부 예시이며 실제 거래 기록이 아니다. 수수료율은 미확정이고 할인율 0.11%는 예정값이다. 본 지면은 화면 설계(안) 시연용 견본이며 발급 효력이 없다.</p>
+              <table class="doc-tbl" data-mount="cert-tbl"></table>
+              <div class="doc-sign">
+                <p class="author">작성자: ㈜페이허그</p>
+                <div class="sig-label">서명</div>
+                <div class="sig-value">kd568w7sg9apt86ag6ejg8atu73aat8tag8ata6agje8s7</div>
+                <span class="badge badge-gray">서명값 표시 — 검증 결과 미표기(확인 대상)</span>
+              </div>
+            </div>
+          </div>
+          <aside class="cert-aside">
+            <div class="card">
+              <h2 class="card-title">발급 안내</h2>
+              <p class="issue-note">표기 금액·상호·서명값은 전부 예시이며 실제 발급 기록이 아니다. 전자문서에 ㈜페이허그 인증서 서명값을 표시함. 인증서 발행기관 검증 회신전문은 형식·전달 경로 미정의 — 확인 대상.</p>
+              <div class="issue-meta">
+                <div><span class="k">작성일자</span><span class="v mono">2026-08-27</span></div>
+                <div><span class="k">투자자</span><span class="v">㈜테스트인베스트</span></div>
+                <div><span class="k">대상 가맹점</span><span class="v" data-mount="cert-count">16개</span></div>
+              </div>
+              <a class="btn btn-primary" style="width:100%" href="assets/docs/투자자산증명서_20260827.pdf" download="투자자산증명서_20260827.pdf" data-act="cert-pdf"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                PDF 다운로드</a>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ═════════ 투자 수익 ═════════ -->
+      <section class="screen" data-screen="invest-profit" data-state="default" hidden>
+        <div class="page-header">
+          <h1 class="page-title">투자 수익<span data-state-mark></span></h1>
+          <p class="page-sub">기간별 투자 수익 현황 조회 · 수익 산정 기준 안내.</p>
+        </div>
+
+        <div class="search-bar">
+          <div class="preset-row">
+            <button class="preset-btn" data-act="preset" data-preset="yesterday">어제</button>
+            <button class="preset-btn" data-act="preset" data-preset="week">일주일</button>
+            <button class="preset-btn" data-act="preset" data-preset="month">이번달</button>
+          </div>
+          <div class="filter-row">
+            <div class="filter-field">
+              <label>시작일</label>
+              <input type="date" class="input" data-mount="pf-from" data-act="pf-date" data-which="from">
+            </div>
+            <div class="filter-tilde">~</div>
+            <div class="filter-field">
+              <label>종료일</label>
+              <input type="date" class="input" data-mount="pf-to" data-act="pf-date" data-which="to">
+            </div>
+            <button class="btn btn-primary" data-act="pf-search" data-mount="pf-go">검색</button>
+            <button class="btn btn-outline" data-act="pf-reset">초기화</button>
+          </div>
+          <p class="range-warn" data-mount="pf-warn" hidden>시작일은 종료일보다 이후일 수 없음.</p>
+        </div>
+
+        <div class="card mb-6">
+          <div class="card-head">
+            <h2 class="card-title">수익 현황</h2>
+            <button class="btn btn-excel" data-act="xls-open" data-xls="profit-status" data-mount="pf-xls1"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            엑셀 다운로드</button>
+          </div>
+          <div class="stat-grid" data-mount="pf-stat"></div>
+        </div>
+
+        <div class="tbl-wrap mb-6">
+          <div class="tbl-head">
+            <div class="left">
+              <h2 class="card-title" data-mount="pf-tbl-title">일별 투자수익</h2>
+              <div class="toggle">
+                <button class="toggle-btn" data-act="pf-gran" data-gran="daily">일별</button>
+                <button class="toggle-btn" data-act="pf-gran" data-gran="monthly">월별</button>
+              </div>
+            </div>
+            <button class="btn btn-excel" data-act="xls-open" data-xls="profit-daily" data-mount="pf-xls2"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            엑셀 다운로드</button>
+          </div>
+          <div data-mount="pf-tbl"></div>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title">수익 산정 기준 (예시)</h2>
+          <div class="formula-grid">
+            <div class="formula-card">
+              <div class="formula-head">
+                <span class="badge badge-primary">수수료 배분형</span>
+              </div>
+              <div class="formula-row">
+                <div class="formula-term strong">
+                  <div class="t-label">배분 대상</div>
+                  <div class="t-value">투자자 배분액</div>
+                </div>
+                <span class="formula-op">=</span>
+                <div class="formula-term">
+                  <div class="t-label">기준 금액</div>
+                  <div class="t-value">선정산 거래액</div>
+                </div>
+                <span class="formula-op">×</span>
+                <div class="formula-term emerald strong">
+                  <div class="t-label">배분 요율</div>
+                  <div class="t-value">0.11%</div>
+                  <div class="t-sub">VAT 면제</div>
+                </div>
+              </div>
+            </div>
+            <div class="formula-card">
+              <div class="formula-head">
+                <span class="badge badge-blue">조달이자형</span>
+              </div>
+              <div class="formula-row">
+                <div class="formula-term strong">
+                  <div class="t-label">산정 결과</div>
+                  <div class="t-value">투자 수익</div>
+                </div>
+                <span class="formula-op">=</span>
+                <div class="formula-term">
+                  <div class="t-label">기준 금액</div>
+                  <div class="t-value">투자실행금</div>
+                </div>
+                <span class="formula-op">×</span>
+                <div class="formula-term emerald strong">
+                  <div class="t-label">조달 이자율</div>
+                  <div class="t-value">연 12%</div>
+                </div>
+                <span class="formula-op">×</span>
+                <div class="formula-term">
+                  <div class="t-label">기간</div>
+                  <div class="t-value">사용일수</div>
+                </div>
+                <span class="formula-op">÷</span>
+                <div class="formula-term muted">
+                  <div class="t-label">연 환산 일수</div>
+                  <div class="t-value">365</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="formula-caption">산식·요율은 예시이며, 개별 계약 조건에 따라 확정됨.</p>
+        </div>
+
+        <div class="terms-note">
+          <span class="tn-title">용어 안내</span>
+          <dl>
+            <dt>금융일수</dt><dd>양수일로부터 지급예정일까지의 한편 넣기 일수</dd>
+            <dt>W금융일수</dt><dd>취소 등이 없다는 가정하에, 보유한 정산채권들의 투자금액을 가중한 금융일수 평균</dd>
+            <dt>S입금부족율</dt><dd>20일 전일자부터 11일 전일자까지인 기간의 거래금액을 샘플로 한 '입금부족액/선정산금액'</dd>
+            <dt>Ty수익율</dt><dd>할인율 × (365 / w금융일수)</dd>
+          </dl>
+        </div>
+      </section>
+
+      <!-- ═════════ 가맹점 ═════════ -->
+      <section class="screen" data-screen="merchants" data-state="default" hidden>
+        <div class="page-header">
+          <h1 class="page-title">가맹점<span data-state-mark></span></h1>
+          <p class="page-sub">투자 대상 가맹점 목록.</p>
+        </div>
+
+        <div class="search-bar">
+          <div class="filter-row">
+            <div class="filter-field">
+              <label>업종</label>
+              <select class="input" style="width:140px" data-mount="mc-sector" data-act="mc-sector" aria-label="업종"></select>
+            </div>
+            <div class="filter-field">
+              <label>채권매입업체</label>
+              <select class="input" style="width:180px" data-mount="mc-buyer" data-act="mc-buyer">
+                <option>전체</option><option>A-001 ㈜페이허그</option>
+              </select>
+            </div>
+            <div class="filter-field" style="flex:1; max-width:360px">
+              <label>검색어</label>
+              <input type="text" class="input" style="width:100%" data-mount="mc-kw" placeholder="가맹점ID·가맹점명·사업자번호·대표자명">
+            </div>
+            <button class="btn btn-primary" data-act="mc-search">검색</button>
+            <button class="btn btn-outline" data-act="mc-reset">초기화</button>
+          </div>
+        </div>
+
+        <div data-mount="mc-chips"></div>
+
+        <div class="tbl-wrap">
+          <div data-mount="mc-tbl"></div>
+          <div class="tbl-foot-note">가맹점 상세 화면은 이번 설계(안) 범위 밖. 행 클릭 목적지 없음.</div>
+          <div class="pagination" style="justify-content:space-between" data-mount="mc-page"></div>
+        </div>
+      </section>
+
+      <!-- ═════════ 정산채권 양수 ═════════ -->
+      <section class="screen" data-screen="acquisition-list" data-state="default" hidden>
+        <div class="page-header">
+          <h1 class="page-title">정산채권 양수<span data-state-mark></span></h1>
+          <p class="page-sub">정산금채권 양수도 계약서 전자서명.</p>
+        </div>
+        <div class="notice notice-green">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span data-mount="aq-notice"></span>
+        </div>
+        <div class="card" style="padding:0; overflow:hidden">
+          <div style="padding:16px 24px; border-bottom:1px solid var(--gray-100)">
+            <span class="card-title" style="margin:0" data-mount="aq-title">서명 대기 목록</span>
+          </div>
+          <div data-mount="aq-rows"></div>
+        </div>
+      </section>
+
+      <!-- ═════════ 계약기록 ═════════ -->
+      <section class="screen" data-screen="contracts" data-state="default" hidden>
+        <div class="page-header">
+          <h1 class="page-title">계약기록<span data-state-mark></span></h1>
+          <p class="page-sub">정산금채권 재양도합의서 보관함.</p>
+        </div>
+        <div class="tbl-wrap">
+          <div class="tbl-head-bar">
+            <div>
+              <span class="card-title" style="margin:0">재양도합의서 목록</span>
+              <span class="tbl-count" data-mount="ct-count"></span>
+              <span class="badge badge-green sel-pill" data-mount="ct-sel"></span>
+            </div>
+            <button class="btn btn-excel" data-act="ct-download" data-mount="ct-dl"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span data-mount="ct-dl-label">선택 문서 다운로드</span></button>
+          </div>
+          <div data-mount="ct-tbl"></div>
+          <div class="tbl-foot-note">다운로드 시 선택한 각 가맹점의 재양도합의서 파일이 제공됨. 서명 검증 회신전문은 형식·전달 경로 미정의 — 확인 대상.</div>
+          <div class="pagination" style="border-top:1px solid var(--gray-100)" data-mount="ct-page"></div>
+        </div>
+      </section>
+
+      <!-- ═════════ 쿠콘 관리 현금 ═════════ -->
+      <section class="screen" data-screen="coocon" data-state="default" hidden>
+        <div class="page-header">
+          <h1 class="page-title">쿠콘 관리 현금<span data-state-mark></span></h1>
+          <p class="page-sub">관리 현금 거래 내역 조회를 위한 외부 시스템 연결.</p>
+        </div>
+        <div class="link-wrap">
+              <!-- 중앙 안내 카드 -->
+              <div class="card link-card">
+                <div class="link-icon">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </div>
+                <h2 class="link-title">쿠콘 We-bank 전자금융서비스</h2>
+                <p class="link-desc">
+                  관리 현금의 입금·송금·펌뱅킹 거래 내역은 쿠콘 We-bank 전자금융서비스에서 조회함.<br>
+                  별도 발급된 사용자 ID·비밀번호·기관코드·OTP로 로그인.
+                </p>
+                <a class="btn btn-primary" href="https://www.we-bank.co.kr/main_00100.act" target="_blank" rel="noopener">
+                  We-bank 바로가기
+                  <svg style="width:14px;height:14px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+                <p class="link-foot">새 창으로 열림 · 계정 발급 및 OTP 초기화는 페이허그 담당자에게 문의</p>
+              </div>
+        
+              <!-- 참고 카드 -->
+              <div class="card" style="margin-top:16px">
+                <h3 class="card-title">We-bank에서 조회 가능한 내역</h3>
+                <div class="ref-list">
+                  <div class="ref-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <span>가상계좌 입금내역조회</span>
+                  </div>
+                  <div class="ref-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <span>가상계좌 송금내역조회</span>
+                  </div>
+                  <div class="ref-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <span>펌뱅킹 제휴거래내역조회</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+      </section>
+
+      <!-- ═════════ 비밀번호 변경 ═════════ -->
+      <section class="screen" data-screen="password" data-state="default" hidden>
+        <div class="page-header">
+          <h1 class="page-title">비밀번호 변경<span data-state-mark></span></h1>
+          <p class="page-sub">로그인 비밀번호 변경.</p>
+        </div>
+        <div class="card pw-card" data-when-not="done">
+          <div class="pw-field">
+            <label>현재 비밀번호</label>
+            <input type="password" class="input" data-mount="pw-cur" data-act="pw-input">
+          </div>
+          <div class="pw-field" data-mount="pw-new-field">
+            <label>새 비밀번호</label>
+            <div class="input-wrap">
+              <input type="password" class="input" data-mount="pw-new" data-act="pw-input">
+              <svg class="warn-ico" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 3h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+            </div>
+            <p class="hint" style="margin:6px 0 0" data-mount="pw-hint">영문·숫자·특수문자 포함 8자 이상</p>
+            <p class="err-msg" data-mount="pw-new-err" hidden><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 9v3m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>비밀번호 규칙 미충족. 미충족 항목 보완 후 재입력.</p>
+            <ul class="rule-list" data-mount="pw-rules" hidden></ul>
+          </div>
+          <div class="pw-field" style="margin-bottom:24px" data-mount="pw-cfm-field">
+            <label>새 비밀번호 확인</label>
+            <div class="input-wrap">
+              <input type="password" class="input" data-mount="pw-cfm" data-act="pw-input">
+              <svg class="warn-ico" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 3h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+            </div>
+            <p class="err-msg" data-mount="pw-cfm-err" hidden><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 9v3m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>새 비밀번호가 일치하지 않음. 새 비밀번호와 동일하게 다시 입력.</p>
+          </div>
+          <button class="btn btn-primary" style="width:100%; padding:12px 0; border-radius:12px" data-act="pw-submit" data-mount="pw-submit">변경하기</button>
+        </div>
+        <p class="pw-note" data-when-not="done">비밀번호 변경 후 기존 세션 처리는 확인 대상.</p>
+
+        <div class="card done-card" data-when="done">
+          <div class="done-ico"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+          <p class="done-title">비밀번호 변경 완료</p>
+          <p class="done-desc">새 비밀번호로 변경 완료. 기존 세션 처리는 확인 대상.</p>
+          <button class="btn btn-primary done-btn" data-nav="login">로그인 화면으로</button>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="xls-assets-status" data-state="default" hidden>
+        <a class="back-link" href="invest-assets.html" data-nav="invest-assets"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 자산</a>
+        <div class="page-header">
+          <h1 class="page-title">엑셀 산출물 서식 — 투자자산 현황<span data-state-mark></span></h1>
+          <p class="page-sub">투자 자산 &gt; 현황 표를 엑셀로 내려받았을 때의 시트 서식. Figma 임포트용이며 화면 흐름의 진입점이 아님.</p>
+        </div>
+        <div class="file-bar" data-mount="filebar"></div>
+        <div class="sheet-frame">
+          <div class="sheet-tabs" data-mount="sheettabs"></div>
+          <div class="sheet-scroll"><table class="sheet" data-mount="sheet"></table></div>
+        </div>
+        <p class="sheet-caption">화면의 표를 그대로 엑셀 양식으로 내려받은 결과. 서식·열 순서는 화면과 동일.</p>
+      </section>
+      <section class="screen" data-screen="xls-assets-merchant" data-state="default" hidden>
+        <a class="back-link" href="invest-assets.html" data-nav="invest-assets"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 자산</a>
+        <div class="page-header">
+          <h1 class="page-title">엑셀 산출물 서식 — 가맹점별 투자자산<span data-state-mark></span></h1>
+          <p class="page-sub">투자 자산 &gt; 가맹점별 투자자산 표를 엑셀로 내려받았을 때의 시트 서식. Figma 임포트용이며 화면 흐름의 진입점이 아님.</p>
+        </div>
+        <div class="file-bar" data-mount="filebar"></div>
+        <div class="sheet-frame">
+          <div class="sheet-tabs" data-mount="sheettabs"></div>
+          <div class="sheet-scroll"><table class="sheet" data-mount="sheet"></table></div>
+        </div>
+        <p class="sheet-caption">화면의 표를 그대로 엑셀 양식으로 내려받은 결과. 서식·열 순서는 화면과 동일.</p>
+      </section>
+      <section class="screen" data-screen="xls-profit-status" data-state="default" hidden>
+        <a class="back-link" href="invest-profit.html" data-nav="invest-profit"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 수익</a>
+        <div class="page-header">
+          <h1 class="page-title">엑셀 산출물 서식 — 투자수익 현황<span data-state-mark></span></h1>
+          <p class="page-sub">투자 수익 &gt; 수익 현황 카드를 엑셀로 내려받았을 때의 시트 서식. Figma 임포트용이며 화면 흐름의 진입점이 아님.</p>
+        </div>
+        <div class="file-bar" data-mount="filebar"></div>
+        <div class="sheet-frame">
+          <div class="sheet-tabs" data-mount="sheettabs"></div>
+          <div class="sheet-scroll"><table class="sheet" data-mount="sheet"></table></div>
+        </div>
+        <p class="sheet-caption">화면의 표를 그대로 엑셀 양식으로 내려받은 결과. 서식·열 순서는 화면과 동일.</p>
+      </section>
+      <section class="screen" data-screen="xls-profit-daily" data-state="default" hidden>
+        <a class="back-link" href="invest-profit.html" data-nav="invest-profit"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 수익</a>
+        <div class="page-header">
+          <h1 class="page-title">엑셀 산출물 서식 — 일별 투자수익<span data-state-mark></span></h1>
+          <p class="page-sub">투자 수익 &gt; 일별 투자수익 표를 엑셀로 내려받았을 때의 시트 서식. Figma 임포트용이며 화면 흐름의 진입점이 아님.</p>
+        </div>
+        <div class="file-bar" data-mount="filebar"></div>
+        <div class="sheet-frame">
+          <div class="sheet-tabs" data-mount="sheettabs"></div>
+          <div class="sheet-scroll"><table class="sheet" data-mount="sheet"></table></div>
+        </div>
+        <p class="sheet-caption">화면의 표를 그대로 엑셀 양식으로 내려받은 결과. 서식·열 순서는 화면과 동일.</p>
+      </section>
+  </main>
+
+</div>
+
+<!-- ═══════════ 사이드바 없는 독립 화면 ═══════════ -->
+<section class="screen" data-screen="index" data-state="default" hidden>
+  <div class="wrap">
+    <div class="hero">
+      <span class="logo-mark" role="img" aria-label="PayHug"></span>
+      <div>
+        <h1>PayHug <em>투자자 어드민</em> — 화면 설계(안)</h1>
+        <p class="sub">투자자용 어드민 UI 기획 · 기존 어드민 디자인시스템 기준</p>
+      </div>
+      <span class="hero-date">2026-08-27</span>
+    </div>
+    <div class="sec-head"><h2>화면</h2><span class="sec-note">메뉴 대응 7 · 하위 6 · 상태 18</span></div>
+    <div class="gallery" data-mount="ix-gallery"></div>
+    <p class="foot-note">표기 금액·요율·상호는 전부 예시.</p>
+  </div>
+</section>
+
+<section class="screen" data-screen="login" data-state="default" hidden>
+  <div class="login-wrap">
+  <div class="card login-card">
+    <div class="login-logo">
+      <span class="logo-mark" role="img" aria-label="PayHug"></span>
+      <span class="wordmark">PayHug <em>Admin</em></span>
+    </div>
+    <p class="login-sub">투자자 어드민</p>
+
+    <div class="login-field">
+      <label>사업자등록번호 또는 휴대전화번호</label>
+      <input type="text" class="input" placeholder="'-' 없이 숫자만 입력">
+    </div>
+    <div class="login-field" style="margin-bottom:8px">
+      <label>비밀번호</label>
+      <input type="password" class="input" placeholder="비밀번호 입력">
+    </div>
+
+    <a class="btn btn-primary login-submit" href="invest-assets.html">로그인</a>
+
+    <div class="login-links"><span class="link-off" role="link" aria-disabled="true" title="비밀번호 찾기 화면은 이번 설계(안) 범위 밖(D-2). 발급·재설정은 페이허그 담당자 문의.">비밀번호 찾기</span></div>
+  </div>
+
+  <p class="login-note">계정 발급은 페이허그 담당자에게 문의.</p>
+  </div>
+</section>
+
+<!-- ═══════════ 모달 ═══════════ -->
+<div class="modal-backdrop" data-modal="invest-assets-cert-confirm" data-act="backdrop" hidden>
+  <div class="modal md">
+    <div class="modal-header">
+      <h3>투자자산 증명서 발급</h3>
+      <button class="close" aria-label="닫기" data-act="modal-close"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p class="cert-desc">기준일 2026-08-27 시점의 가맹점별 투자자산 내역으로 전자문서를 발급함. 발급 문서에 ㈜페이허그 인증서 서명값을 표시함. 인증서 발행기관 검증 회신전문은 확인 대상.</p>
+      <dl class="cert-info">
+        <dt>문서명</dt><dd>투자자산 증명서</dd>
+        <dt>기준일</dt><dd class="mono">2026-08-27</dd>
+        <dt>대상</dt><dd data-mount="cf-target">가맹점 16개</dd>
+        <dt>작성자</dt><dd>㈜페이허그</dd>
+      </dl>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-act="modal-close">취소</button>
+      <button class="btn btn-primary" data-act="cert-issue">발급</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" data-modal="acquisition-confirm" data-act="backdrop" hidden>
+  <div class="modal md">
+    <div class="modal-header">
+      <h3>정산금채권 양수도 계약서 서명</h3>
+      <button class="close" aria-label="닫기" data-act="modal-close"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc" style="margin:0">선택한 <b data-mount="aqc-count">2건</b>의 계약서에 전자서명함. 서명 수단은 확인 대상. 서명 후 취소 불가.</p>
+      <div class="modal-sign-list" data-mount="aqc-list"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-act="modal-close">취소</button>
+      <button class="btn btn-primary" data-act="aq-sign-go">서명 진행</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" data-modal="acquisition-signing" hidden>
+  <div class="modal md">
+    <div class="modal-header"><h3>전자서명 진행</h3></div>
+    <div class="modal-body">
+      <div class="spin-wrap">
+        <div class="spinner"></div>
+        <span class="spin-label">인증서 서명 진행 중</span>
+      </div>
+      <div class="step-list">
+        <div class="step done">
+          <span class="step-num"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></span>
+          <span class="step-text">계약서 생성 완료
+            <span class="step-note">양수도 계약서 <span data-mount="aqs-count">2</span>건 생성.</span>
+          </span>
+        </div>
+        <div class="step now">
+          <span class="step-num">2</span>
+          <span class="step-text">인증서 서명 진행 중
+            <span class="step-note">전자서명 진행 중. 서명 수단 확인 대상.</span>
+          </span>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <span class="step-text">서명 검증 대기
+            <span class="step-note">인증서 발행기관 검증 회신 대기.</span>
+          </span>
+        </div>
+      </div>
+      <p class="modal-guide">서명 완료까지 창을 닫지 말 것.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" disabled>서명 진행 중</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" data-modal="acquisition-done" data-act="backdrop" hidden>
+  <div class="modal md">
+    <div class="modal-body" style="padding-top:32px">
+      <div class="done-head">
+        <div class="done-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg></div>
+        <h3 class="done-title">서명 완료</h3>
+        <p class="done-desc">정산금채권 양수도 계약 <b data-mount="aqd-count">2건</b> 서명 완료.<br>서명값은 계약기록에 보관됨. 인증서 발행기관 검증 회신전문의 형식·보관 경로는 확인 대상.</p>
+      </div>
+      <div class="done-list" data-mount="aqd-list"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-nav="contracts">계약기록 보기</button>
+      <button class="btn btn-primary" data-act="aq-done-ok">확인</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" data-modal="coocon-confirm" data-act="backdrop" hidden>
+  <div class="modal md">
+    <div class="modal-header">
+      <h3>외부 시스템으로 이동</h3>
+      <button class="close" aria-label="닫기" data-act="modal-close"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc" style="margin:0">쿠콘 We-bank 전자금융서비스로 이동함. 별도 발급된 사용자 ID·비밀번호·기관코드·OTP로 로그인 필요.</p>
+      <div class="url-box">
+        <span class="k">이동 주소</span>
+        <span class="v mono">https://www.we-bank.co.kr/main_00100.act</span>
+      </div>
+      <p class="modal-guide">새 창으로 열림 · 계정 발급 및 OTP 초기화는 페이허그 담당자에게 문의.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-act="modal-close">취소</button>
+      <a class="btn btn-primary" href="https://www.we-bank.co.kr/main_00100.act" target="_blank" rel="noopener">이동</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ 하단 액션바 · 토스트 · 이동 도크 ═══════════ -->
+<div class="action-bar" data-mount="action-bar" hidden>
+  <span class="sel-count">선택 <b class="mono" data-mount="ab-count">0</b>건</span>
+  <button class="btn btn-primary" style="padding:12px 40px; font-size:16px; border-radius:12px" data-act="aq-sign" data-mount="ab-btn" disabled>서명하기</button>
+</div>
+
+<div class="toast toast-success" role="status" data-mount="toast" hidden></div>
+
+<div class="dock">
+  <button class="dock-toggle" data-act="dock-toggle"><span class="dot"></span><span data-mount="dock-label">화면 · 상태</span></button>
+  <div class="dock-panel" data-mount="dock-panel" hidden>
+    <h3>화면</h3>
+    <select class="input" data-mount="dock-screen" data-act="dock-screen"></select>
+    <h3>상태</h3>
+    <div class="dock-states" data-mount="dock-states"></div>
+    <p class="dock-hint">해시 딥링크 <code>#화면/상태</code> · 예 <code>#invest-assets/page2</code></p>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ═══ 예시 데이터 — 개별 화면 HTML·assets/xlsx 실측값 그대로. 새 값 생성 없음 ═══ */
+var BASE_DATE = '2026-08-27';
+var INVESTOR  = '㈜테스트인베스트';
+
+var MERCHANTS = [
+  {mid:'M2026-0001', name:'김성호떡볶이 본점', biz:'123-45-67890', ceo:'김성호', sector:'음식점업', item:'분식', buyer:'A-001', buyerName:'㈜페이허그', amount:312400000, w:10.8, s:0.31, ty:3.72},
+  {mid:'M2026-0002', name:'달빛곱창 홍대점', biz:'234-56-78901', ceo:'이달빛', sector:'음식점업', item:'곱창', buyer:'A-001', buyerName:'㈜페이허그', amount:268900000, w:11.5, s:0.55, ty:3.49},
+  {mid:'M2026-0003', name:'성호분식 2호점', biz:'345-67-89012', ceo:'박성호', sector:'음식점업', item:'분식', buyer:'A-001', buyerName:'㈜페이허그', amount:197300000, w:12.1, s:0.28, ty:3.32},
+  {mid:'M2026-0004', name:'바다마루 횟집', biz:'456-78-90123', ceo:'조해민', sector:'음식점업', item:'일식', buyer:'A-001', buyerName:'㈜페이허그', amount:152600000, w:10.2, s:0.47, ty:3.94},
+  {mid:'M2026-0005', name:'한강커피 잠원점', biz:'567-89-01234', ceo:'정한강', sector:'음식점업', item:'카페', buyer:'A-001', buyerName:'㈜페이허그', amount:121800000, w:11.9, s:0.62, ty:3.37},
+  {mid:'M2026-0006', name:'김밥나라', biz:'678-90-12345', ceo:'김나라', sector:'음식점업', item:'김밥', buyer:'A-001', buyerName:'㈜페이허그', amount:98200000, w:10.5, s:0.19, ty:3.82},
+  {mid:'M2026-0007', name:'초록치킨 서초점', biz:'789-01-23456', ceo:'최초록', sector:'음식점업', item:'치킨', buyer:'A-001', buyerName:'㈜페이허그', amount:76100000, w:12.4, s:0.71, ty:3.24},
+  {mid:'M2026-0008', name:'골목냉면', biz:'890-12-34567', ceo:'백미순', sector:'음식점업', item:'냉면', buyer:'A-001', buyerName:'㈜페이허그', amount:57200000, w:11.0, s:0.38, ty:3.65},
+  {mid:'M2026-0009', name:'청춘포차 신촌점', biz:'901-23-45678', ceo:'오지훈', sector:'음식점업', item:'포차', buyer:'A-001', buyerName:'㈜페이허그', amount:48900000, w:11.3, s:0.44, ty:3.55},
+  {mid:'M2026-0010', name:'왕십리곱창타운', biz:'112-34-56789', ceo:'한상철', sector:'음식점업', item:'곱창', buyer:'A-001', buyerName:'㈜페이허그', amount:42300000, w:10.6, s:0.26, ty:3.79},
+  {mid:'M2026-0011', name:'소소한밥상', biz:'223-45-67891', ceo:'문소연', sector:'음식점업', item:'한식', buyer:'A-001', buyerName:'㈜페이허그', amount:37600000, w:12.2, s:0.58, ty:3.29},
+  {mid:'M2026-0012', name:'대박국수 사당점', biz:'334-56-78902', ceo:'서동혁', sector:'음식점업', item:'국수', buyer:'A-001', buyerName:'㈜페이허그', amount:31400000, w:11.7, s:0.33, ty:3.43},
+  {mid:'M2026-0013', name:'정든수산', biz:'445-67-89013', ceo:'정해수', sector:'음식점업', item:'수산', buyer:'A-001', buyerName:'㈜페이허그', amount:26800000, w:10.9, s:0.51, ty:3.68},
+  {mid:'M2026-0014', name:'착한고기 은평점', biz:'556-78-90124', ceo:'강민호', sector:'음식점업', item:'고기', buyer:'A-001', buyerName:'㈜페이허그', amount:21500000, w:12.6, s:0.67, ty:3.19},
+  {mid:'M2026-0015', name:'커피한잔 마포점', biz:'667-89-01235', ceo:'윤지원', sector:'음식점업', item:'카페', buyer:'A-001', buyerName:'㈜페이허그', amount:17200000, w:11.1, s:0.22, ty:3.62},
+  {mid:'M2026-0016', name:'우리동네반찬', biz:'778-90-12346', ceo:'임보경', sector:'음식점업', item:'반찬', buyer:'A-001', buyerName:'㈜페이허그', amount:12900000, w:10.4, s:0.35, ty:3.86}
+];
+/* 업종 옵션은 원장 데이터에서 뽑는다 — 화면에 없는 업종을 옵션으로 내걸지 않는다.
+   운영 어드민에는 업종 필터 자체가 없어(admin app/manage/page.tsx:223-255 · services/merchantService.ts:199-205)
+   가져올 코드 목록이 없다. 근거가 있는 값은 원장에 실재하는 업종뿐이다. */
+var SECTORS = (function(){
+  var out = ['전체'], seen = {}, i;
+  for(i = 0; i < MERCHANTS.length; i++){
+    var v = MERCHANTS[i].sector;
+    if(v && !seen[v]){ seen[v] = 1; out.push(v); }
+  }
+  return out;
+})();
+
+/* 현황 표 — 투자실행액 행의 W·S·Ty는 기록값(합계 행에서는 산정하지 않음) */
+var ASSET_ROWS = [
+  {name:'투자실행액', amount:1523100000, w:11.3,  s:0.42, ty:3.57, keeper:'㈜페이허그'},
+  {name:'순현금',     amount:105300000,  w:null,  s:null, ty:null, keeper:'㈜쿠콘'}
+];
+
+var DAILY = [
+  {d:'2026-08-21', repay:179096790, exec:178900000, profit:196790, w:11.4, ty:3.52},
+  {d:'2026-08-22', repay:172789860, exec:172600000, profit:189860, w:11.1, ty:3.62},
+  {d:'2026-08-23', repay:165481830, exec:165300000, profit:181830, w:10.9, ty:3.68},
+  {d:'2026-08-24', repay:187906470, exec:187700000, profit:206470, w:11.6, ty:3.46},
+  {d:'2026-08-25', repay:183301410, exec:183100000, profit:201410, w:11.3, ty:3.55},
+  {d:'2026-08-26', repay:176794260, exec:176600000, profit:194260, w:11.2, ty:3.58},
+  {d:'2026-08-27', repay:186805260, exec:186600000, profit:205260, w:11.5, ty:3.49}
+];
+var MONTHLY = [
+  {d:'2026-03', repay:5036734320, exec:5031200000, profit:5534320, w:11.4, ty:3.52},
+  {d:'2026-04', repay:5295218340, exec:5289400000, profit:5818340, w:11.2, ty:3.58},
+  {d:'2026-05', repay:5544792570, exec:5538700000, profit:6092570, w:11.0, ty:3.65},
+  {d:'2026-06', repay:5382414150, exec:5376500000, profit:5914150, w:11.6, ty:3.46},
+  {d:'2026-07', repay:5759128080, exec:5752800000, profit:6328080, w:11.3, ty:3.55},
+  {d:'2026-08', repay:5114519790, exec:5108900000, profit:5619790, w:11.5, ty:3.49}
+];
+
+var CONTRACTS = [
+  {mid:'M2026-0001', name:'김성호떡볶이 본점', signed:'2026-07-14'},
+  {mid:'M2026-0002', name:'달빛곱창 홍대점', signed:'2026-07-18'},
+  {mid:'M2026-0003', name:'성호분식 2호점', signed:'2026-07-25'},
+  {mid:'M2026-0004', name:'바다마루 횟집', signed:'2026-07-31'},
+  {mid:'M2026-0005', name:'한강커피 잠원점', signed:'2026-08-05'},
+  {mid:'M2026-0006', name:'김밥나라', signed:'2026-08-12'},
+  {mid:'M2026-0007', name:'초록치킨 서초점', signed:'2026-08-19'},
+  {mid:'M2026-0008', name:'골목냉면', signed:'2026-08-24'},
+  {mid:'M2026-0009', name:'청춘포차 신촌점', signed:'2026-08-25'},
+  {mid:'M2026-0010', name:'왕십리곱창타운', signed:'2026-08-25'},
+  {mid:'M2026-0011', name:'소소한밥상', signed:'2026-08-26'},
+  {mid:'M2026-0012', name:'대박국수 사당점', signed:'2026-08-26'},
+  {mid:'M2026-0013', name:'정든수산', signed:'2026-08-26'},
+  {mid:'M2026-0014', name:'착한고기 은평점', signed:'2026-08-27'},
+  {mid:'M2026-0015', name:'커피한잔 마포점', signed:'2026-08-27'},
+  {mid:'M2026-0016', name:'우리동네반찬', signed:'2026-08-27'}
+];
+
+var SIGNQ = [
+  {mid:'M2026-0001', name:'김성호떡볶이 본점', created:'2026-08-25'},
+  {mid:'M2026-0002', name:'달빛곱창 홍대점',   created:'2026-08-26'},
+  {mid:'M2026-0004', name:'바다마루 횟집',     created:'2026-08-27'}
+];
+
+/* 파일명 규칙 — 원본 `{내용}_{시작일}_{종료일}.xlsx`, 날짜 YYYY-MM-DD
+   (TransferRecordsTab.tsx:318 · overview/page.tsx:658 · PreSettlementTab.tsx:394 · LockAccountDeposits.tsx:219).
+   투자자산 2건은 기준일 스냅샷이라 시작=종료, 투자수익 2건은 기본 조회기간(일주일). */
+var XLSX = {
+  'assets-status':   {file:'투자자산현황_2026-08-27_2026-08-27.xlsx',   size:'5.8 KB', made:'2026-08-27 21:15', sheet:'투자자산 현황',   screen:'xls-assets-status',   from:'invest-assets'},
+  'assets-merchant': {file:'가맹점별투자자산_2026-08-27_2026-08-27.xlsx', size:'6.6 KB', made:'2026-08-27 21:15', sheet:'가맹점별 투자자산', screen:'xls-assets-merchant', from:'invest-assets'},
+  'profit-status':   {file:'투자수익현황_2026-08-21_2026-08-27.xlsx',   size:'5.6 KB', made:'2026-08-27 21:15', sheet:'투자수익 현황',   screen:'xls-profit-status',   from:'invest-profit'},
+  'profit-daily':    {file:'일별투자수익_2026-08-21_2026-08-27.xlsx',   size:'6.0 KB', made:'2026-08-27 21:15', sheet:'일별 투자수익',   screen:'xls-profit-daily',    from:'invest-profit'}
+};
+
+/* ═══ 화면·상태 레지스터 ═══ */
+var MENU_OF = {
+  'invest-assets':'invest-assets', 'certificate':'invest-assets',
+  'xls-assets-status':'invest-assets', 'xls-assets-merchant':'invest-assets',
+  'invest-profit':'invest-returns', 'xls-profit-status':'invest-returns', 'xls-profit-daily':'invest-returns',
+  'merchants':'merchants', 'acquisition-list':'receivables', 'contracts':'contracts',
+  'coocon':'kcoon', 'password':'password', 'index':'', 'login':''
+};
+var STANDALONE = ['index', 'login'];
+var STATE_META = {
+  'invest-assets': {
+    'default':null,
+    'page2':        {label:'2페이지',          cls:'badge-gray'},
+    'download':     {label:'엑셀 다운로드 완료', cls:'badge-gray'},
+    'cert-confirm': {label:'증명서 발급 확인',   cls:'badge-gray'},
+    'empty':        {label:'데이터 없음',       cls:'badge-gray'}
+  },
+  'invest-profit': {
+    'default':null,
+    'monthly':    {label:'월별',      cls:'badge-gray'},
+    'empty':      {label:'결과 없음', cls:'badge-gray'}
+  },
+  'merchants': {
+    'default':null,
+    'filtered':    {label:'검색 적용', cls:'badge-gray'},
+    'empty':       {label:'결과 없음', cls:'badge-gray'}
+  },
+  'acquisition-list': {
+    'default':null,
+    'confirm': {label:'서명 확인', cls:'badge-gray'},
+    'signing': {label:'서명 진행', cls:'badge-gray'},
+    'done':    {label:'서명 완료', cls:'badge-gray'}
+  },
+  'contracts': {
+    'default':null,
+    'all':        {label:'전체 선택',     cls:'badge-primary'},
+    'downloaded': {label:'다운로드 완료', cls:'badge-green'},
+    'empty':      {label:'문서 없음',     cls:'badge-gray'}
+  },
+  'coocon':   {'default':null, 'confirm':{label:'이동 확인', cls:'badge-gray'}},
+  'password': {
+    'default':null,
+    'weak':  {label:'규칙 미충족',   cls:'badge-amber'},
+    'error': {label:'확인값 불일치', cls:'badge-red'},
+    'done':  {label:'변경 완료',     cls:'badge-green'}
+  },
+  'certificate':{'default':null}, 'xls-assets-status':{'default':null}, 'xls-assets-merchant':{'default':null},
+  'xls-profit-status':{'default':null}, 'xls-profit-daily':{'default':null},
+  'index':{'default':null}, 'login':{'default':null}
+};
+var SCREEN_LABEL = {
+  'index':'랜딩 갤러리', 'login':'로그인', 'invest-assets':'투자 자산', 'certificate':'투자자산 증명서',
+  'xls-assets-status':'엑셀 산출물 서식 — 투자자산 현황', 'xls-assets-merchant':'엑셀 산출물 서식 — 가맹점별 투자자산',
+  'invest-profit':'투자 수익', 'xls-profit-status':'엑셀 산출물 서식 — 투자수익 현황',
+  'xls-profit-daily':'엑셀 산출물 서식 — 일별 투자수익', 'merchants':'가맹점',
+  'acquisition-list':'정산채권 양수', 'contracts':'계약기록', 'coocon':'쿠콘 관리 현금', 'password':'비밀번호 변경'
+};
+var SCREEN_ORDER = ['index','login','invest-assets','certificate','xls-assets-status','xls-assets-merchant',
+  'invest-profit','xls-profit-status','xls-profit-daily','merchants','acquisition-list','contracts','coocon','password'];
+var FILE2SCREEN = {
+  'index.html':'index', 'login.html':'login', 'invest-assets.html':'invest-assets', 'certificate.html':'certificate',
+  'invest-profit.html':'invest-profit', 'merchants.html':'merchants', 'acquisition.html':'acquisition-list',
+  'contracts.html':'contracts', 'coocon.html':'coocon', 'password.html':'password',
+  'xls-assets-status.html':'xls-assets-status', 'xls-assets-merchant.html':'xls-assets-merchant',
+  'xls-profit-status.html':'xls-profit-status', 'xls-profit-daily.html':'xls-profit-daily'
+};
+var STATEFILE = {
+  'invest-assets--page2.html':'invest-assets/page2', 'invest-assets--download.html':'invest-assets/download',
+  'invest-assets--cert-confirm.html':'invest-assets/cert-confirm', 'invest-assets--empty.html':'invest-assets/empty',
+  'invest-profit--monthly.html':'invest-profit/monthly',
+  'invest-profit--empty.html':'invest-profit/empty',
+  'merchants--filtered.html':'merchants/filtered', 'merchants--empty.html':'merchants/empty',
+  'acquisition--confirm.html':'acquisition-list/confirm', 'acquisition--signing.html':'acquisition-list/signing',
+  'acquisition--done.html':'acquisition-list/done', 'contracts--all.html':'contracts/all',
+  'contracts--downloaded.html':'contracts/downloaded', 'contracts--empty.html':'contracts/empty',
+  'coocon--confirm.html':'coocon/confirm', 'password--weak.html':'password/weak',
+  'password--error.html':'password/error', 'password--done.html':'password/done'
+};
+var MODAL_OF = {
+  'invest-assets/cert-confirm':'invest-assets-cert-confirm',
+  'acquisition-list/confirm':'acquisition-confirm',
+  'acquisition-list/signing':'acquisition-signing',
+  'acquisition-list/done':'acquisition-done',
+  'coocon/confirm':'coocon-confirm'
+};
+
+/* ═══ 유틸 ═══ */
+function fmt(n){ return Number(n).toLocaleString('ko-KR'); }
+function pct(v, d){ return (v===null||v===undefined) ? '-' : Number(v).toFixed(d===undefined?1:d) + '%'; }
+function fx(v, d){ return Number(v).toFixed(d); }
+function sum(a, k){ var t=0; for(var i=0;i<a.length;i++) t += a[i][k]; return t; }
+/* 비중 — 소수 1자리 반올림 후 잔차를 최대 금액 행에 흡수해 합계를 정확히 100.0 으로 닫는다 */
+function ratios(a, base){
+  var i, out = [], k = 0, t = 0;
+  for(i = 0; i < a.length; i++){
+    out.push(base ? Math.round(a[i].amount / base * 1000) / 10 : 0);
+    t += out[i];
+    if(a[i].amount > a[k].amount) k = i;
+  }
+  if(a.length) out[k] = Math.round((out[k] + (100 - t)) * 10) / 10;
+  return out;
+}
+function wavg(a, k, wk){ var n=0, d=0; for(var i=0;i<a.length;i++){ n += a[i][k]*a[i][wk]; d += a[i][wk]; } return d? n/d : 0; }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function Q(sel, root){ return (root||document).querySelector(sel); }
+function QA(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+function SEC(id){ return Q('section.screen[data-screen="' + id + '"]'); }
+function M(name, screen){
+  return screen ? Q('[data-mount="' + name + '"]', SEC(screen)) : Q('[data-mount="' + name + '"]');
+}
+var SVGD = {
+  excel:  'M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', doc:'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', checkc:'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', check:'M5 13l4 4L19 7', x:'M6 18L18 6M6 6l12 12',
+  left:   'M15 19l-7-7 7-7', right:'M9 5l7 7-7 7', grid:'M3 10h18M3 15h18M9 5v14M15 5v14M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', ext:'M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14', card:'M3 10h18M7 15h1m4 0h1m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', trend:'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6',
+  users:  'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z', cards:'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z', coin:'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', lock:'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z', shield:'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+  chev:   'M19 9l-7 7-7-7', dl:'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4', chart:'M9 17V7m4 10V11m4 6v-3M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z',
+  search: 'M21 21l-5.2-5.2m2.2-5.3a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z'
+};
+function svg(key, w, cls, style){
+  return '<svg' + (cls?' class="'+cls+'"':'') + (style?' style="'+style+'"':'') +
+         ' fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+         '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="' + (w||2) + '" d="' + SVGD[key] + '"/></svg>';
+}
+
+/* ═══ 모델 (조작 결과가 여기 쌓이고, 화면은 여기서만 그려진다) ═══ */
+var IA = {page:1, downloaded:false, empty:false, cert:false};
+var PF = {gran:'daily', from:'2026-08-21', to:'2026-08-27'};
+var MC = {sector:'전체', buyer:'전체', kw:'', page:1, applied:null};
+var AQ = {sel:[false,false,false], signed:[false,false,false], phase:'list'};
+var CT = {sel:{'M2026-0001':1, 'M2026-0004':1, 'M2026-0006':1}, page:1, downloaded:false, empty:false};
+var CO = {modal:false};
+var PW = {cur:'12345678', nw:'12345678', cfm:'12345678', touched:false, done:false};
+var SORT = {};
+var CUR = 'invest-assets';
+var signTimer = null, toastTimer = null, hashLock = false;
+var PAGE_SIZE = 8;
+var PRESET_LABEL = {yesterday:'어제', week:'일주일', month:'이번달'};
+function presetLabel(){
+  for(var k in PRESET_RANGE) if(PRESET_RANGE[k][0] === PF.from && PRESET_RANGE[k][1] === PF.to) return PRESET_LABEL[k];
+  return '직접입력';
+}
+
+/* ═══ 정렬 ═══ */
+function sortState(id){ if(!SORT[id]) SORT[id] = {col:null, dir:1}; return SORT[id]; }
+function th(id, key, label, cls){
+  var st = sortState(id), on = (st.col === key);
+  var mark = on ? (st.dir > 0 ? '▲' : '▼') : '↕';
+  /* 정렬 머리글은 키보드로도 눌려야 하고 정렬 상태가 읽혀야 한다 */
+  return '<th class="' + (cls ? cls + ' ' : '') + 'sortable' + (on ? ' sorted' : '') +
+         '" data-act="sort" data-tbl="' + id + '" data-key="' + key + '"' +
+         ' role="columnheader" tabindex="0" aria-sort="' + (on ? (st.dir > 0 ? 'ascending' : 'descending') : 'none') + '"' +
+         ' aria-label="' + label + ' 기준 정렬">' + label +
+         '<span class="sort-mark">' + mark + '</span></th>';
+}
+function applySort(id, rows){
+  var st = sortState(id); if(!st.col) return rows;
+  var k = st.col, out = rows.slice();
+  out.sort(function(a, b){
+    var x = a[k], y = b[k];
+    if(x === y) return 0;
+    if(x === null || x === undefined) return 1;
+    if(y === null || y === undefined) return -1;
+    return (typeof x === 'number' ? x - y : String(x).localeCompare(String(y), 'ko')) * st.dir;
+  });
+  return out;
+}
+function emptyState(icon, title, desc, cta){
+  return '<div class="empty-state"><div class="empty-ico">' + svg(icon, 1.6) + '</div>' +
+         '<p class="empty-title">' + title + '</p><p class="empty-desc">' + desc + '</p>' + (cta || '') + '</div>';
+}
+/* 표에 적힌 총 건수와 지금 화면에 그려진 행 수가 어긋나 보이지 않도록 표시 구간을 함께 적는다. */
+function rangeLabel(cur, pages, total){
+  if(pages <= 1) return '';
+  var a = (cur - 1) * PAGE_SIZE + 1, b = Math.min(cur * PAGE_SIZE, total);
+  return ' · 표시 <b class="mono">' + a + '–' + b + '</b>';
+}
+function pageBar(cur, pages, act, left){
+  var h = left ? left : '';
+  var inner = '<button class="page-arrow" data-act="' + act + '" data-page="' + (cur - 1) + '"' + (cur <= 1 ? ' disabled' : '') + '>' + svg('left') + '</button>';
+  for(var p = 1; p <= pages; p++)
+    inner += '<button class="page-btn' + (p === cur ? ' active' : '') + '" data-act="' + act + '" data-page="' + p + '">' + p + '</button>';
+  inner += '<button class="page-arrow" data-act="' + act + '" data-page="' + (cur + 1) + '"' + (cur >= pages ? ' disabled' : '') + '>' + svg('right') + '</button>';
+  return left ? (h + '<div style="display:flex; align-items:center; gap:4px">' + inner + '</div>') : inner;
+}
+
+/* ═══ 상태 파생 · 주입 ═══ */
+var DERIVE = {
+  'invest-assets': function(){
+    if(IA.empty) return 'empty';
+    if(IA.cert) return 'cert-confirm';
+    if(IA.downloaded) return 'download';
+    if(IA.page === 2) return 'page2';
+    return 'default';
+  },
+  'invest-profit': function(){
+    if(pfRows().length === 0) return 'empty';
+    if(PF.gran === 'monthly') return 'monthly';
+    return 'default';
+  },
+  'merchants': function(){
+    if(MC.applied){ return mcRows().length === 0 ? 'empty' : 'filtered'; }
+    return 'default';
+  },
+  'acquisition-list': function(){ return AQ.phase === 'list' ? 'default' : AQ.phase; },
+  'contracts': function(){
+    if(CT.empty) return 'empty';
+    if(CT.downloaded) return 'downloaded';
+    if(ctSelCount() === CONTRACTS.length) return 'all';
+    return 'default';
+  },
+  'coocon':   function(){ return CO.modal ? 'confirm' : 'default'; },
+  'password': function(){
+    if(PW.done) return 'done';
+    if(!PW.touched) return 'default';
+    if(!pwRulesOk(PW.nw)) return 'weak';
+    if(PW.nw !== PW.cfm) return 'error';
+    return 'default';
+  }
+};
+var SEED = {
+  'invest-assets': function(s){ IA.empty = (s === 'empty'); IA.cert = (s === 'cert-confirm'); IA.downloaded = (s === 'download'); IA.page = (s === 'page2') ? 2 : 1; },
+  'invest-profit': function(s){
+    if(s === 'monthly'){ PF.gran = 'monthly'; PF.from = '2026-03-01'; PF.to = '2026-08-27'; }
+    else if(s === 'empty'){ PF.gran = 'daily'; PF.from = '2026-07-01'; PF.to = '2026-07-07'; }
+    else { PF.gran = 'daily'; PF.from = '2026-08-21'; PF.to = '2026-08-27'; }
+  },
+  'merchants': function(s){
+    MC.page = 1;
+    if(s === 'filtered'){ MC.sector = '음식점업'; MC.kw = '곱창'; MC.buyer = '전체'; MC.applied = {sector:'음식점업', kw:'곱창', buyer:'전체'}; }
+    else if(s === 'empty'){ MC.sector = '음식점업'; MC.kw = '라멘'; MC.buyer = '전체'; MC.applied = {sector:'음식점업', kw:'라멘', buyer:'전체'}; }
+    else { MC.sector = '전체'; MC.kw = ''; MC.buyer = '전체'; MC.applied = null; }
+  },
+  'acquisition-list': function(s){
+    clearSignTimer();
+    if(s === 'default'){ AQ.sel = [false, false, false]; AQ.signed = [false, false, false]; AQ.phase = 'list'; }
+    else if(s === 'done'){ AQ.sel = [true, true, false]; AQ.signed = [true, true, false]; AQ.phase = 'done'; }
+    else { AQ.sel = [true, true, false]; AQ.signed = [false, false, false]; AQ.phase = s; }
+  },
+  'contracts': function(s){
+    CT.empty = (s === 'empty'); CT.downloaded = (s === 'downloaded'); CT.page = 1;
+    if(s === 'all' || s === 'downloaded'){ CT.sel = {}; for(var i = 0; i < CONTRACTS.length; i++) CT.sel[CONTRACTS[i].mid] = 1; }
+    else if(s === 'empty'){ CT.sel = {}; }
+    else { CT.sel = {'M2026-0001':1, 'M2026-0004':1, 'M2026-0006':1}; }
+  },
+  'coocon':   function(s){ CO.modal = (s === 'confirm'); },
+  'password': function(s){
+    PW.done = (s === 'done'); PW.cur = '12345678';
+    if(s === 'weak'){ PW.nw = '12345678'; PW.cfm = '12345678'; PW.touched = true; }
+    else if(s === 'error'){ PW.nw = 'payhug!2026'; PW.cfm = 'payhug!2025'; PW.touched = true; }
+    else { PW.nw = '12345678'; PW.cfm = '12345678'; PW.touched = false; }
+  }
+};
+
+/* ═══ 화면 전환 ═══ */
+var PEND = {};
+function go(screen, state){
+  if(!SEC(screen)) screen = 'invest-assets';
+  var fresh = (screen !== CUR);
+  var st = state || PEND[screen] || (fresh ? 'default' : null);
+  delete PEND[screen];
+  clearSignTimer();
+  if(fresh) hideToast();          /* 화면이 바뀌면 이전 화면의 토스트는 내린다 */
+  CUR = screen;
+  QA('section.screen').forEach(function(s){ s.hidden = (s.dataset.screen !== screen); });
+  Q('.page').hidden = (STANDALONE.indexOf(screen) >= 0);
+  document.body.dataset.active = MENU_OF[screen] || '';
+  document.body.dataset.view = screen;
+  if(st && SEED[screen]) SEED[screen](st);
+  refresh(screen);
+  window.scrollTo(0, 0);
+}
+function refresh(id){
+  var sec = SEC(id); if(!sec) return;
+  var st = DERIVE[id] ? DERIVE[id]() : 'default';
+  sec.dataset.state = st;
+  if(RENDER[id]) RENDER[id]();
+  QA('[data-when],[data-when-not]', sec).forEach(function(el){
+    var ok = true;
+    if(el.dataset.when) ok = el.dataset.when.split(/\s+/).indexOf(st) >= 0;
+    if(ok && el.dataset.whenNot) ok = el.dataset.whenNot.split(/\s+/).indexOf(st) < 0;
+    el.hidden = !ok;
+  });
+  var mk = Q('[data-state-mark]', sec);
+  if(mk){
+    var meta = (STATE_META[id] || {})[st];
+    mk.innerHTML = meta ? ' <span class="badge ' + meta.cls + ' state-badge">' + meta.label + '</span>' : '';
+  }
+  var want = MODAL_OF[id + '/' + st] || null;
+  QA('[data-modal]').forEach(function(m){ m.hidden = (m.dataset.modal !== want); });
+  syncToast(id, st);
+  M('action-bar').hidden = (id !== 'acquisition-list');
+  if(id === CUR){ setHash(id, st); updateDock(id, st); }
+}
+function setState(id, st){ if(SEED[id]) SEED[id](st); refresh(id); }
+function setHash(id, st){
+  var h = '#' + id + (st && st !== 'default' ? '/' + st : '');
+  if(location.hash !== h){ hashLock = true; location.hash = h; setTimeout(function(){ hashLock = false; }, 0); }
+}
+function readHash(){
+  var raw = decodeURIComponent((location.hash || '').replace(/^#/, '')).trim();
+  if(!raw) return null;
+  if(STATEFILE[raw]) raw = STATEFILE[raw];
+  if(FILE2SCREEN[raw]) raw = FILE2SCREEN[raw];
+  var p = raw.split('/');
+  if(SEC(p[0])) return {screen:p[0], state:p[1] || 'default'};
+  for(var s in STATE_META){                       /* app_spec.json 상태 id 별칭 */
+    for(var k in STATE_META[s]) if(k !== 'default' && s + '-' + k === raw) return {screen:s, state:k};
+  }
+  return null;
+}
+/* ═══ 토스트 ═══ */
+/* 원본 Toast.tsx:18, 20-25, 45-51 —
+   duration 기본 3000ms, duration===0 이면 자동 소멸 대신 X 닫기 버튼을 렌더한다.
+   닫을 수단이 없는 토스트가 만들어지지 않는 구조를 그대로 따른다. */
+var TOAST_MS = 3000;
+/* 엑셀 미리보기·실물 xlsx 2행에 같이 붙는 예시값 고지 — build_xlsx.py NOTICE 와 같은 문장 */
+var XLS_NOTICE = '※ 예시값 — 표기 금액·요율·상호는 전부 예시이며 실제 거래 기록이 아니다. 수수료율은 미확정이고 할인율 0.11%는 예정값이다.';
+function toastCloseBtn(){
+  return '<button type="button" class="t-close" aria-label="닫기" data-act="toast-close">' + svg('x', 2) + '</button>';
+}
+function toastBody(main, sub){
+  return sub ? (svg('checkc', 2, 't-ico') + '<div><p class="t-main">' + main + '</p><p class="t-sub">' + sub + '</p></div>')
+             : (svg('checkc', 2, '', 'width:20px;height:20px;flex-shrink:0;margin-top:2px;') + '<span>' + main + '</span>');
+}
+function armToast(t, ms){
+  t.hidden = false;
+  if(toastTimer){ clearTimeout(toastTimer); toastTimer = null; }
+  if(ms > 0) toastTimer = setTimeout(function(){ t.hidden = true; toastTimer = null; }, ms);
+}
+function showToast(main, sub, ms){
+  if(ms === undefined || ms === null) ms = TOAST_MS;
+  var t = M('toast');
+  t.className = 'toast toast-success';
+  t.innerHTML = toastBody(main, sub) + (ms === 0 ? toastCloseBtn() : '');
+  armToast(t, ms);
+}
+function showInfo(main, ms){
+  if(ms === undefined || ms === null) ms = TOAST_MS;
+  var t = M('toast');
+  t.className = 'toast toast-info';
+  t.innerHTML = svg('doc', 1.8, '', 'width:20px;height:20px;flex-shrink:0;margin-top:2px;') + '<span>' + main + '</span>' +
+                (ms === 0 ? toastCloseBtn() : '');
+  armToast(t, ms);
+}
+function hideToast(){
+  var t = M('toast'); t.hidden = true;
+  if(toastTimer){ clearTimeout(toastTimer); toastTimer = null; }
+}
+/* ── 실물 전달 ────────────────────────────────────────────────────
+   화면이 `내려받기 완료`라고 말하면 그 순간 실제 파일이 나가야 한다.
+   assets/ 에 실재하는 파일만 건다. 정적 묶음이 없는 조합은 개별 PDF로 내려준다. */
+var CERT_PDF    = '투자자산증명서_20260827.pdf';
+var CT_ZIP_ALL  = '재양도합의서_전체16건_20260827.zip';
+var CT_ZIP_SEL3 = '재양도합의서_선택3건_20260827.zip';
+var CT_SEL3     = 'M2026-0001,M2026-0004,M2026-0006';
+var toastServed = null;
+
+function pullFile(dir, name, delay){
+  setTimeout(function(){
+    var a = document.createElement('a');
+    a.href = dir + encodeURIComponent(name);
+    a.download = name;
+    document.body.appendChild(a); a.click(); a.parentNode.removeChild(a);
+  }, delay || 0);
+}
+function ctSelMids(){
+  var out = [], i;
+  for(i = 0; i < CONTRACTS.length; i++) if(CT.sel[CONTRACTS[i].mid]) out.push(CONTRACTS[i].mid);
+  return out;
+}
+function ctBundle(){
+  var mids = ctSelMids(), sig = mids.join(','), f = [], i;
+  if(mids.length === CONTRACTS.length && mids.length > 0)
+    return {kind:'zip', files:[CT_ZIP_ALL], n:mids.length, sig:sig};
+  if(sig === CT_SEL3) return {kind:'zip', files:[CT_ZIP_SEL3], n:mids.length, sig:sig};
+  for(i = 0; i < mids.length; i++) f.push('재양도합의서_' + mids[i] + '.pdf');
+  return {kind:'pdf', files:f, n:mids.length, sig:sig};
+}
+function ctDeliver(b){ for(var i = 0; i < b.files.length; i++) pullFile('assets/docs/', b.files[i], i * 250); }
+
+function syncToast(id, st){
+  if(id === 'invest-assets' && st === 'download'){
+    var xf = XLSX['assets-merchant'].file, xk = 'invest-assets/download:' + xf;
+    if(toastServed !== xk){ pullFile('assets/xlsx/', xf, 0); toastServed = xk; }
+    showToast(xf + ' 내려받기 완료'); return;   /* 기본 3,000ms — 원본 Toast.tsx:18 */
+  }
+  if(id === 'contracts' && st === 'downloaded'){
+    var b = ctBundle(), ck = 'contracts/downloaded:' + b.sig;
+    if(toastServed !== ck){ ctDeliver(b); toastServed = ck; }
+    showToast(b.kind === 'zip' ? b.files[0] + ' 내려받기 완료'
+                               : '재양도합의서 ' + b.n + '건 내려받기 완료',
+              (b.kind === 'zip' ? '재양도합의서 ' + b.n + '건 묶음.' : '개별 PDF ' + b.n + '개.')
+              + ' 서명 검증 회신전문 미포함 — 형식·전달 경로 확인 대상.');
+    return;
+  }
+  toastServed = null;
+  if(!toastTimer) M('toast').hidden = true;
+}
+function clearSignTimer(){ if(signTimer){ clearTimeout(signTimer); signTimer = null; } }
+
+var RENDER = {};
+
+/* ───────── 투자 자산 ───────── */
+function iaExecTotal(){ return sum(MERCHANTS, 'amount'); }
+RENDER['invest-assets'] = function(){
+  var sec = SEC('invest-assets'), empty = IA.empty;
+  var arows = empty ? [] : ASSET_ROWS;
+  var mrows = empty ? [] : MERCHANTS;
+  var exec = 0, cash = 0, i;
+  for(i = 0; i < arows.length; i++){ if(arows[i].name === '순현금') cash += arows[i].amount; else exec += arows[i].amount; }
+  var total = exec + cash;
+  var aRatio = ratios(arows, total), mRatio = ratios(mrows, exec);
+  var rExec = 0, rCash = 0;
+  for(i = 0; i < arows.length; i++){ if(arows[i].name === '순현금') rCash += aRatio[i]; else rExec += aRatio[i]; }
+  var tyv = arows.length ? arows[0].ty : 0, wv = arows.length ? arows[0].w : null;
+
+  M('ia-summary', 'invest-assets').innerHTML =
+    '<div class="summary-card highlight"><div class="summary-label">투자자산</div>' +
+      '<div class="summary-value">' + fmt(total) + '<span class="unit">원</span></div>' +
+      '<div class="summary-sub">투자실행액 + 순현금</div></div>' +
+    '<div class="summary-card"><div class="summary-label">투자실행액</div>' +
+      '<div class="summary-value">' + fmt(exec) + '<span class="unit">원</span></div>' +
+      '<div class="summary-sub">비중 ' + fx(rExec, 1) + '% · 보관 ㈜페이허그</div></div>' +
+    '<div class="summary-card"><div class="summary-label">순현금</div>' +
+      '<div class="summary-value">' + fmt(cash) + '<span class="unit">원</span></div>' +
+      '<div class="summary-sub">비중 ' + fx(rCash, 1) + '% · 보관 ㈜쿠콘</div></div>' +
+    '<div class="summary-card"><div class="summary-label">Ty수익율</div>' +
+      '<div class="summary-value">' + fx(tyv, 2) + '<span class="unit">%</span></div>' +
+      '<div class="summary-sub">' + (wv === null ? 'W금융일수 집계 대상 없음' : 'W금융일수 ' + fx(wv, 1) + '일 기준') + '</div></div>';
+
+  var h = '<thead><tr><th>자산 구분</th><th class="num">금액 (원)</th><th class="num">W금융일수</th>' +
+          '<th class="num">S입금부족율</th><th class="num">Ty수익율</th><th class="num">비중</th><th>보관</th></tr></thead><tbody>';
+  if(!arows.length){ h += '<tr><td colspan="7" class="empty">조회된 자산 구분 없음</td></tr>'; }
+  else {
+    for(i = 0; i < arows.length; i++){
+      var a = arows[i];
+      h += '<tr><td><span class="name">' + a.name + '</span></td>' +
+           '<td class="num"><span class="strong">' + fmt(a.amount) + '</span></td>' +
+           '<td class="num">' + (a.w === null ? '<span class="none">-</span>' : fx(a.w, 1) + '일') + '</td>' +
+           '<td class="num">' + (a.s === null ? '<span class="none">-</span>' : pct(a.s, 2)) + '</td>' +
+           '<td class="num">' + (a.ty === null ? '<span class="none">-</span>' : pct(a.ty, 2)) + '</td>' +
+           '<td class="num">' + fx(aRatio[i], 1) + '%</td><td>' + a.keeper + '</td></tr>';
+    }
+    h += '<tr class="total-row"><td>합계 (투자자산)</td><td class="num">' + fmt(total) + '</td>' +
+         '<td class="num"><span class="none">-</span></td><td class="num"><span class="none">-</span></td>' +
+         '<td class="num"><span class="none">-</span></td><td class="num">100.0%</td><td><span class="none">-</span></td></tr>';
+  }
+  Q('[data-mount="ia-status"]', sec).innerHTML = h + '</tbody>';
+
+  var view = mrows.map(function(r, i){
+    var o = {}; for(var k in r) o[k] = r[k];
+    o.ratio = mRatio[i]; return o;
+  });
+  view = applySort('ia-merch', view);
+  var pages = Math.max(1, Math.ceil(view.length / PAGE_SIZE));
+  if(IA.page > pages) IA.page = 1;
+  var slice = view.slice((IA.page - 1) * PAGE_SIZE, IA.page * PAGE_SIZE);
+  var mm = M('ia-merch', 'invest-assets'), mp = M('ia-merch-page', 'invest-assets');
+  if(!mrows.length){
+    mm.innerHTML = emptyState('chart', '조회된 투자자산 없음', '선정산 채권 양수 후 자산이 집계됨.');
+    mp.innerHTML = '';
+  } else {
+    var t = '<div class="tbl-scroll"><table class="tbl"><thead><tr>' +
+      th('ia-merch', 'name', '가맹점') + th('ia-merch', 'amount', '투자금액 (원)', 'num') +
+      th('ia-merch', 'w', 'W금융일수', 'num') + th('ia-merch', 's', 'S입금부족율', 'num') +
+      th('ia-merch', 'ty', 'Ty수익율', 'num') + th('ia-merch', 'ratio', '비중', 'num') +
+      '</tr></thead><tbody>';
+    for(i = 0; i < slice.length; i++){
+      var m = slice[i];
+      t += '<tr><td><span class="name">' + m.name + '</span></td>' +
+           '<td class="num"><span class="strong">' + fmt(m.amount) + '</span></td>' +
+           '<td class="num">' + fx(m.w, 1) + '일</td><td class="num">' + pct(m.s, 2) + '</td>' +
+           '<td class="num">' + pct(m.ty, 2) + '</td><td class="num">' + fx(m.ratio, 1) + '%</td></tr>';
+    }
+    mm.innerHTML = t + '</tbody></table></div>';
+    mp.innerHTML = '<div class="pagination">' + pageBar(IA.page, pages, 'ia-page') + '</div>';
+  }
+
+  var bx = Q('[data-xls="assets-status"]', sec); bx.disabled = empty;
+  var xm = M('ia-xls-merchant', 'invest-assets');
+  xm.className = 'btn btn-excel' + (IA.downloaded ? ' is-done' : '');
+  xm.innerHTML = IA.downloaded ? (svg('checkc') + ' 다운로드 완료') : (svg('excel') + ' 엑셀 다운로드');
+  xm.disabled = empty;
+  M('ia-cert', 'invest-assets').disabled = empty;
+  M('cf-target').textContent = '가맹점 ' + mrows.length + '개';
+};
+
+/* ───────── 투자자산 증명서 ───────── */
+RENDER['certificate'] = function(){
+  var exec = iaExecTotal(), cRatio = ratios(MERCHANTS, exec), i, h =
+    '<thead><tr><th>가맹점</th><th>투자금액 (원)</th><th>W금융일수</th><th>S입금부족율</th><th>Ty수익율</th><th>비중</th></tr></thead><tbody>';
+  for(i = 0; i < MERCHANTS.length; i++){
+    var m = MERCHANTS[i];
+    h += '<tr><td>' + m.name + '</td><td class="num">' + fmt(m.amount) + '</td><td class="num">' + fx(m.w, 1) + '일</td>' +
+         '<td class="num">' + pct(m.s, 2) + '</td><td class="num">' + pct(m.ty, 2) + '</td>' +
+         '<td class="num">' + fx(cRatio[i], 1) + '%</td></tr>';
+  }
+  h += '</tbody><tfoot><tr><td>합계</td><td class="num">' + fmt(exec) +
+       '</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td class="num">100.0%</td></tr></tfoot>';
+  M('cert-tbl', 'certificate').innerHTML = h;
+  M('cert-count', 'certificate').textContent = MERCHANTS.length + '개';
+};
+
+/* ───────── 투자 수익 ───────── */
+function pfRows(){
+  var src = PF.gran === 'daily' ? DAILY : MONTHLY;
+  var a = PF.gran === 'daily' ? PF.from : PF.from.slice(0, 7);
+  var b = PF.gran === 'daily' ? PF.to : PF.to.slice(0, 7);
+  return src.filter(function(r){ return r.d >= a && r.d <= b; });
+}
+function assetTotal(){ return sum(ASSET_ROWS, 'amount'); }
+function daysIn(y, m){ return new Date(y, m, 0).getDate(); }
+function cashRow(){
+  for(var i = 0; i < ASSET_ROWS.length; i++) if(ASSET_ROWS[i].name === '순현금') return ASSET_ROWS[i];
+  return null;
+}
+/* ── 투자자산 대비 Ty수익율 (현황 ⑤) — 대표 정의서 ────────────────
+   ⑤ = (④ × PSA) / (PSA + PSC).  PSA = 기간 투자실행금 합, PSC = 기간 동안 EC들의 합.
+   EC = 전일자 마감시점 순현금이며 하루에 한 건 쌓인다(유량). 기준일 잔액 1개(스톡)로 나누지 않는다.
+   일별 EC 원장이 없어 EC 예시값은 순현금 잔액으로 고정한다 — 실데이터 연결은 확인 대상. */
+function ecDays(rows){
+  var n = 0, i;
+  for(i = 0; i < rows.length; i++){
+    if(PF.gran === 'daily'){ n += 1; continue; }
+    var y = parseInt(rows[i].d.slice(0, 4), 10), m = parseInt(rows[i].d.slice(5, 7), 10);
+    var a = rows[i].d + '-01', b = rows[i].d + '-' + ('0' + daysIn(y, m)).slice(-2);
+    if(a < PF.from) a = PF.from;
+    if(b > PF.to)   b = PF.to;
+    n += Math.round((Date.parse(b) - Date.parse(a)) / 86400000) + 1;
+  }
+  return n;
+}
+function tyAssetOf(ty4, psa, rows){
+  var c = cashRow(), psc = (c ? c.amount : 0) * ecDays(rows);
+  return (psa + psc) ? ty4 * psa / (psa + psc) : 0;
+}
+RENDER['invest-profit'] = function(){
+  var sec = SEC('invest-profit'), rows = pfRows(), daily = (PF.gran === 'daily');
+  /* 프리셋 활성 판정은 현재 날짜값이 프리셋 범위와 같은지로 본다 — 수동 입력으로 맞춰도 되살아난다.
+     원본 DateRangeFilter.tsx:74-77(판정) · :99(aria-pressed 고지). */
+  QA('.preset-btn', sec).forEach(function(b){
+    var r = PRESET_RANGE[b.dataset.preset], on = !!(r && r[0] === PF.from && r[1] === PF.to);
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  QA('.toggle-btn', sec).forEach(function(b){ b.classList.toggle('active', b.dataset.gran === PF.gran); });
+  var fi = M('pf-from', 'invest-profit'), ti = M('pf-to', 'invest-profit');
+  fi.value = PF.from; ti.value = PF.to;
+  /* 역전 범위 방어 — 달력 자체를 상호 제한하고, 어긋나면 안내문 + 조회 버튼 비활성.
+     원본 DateRangeFilter.tsx:79, 116, 122, 128, 138-140 */
+  fi.max = PF.to || ''; ti.min = PF.from || '';
+  var badRange = !!(PF.from && PF.to && PF.from > PF.to);
+  M('pf-warn', 'invest-profit').hidden = !badRange;
+  M('pf-go', 'invest-profit').disabled = badRange;
+  M('pf-tbl-title', 'invest-profit').textContent = daily ? '일별 투자수익' : '월별 투자수익';
+
+  var exec = sum(rows, 'exec'), profit = sum(rows, 'profit'), repay = sum(rows, 'repay');
+  var tyExec = rows.length ? wavg(rows, 'ty', 'exec') : 0;
+  var wAvg = rows.length ? wavg(rows, 'w', 'exec') : 0;
+  var tyAsset = rows.length ? tyAssetOf(tyExec, exec, rows) : 0;
+  M('pf-stat', 'invest-profit').innerHTML =
+    '<div class="stat"><div class="summary-label">검색대상기간</div>' +
+      '<div class="stat-period">' + presetLabel() + '</div>' +
+      '<div class="summary-sub mono">' + PF.from + ' ~ ' + PF.to + '</div></div>' +
+    '<div class="stat"><div class="summary-label">투자실행금</div>' +
+      '<div class="summary-value">' + fmt(exec) + '<span class="unit">원</span></div></div>' +
+    '<div class="stat"><div class="summary-label">투자수익</div>' +
+      '<div class="summary-value">' + fmt(profit) + '<span class="unit">원</span></div></div>' +
+    '<div class="stat"><div class="summary-label">Ty수익율</div><div class="ty-split">' +
+      '<div><div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자실행금액 대비</span>' +
+        '<span class="tip-panel">PSMR × 365 ÷ PSD' +
+          '<span class="tip-row"><span>PSMR</span><span class="tip-green">투자수익 ÷ 투자실행금</span></span>' +
+          '<span class="tip-row"><span>PSD</span><span class="tip-green">투자실행금 가중평균 금융일수</span></span>' +
+        '</span></span></div>' +
+        '<div class="summary-value">' + fx(tyExec, 2) + '<span class="unit">%</span></div></div>' +
+      '<div><div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자자산 대비</span>' +
+        '<span class="tip-panel">(투자실행금액 대비 × PSA) ÷ (PSA + PSC)' +
+          '<span class="tip-row"><span>PSA</span><span class="tip-green">' + fmt(exec) + '원</span></span>' +
+          '<span class="tip-row"><span>PSC</span><span class="tip-green">' + fmt((cashRow() ? cashRow().amount : 0) * ecDays(rows)) + '원</span></span>' +
+          '<span class="tip-row sum"><span>EC ' + ecDays(rows) + '일 합</span><span>기간 순현금 합계 · 예시값</span></span>' +
+        '</span></span></div>' +
+        '<div class="summary-value">' + fx(tyAsset, 2) + '<span class="unit">%</span></div></div>' +
+    '</div></div>';
+
+  var box = M('pf-tbl', 'invest-profit');
+  if(!rows.length){
+    box.innerHTML = emptyState('chart', '조회된 투자수익 없음', '선택한 기간에 상환된 정산채권이 없음.');
+  } else {
+    var view = applySort('pf-tbl', rows), i;
+    var t = '<div class="tbl-scroll"><table class="tbl"><thead><tr>' +
+      th('pf-tbl', 'd', daily ? '정산예정일' : '정산예정월') + th('pf-tbl', 'repay', '상환액', 'num') +
+      th('pf-tbl', 'exec', '투자실행금', 'num') + th('pf-tbl', 'profit', '투자 수익', 'num') +
+      th('pf-tbl', 'w', 'W금융일수', 'num') + th('pf-tbl', 'ty', 'Ty수익율', 'num') + '</tr></thead><tbody>';
+    for(i = 0; i < view.length; i++){
+      var r = view[i];
+      t += '<tr><td class="mono">' + r.d + '</td><td class="num">' + fmt(r.repay) + '</td>' +
+           '<td class="num">' + fmt(r.exec) + '</td><td class="num"><span class="strong">' + fmt(r.profit) + '</span></td>' +
+           '<td class="num">' + fx(r.w, 1) + '</td><td class="num">' + pct(r.ty, 2) + '</td></tr>';
+    }
+    t += '</tbody><tfoot><tr><td>합계</td><td class="num">' + fmt(repay) + '</td><td class="num">' + fmt(exec) +
+         '</td><td class="num">' + fmt(profit) + '</td>' +
+         '<td class="num">' + fx(wAvg, 1) + '<span class="avg-note">(가중평균)</span></td>' +
+         '<td class="num">' + fx(tyExec, 2) + '%<span class="avg-note">(가중평균)</span></td></tr></tfoot>';
+    box.innerHTML = t + '</table></div>';
+  }
+  var x1 = M('pf-xls1', 'invest-profit'), x2 = M('pf-xls2', 'invest-profit');
+  x1.disabled = !rows.length; x2.disabled = !rows.length;
+  
+};
+
+
+/* ───────── 가맹점 ───────── */
+function mcRows(){
+  var f = MC.applied; if(!f) return MERCHANTS;
+  return MERCHANTS.filter(function(m){
+    if(f.sector && f.sector !== '전체' && m.sector !== f.sector) return false;
+    if(f.buyer && f.buyer !== '전체' && (m.buyer + ' ' + m.buyerName) !== f.buyer) return false;
+    if(f.kw){
+      var k = f.kw.toLowerCase();
+      var hay = (m.mid + ' ' + m.name + ' ' + m.biz + ' ' + m.ceo + ' ' + m.item).toLowerCase();
+      if(hay.indexOf(k) < 0) return false;
+    }
+    return true;
+  });
+}
+function mcChips(){
+  var f = MC.applied; if(!f) return [];
+  var out = [];
+  if(f.sector && f.sector !== '전체') out.push({k:'sector', t:'업종: ' + f.sector});
+  if(f.buyer && f.buyer !== '전체') out.push({k:'buyer', t:'채권매입업체: ' + f.buyer});
+  if(f.kw) out.push({k:'kw', t:'검색어: ' + f.kw});
+  return out;
+}
+RENDER['merchants'] = function(){
+  var sec = SEC('merchants'), i;
+  /* 업종 필터는 네이티브 select — 원본 어드민은 커스텀 드롭다운 0건, 15파일 25곳 전부 <select>. */
+  var sel = M('mc-sector', 'merchants');
+  if(sel.options.length !== SECTORS.length){
+    var opt = '';
+    for(i = 0; i < SECTORS.length; i++) opt += '<option value="' + SECTORS[i] + '">' + SECTORS[i] + '</option>';
+    sel.innerHTML = opt;
+  }
+  sel.value = MC.sector;
+  M('mc-buyer', 'merchants').value = MC.buyer;
+  M('mc-kw', 'merchants').value = MC.kw;
+
+  var chips = mcChips(), ch = '';
+  if(chips.length){
+    ch = '<div class="chip-row"><span class="chip-label">적용된 조건</span>';
+    for(i = 0; i < chips.length; i++)
+      ch += '<span class="chip">' + chips[i].t + ' <button aria-label="조건 해제" data-act="mc-chip-off" data-key="' + chips[i].k + '">' + svg('x', 2.5) + '</button></span>';
+    ch += '<button class="chip-clear" data-act="mc-reset">조건 초기화</button></div>';
+  }
+  M('mc-chips', 'merchants').innerHTML = ch;
+
+  var rows = applySort('mc-tbl', mcRows());
+  var pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  if(MC.page > pages) MC.page = 1;
+  var slice = rows.slice((MC.page - 1) * PAGE_SIZE, MC.page * PAGE_SIZE);
+  var t = '<div class="tbl-scroll"><table class="tbl"><thead><tr>' +
+    th('mc-tbl', 'mid', '가맹점ID') + th('mc-tbl', 'name', '가맹점명') + th('mc-tbl', 'biz', '사업자번호') +
+    th('mc-tbl', 'ceo', '대표자') + th('mc-tbl', 'sector', '업종') + th('mc-tbl', 'item', '종목') +
+    th('mc-tbl', 'buyer', '채권매입업체ID') + '</tr></thead><tbody>';
+  if(!rows.length){
+    t += '<tr><td colspan="7" style="padding:0">' +
+         emptyState('search', '검색 결과 없음', '다른 조건으로 다시 조회.',
+                    '<button class="btn btn-outline" data-act="mc-reset">조건 초기화</button>') + '</td></tr>';
+  } else {
+    for(i = 0; i < slice.length; i++){
+      var m = slice[i];
+      t += '<tr data-mid="' + m.mid + '">' +
+           '<td class="mono">' + m.mid + '</td><td><span class="name">' + m.name + '</span></td>' +
+           '<td class="mono">' + m.biz + '</td><td>' + m.ceo + '</td><td>' + m.sector + '</td><td>' + m.item + '</td>' +
+           '<td><span class="badge sm badge-primary">' + m.buyer + '</span> ' + m.buyerName + '</td></tr>';
+    }
+  }
+  M('mc-tbl', 'merchants').innerHTML = t + '</tbody></table></div>';
+  M('mc-page', 'merchants').innerHTML = pageBar(MC.page, pages, 'mc-page',
+    '<span style="font-size:12px; color:var(--gray-500)">총 <b class="mono">' + rows.length + '</b>건'
+    + rangeLabel(MC.page, pages, rows.length) + '</span>');
+};
+
+/* ───────── 정산채권 양수 ───────── */
+function aqCount(){ var n = 0; for(var i = 0; i < AQ.sel.length; i++) if(AQ.sel[i]) n++; return n; }
+function aqSignedCount(){ var n = 0; for(var i = 0; i < AQ.signed.length; i++) if(AQ.signed[i]) n++; return n; }
+RENDER['acquisition-list'] = function(){
+  var i, done = aqSignedCount(), wait = SIGNQ.length - done;
+  M('aq-title', 'acquisition-list').textContent = done ? '양수도 계약 목록' : '서명 대기 목록';
+  var note;
+  if(AQ.phase === 'signing') note = '서명 대기 중인 정산금채권 양수도 계약 <b class="mono">' + SIGNQ.length + '건</b>. 선택 <b class="mono">' + aqCount() + '건</b> 서명 처리 중.';
+  else if(done) note = '서명 완료 <b class="mono">' + done + '건</b>. 서명 대기 잔여 <b class="mono">' + wait + '건</b>.';
+  else note = '서명 대기 중인 정산금채권 양수도 계약 <b class="mono">' + SIGNQ.length + '건</b>. 계약서 내용 확인 후 서명 진행.';
+  M('aq-notice', 'acquisition-list').innerHTML = note;
+
+  var h = '';
+  for(i = 0; i < SIGNQ.length; i++){
+    var s = SIGNQ[i], sg = AQ.signed[i], sel = AQ.sel[i];
+    h += '<div class="sign-row' + (sg ? ' done' : (sel ? ' selected' : '')) + '">' +
+      '<input type="checkbox" class="chk" data-act="aq-chk" data-i="' + i + '"' + ((sel || sg) ? ' checked' : '') + (sg ? ' disabled' : '') + '>' +
+      '<div style="flex:1; min-width:0"><div class="m-name">' + s.name + '</div>' +
+      '<div class="m-date">계약 생성일 <span class="mono">' + s.created + '</span></div></div>' +
+      '<span class="badge ' + (sg ? 'badge-green">서명 완료' : 'badge-amber">서명 대기') + '</span>' +
+      (sg ? '<a class="doc-link" href="contracts.html" data-nav="contracts">계약서 보기</a>'
+          : '<a class="doc-link" href="assets/docs/계약서_서명대기_' + s.mid + '.pdf" target="_blank" rel="noopener">계약서 보기</a>') + '</div>';
+  }
+  M('aq-rows', 'acquisition-list').innerHTML = h;
+
+  M('ab-count').textContent = aqCount();
+  var btn = M('ab-btn');
+  btn.disabled = (aqCount() === 0 || AQ.phase !== 'list');
+
+  var list = '';
+  for(i = 0; i < SIGNQ.length; i++) if(AQ.sel[i])
+    list += '<div class="row-between"><span class="n">' + SIGNQ[i].name + '</span><span class="d mono">' + SIGNQ[i].created + '</span></div>';
+  M('aqc-list').innerHTML = list;
+  M('aqc-count').textContent = aqCount() + '건';
+  M('aqs-count').textContent = aqCount();
+  var dl = '';
+  for(i = 0; i < SIGNQ.length; i++) if(AQ.signed[i])
+    dl += '<div class="done-item">' + svg('check') + '<span class="n">' + SIGNQ[i].name + '</span><span class="d mono">' + SIGNQ[i].created + '</span></div>';
+  M('aqd-list').innerHTML = dl;
+  M('aqd-count').textContent = done + '건';
+};
+
+/* ───────── 계약기록 ───────── */
+function ctSelCount(){ var n = 0; for(var k in CT.sel) if(CT.sel[k]) n++; return n; }
+RENDER['contracts'] = function(){
+  var rows0 = CT.empty ? [] : CONTRACTS, i;
+  var rows = applySort('ct-tbl', rows0);
+  var pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  if(CT.page > pages) CT.page = 1;
+  var slice = rows.slice((CT.page - 1) * PAGE_SIZE, CT.page * PAGE_SIZE);
+  var n = ctSelCount();
+
+  M('ct-count', 'contracts').innerHTML = '총 <b class="mono">' + rows.length + '</b>건' + rangeLabel(CT.page, pages, rows.length);
+  var pill = M('ct-sel', 'contracts');
+  pill.textContent = n + '건 선택'; pill.hidden = (n === 0);
+  var dl = M('ct-dl', 'contracts');
+  dl.disabled = (n === 0);
+  dl.classList.toggle('armed', n > 0 && n === rows.length && rows.length > 0);
+  M('ct-dl-label', 'contracts').textContent = '선택 문서 다운로드' + (n ? ' (' + n + ')' : '');
+
+  var box = M('ct-tbl', 'contracts');
+  if(!rows.length){
+    box.innerHTML = emptyState('doc', '보관된 계약문서 없음', '정산채권 양수 후 재양도합의서가 보관됨.',
+      '<button class="btn btn-outline" data-nav="acquisition-list">정산채권 양수로 이동</button>');
+    M('ct-page', 'contracts').innerHTML = '';
+    return;
+  }
+  var allOn = (n === rows.length);
+  var t = '<div class="tbl-scroll"><table class="tbl"><thead><tr>' +
+    '<th style="width:48px"><input type="checkbox" class="chk" data-act="ct-all"' + (allOn ? ' checked' : '') + '></th>' +
+    th('ct-tbl', 'mid', 'MID') + th('ct-tbl', 'name', '가맹점') +
+    '<th>재양도합의서</th><th class="center">검증</th></tr></thead><tbody>';
+  for(i = 0; i < slice.length; i++){
+    var c = slice[i], on = !!CT.sel[c.mid];
+    t += '<tr' + (on ? ' class="selected"' : '') + '>' +
+      '<td><input type="checkbox" class="chk" data-act="ct-chk" data-mid="' + c.mid + '"' + (on ? ' checked' : '') + '></td>' +
+      '<td class="mono">' + c.mid + '</td><td><span class="name">' + c.name + '</span></td>' +
+      '<td><a class="file-link" href="assets/docs/재양도합의서_' + c.mid + '.pdf" target="_blank" rel="noopener">재양도합의서_' + c.mid + '.pdf</a></td>' +
+      '<td class="center"><span class="badge badge-gray">확인 대상</span></td></tr>';
+  }
+  box.innerHTML = t + '</tbody></table></div>';
+  M('ct-page', 'contracts').innerHTML = pageBar(CT.page, pages, 'ct-page');
+};
+
+/* ───────── 비밀번호 변경 ───────── */
+function pwChecks(v){
+  return [
+    {t:'8자 이상',    ok:v.length >= 8},
+    {t:'영문 포함',    ok:/[A-Za-z]/.test(v)},
+    {t:'숫자 포함',    ok:/[0-9]/.test(v)},
+    {t:'특수문자 포함', ok:/[^A-Za-z0-9]/.test(v)}
+  ];
+}
+function pwRulesOk(v){ return pwChecks(v).every(function(c){ return c.ok; }); }
+RENDER['password'] = function(){
+  var sec = SEC('password');
+  M('pw-cur', 'password').value = PW.cur;
+  M('pw-new', 'password').value = PW.nw;
+  M('pw-cfm', 'password').value = PW.cfm;
+  var weak = PW.touched && !pwRulesOk(PW.nw);
+  var mism = PW.touched && !weak && (PW.nw !== PW.cfm);
+  M('pw-new-field', 'password').classList.toggle('has-error', weak);
+  M('pw-cfm-field', 'password').classList.toggle('has-error', mism);
+  M('pw-new-err', 'password').hidden = !weak;
+  M('pw-cfm-err', 'password').hidden = !mism;
+  M('pw-hint', 'password').hidden = weak;
+  var ul = M('pw-rules', 'password');
+  ul.hidden = !weak;
+  if(weak){
+    ul.innerHTML = pwChecks(PW.nw).map(function(c){
+      return '<li class="' + (c.ok ? 'ok' : 'ng') + '">' + svg(c.ok ? 'check' : 'x', 2.5) + c.t + '</li>';
+    }).join('');
+  }
+  M('pw-submit', 'password').disabled = (weak || mism || !PW.cur);
+};
+
+/* ───────── 엑셀 미리보기 4종 ───────── */
+function sheetRow(n, cells, cls){
+  var h = '<tr' + (cls ? ' class="' + cls + '"' : '') + '><th class="row-head">' + n + '</th>';
+  for(var i = 0; i < cells.length; i++){
+    var c = cells[i];
+    if(c === null){ h += '<td class="c-empty"></td>'; continue; }
+    h += '<td' + (c.c ? ' class="' + c.c + '"' : '') + (c.span ? ' colspan="' + c.span + '"' : '') + '>' + (c.v === undefined ? '' : c.v) + '</td>';
+  }
+  return h + '</tr>';
+}
+function sheetData(key){
+  var i, rows = [], cols, exec = iaExecTotal(), total = assetTotal();
+  var sRatio = ratios(ASSET_ROWS, total), xRatio = ratios(MERCHANTS, exec);
+  if(key === 'assets-status'){
+    cols = [44, 190, 175, 130, 145, 130, 120, 0];
+    rows.push({n:1, c:[{v:'투자자산 현황 — 기준일 ' + BASE_DATE + ' / ' + INVESTOR, c:'c-title', span:7}]});
+    rows.push({n:2, c:[{v:XLS_NOTICE, c:'c-note', span:7}]});
+    rows.push({n:3, c:[{v:'자산 구분', c:'c-head'}, {v:'금액 (원)', c:'c-head r'}, {v:'W금융일수', c:'c-head r'},
+                       {v:'S입금부족율', c:'c-head r'}, {v:'Ty수익율', c:'c-head r'}, {v:'비중', c:'c-head r'}, {v:'보관', c:'c-head'}]});
+    for(i = 0; i < ASSET_ROWS.length; i++){
+      var a = ASSET_ROWS[i];
+      rows.push({n:4 + i, c:[{v:a.name}, {v:fmt(a.amount), c:'c-num'},
+        a.w === null ? {v:''} : {v:fx(a.w, 1), c:'c-num'}, a.s === null ? {v:''} : {v:pct(a.s, 2), c:'c-num'},
+        a.ty === null ? {v:''} : {v:pct(a.ty, 2), c:'c-num'},
+        {v:fx(sRatio[i], 1) + '%', c:'c-num'}, {v:a.keeper}]});
+    }
+    rows.push({n:6, cls:'r-total', c:[{v:'합계 (투자자산)'}, {v:fmt(total), c:'c-num'}, {v:''}, {v:''}, {v:''}, {v:'100.0%', c:'c-num'}, {v:''}]});
+    rows.push({n:7, c:[null, null, null, null, null, null, null]});
+    rows.push({n:8, c:[{v:'※ 합계(투자자산) = 투자실행액 + 순현금. W금융일수·S입금부족율·Ty수익율은 투자실행액에만 산정.', c:'c-note', span:7}]});
+    rows.push({n:9, c:[null, null, null, null, null, null, null]});
+    rows.push({n:10, c:[null, null, null, null, null, null, null]});
+  } else if(key === 'assets-merchant'){
+    cols = [44, 210, 175, 130, 145, 130, 120, 0];
+    rows.push({n:1, c:[{v:'가맹점별 투자자산 — 기준일 ' + BASE_DATE + ' / ' + INVESTOR, c:'c-title', span:7}]});
+    rows.push({n:2, c:[{v:XLS_NOTICE, c:'c-note', span:7}]});
+    rows.push({n:3, c:[{v:'가맹점', c:'c-head'}, {v:'투자금액 (원)', c:'c-head r'}, {v:'W금융일수', c:'c-head r'},
+                       {v:'S입금부족율', c:'c-head r'}, {v:'Ty수익율', c:'c-head r'}, {v:'비중', c:'c-head r'}, null]});
+    for(i = 0; i < MERCHANTS.length; i++){
+      var m = MERCHANTS[i];
+      rows.push({n:4 + i, c:[{v:m.name}, {v:fmt(m.amount), c:'c-num'}, {v:fx(m.w, 1), c:'c-num'},
+        {v:pct(m.s, 2), c:'c-num'}, {v:pct(m.ty, 2), c:'c-num'}, {v:fx(xRatio[i], 1) + '%', c:'c-num'}, null]});
+    }
+    var tot = 4 + MERCHANTS.length;
+    rows.push({n:tot, cls:'r-total', c:[{v:'합계'}, {v:fmt(exec), c:'c-num'}, {v:''}, {v:''}, {v:''}, {v:'100.0%', c:'c-num'}, null]});
+    rows.push({n:tot + 1, c:[null, null, null, null, null, null, null]});
+    rows.push({n:tot + 2, c:[{v:'※ 비중은 투자실행액 합계(' + fmt(exec) + '원) 대비 각 가맹점 투자금액의 구성비.', c:'c-note', span:7}]});
+  } else if(key === 'profit-status'){
+    cols = [44, 300, 340, 90, 90, 90, 90, 0];
+    var rw = pfRows(), pexec = sum(rw, 'exec'), pprofit = sum(rw, 'profit');
+    var tyE = rw.length ? wavg(rw, 'ty', 'exec') : 0;
+    var tyA = rw.length ? tyAssetOf(tyE, pexec, rw) : 0;
+    rows.push({n:1, c:[{v:'투자수익 현황 — 기준일 ' + BASE_DATE + ' / ' + INVESTOR, c:'c-title', span:2}, null, null, null, null]});
+    rows.push({n:2, c:[{v:XLS_NOTICE, c:'c-note', span:2}]});
+    rows.push({n:3, c:[{v:'항목', c:'c-head'}, {v:'값', c:'c-head r'}, null, null, null, null, null]});
+    rows.push({n:4, c:[{v:'검색대상기간'}, {v:presetLabel() + ' (' + PF.from + ' ~ ' + PF.to + ')', c:'c-num'}, null, null, null, null, null]});
+    rows.push({n:5, c:[{v:'투자실행금'}, {v:fmt(pexec), c:'c-num'}, null, null, null, null, null]});
+    rows.push({n:6, c:[{v:'투자수익'}, {v:fmt(pprofit), c:'c-num'}, null, null, null, null, null]});
+    rows.push({n:7, c:[{v:'Ty수익율 (투자실행금액 대비)'}, {v:fx(tyE, 2) + '%', c:'c-num'}, null, null, null, null, null]});
+    rows.push({n:8, c:[{v:'Ty수익율 (투자자산 대비)'}, {v:fx(tyA, 2) + '%', c:'c-num'}, null, null, null, null, null]});
+    rows.push({n:9, c:[null, null, null, null, null, null, null]});
+    rows.push({n:10, c:[{v:'※ Ty수익율 = 할인율 × (365 ÷ W금융일수). 투자자산 대비 수익율의 분모는 기간 투자실행금 합 + 기간 순현금 합(PSC).', c:'c-note', span:7}]});
+    rows.push({n:11, c:[null, null, null, null, null, null, null]});
+    rows.push({n:12, c:[null, null, null, null, null, null, null]});
+  } else {
+    cols = [44, 140, 175, 175, 150, 130, 130, 0];
+    var daily = true, dr = DAILY.filter(function(r){ return r.d >= PF.from && r.d <= PF.to; });
+    rows.push({n:1, c:[{v:(daily ? '일별' : '월별') + ' 투자수익 — ' + PF.from + ' ~ ' + PF.to + ' / ' + INVESTOR, c:'c-title', span:7}]});
+    rows.push({n:2, c:[{v:XLS_NOTICE, c:'c-note', span:7}]});
+    rows.push({n:3, c:[{v:daily ? '정산예정일' : '정산예정월', c:'c-head'}, {v:'상환액', c:'c-head r'}, {v:'투자실행금', c:'c-head r'},
+                       {v:'투자 수익', c:'c-head r'}, {v:'W금융일수', c:'c-head r'}, {v:'Ty수익율', c:'c-head r'}, null]});
+    for(i = 0; i < dr.length; i++){
+      var d = dr[i];
+      rows.push({n:4 + i, c:[{v:d.d}, {v:fmt(d.repay), c:'c-num'}, {v:fmt(d.exec), c:'c-num'},
+        {v:fmt(d.profit), c:'c-num'}, {v:fx(d.w, 1), c:'c-num'}, {v:pct(d.ty, 2), c:'c-num'}, null]});
+    }
+    var nn = 4 + dr.length;
+    rows.push({n:nn, cls:'r-total', c:[{v:'합계'}, {v:fmt(sum(dr, 'repay')), c:'c-num'}, {v:fmt(sum(dr, 'exec')), c:'c-num'},
+      {v:fmt(sum(dr, 'profit')), c:'c-num'},
+      {v:dr.length ? fx(wavg(dr, 'w', 'exec'), 1) : '0.0', c:'c-num'},
+      {v:dr.length ? fx(wavg(dr, 'ty', 'exec'), 2) + '%' : '0.00%', c:'c-num'}, null]});
+    rows.push({n:nn + 1, c:[null, null, null, null, null, null, null]});
+    rows.push({n:nn + 2, c:[{v:'※ 합계행의 W금융일수·Ty수익율은 투자금액 가중평균(단순평균 아님).', c:'c-note', span:7}]});
+  }
+  return {cols:cols, rows:rows};
+}
+function renderXls(key){
+  var meta = XLSX[key], sec = SEC(meta.screen), d = sheetData(key), i;
+  M('filebar', meta.screen).innerHTML =
+    '<div class="fb-left"><div class="fb-icon">' + svg('grid', 1.8) + '</div><div>' +
+      '<div class="fb-name">' + meta.file + '</div>' +
+      '<div class="fb-meta"><span>' + meta.size + '</span><span class="dot">·</span>' +
+      '<span>생성일시 <span class="mono">' + meta.made + '</span></span><span class="dot">·</span><span>시트 1개</span></div>' +
+    '</div></div>' +
+    '<a class="btn btn-primary" href="assets/xlsx/' + encodeURIComponent(meta.file) + '" download data-act="xls-get" data-xls="' + key + '">' +
+      svg('excel') + ' 엑셀 파일 내려받기</a>';
+  M('sheettabs', meta.screen).innerHTML = '<span class="sheet-tab active">' + meta.sheet + '</span>';
+  var cg = '<colgroup>';
+  for(i = 0; i < d.cols.length; i++) cg += d.cols[i] ? '<col style="width:' + d.cols[i] + 'px">' : '<col>';
+  cg += '</colgroup>';
+  var head = '<thead><tr class="col-head"><th class="corner"></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th></tr></thead>';
+  var body = '<tbody>';
+  for(i = 0; i < d.rows.length; i++) body += sheetRow(d.rows[i].n, d.rows[i].c, d.rows[i].cls);
+  M('sheet', meta.screen).innerHTML = cg + head + body + '</tbody>';
+}
+RENDER['xls-assets-status']   = function(){ renderXls('assets-status'); };
+RENDER['xls-assets-merchant'] = function(){ renderXls('assets-merchant'); };
+RENDER['xls-profit-status']   = function(){ renderXls('profit-status'); };
+RENDER['xls-profit-daily']    = function(){ renderXls('profit-daily'); };
+
+/* ───────── 랜딩 갤러리 ───────── */
+var GALLERY = [
+  ['invest-assets','card','badge-primary','투자','현황·가맹점별 투자자산·산식·엑셀/증명서 다운로드'],
+  ['certificate','shield','badge-primary','투자','전자문서 미리보기·서명 검증'],
+  ['invest-profit','trend','badge-primary','투자','기간 검색·일별/월별 투자수익·산식'],
+  ['merchants','users','badge-blue','가맹점','목록·필터 검색·정렬'],
+  ['acquisition-list','cards','badge-blue','가맹점','양수도 계약서 전자서명'],
+  ['contracts','doc','badge-blue','가맹점','재양도합의서 일괄 다운로드'],
+  ['coocon','coin','badge-gray','관리','We-bank 외부 연결'],
+  ['password','lock','badge-gray','관리','로그인 비밀번호 변경'],
+  ['login','lock','badge-gray','인증','사업자번호·휴대전화 로그인'],
+  ['xls-assets-status','grid','badge-primary','투자','투자자산 현황 엑셀 시트 서식 · Figma 전용'],
+  ['xls-assets-merchant','grid','badge-primary','투자','가맹점별 투자자산 엑셀 시트 서식 · Figma 전용'],
+  ['xls-profit-status','grid','badge-primary','투자','투자수익 현황 엑셀 시트 서식 · Figma 전용'],
+  ['xls-profit-daily','grid','badge-primary','투자','일별 투자수익 엑셀 시트 서식 · Figma 전용']
+];
+RENDER['index'] = function(){
+  var h = '';
+  for(var i = 0; i < GALLERY.length; i++){
+    var g = GALLERY[i], states = Object.keys(STATE_META[g[0]] || {}).filter(function(k){ return k !== 'default'; });
+    h += '<button class="shot-card" data-nav="' + g[0] + '"><div class="shot-top">' +
+      '<div class="shot-icon">' + svg(g[1], 1.8) + '</div><div>' +
+      '<div class="shot-name">' + SCREEN_LABEL[g[0]] + '</div>' +
+      '<div class="shot-file">#' + g[0] + '</div></div>' +
+      '<span class="badge sm ' + g[2] + '">' + g[3] + '</span></div>' +
+      '<p class="shot-desc">' + g[4] + (states.length ? ' · 상태 ' + states.length : '') + '</p></button>';
+  }
+  M('ix-gallery', 'index').innerHTML = h;
+};
+RENDER['login'] = function(){};
+RENDER['coocon'] = function(){};
+
+var KEEP_DEFAULT = ['xls-get', 'cert-pdf', 'aq-chk', 'ct-chk', 'ct-all'];
+var ACT = {};
+
+/* 정렬 */
+ACT['sort'] = function(el){
+  var st = sortState(el.dataset.tbl), k = el.dataset.key;
+  if(st.col === k) st.dir = -st.dir; else { st.col = k; st.dir = 1; }
+  refresh(CUR);
+};
+
+/* 투자 자산 */
+ACT['ia-page'] = function(el){
+  var p = parseInt(el.dataset.page, 10);
+  if(p < 1) return;
+  IA.page = p; IA.downloaded = false; refresh('invest-assets');
+};
+/* 엑셀 다운로드 — 원본은 버튼을 누르면 중간 화면 없이 파일이 바로 나간다
+   (ExcelDownloadButton → downloadExcel → Blob → a[download].click(), lib/excel.ts:38-51).
+   내려받는 동안의 라벨 교체는 PreSettlementTab.tsx:483-484 · LockAccountDeposits.tsx:309-310 규격. */
+function xlsBusy(el, on){
+  if(!el) return;
+  if(on){
+    if(el.dataset.idle === undefined) el.dataset.idle = el.innerHTML;
+    el.disabled = true;
+    el.innerHTML = '<span class="spinner-inline"></span>다운로드 중...';
+  } else {
+    el.disabled = false;
+    if(el.dataset.idle !== undefined){ el.innerHTML = el.dataset.idle; delete el.dataset.idle; }
+  }
+}
+ACT['xls-open']  = function(el){
+  var k = el.dataset.xls, meta = XLSX[k];
+  if(k === 'profit-daily' && PF.gran === 'monthly'){
+    showInfo('월별 표에 대응하는 엑셀 파일 없음. 일별 표 기준 파일만 제공.');
+    return;
+  }
+  pullFile('assets/xlsx/', meta.file, 0);
+  if(k === 'assets-merchant'){
+    IA.downloaded = true;
+    toastServed = 'invest-assets/download:' + meta.file;   /* 이 클릭이 이미 파일을 내려줬다 — 재전달 금지 */
+  }
+  xlsBusy(el, true);
+  setTimeout(function(){
+    xlsBusy(el, false);
+    if(k === 'assets-merchant') refresh('invest-assets');  /* 상태 전환이 syncToast 로 토스트를 낸다 */
+    else showToast(meta.file + ' 내려받기 완료');
+  }, 350);
+};
+ACT['cert-open'] = function(){ IA.cert = true; refresh('invest-assets'); };
+ACT['cert-issue']= function(){ IA.cert = false; refresh('invest-assets'); go('certificate'); };
+ACT['cert-pdf']  = function(){ showToast(CERT_PDF + ' 내려받기 완료'); };
+ACT['xls-get']   = function(el){
+  var k = el.dataset.xls;
+  if(k === 'assets-merchant'){
+    PEND['invest-assets'] = 'download';
+    toastServed = 'invest-assets/download:' + XLSX[k].file;   /* 이 클릭이 이미 파일을 내려줬다 — 재전달 금지 */
+  }
+  showToast(XLSX[k].file + ' 내려받기 완료');
+};
+
+ACT['toast-close'] = function(){ hideToast(); };
+
+/* 메뉴 그룹 접힘 — 원본 AdminLayout.tsx:486(<button>), :494(셰브론 -rotate-90 duration-200).
+   종전에는 <div> 에 셰브론만 붙어 눌러도 반응이 없었다. */
+ACT['nav-group'] = function(el){
+  var g = el.closest('.nav-group');
+  if(!g) return;
+  var on = g.classList.toggle('collapsed');
+  el.setAttribute('aria-expanded', on ? 'false' : 'true');
+};
+
+/* 모달 닫기 (현재 화면 기준) */
+ACT['modal-close'] = function(){
+  if(CUR === 'invest-assets'){ IA.cert = false; }
+  if(CUR === 'coocon'){ CO.modal = false; }
+  if(CUR === 'acquisition-list'){ clearSignTimer(); AQ.phase = 'list'; }
+  refresh(CUR);
+};
+
+/* 투자 수익 */
+var PRESET_RANGE = {
+  yesterday: ['2026-08-26', '2026-08-26'],
+  week:      ['2026-08-21', '2026-08-27'],
+  month:     ['2026-08-01', '2026-08-27']
+};
+ACT['preset'] = function(el){
+  var r = PRESET_RANGE[el.dataset.preset];
+  PF.from = r[0]; PF.to = r[1];
+  refresh('invest-profit');
+};
+ACT['pf-search'] = function(){
+  if(PF.from > PF.to){ showInfo('시작일은 종료일보다 이후일 수 없음.'); return; }   /* 원본 :82-84 alert 대응 */
+  refresh('invest-profit');
+  showInfo('조회 결과 ' + pfRows().length + '건 · ' + PF.from + ' ~ ' + PF.to);
+};
+ACT['pf-reset']  = function(){ setState('invest-profit', 'default'); showInfo('검색 조건 초기화'); };
+ACT['pf-gran']   = function(el){
+  var g = el.dataset.gran;
+  if(g === PF.gran){ refresh('invest-profit'); return; }
+  if(g === 'monthly'){ PF.gran = 'monthly'; PF.from = '2026-03-01'; PF.to = '2026-08-27'; }
+  else { PF.gran = 'daily'; PF.from = '2026-08-21'; PF.to = '2026-08-27'; }
+  refresh('invest-profit');
+};
+/* 가맹점 */
+ACT['mc-search'] = function(){
+  MC.kw = M('mc-kw', 'merchants').value.trim();
+  MC.buyer = M('mc-buyer', 'merchants').value;
+  MC.page = 1;
+  MC.applied = (MC.sector === '전체' && !MC.kw && MC.buyer === '전체') ? null
+             : {sector:MC.sector, kw:MC.kw, buyer:MC.buyer};
+  refresh('merchants');
+  showInfo('조회 결과 ' + mcRows().length + '건');
+};
+ACT['mc-reset'] = function(){ setState('merchants', 'default'); showInfo('검색 조건 초기화'); };
+ACT['mc-chip-off'] = function(el){
+  var k = el.dataset.key;
+  if(k === 'sector') MC.sector = '전체';
+  if(k === 'buyer')  MC.buyer = '전체';
+  if(k === 'kw')     MC.kw = '';
+  MC.applied = (MC.sector === '전체' && !MC.kw && MC.buyer === '전체') ? null
+             : {sector:MC.sector, kw:MC.kw, buyer:MC.buyer};
+  MC.page = 1;
+  refresh('merchants');
+};
+ACT['mc-page'] = function(el){ var p = parseInt(el.dataset.page, 10); if(p < 1) return; MC.page = p; refresh('merchants'); };
+
+/* 정산채권 양수 */
+ACT['aq-chk'] = function(el){
+  var i = parseInt(el.dataset.i, 10);
+  AQ.sel[i] = el.checked;
+  refresh('acquisition-list');
+};
+ACT['aq-sign'] = function(){ if(aqCount() === 0) return; AQ.phase = 'confirm'; refresh('acquisition-list'); };
+ACT['aq-sign-go'] = function(){
+  AQ.phase = 'signing'; refresh('acquisition-list');
+  clearSignTimer();
+  signTimer = setTimeout(function(){
+    signTimer = null;
+    for(var i = 0; i < AQ.sel.length; i++) if(AQ.sel[i]) AQ.signed[i] = true;
+    AQ.phase = 'done';
+    refresh('acquisition-list');
+  }, 1500);
+};
+ACT['aq-done-ok'] = function(){ setState('acquisition-list', 'default'); };
+
+/* 계약기록 */
+ACT['ct-all'] = function(el){
+  CT.sel = {};
+  if(el.checked) for(var i = 0; i < CONTRACTS.length; i++) CT.sel[CONTRACTS[i].mid] = 1;
+  CT.downloaded = false;
+  refresh('contracts');
+};
+ACT['ct-chk'] = function(el){
+  if(el.checked) CT.sel[el.dataset.mid] = 1; else delete CT.sel[el.dataset.mid];
+  CT.downloaded = false;
+  refresh('contracts');
+};
+ACT['ct-download'] = function(){
+  if(ctSelCount() === 0) return;
+  CT.downloaded = true;
+  refresh('contracts');
+};
+ACT['ct-page'] = function(el){ var p = parseInt(el.dataset.page, 10); if(p < 1) return; CT.page = p; refresh('contracts'); };
+
+/* 비밀번호 */
+function readPw(){
+  PW.cur = M('pw-cur', 'password').value;
+  PW.nw  = M('pw-new', 'password').value;
+  PW.cfm = M('pw-cfm', 'password').value;
+}
+ACT['pw-input'] = function(){};
+ACT['pw-submit'] = function(){
+  readPw();
+  if(!pwRulesOk(PW.nw) || PW.nw !== PW.cfm){ PW.touched = true; refresh('password'); return; }
+  PW.done = true; refresh('password');
+};
+
+/* 도크 */
+ACT['dock-toggle'] = function(){ var p = M('dock-panel'); p.hidden = !p.hidden; };
+ACT['dock-state']  = function(el){ setState(CUR, el.dataset.state); };
+
+/* ═══ 이벤트 바인딩 ═══ */
+document.addEventListener('click', function(e){
+  var t = e.target;
+  if(!t || !t.closest) return;
+  var a = t.closest('[data-act]');
+  /* 모달 배경 클릭으로 닫기 — 패널 안쪽 클릭은 배경으로 새지 않는다.
+     원본 ConfirmDialog.tsx:54-55 (백드롭 onClick + 패널 stopPropagation) 대응.
+     진행 중 오버레이(acquisition-signing)만 예외 — 원본도 submitting·ocrProcessing 오버레이는 닫히지 않는다. */
+  if(a && a.dataset.act === 'backdrop'){
+    if(t !== a) a = t.closest('[data-act]:not([data-act="backdrop"])') || a;
+    if(a.dataset.act === 'backdrop'){ e.preventDefault(); ACT['modal-close'](); return; }
+  }
+  if(a && ACT[a.dataset.act]){
+    if(KEEP_DEFAULT.indexOf(a.dataset.act) < 0) e.preventDefault();
+    ACT[a.dataset.act](a, e);
+    return;
+  }
+  var n = t.closest('[data-nav]');
+  if(n){ e.preventDefault(); go(n.dataset.nav); return; }
+  if(t.closest('.sidebar-logo a')){ e.preventDefault(); go('index'); return; }
+  if(t.closest('button.logout')){ e.preventDefault(); go('login'); return; }
+  var link = t.closest('a[href]');
+  if(link){
+    var href = link.getAttribute('href');
+    if(link.getAttribute('target') === '_blank'){
+      if(t.closest('[data-screen="coocon"]')){ e.preventDefault(); CO.modal = true; refresh('coocon'); }
+      return;
+    }
+    if(FILE2SCREEN[href]){ e.preventDefault(); go(FILE2SCREEN[href]); return; }
+    if(STATEFILE[href]){ e.preventDefault(); var p = STATEFILE[href].split('/'); go(p[0], p[1]); return; }
+    if(href.charAt(0) === '#'){
+      e.preventDefault();
+      if(t.closest('.login-links')) showInfo('비밀번호 재발급은 페이허그 담당자에게 문의.');
+      else showInfo('연결 대상 화면이 이번 설계 범위에 없음.');
+      return;
+    }
+  }
+}, false);
+
+/* ═══ 키보드 조작 — div·th 기반 컨트롤도 키로 눌린다 ═══ */
+document.addEventListener('keydown', function(e){
+  var t = e.target;
+  if(!t || !t.closest) return;
+  var k = e.key;
+
+  /* 검색창 Enter → 조회 실행 (원본 app/sales/[bizNo]/page.tsx:558) */
+  if(t.getAttribute && t.getAttribute('data-mount') === 'mc-kw' && k === 'Enter'){
+    e.preventDefault(); ACT['mc-search'](t, e); return;
+  }
+  if(t.getAttribute && (t.getAttribute('data-mount') === 'pf-from' || t.getAttribute('data-mount') === 'pf-to') && k === 'Enter'){
+    e.preventDefault(); ACT['pf-search'](t, e); return;
+  }
+
+  var head = t.closest('th[data-act="sort"]');
+  if(head && (k === 'Enter' || k === ' ' || k === 'Spacebar')){
+    e.preventDefault();
+    var tbl = head.dataset.tbl, key = head.dataset.key;
+    ACT['sort'](head, e);
+    var again = document.querySelector('th[data-act="sort"][data-tbl="' + tbl + '"][data-key="' + key + '"]');
+    if(again) again.focus();                      /* 표를 다시 그려도 포커스를 잃지 않는다 */
+    return;
+  }
+}, false);
+
+document.addEventListener('change', function(e){
+  var el = e.target.closest && e.target.closest('[data-act]');
+  if(!el) return;
+  /* 날짜 입력이 조회 조건을 움직인다 — 원본 DateRangeFilter.tsx:116-123 의 value/onChange 대응.
+     종전에는 change 를 받는 코드가 없어 사용자가 친 값이 버려졌다. */
+  if(el.dataset.act === 'pf-date'){
+    if(el.dataset.which === 'to') PF.to = el.value; else PF.from = el.value;
+    refresh('invest-profit');
+    return;
+  }
+  if(el.dataset.act === 'mc-sector'){
+    MC.sector = el.value; MC.page = 1;
+    if(MC.applied) MC.applied.sector = MC.sector;
+    refresh('merchants');
+    return;
+  }
+  if(el.dataset.act === 'mc-buyer'){
+    MC.buyer = el.value;
+    if(MC.applied) MC.applied.buyer = MC.buyer;
+    refresh('merchants');
+  }
+  if(el.dataset.act === 'dock-screen') go(el.value);
+});
+document.addEventListener('input', function(e){
+  var el = e.target.closest && e.target.closest('[data-act]');
+  if(!el) return;
+  if(el.dataset.act === 'pw-input'){ readPw(); PW.touched = true; refresh('password'); }
+});
+window.addEventListener('hashchange', function(){
+  if(hashLock) return;
+  var h = readHash();
+  if(h) go(h.screen, h.state);
+});
+
+/* ═══ 도크 ═══ */
+function updateDock(id, st){
+  var sel = M('dock-screen');
+  if(!sel.options.length){
+    sel.innerHTML = SCREEN_ORDER.map(function(s){ return '<option value="' + s + '">' + SCREEN_LABEL[s] + '</option>'; }).join('');
+  }
+  sel.value = id;
+  var meta = STATE_META[id] || {'default':null};
+  var keys = Object.keys(meta);
+  M('dock-states').innerHTML = keys.map(function(k){
+    return '<button data-act="dock-state" data-state="' + k + '"' + (k === st ? ' class="on"' : '') + '>' +
+           (k === 'default' ? '기본' : meta[k].label) + '</button>';
+  }).join('');
+  M('dock-label').textContent = SCREEN_LABEL[id] + (meta[st] ? ' · ' + meta[st].label : '');
+}
+
+/* ═══ 자체 점검 — 화면 간 숫자 정합 ═══ */
+window.__selfcheck = function(){
+  var exec = iaExecTotal(), total = assetTotal();
+  return {
+    merchantSum: exec,
+    assetExecRow: ASSET_ROWS[0].amount,
+    execMatch: exec === ASSET_ROWS[0].amount,
+    assetTotal: total,
+    ratioSum: Number(ratios(MERCHANTS, exec).reduce(function(a, r){ return a + r; }, 0).toFixed(1)),
+    dailyProfitSum: sum(DAILY, 'profit'),
+    monthlyProfitSum: sum(MONTHLY, 'profit'),
+    contracts: CONTRACTS.length,
+    signQueue: SIGNQ.length,
+    screens: QA('section.screen').length,
+    states: Object.keys(STATE_META).reduce(function(a, k){ return a + Object.keys(STATE_META[k]).length - 1; }, 0)
+  };
+};
+
+/* ═══ 초기화 ═══ */
+(function init(){
+  var h = readHash();
+  updateDock('invest-assets', 'default');
+  SCREEN_ORDER.forEach(function(s){ if(RENDER[s]) RENDER[s](); });
+  go(h ? h.screen : 'invest-assets', h ? h.state : null);
+})();
+</script>
+</body>
+</html>

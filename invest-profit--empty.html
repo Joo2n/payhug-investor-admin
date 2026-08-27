@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1440">
-<title>PayHug Admin — 투자 수익</title>
+<title>PayHug Admin — 투자 수익 (결과 없음)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,6 +25,23 @@
   .tbl-head .toggle { margin-bottom: 0; }
   .tbl tfoot td { background: var(--gray-50); border-top: 1px solid var(--gray-100); border-bottom: 0; font-weight: 700; color: var(--gray-900); }
   .tbl tfoot td .avg-note { font-size: 11px; font-weight: 400; color: var(--gray-400); margin-left: 4px; font-family: var(--font-sans); }
+
+  /* ── 상태 뱃지 (제안서 화면 구분용) ── */
+  .page-title .state-badge {
+    vertical-align: middle; position: relative; top: -2px; margin-left: 8px;
+    font-size: 12px; line-height: 16px; font-weight: 500;
+  }
+
+  /* ── 빈 상태 ── */
+  .empty-state { padding: 64px 24px; text-align: center; }
+  .empty-state .es-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--gray-100); color: var(--gray-400);
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+  }
+  .empty-state .es-icon svg { width: 28px; height: 28px; }
+  .empty-state .es-title { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gray-600); margin: 0 0 6px; }
+  .empty-state .es-sub { font-size: 12px; line-height: 16px; color: var(--gray-400); margin: 0; }
 </style>
 </head>
 <body data-active="invest-returns">
@@ -105,7 +122,7 @@
   <!-- ═══════════ 콘텐츠 영역 ═══════════ -->
   <main class="content">
     <div class="page-header">
-      <h1 class="page-title">투자 수익</h1>
+      <h1 class="page-title">투자 수익 <span class="badge badge-gray state-badge">결과 없음</span></h1>
       <p class="page-sub">기간별 투자 수익 현황 조회 · 수익 산정 기준 안내.</p>
     </div>
 
@@ -113,18 +130,18 @@
     <div class="search-bar">
       <div class="preset-row">
         <button class="preset-btn">어제</button>
-        <button class="preset-btn active">일주일</button>
+        <button class="preset-btn">일주일</button>
         <button class="preset-btn">이번달</button>
       </div>
       <div class="filter-row">
         <div class="filter-field">
           <label>시작일</label>
-          <input type="date" class="input" value="2026-08-21">
+          <input type="date" class="input" value="2026-07-01">
         </div>
         <div class="filter-tilde">~</div>
         <div class="filter-field">
           <label>종료일</label>
-          <input type="date" class="input" value="2026-08-27">
+          <input type="date" class="input" value="2026-07-07">
         </div>
         <button class="btn btn-primary">검색</button>
         <button class="btn btn-outline">초기화</button>
@@ -135,35 +152,35 @@
     <div class="card mb-6">
       <div class="card-head">
         <h2 class="card-title">수익 현황</h2>
-        <a class="btn btn-excel" href="assets/xlsx/투자수익현황_2026-08-21_2026-08-27.xlsx" download>
+        <button class="btn btn-excel" disabled>
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           엑셀 다운로드
-        </a>
+        </button>
       </div>
       <div class="stat-grid">
         <div class="stat">
           <div class="summary-label">검색대상기간</div>
-          <div style="font-size:16px; line-height:28px; font-weight:700; color:var(--gray-900);">일주일</div>
-          <div class="summary-sub mono">2026-08-21 ~ 2026-08-27</div>
+          <div style="font-size:16px; line-height:28px; font-weight:700; color:var(--gray-900);">직접입력</div>
+          <div class="summary-sub mono">2026-07-01 ~ 2026-07-07</div>
         </div>
         <div class="stat">
           <div class="summary-label">투자실행금</div>
-          <div class="summary-value">1,250,800,000<span class="unit">원</span></div>
+          <div class="summary-value">0<span class="unit">원</span></div>
         </div>
         <div class="stat">
           <div class="summary-label">투자수익</div>
-          <div class="summary-value">1,375,880<span class="unit">원</span></div>
+          <div class="summary-value">0<span class="unit">원</span></div>
         </div>
         <div class="stat">
           <div class="summary-label">Ty수익율</div>
           <div class="ty-split">
             <div>
               <div class="ty-label">투자실행금액 대비</div>
-              <div class="summary-value">3.55<span class="unit">%</span></div>
+              <div class="summary-value">0.00<span class="unit">%</span></div>
             </div>
             <div>
               <div class="ty-label">투자자산 대비</div>
-              <div class="summary-value">2.24<span class="unit">%</span></div>
+              <div class="summary-value">0.00<span class="unit">%</span></div>
             </div>
           </div>
         </div>
@@ -180,92 +197,15 @@
             <button class="toggle-btn">월별</button>
           </div>
         </div>
-        <a class="btn btn-excel" href="assets/xlsx/일별투자수익_2026-08-21_2026-08-27.xlsx" download>
+        <button class="btn btn-excel" disabled>
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           엑셀 다운로드
-        </a>
+        </button>
       </div>
-      <div class="tbl-scroll">
-        <table class="tbl">
-          <thead>
-            <tr>
-              <th>정산예정일</th>
-              <th class="num">상환액</th>
-              <th class="num">투자실행금</th>
-              <th class="num">투자 수익</th>
-              <th class="num">W금융일수</th>
-              <th class="num">Ty수익율</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="mono">2026-08-21</td>
-              <td class="num">179,096,790</td>
-              <td class="num">178,900,000</td>
-              <td class="num"><span class="strong">196,790</span></td>
-              <td class="num">11.4</td>
-              <td class="num">3.52%</td>
-            </tr>
-            <tr>
-              <td class="mono">2026-08-22</td>
-              <td class="num">172,789,860</td>
-              <td class="num">172,600,000</td>
-              <td class="num"><span class="strong">189,860</span></td>
-              <td class="num">11.1</td>
-              <td class="num">3.62%</td>
-            </tr>
-            <tr>
-              <td class="mono">2026-08-23</td>
-              <td class="num">165,481,830</td>
-              <td class="num">165,300,000</td>
-              <td class="num"><span class="strong">181,830</span></td>
-              <td class="num">10.9</td>
-              <td class="num">3.68%</td>
-            </tr>
-            <tr>
-              <td class="mono">2026-08-24</td>
-              <td class="num">187,906,470</td>
-              <td class="num">187,700,000</td>
-              <td class="num"><span class="strong">206,470</span></td>
-              <td class="num">11.6</td>
-              <td class="num">3.46%</td>
-            </tr>
-            <tr>
-              <td class="mono">2026-08-25</td>
-              <td class="num">183,301,410</td>
-              <td class="num">183,100,000</td>
-              <td class="num"><span class="strong">201,410</span></td>
-              <td class="num">11.3</td>
-              <td class="num">3.55%</td>
-            </tr>
-            <tr>
-              <td class="mono">2026-08-26</td>
-              <td class="num">176,794,260</td>
-              <td class="num">176,600,000</td>
-              <td class="num"><span class="strong">194,260</span></td>
-              <td class="num">11.2</td>
-              <td class="num">3.58%</td>
-            </tr>
-            <tr>
-              <td class="mono">2026-08-27</td>
-              <td class="num">186,805,260</td>
-              <td class="num">186,600,000</td>
-              <td class="num"><span class="strong">205,260</span></td>
-              <td class="num">11.5</td>
-              <td class="num">3.49%</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td>합계</td>
-              <td class="num">1,252,175,880</td>
-              <td class="num">1,250,800,000</td>
-              <td class="num">1,375,880</td>
-              <td class="num">11.3<span class="avg-note">(평균)</span></td>
-              <td class="num">3.55%</td>
-            </tr>
-          </tfoot>
-        </table>
+      <div class="empty-state">
+        <div class="es-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17V7m4 10V11m4 6v-3M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
+        <p class="es-title">조회된 투자수익 없음</p>
+        <p class="es-sub">선택한 기간에 상환된 정산채권이 없음.</p>
       </div>
     </div>
 
