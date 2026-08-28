@@ -2,10 +2,16 @@
 
 투자자용 어드민 UI 기획 목업. 실제 운영 어드민(payhug-admin-web)의 디자인시스템을 실측해 동일한 UI 문법으로 제작.
 
-**공개 주소**: https://joo2n.github.io/payhug-investor-admin/ — `origin/main`에 올라간 15개 파일만 응답한다.
-공개 범위는 기본 화면 8종(`invest-assets` `certificate` `invest-profit` `merchants` `acquisition` `contracts` `coocon` `password`)과 랜딩 `index.html`,
-그리고 `assets/base.css` · `template.html` · `components.html` · `logo-icon.png`다.
-통합 프로토타입 `app.html`, 상태 파일 19종, 엑셀 산출물 서식 4종, 설명 문서, `assets/docs/` · `assets/xlsx/` 실물은 미푸시라 이 주소에서 열리지 않는다.
+**공개 주소**: https://joo2n.github.io/payhug-investor-admin/ — `origin/main`에 올라간 73개 파일 전량이 응답한다. 미푸시 항목은 없다.
+
+| 구획 | 수 | 내역 |
+|---|---|---|
+| 루트 HTML | 40 | 기본 화면 8 · 상태 19 · 엑셀 서식 4 · 로그인 1 · 랜딩 1 · 통합 프로토타입 1 · 설명 문서 6 |
+| 루트 문서 | 2 | `README.md` `DESIGN_REF.md` |
+| `assets/` 공용 | 5 | `base.css` `sheet.css` `template.html` `components.html` `logo-icon.png` |
+| 내려받기 실물 | 26 | `assets/docs/` PDF 20 · ZIP 2, `assets/xlsx/` XLSX 4 |
+
+통합 프로토타입 `app.html`, 설명 문서 `glossary.html` 계열, 상태 파일, 엑셀 서식 `xls-*.html`, 그리고 한글 이름을 쓰는 PDF·ZIP·XLSX 실물까지 모두 `https://joo2n.github.io/payhug-investor-admin/<파일>` 로 바로 열린다.
 
 집계 — 루트 HTML **40**.
 
@@ -73,7 +79,8 @@
     ├── template.html     # 화면 스켈레톤
     ├── components.html   # 컴포넌트 갤러리
     ├── logo-icon.png     # 미사용. 로고는 base.css의 .logo-mark data URI로 렌더
-    └── xlsx/             # 실제 내려받기 대상 엑셀 4종
+    ├── docs/             # 내려받기 대상 PDF 20 · ZIP 2
+    └── xlsx/             # 내려받기 대상 엑셀 4종
 ```
 
 ## 엑셀 다운로드 대응
@@ -100,6 +107,7 @@
 
 ## 변경 이력
 
+- 2026-08-28 — 공개 주소 문단을 `origin/main` 실측에 맞춘다. 공개 파일은 73개 전량이고 루트 HTML 40 · 루트 문서 2 · `assets/` 공용 5 · 내려받기 실물 26으로 갈린다. `app.html`·설명 문서·상태 파일·엑셀 서식·PDF·XLSX가 모두 이 주소에서 열려 미푸시 항목은 남지 않는다. 구조 트리에 `assets/docs/` 를 등재.
 - 2026-08-28 — 용어 해설 최상단에 「화면에서 본 이름으로 찾기」 매핑표를 둔다. 화면 항목 13행 + 추가 14행으로, 화면에서 읽은 이름 하나가 어느 카드로 가는지와 갈릴 때 어느 것을 쓰는지를 준다. 카드는 `화면 용어` 28 · `계산 재료` 22 두 층위로 갈라 뱃지·상단 필터·검색축에 반영. 같은 이름이 갈리는 카드 15건은 `용어 (계통 · 집계 단위)` 한 규칙으로 통일하고 원문 기호는 제목 부제로 내렸다. 숫자·산식·판정은 종전 그대로다.
 - 2026-08-27 — 투자 수익을 일별 원장 한 벌(2026-03-01~08-27, 180일)에서 그린다. 월별 표는 그 원장을 조회 기간만큼 잘라 달별로 합친 결과라 조회 기간을 바꾸면 표와 카드가 함께 따라간다. 용어 해설 전체 그림의 기호 25개에 우리말을 병기.
 - 2026-08-27 — 통합 프로토타입 `app.html` 추가. 랜딩을 화면·상태 전량 등재 구조로 개편. `acquisition.html`을 기본(목록) 상태로 정정하고 서명 확인 모달을 `acquisition--confirm.html`로 분리. 서명 대상 가맹점을 김성호떡볶이 본점·달빛곱창 홍대점으로 통일.
