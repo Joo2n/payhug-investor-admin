@@ -185,13 +185,16 @@ def wanted_assets(s):
     want = set()
     for f in re.findall(r"file:'([^']+\.xlsx)'", s):
         want.add('xlsx/' + f)
-    for m in set(re.findall(r"\{mid:'(M2026-\d{4})'", s)):
-        want.add('docs/재양도합의서_%s.pdf' % m)
-    sign = re.search(r'var SIGNQ = \[(.*?)\];', s, re.S)
-    if sign:
-        for m in re.findall(r"\{mid:'(M2026-\d{4})'", sign.group(1)):
-            want.add('docs/계약서_서명대기_%s.pdf' % m)
-    for v in re.findall(r"var (?:CERT_PDF|CT_ZIP_ALL|CT_ZIP_SEL3)\s*=\s*'([^']+)'", s):
+    # 계약기록 행 파일 — 전자서명 결과 텍스트 (PDF 시절 이름 아님)
+    pre = re.search(r"var CT_SIG_PREFIX\s*=\s*'([^']*)'", s)
+    ext = re.search(r"var CT_SIG_EXT\s*=\s*'([^']*)'", s)
+    if pre and ext:
+        for m in set(re.findall(r"\{mid:'(M2026-\d{4})'", s)):
+            want.add('docs/%s%s%s' % (pre.group(1), m, ext.group(1)))
+    # 단일 파일 상수 — 증명서·묶음·계약서 원문
+    for v in re.findall(r"var (?:CERT_PDF|CT_SIG_ALL|CT_SIG_SEL3)\s*=\s*'([^']+)'", s):
+        want.add('docs/' + v)
+    for v in set(re.findall(r"'(?:assets/docs/)?([^'/]+\.txt)'", s)):
         want.add('docs/' + v)
     for c in re.findall(r'<link rel="stylesheet" href="assets/([^"]+)"', s):
         want.add(c)

@@ -51,20 +51,36 @@
 
     <div class="login-field">
       <label>사업자등록번호 또는 휴대전화번호</label>
-      <input type="text" class="input" placeholder="'-' 없이 숫자만 입력">
+      <input type="text" class="input" data-login="id" placeholder="'-' 없이 숫자만 입력">
     </div>
     <div class="login-field" style="margin-bottom:8px">
       <label>비밀번호</label>
-      <input type="password" class="input" placeholder="비밀번호 입력">
+      <input type="password" class="input" data-login="pw" placeholder="비밀번호 입력">
     </div>
 
     <a class="btn btn-primary login-submit" href="invest-assets.html">로그인</a>
+
+    <div class="login-links">
+      <span class="link-off" aria-disabled="true">비밀번호 찾기</span>
+    </div>
 
   </div>
 
   <p class="login-note">계정 발급은 페이허그 담당자에게 문의.</p>
 
 </div>
+
+<script>
+/* Enter 제출 — 원본 payhug-admin-web/app/login/page.tsx:88-92 (onKeyDown Enter -> handleLogin).
+   원본에도 <form> 은 없다. 입력의 keydown 에서 제출 요소를 그대로 누른다. */
+document.addEventListener('keydown', function(e){
+  var t = e.target;
+  if(e.key !== 'Enter' || !t || !t.getAttribute || !t.getAttribute('data-login')) return;
+  e.preventDefault();
+  var b = document.querySelector('.login-submit');
+  if(b) b.click();
+});
+</script>
 
 </body>
 </html>

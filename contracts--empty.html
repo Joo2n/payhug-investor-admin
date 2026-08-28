@@ -27,16 +27,6 @@
   .tbl-count { font-size: 12px; color: var(--gray-400); margin-left: 8px; }
   .sel-pill { margin-left: 8px; font-weight: 600; }
 
-  /* 빈 상태 */
-  .empty-state { padding: 72px 20px 76px; text-align: center; }
-  .empty-ico {
-    width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 16px;
-    background: var(--gray-100); color: var(--gray-400);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .empty-ico svg { width: 28px; height: 28px; }
-  .empty-title { font-size: 16px; line-height: 24px; font-weight: 700; color: var(--gray-700); margin: 0 0 6px; }
-  .empty-desc { font-size: 13px; line-height: 20px; color: var(--gray-400); margin: 0 0 20px; }
   .sign-foot { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px 24px 24px; border-top: 1px solid var(--gray-100); background: var(--gray-50); }
   .sign-foot .sel-count { font-size: 13px; color: var(--gray-600); }
   .sign-foot .sel-count b { color: var(--gray-900); }
@@ -141,7 +131,6 @@
           <span class="tbl-count">총 <b class="mono">0</b>건</span>
         </div>
         <div class="list-tools">
-          <label class="pg-size">보기<select class="input sz" aria-label="보기 갯수"><option value="10" selected>10개</option><option value="20">20개</option><option value="50">50개</option></select></label>
           <button class="btn btn-ghost" disabled>선택 해제</button>
           <button class="btn btn-excel" disabled>
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -149,12 +138,22 @@
           </button>
         </div>
       </div>
-      <div class="empty-state">
-        <div class="empty-ico">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-        </div>
-        <p class="empty-title">보관된 계약문서 없음</p>
-        <a class="btn btn-outline" href="acquisition.html">정산채권 양수로 이동</a>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width:48px"><input type="checkbox" class="chk" disabled></th>
+              <th class="no">No</th>
+              <th>MID</th>
+              <th>가맹점</th>
+              <th>전자서명 결과</th>
+              <th class="center">서명 수단</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="6" class="empty">보관된 계약문서가 없습니다.</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </main>

@@ -34,17 +34,6 @@
     vertical-align: middle; position: relative; top: -2px; margin-left: 8px;
     font-size: 12px; line-height: 16px; font-weight: 500;
   }
-
-  /* ── 빈 상태 ── */
-  .empty-state { padding: 64px 24px; text-align: center; }
-  .empty-state .es-icon {
-    width: 56px; height: 56px; border-radius: 50%;
-    background: var(--gray-100); color: var(--gray-400);
-    display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
-  }
-  .empty-state .es-icon svg { width: 28px; height: 28px; }
-  .empty-state .es-title { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gray-600); margin: 0 0 6px; }
-  .empty-state .es-sub { font-size: 12px; line-height: 16px; color: var(--gray-400); margin: 0; }
 </style>
 </head>
 <body data-active="invest-assets">
@@ -181,7 +170,7 @@
           </thead>
           <tbody>
             <tr>
-              <td colspan="7" class="empty">조회된 자산 구분 없음</td>
+              <td colspan="7" class="empty">조회된 자산 구분이 없습니다.</td>
             </tr>
           </tbody>
         </table>
@@ -203,9 +192,22 @@
           </button>
         </div>
       </div>
-      <div class="empty-state">
-        <div class="es-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17V7m4 10V11m4 6v-3M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
-        <p class="es-title">조회된 투자자산 없음</p>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>가맹점</th>
+              <th class="num">투자금액 (원)</th>
+              <th class="num">W금융일수</th>
+              <th class="num">S입금부족율</th>
+              <th class="num">Ty수익율</th>
+              <th class="num">비중</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="6" class="empty">조회된 투자자산이 없습니다.</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 

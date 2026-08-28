@@ -65,17 +65,11 @@
   .chk:disabled { cursor: default; opacity: 0.6; }
   .tbl tbody tr.selected td { background: var(--primary-50); }
 
-  /* ── 빈 상태 (M-3 단일화) ─────────────────────────────────── */
-  .empty-state { padding: 64px 24px; text-align: center; }
-  .empty-state .empty-ico {
-    width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 16px;
-    background: var(--gray-100); color: var(--gray-400);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .empty-state .empty-ico svg { width: 28px; height: 28px; }
-  .empty-state .empty-title { font-size: 16px; line-height: 24px; font-weight: 700; color: var(--gray-700); margin: 0 0 6px; }
-  .empty-state .empty-desc { font-size: 13px; line-height: 20px; color: var(--gray-400); margin: 0 0 20px; }
-  .empty-state .empty-desc:last-child { margin-bottom: 0; }
+  /* ── 빈 상태 ──────────────────────────────────────────────
+     표는 base.css `.tbl .empty` (= px-5 py-16 text-center text-secondary) 한 줄만 쓴다.
+     표가 아닌 목록만 아래 한 줄을 쓴다 — 원본 settlement/overview/BatchDetailTab.tsx:341
+     `<div className="p-8 text-center text-gray-400">해당 기간에 정산 내역이 없습니다.</div>` */
+  .empty-cell { padding: 64px 20px; text-align: center; color: var(--secondary); }
 
   /* ── 안내 배너 초록 (L-4) ─────────────────────────────────── */
   .notice-green { background: var(--primary-50); border-color: var(--primary-200); color: var(--primary-700); }
@@ -672,7 +666,7 @@
             <button class="btn btn-primary" data-act="pf-search" data-mount="pf-go">검색</button>
             <button class="btn btn-outline" data-act="pf-reset">초기화</button>
           </div>
-          <p class="range-warn" data-mount="pf-warn" hidden>시작일은 종료일보다 이후일 수 없음.</p>
+          <p class="range-warn" data-mount="pf-warn" hidden>시작일은 종료일보다 이후일 수 없습니다.</p>
           <div class="toggle">
             <button class="toggle-btn" data-act="pf-gran" data-gran="daily">일별</button>
             <button class="toggle-btn" data-act="pf-gran" data-gran="weekly">주별</button>
@@ -780,7 +774,7 @@
             </div>
             <div class="filter-field" style="flex:1; max-width:360px">
               <label>검색어</label>
-              <input type="text" class="input" style="width:100%" data-mount="mc-kw" placeholder="가맹점ID·가맹점명·사업자번호·대표자명">
+              <input type="text" class="input" style="width:100%" data-mount="mc-kw" data-act="mc-kw" placeholder="가맹점ID·가맹점명·사업자번호·대표자명">
             </div>
             <button class="btn btn-primary" data-act="mc-search">검색</button>
             <button class="btn btn-outline" data-act="mc-reset">초기화</button>
@@ -989,14 +983,18 @@
 
     <div class="login-field">
       <label>사업자등록번호 또는 휴대전화번호</label>
-      <input type="text" class="input" placeholder="'-' 없이 숫자만 입력">
+      <input type="text" class="input" data-login="id" placeholder="'-' 없이 숫자만 입력">
     </div>
     <div class="login-field" style="margin-bottom:8px">
       <label>비밀번호</label>
-      <input type="password" class="input" placeholder="비밀번호 입력">
+      <input type="password" class="input" data-login="pw" placeholder="비밀번호 입력">
     </div>
 
     <a class="btn btn-primary login-submit" href="invest-assets.html">로그인</a>
+
+    <div class="login-links">
+      <span class="link-off" aria-disabled="true">비밀번호 찾기</span>
+    </div>
 
   </div>
 
@@ -1624,10 +1622,18 @@ var PS = {'ia-merch':PAGE_SIZE, 'mc-tbl':PAGE_SIZE, 'ct-tbl':PAGE_SIZE};
 function psz(k){ return PS[k] || PAGE_SIZE; }
 function presetLabel(){ var k = activePreset(); return k ? PRESET_LABEL[k] : '직접입력'; }
 
-function emptyState(icon, title, cta){
-  return '<div class="empty-state"><div class="empty-ico">' + svg(icon, 1.6) + '</div>' +
-         '<p class="empty-title">' + title + '</p>' + (cta || '') + '</div>';
+/* 빈 상태 = 표 안 <td colspan> 한 줄. 아이콘 0·버튼 0·일러스트 0.
+   원본 app/manage/page.tsx:281-283 · app/sales/page.tsx:121-123 ·
+   app/sales/[bizNo]/page.tsx:929 · components/LockAccountDeposits.tsx:425 */
+function emptyRow(cols, text){
+  return '<tr><td colspan="' + cols + '" class="empty">' + text + '</td></tr>';
 }
+function emptyTable(head, cols, text){
+  return '<div class="tbl-scroll"><table class="tbl"><thead><tr>' + head + '</tr></thead><tbody>' +
+         emptyRow(cols, text) + '</tbody></table></div>';
+}
+/* 표가 아닌 목록 — 원본 BatchDetailTab.tsx:341 의 가운데 정렬 한 줄 */
+function emptyLine(text){ return '<div class="empty-cell">' + text + '</div>'; }
 /* 쪽번호는 가운데, 총 건수는 같은 줄 맨 왼쪽.
    원본 activity-logs/page.tsx:339 · sales/[bizNo]/page.tsx:1243 = justify-center,
    LockAccountDeposits.tsx:435-437 = 같은 줄 왼쪽 총 건수. 두 패턴을 3열 격자로 겹쳐 쓴다. */
@@ -1641,13 +1647,20 @@ function sizeSel(key){
   return '<label class="pg-size">보기<select class="input sz" data-act="pg-size" data-key="' + key +
          '" aria-label="보기 갯수">' + o + '</select></label>';
 }
+/* 원본은 쪽 이동 컨트롤 전체를 {totalPages > 1 && (…)} 로 가둔다
+   (app/sales/[bizNo]/page.tsx:1242 · app/activity-logs/page.tsx:338 · LockAccountDeposits.tsx:432).
+   한 쪽에 다 들어오면 비활성 화살표도 쪽번호도 남기지 않는다. */
 function pageBar(cur, pages, act, left){
-  var inner = '<button class="page-arrow" data-act="' + act + '" data-page="' + (cur - 1) + '"' + (cur <= 1 ? ' disabled' : '') + '>' + svg('left') + '</button>';
-  for(var p = 1; p <= pages; p++)
-    inner += '<button class="page-btn' + (p === cur ? ' active' : '') + '" data-act="' + act + '" data-page="' + p + '">' + p + '</button>';
-  inner += '<button class="page-arrow" data-act="' + act + '" data-page="' + (cur + 1) + '"' + (cur >= pages ? ' disabled' : '') + '>' + svg('right') + '</button>';
+  var inner = '';
+  if(pages > 1){
+    inner = '<button class="page-arrow" data-act="' + act + '" data-page="' + (cur - 1) + '"' + (cur <= 1 ? ' disabled' : '') + '>' + svg('left') + '</button>';
+    for(var p = 1; p <= pages; p++)
+      inner += '<button class="page-btn' + (p === cur ? ' active' : '') + '" data-act="' + act + '" data-page="' + p + '">' + p + '</button>';
+    inner += '<button class="page-arrow" data-act="' + act + '" data-page="' + (cur + 1) + '"' + (cur >= pages ? ' disabled' : '') + '>' + svg('right') + '</button>';
+  }
   if(!left) return inner;
-  return '<span class="pg-count">' + left + '</span><div class="pg-nums">' + inner + '</div><span></span>';
+  return '<span class="pg-count">' + left + '</span>' +
+         (inner ? '<div class="pg-nums">' + inner + '</div>' : '<span></span>') + '<span></span>';
 }
 
 /* ═══ 상태 파생 · 주입 ═══ */
@@ -1911,7 +1924,7 @@ RENDER['invest-assets'] = function(){
 
   var h = '<thead><tr><th>자산 구분</th><th class="num">금액 (원)</th><th class="num">W금융일수</th>' +
           '<th class="num">S입금부족율</th><th class="num">Ty수익율</th><th class="num">비중</th><th>보관</th></tr></thead><tbody>';
-  if(!arows.length){ h += '<tr><td colspan="7" class="empty">조회된 자산 구분 없음</td></tr>'; }
+  if(!arows.length){ h += emptyRow(7, '조회된 자산 구분이 없습니다.'); }
   else {
     for(i = 0; i < arows.length; i++){
       var a = arows[i];
@@ -1937,15 +1950,14 @@ RENDER['invest-assets'] = function(){
   if(IA.page > pages) IA.page = 1;
   var slice = view.slice((IA.page - 1) * iaSize, IA.page * iaSize);
   var mm = M('ia-merch', 'invest-assets'), mp = M('ia-merch-page', 'invest-assets');
+  var IA_HEAD = '<th>가맹점</th><th class="num">투자금액 (원)</th><th class="num">W금융일수</th>' +
+                '<th class="num">S입금부족율</th><th class="num">Ty수익율</th><th class="num">비중</th>';
   if(!mrows.length){
-    mm.innerHTML = emptyState('chart', '조회된 투자자산 없음');
+    mm.innerHTML = emptyTable(IA_HEAD, 6, '조회된 투자자산이 없습니다.');
     mp.innerHTML = '';
-    M('ia-size', 'invest-assets').innerHTML = sizeSel('ia-merch');
+    M('ia-size', 'invest-assets').innerHTML = '';
   } else {
-    var t = '<div class="tbl-scroll"><table class="tbl"><thead><tr>' +
-      '<th>가맹점</th><th class="num">투자금액 (원)</th><th class="num">W금융일수</th>' +
-      '<th class="num">S입금부족율</th><th class="num">Ty수익율</th><th class="num">비중</th>' +
-      '</tr></thead><tbody>';
+    var t = '<div class="tbl-scroll"><table class="tbl"><thead><tr>' + IA_HEAD + '</tr></thead><tbody>';
     for(i = 0; i < slice.length; i++){
       var m = slice[i];
       t += '<tr><td><span class="name">' + m.name + '</span></td>' +
@@ -1955,7 +1967,7 @@ RENDER['invest-assets'] = function(){
     }
     mm.innerHTML = t + '</tbody></table></div>';
     M('ia-size', 'invest-assets').innerHTML = sizeSel('ia-merch');
-    mp.innerHTML = '<div class="pagination">' + pageBar(IA.page, pages, 'ia-page') + '</div>';
+    mp.innerHTML = pages > 1 ? '<div class="pagination">' + pageBar(IA.page, pages, 'ia-page') + '</div>' : '';
   }
 
   var bx = Q('[data-xls="assets-status"]', sec); bx.disabled = empty;
@@ -2109,14 +2121,14 @@ RENDER['invest-profit'] = function(){
     '</div></div>';
 
   var box = M('pf-tbl', 'invest-profit');
+  var PF_HEAD = '<th>' + GRAN_COL[PF.gran] + '</th><th class="num">상환액</th>' +
+                '<th class="num">투자실행금</th><th class="num">투자 수익</th>' +
+                '<th class="num">W금융일수</th><th class="num">Ty수익율</th>';
   if(!rows.length){
-    box.innerHTML = emptyState('chart', '조회된 투자수익 없음');
+    box.innerHTML = emptyTable(PF_HEAD, 6, '조회 결과가 없습니다.');
   } else {
     var view = rows, i;
-    var t = '<div class="tbl-scroll"><table class="tbl"><thead><tr>' +
-      '<th>' + GRAN_COL[PF.gran] + '</th><th class="num">상환액</th>' +
-      '<th class="num">투자실행금</th><th class="num">투자 수익</th>' +
-      '<th class="num">W금융일수</th><th class="num">Ty수익율</th></tr></thead><tbody>';
+    var t = '<div class="tbl-scroll"><table class="tbl"><thead><tr>' + PF_HEAD + '</tr></thead><tbody>';
     for(i = 0; i < view.length; i++){
       var r = view[i];
       t += '<tr><td class="mono">' + r.d + '</td><td class="num">' + fmt(r.repay) + '</td>' +
@@ -2169,7 +2181,8 @@ RENDER['merchants'] = function(){
   }
   sel.value = MC.sector;
   M('mc-buyer', 'merchants').value = MC.buyer;
-  M('mc-kw', 'merchants').value = MC.kw;
+  var kwEl = M('mc-kw', 'merchants');
+  if(kwEl !== document.activeElement) kwEl.value = MC.kw;
 
   var chips = mcChips(), ch = '';
   if(chips.length){
@@ -2190,9 +2203,7 @@ RENDER['merchants'] = function(){
     '<th class="no">No</th><th>가맹점ID</th><th>가맹점명</th><th>사업자번호</th>' +
     '<th>대표자</th><th>업종</th><th>종목</th><th>채권매입업체ID</th></tr></thead><tbody>';
   if(!rows.length){
-    t += '<tr><td colspan="8" style="padding:0">' +
-         emptyState('search', '검색 결과 없음',
-                    '<button class="btn btn-outline" data-act="mc-reset">조건 초기화</button>') + '</td></tr>';
+    t += emptyRow(8, '검색 결과가 없습니다.');
   } else {
     for(i = 0; i < slice.length; i++){
       var m = slice[i];
@@ -2205,9 +2216,11 @@ RENDER['merchants'] = function(){
     }
   }
   M('mc-tbl', 'merchants').innerHTML = t + '</tbody></table></div>';
-  M('mc-size', 'merchants').innerHTML = sizeSel('mc-tbl');
-  M('mc-page', 'merchants').innerHTML = pageBar(MC.page, pages, 'mc-page',
-    '총 <b class="mono">' + rows.length + '</b>건');
+  M('mc-size', 'merchants').innerHTML = rows.length ? sizeSel('mc-tbl') : '';
+  var mcp = M('mc-page', 'merchants');
+  mcp.innerHTML = rows.length ? pageBar(MC.page, pages, 'mc-page',
+    '총 <b class="mono">' + rows.length + '</b>건') : '';
+  mcp.hidden = !rows.length;
 };
 
 /* ───────── 정산채권 양수 ───────── */
@@ -2231,7 +2244,7 @@ RENDER['acquisition-list'] = function(){
     /* 행 어디를 눌러도 선택된다 — 체크박스와 계약서보기는 각자 data-act 를 가져
        closest() 가 먼저 잡으므로 행 토글과 겹쳐 상쇄되지 않는다. */
     h += '<div class="sign-row pickable' + (sel ? ' selected' : '') + '"' +
-      ' data-act="aq-row" data-i="' + i + '" role="checkbox" tabindex="0" aria-checked="' + (sel ? 'true' : 'false') + '">' +
+      ' data-act="aq-row" data-i="' + i + '">' +
       '<input type="checkbox" class="chk" data-act="aq-chk" data-i="' + i + '"' + (sel ? ' checked' : '') + '>' +
       '<div style="flex:1; min-width:0"><div class="m-name">' + s.name + '</div>' +
       '<div class="m-date">계약 생성일 <span class="mono">' + s.created + '</span></div></div>' +
@@ -2239,8 +2252,7 @@ RENDER['acquisition-list'] = function(){
       /* 계약서보기 — 서명하기와 별개 액션이다(대표 미팅 2026-08-28 M-1) */
       '<a class="doc-link" data-act="aq-view" data-i="' + i + '" href="#">계약서보기</a></div>';
   }
-  M('aq-rows', 'acquisition-list').innerHTML = shown ? h : emptyState('doc', '서명 대기 계약 없음',
-    '<button class="btn btn-outline" data-nav="contracts">계약기록으로 이동</button>');
+  M('aq-rows', 'acquisition-list').innerHTML = shown ? h : emptyLine('서명 대기 계약이 없습니다.');
 
   M('ab-count').textContent = aqCount();
   var btn = M('ab-btn');
@@ -2295,25 +2307,27 @@ RENDER['contracts'] = function(){
   M('ct-clear', 'contracts').disabled = (n === 0);
 
   var box = M('ct-tbl', 'contracts');
+  var ctp = M('ct-page', 'contracts');
+  var allOn = (n === rows.length);
+  var CT_HEAD = '<th style="width:48px"><input type="checkbox" class="chk" data-act="ct-all"' + (allOn ? ' checked' : '') + '></th>' +
+    '<th class="no">No</th><th>MID</th><th>가맹점</th>' +
+    '<th>전자서명 결과</th><th class="center">서명 수단</th>';
   if(!rows.length){
-    box.innerHTML = emptyState('doc', '보관된 계약문서 없음',
-      '<button class="btn btn-outline" data-nav="acquisition-list">정산채권 양수로 이동</button>');
-    M('ct-page', 'contracts').innerHTML = '';
-    M('ct-size', 'contracts').innerHTML = sizeSel('ct-tbl');
+    box.innerHTML = emptyTable(
+      '<th style="width:48px"><input type="checkbox" class="chk" disabled></th>' +
+      '<th class="no">No</th><th>MID</th><th>가맹점</th>' +
+      '<th>전자서명 결과</th><th class="center">서명 수단</th>', 6, '보관된 계약문서가 없습니다.');
+    ctp.innerHTML = ''; ctp.hidden = true;
+    M('ct-size', 'contracts').innerHTML = '';
     return;
   }
-  var allOn = (n === rows.length);
-  var t = '<div class="tbl-scroll"><table class="tbl"><thead><tr>' +
-    '<th style="width:48px"><input type="checkbox" class="chk" data-act="ct-all"' + (allOn ? ' checked' : '') + '></th>' +
-    '<th class="no">No</th>' +
-    '<th>MID</th><th>가맹점</th>' +
-    '<th>전자서명 결과</th><th class="center">서명 수단</th></tr></thead><tbody>';
+  ctp.hidden = false;
+  var t = '<div class="tbl-scroll"><table class="tbl"><thead><tr>' + CT_HEAD + '</tr></thead><tbody>';
   for(i = 0; i < slice.length; i++){
     var c = slice[i], on = !!CT.sel[c.mid];
     /* 순번은 쪽이 넘어가도 이어진다 — 머리에 적은 총 건수와 같은 축이라야 행을 가리킬 수 있다.
        원본 어드민의 순번(sales/page.tsx:143 등)은 쪽나눔이 없는 표라 배열 인덱스 그대로다. */
-    t += '<tr class="clickable' + (on ? ' selected' : '') + '" data-act="ct-row" data-mid="' + c.mid + '"' +
-      ' role="checkbox" tabindex="0" aria-checked="' + (on ? 'true' : 'false') + '">' +
+    t += '<tr class="clickable' + (on ? ' selected' : '') + '" data-act="ct-row" data-mid="' + c.mid + '">' +
       '<td><input type="checkbox" class="chk" data-act="ct-chk" data-mid="' + c.mid + '"' + (on ? ' checked' : '') + '></td>' +
       '<td class="no">' + ((CT.page - 1) * ctSize + i + 1) + '</td>' +
       '<td class="mono">' + c.mid + '</td><td><span class="name">' + c.name + '</span></td>' +
@@ -2322,7 +2336,7 @@ RENDER['contracts'] = function(){
   }
   box.innerHTML = t + '</tbody></table></div>';
   M('ct-size', 'contracts').innerHTML = sizeSel('ct-tbl');
-  M('ct-page', 'contracts').innerHTML = pageBar(CT.page, pages, 'ct-page',
+  ctp.innerHTML = pageBar(CT.page, pages, 'ct-page',
     n ? '<span class="badge badge-green sel-pill">' + n + '건 선택</span>' : ' ');
 };
 
@@ -2731,7 +2745,7 @@ ACT['preset'] = function(el){
   refresh('invest-profit');
 };
 ACT['pf-search'] = function(){
-  if(PF.from > PF.to){ showInfo('시작일은 종료일보다 이후일 수 없음.'); return; }   /* 원본 :82-84 alert 대응 */
+  if(PF.from > PF.to){ showInfo('시작일은 종료일보다 이후일 수 없습니다.'); return; }   /* 원본 :82-84 alert 대응 */
   refresh('invest-profit');
   showInfo('조회 결과 ' + pfRows().length + '건 · ' + PF.from + ' ~ ' + PF.to);
 };
@@ -2924,25 +2938,17 @@ document.addEventListener('keydown', function(e){
     e.preventDefault(); ACT['pf-search'](t, e); return;
   }
 
-  /* 선택 행은 키보드로도 토글된다 — role=checkbox 에 Space·Enter */
-  var row = t.closest('[data-act="aq-row"]');
-  if(row && (k === 'Enter' || k === ' ' || k === 'Spacebar')){
+  /* 로그인 Enter 제출 — 원본 payhug-admin-web/app/login/page.tsx:88-92.
+     원본에도 <form> 은 없다. 입력의 keydown 에서 제출 요소를 그대로 누른다. */
+  if(t.getAttribute && t.getAttribute('data-login') && k === 'Enter'){
     e.preventDefault();
-    var ri = row.dataset.i;
-    ACT['aq-row'](row, e);
-    var back = document.querySelector('[data-act="aq-row"][data-i="' + ri + '"]');
-    if(back) back.focus();
+    var sb = document.querySelector('section[data-screen="login"] .login-submit');
+    if(sb) sb.click();
     return;
   }
-  var crow = t.closest('[data-act="ct-row"]');
-  if(crow && (k === 'Enter' || k === ' ' || k === 'Spacebar')){
-    e.preventDefault();
-    var cm = crow.dataset.mid;
-    ACT['ct-row'](crow, e);
-    var cback = document.querySelector('[data-act="ct-row"][data-mid="' + cm + '"]');
-    if(cback) cback.focus();
-    return;
-  }
+
+  /* 표 행에는 tabindex 를 두지 않는다 — 원본 어드민은 레포 전체 tabIndex 0건이라
+     행이 키보드 대상이 아니다. 선택은 행 클릭과 행 안 체크박스가 맡는다. */
 
 }, false);
 
@@ -2983,6 +2989,17 @@ document.addEventListener('change', function(e){
 document.addEventListener('input', function(e){
   var el = e.target.closest && e.target.closest('[data-act]');
   if(!el) return;
+  /* 가맹점 검색어 — 타이핑만으로 걸러진다. 원본 app/manage/page.tsx:249-255 는
+     onChange 단독 라이브 필터라 버튼도 Enter 도 필요 없다. 버튼은 스토리보드 S14 규정이라 남긴다. */
+  if(el.dataset.act === 'mc-kw'){
+    if(e.isComposing) return;
+    MC.kw = el.value.trim();
+    MC.page = 1;
+    MC.applied = (MC.sector === '전체' && !MC.kw && MC.buyer === '전체') ? null
+               : {sector:MC.sector, kw:MC.kw, buyer:MC.buyer};
+    refresh('merchants');
+    return;
+  }
   if(el.dataset.act === 'pw-input'){
     /* IME(한글 등) 조합 중에는 값을 건드리지 않는다 — 조합이 끝난 뒤 compositionend 에서 최종 값을 한 번에 받는다.
        (PasswordInput.tsx:68-78 — 이벤트마다 isComposing 을 그때그때 보므로 한영전환으로 조합이
