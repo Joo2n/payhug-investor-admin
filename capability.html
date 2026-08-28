@@ -275,7 +275,7 @@
   <!-- ============================ 1. 한눈에 보기 ============================ -->
   <section class="sec">
     <div class="sec-head"><span class="sec-no">01</span><h2>한눈에 보기</h2></div>
-    <p class="sec-lead">화면 설계(안) 36개 HTML(화면 14 + 상태 변형 20 + 공용 부품 2)을 화면 블록 15개로 묶어 대조한 결과.</p>
+    <p class="sec-lead">화면 설계(안) 35개 HTML(화면 14 + 상태 변형 20 + 공용 부품 1)을 화면 블록 15개로 묶어 대조한 결과.</p>
 
     <div class="kpi">
       <div class="kpi-card">
@@ -677,7 +677,7 @@
             <li><span class="a-no">16</span><div class="a-body">
               <div class="a-verb">기준 변수 6개를 넣는다</div>
               <div class="a-el">기준 변수 카드 — 할인율(%) · 순현금(원) · 미지급률(%) · 과지급률(%) · 시작일 · 종료일</div>
-              <div class="a-note">블록 자리·서식은 어드민 <code>정책 선택</code>(<code>page.tsx:210-248</code>)이고 컨트롤만 수치·날짜 6개로 바뀌었다. 기본값 4종의 원천이 이 산출물 안에서 정해졌다 — 할인율 <code>0.11%</code>는 <code>D-21</code>·<code>D-22</code>로 이 산출물에 한해 채택한 값이고 정책서 C1은 미해소, 미지급률 <code>0.08%</code>·과지급률 <code>0.01%</code>는 <code>S입금부족율 0.07%</code>에서 역산한 값이다(<code>simulation_design.md</code> §3-4)</div>
+              <div class="a-note">블록 자리·서식은 어드민 <code>정책 선택</code>(<code>page.tsx:210-248</code>)이고 컨트롤은 수치 입력 4개·날짜 2개다. 기본값 4종의 원천이 이 산출물 안에서 정해졌다 — 할인율 <code>0.11%</code>는 <code>D-21</code>·<code>D-22</code>로 이 산출물에 한해 채택한 값이고 정책서 C1은 미해소, 미지급률 <code>0.08%</code>·과지급률 <code>0.01%</code>는 <code>S입금부족율 0.07%</code>에서 역산한 값이다(<code>simulation_design.md</code> §3-4)</div>
             </div><span class="j j-chk">확인필요</span></li>
             <li><span class="a-no">17</span><div class="a-body">
               <div class="a-verb">정산금채권을 행 단위로 넣는다</div>
@@ -1324,7 +1324,7 @@
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-2</span><div><div class="gi-title">투자자 자산 데이터 계층 부재</div><div class="gi-what"><code>SB s3</code>의 4개 지표가 요구하는 원천(정산채권 단위의 양수일·지급예정일·투자금액·입금부족액)을 운영 백엔드에서 확인할 수 없다. 특히 가맹점별 누적 투자 원금 잔액 필드가 존재하지 않는다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 단위로 정산채권 잔액을 집계하는 테이블 또는 API가 현재 존재합니까? 없다면 `GET /admin/settlement/batch-payouts`(role=INVESTOR)를 `Batch.targetDate`로 누적해 잔액을 재구성하는 방식이 가능합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-3</span><div><div class="gi-title"><code>투자 수익</code> 산식과 <code>할인율</code>의 실체</div><div class="gi-what"><code>SB s7</code>은 <code>투자 수익</code> 열 이름만 두고 산식을 적지 않는다. <code>SB s3</code> 각주는 <code>Ty수익율 = 할인율 × (365 / w금융일수)</code>로 <code>할인율</code>을 전제하나 그 값의 출처를 적지 않는다. 설계안 산식 카드 2종(수수료 배분형 / 조달이자형)의 동시 적용·택일 관계가 어디에도 없다. 현행 화면 표는 할인율 0.11% 한 값으로 생성돼 두 열이 서로 맞는다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>`투자 수익` 열은 어떤 식으로 산정합니까? `Ty수익율`의 `할인율`은 정산채권 단위로 저장된 수익권자 할인율 필드입니까, 실현 수익율입니까? 두 열이 같은 기준으로 산출됩니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-3</span><div><div class="gi-title"><code>투자 수익</code> 산식과 <code>할인율</code>의 실체</div><div class="gi-what"><code>SB s7</code>은 <code>투자 수익</code> 열 이름만 두고 산식을 적지 않는다. <code>SB s3</code> 각주는 <code>Ty수익율 = 할인율 × (365 / w금융일수)</code>로 <code>할인율</code>을 전제하나 그 값의 근거를 적지 않는다. 설계안 산식 카드 2종(수수료 배분형 / 조달이자형)의 동시 적용·택일 관계가 어디에도 없다. 현행 화면 표는 할인율 0.11% 한 값으로 생성돼 두 열이 서로 맞는다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>`투자 수익` 열은 어떤 식으로 산정합니까? `Ty수익율`의 `할인율`은 정산채권 단위로 저장된 수익권자 할인율 필드입니까, 실현 수익율입니까? 두 열이 같은 기준으로 산출됩니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-4</span><div><div class="gi-title">증명서 문서명이 3개</div><div class="gi-what"><code>SB s3</code>⑬은 전자문서에 기재할 명칭을 <code>투자자산 현황</code>이라 하고 <code>SB s6</code> 제목은 <code>가맹점별 투자자산 증명서</code>다. 설계안은 여기에 <code>투자자산 증명서</code>를 더했다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>발급 문서의 정식 명칭을 하나로 확정해 주십시오. 전자문서 본문에 인쇄될 문서명과 파일명이 같아야 합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
@@ -1377,7 +1377,7 @@
       <div class="cand-head"><span class="cand-id">7-15</span><span class="cand-t">투자자 수익 산정 기준 — 스토리보드의 <code>할인율</code>은 무엇인가</span><span class="badge sm badge-gray">후보</span></div>
       <div class="cand-body"><dl>
         <dt>질문</dt><dd>투자자에게 귀속되는 수익을 무엇으로 산정하는가. 스토리보드가 <code>Ty수익율 = 할인율 × (365 / w금융일수)</code>로 전제하는 <code>할인율</code>의 실체는 정산채권 단위로 저장된 수익권자 할인율인가, 실현 수익율인가. 이 기준이 운영 어드민의 배분 원장 모델과 어떻게 정합하는가.</dd>
-        <dt>배경</dt><dd>스토리보드는 투자수익 화면에 <code>투자 수익</code> 열을 두면서 산식을 적지 않고, 투자자산 화면 각주에서 <code>할인율</code>을 전제하되 그 값의 출처를 적지 않는다. 정책서 <code>03_SETTLEMENT_LOGIC.md</code>에는 투자자 배분 산식이 아예 없고 채권매입수수료를 참여자별로 쪼개지 않는 단일 항목으로만 다룬다. 반대로 운영 어드민 코드는 정액 합산 + 다자 배분율 모델로 이미 돌아가며, 원장 상세의 수익은 <code>매출 − 원가</code> 축이라 스토리보드의 상환 축과 만나지 않는다 — 이 형태 불일치가 <code>spec/90_정책레지스터.md</code> V14다. 별도로 Figma에는 자금조달(대출) 이자 정산이 전용 어드민 기능까지 갖춘 채 설계돼 있어, 할인 매입 차익과 조달 이자가 동시 발생인지 택일인지도 미정이다. 화면 설계(안)이 임의로 채워 넣은 산식 카드 2종으로는 같은 화면의 표가 재현되지 않는다. (확인필요)</dd>
+        <dt>배경</dt><dd>스토리보드는 투자수익 화면에 <code>투자 수익</code> 열을 두면서 산식을 적지 않고, 투자자산 화면 각주에서 <code>할인율</code>을 전제하되 그 값의 근거를 적지 않는다. 정책서 <code>03_SETTLEMENT_LOGIC.md</code>에는 투자자 배분 산식이 아예 없고 채권매입수수료를 참여자별로 쪼개지 않는 단일 항목으로만 다룬다. 반대로 운영 어드민 코드는 정액 합산 + 다자 배분율 모델로 이미 돌아가며, 원장 상세의 수익은 <code>매출 − 원가</code> 축이라 스토리보드의 상환 축과 만나지 않는다 — 이 형태 불일치가 <code>spec/90_정책레지스터.md</code> V14다. 별도로 Figma에는 자금조달(대출) 이자 정산이 전용 어드민 기능까지 갖춘 채 설계돼 있어, 할인 매입 차익과 조달 이자가 동시 발생인지 택일인지도 미정이다. 화면 설계(안)이 임의로 채워 넣은 산식 카드 2종으로는 같은 화면의 표가 재현되지 않는다. (확인필요)</dd>
         <dt>위치</dt><dd>투자자 어드민 투자 수익 화면(현황 카드·일별 표) / 투자 자산·투자 수익 화면 하단 수익 산정 기준 카드 / <code>03_SETTLEMENT_LOGIC.md</code> §1·§2 / <code>spec/90_정책레지스터.md</code> V14</dd>
         <dt>영향</dt><dd>기준이 정해져야 일별 표의 <code>투자 수익</code> 열, <code>Ty수익율</code>, 엑셀 8종, 증명서 본문이 동시에 결정된다. 할인율 기준으로 가면 정산채권 단위 원장이 필요해 현행 배치 단위 배분 원장과 집계 축이 달라지고, 배분율 기준으로 가면 C1의 요율 매트릭스 확정이 선행 조건이 된다.</dd>
         <dt>주의</dt><dd class="caution">여기 등장하는 0.11%·연 12%는 어느 쪽도 채택하지 않는다. C1 범위이며 <code>07 §7</code> 말미의 값 채택 금지가 그대로 적용된다.</dd>

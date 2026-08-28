@@ -10,13 +10,13 @@
 | https://payhug-investor-prototype.vercel.app/ | 시연본. `app.html` 한 판만, 바깥으로 나가는 통로 없음 |
 | https://payhug-investor-glossary.vercel.app/ | 용어 해설 단독본 |
 
-전체본은 `main` 에 올라간 94개 파일을 그대로 서비스한다. 한글 이름을 쓰는 PDF·ZIP·XLSX·TXT 도 같은 주소에서 바로 열린다.
+전체본은 `main` 에 올라간 93개 파일을 그대로 서비스한다. 한글 이름을 쓰는 PDF·TXT·XLSX 도 같은 주소에서 바로 열린다.
 
 | 구획 | 수 | 내역 |
 |---|---|---|
 | 루트 HTML | 42 | 통합 프로토타입 1 · 기본 화면 14 · 상태 20 · 랜딩 1 · 설명 문서 6 |
 | 루트 문서 | 2 | `README.md` `DESIGN_REF.md` |
-| `assets/` 공용 | 5 | `base.css` `sheet.css` `template.html` `components.html` `logo-icon.png` |
+| `assets/` 공용 | 4 | `base.css` `logo-icon.png` `sheet.css` `template.html` |
 | 내려받기 실물 | 28 | `assets/docs/` 20 · `assets/xlsx/` 8 |
 | 화면 캡처 | 15 | `assets/shots/` — 정적 화면 촬영본. 용어 해설이 카드에 거는 것은 5장 |
 | 동기화 스크립트 | 2 | `scripts/` — 시연본·용어 단독본 변환기 |
@@ -82,11 +82,10 @@
 ├── scripts/              # 시연본·용어 단독본 변환기
 └── assets/
     ├── base.css          # 공용 스타일 (실측 토큰: 사이드바 #1B2537, primary #7FE141 등)
-    ├── sheet.css         # 엑셀 미리보기 전용 (xls-*.html · app.html에서 로드)
-    ├── template.html     # 화면 스켈레톤
-    ├── components.html   # 컴포넌트 갤러리
     ├── logo-icon.png     # 로고 원본. 화면 렌더는 base.css의 .logo-mark data URI
-    ├── docs/             # 내려받기 실물 20 (PDF · ZIP · TXT)
+    ├── sheet.css         # 엑셀 미리보기 전용 (xls-*.html · app.html에서 로드)
+    ├── template.html     # 화면 스켈레톤. 사이드바 메뉴 실측 원본
+    ├── docs/             # 내려받기 실물 20 (PDF · TXT)
     ├── xlsx/             # 내려받기 실물 8 (XLSX)
     └── shots/            # 화면 캡처 15 — 용어 해설이 거는 것 5
 ```
