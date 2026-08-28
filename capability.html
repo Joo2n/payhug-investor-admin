@@ -608,8 +608,8 @@
           <ul class="acts">
             <li><span class="a-no">09</span><div class="a-body">
               <div class="a-verb">기간 프리셋을 고른다</div>
-              <div class="a-el">어제 · 일주일 · 이번달 칩</div>
-              <div class="a-note">원 요구는 <code>일주일</code>·<code>금월</code> 2종(<code>SB s7</code>). <code>어제</code>는 설계안 신규. 운영 어드민 공용 필터는 프리셋 7개(<code>DateRangeFilter.tsx:23-61</code>)이므로 부품 재사용 시 프리셋 구성을 맞춰야 한다</div>
+              <div class="a-el">일주일 · 금월 칩</div>
+              <div class="a-note">스토리보드 슬라이드7 그대로 <code>일주일</code>·<code>금월</code> 2종(<code>SB s7</code>). 운영 어드민 공용 필터는 프리셋 7개(<code>DateRangeFilter.tsx:23-61</code>)라, 부품을 그대로 재사용하면 프리셋 구성을 이 화면 기준으로 좁혀야 한다</div>
             </div><span class="j j-hyp">가설</span></li>
             <li><span class="a-no">10</span><div class="a-body">
               <div class="a-verb">시작일·종료일을 직접 고른다</div>
@@ -1394,7 +1394,7 @@
         <dt>질문</dt><dd>Figma가 정의한 "투자자 수익금 월 1회 정산"이 유효한가. 유효하다면 투자자 어드민이 일별 조회를 제공하는 것과 어떻게 구분해 표기하는가. 정산일은 총판 정산일(20일)과 같은 날인가.</dd>
         <dt>배경</dt><dd>Figma 정산금 회수 플로우에 "투자자 수익금 월 1회 정산"이 적혀 있는데, 스토리보드의 투자수익 화면은 일별·월별 토글과 기간 검색을 제공한다. 조회 단위와 실제 지급 단위가 다르면 투자자가 화면의 일별 <code>투자 수익</code>을 그날 받은 돈으로 오독할 소지가 있다. 총판 정산 주기와 같은 날짜인지도 확인된 바 없다. 지급 캘린더 자체가 C2로 미해소 상태라는 점도 겹친다. (확인필요)</dd>
         <dt>위치</dt><dd>투자자 어드민 투자 수익 화면(현황 카드 문구·일별 표 열 라벨) / <code>analysis/figma_01_선정산시스템.md</code> 04.정산금 회수 Flow / <code>analysis/00_종합.md</code> C2</dd>
-        <dt>영향</dt><dd>정산 주기가 월 1회로 확정되면 일별 표의 라벨을 "지급액"이 아니라 "발생 수익"으로 갈라 적어야 하고, 현황 카드에 다음 정산 예정일 표기가 필요해진다. 조회 기간 프리셋 구성(설계안은 <code>어제</code>·<code>일주일</code>·<code>이번달</code>, 원 요구는 <code>일주일</code>·<code>금월</code>)도 함께 정해진다.</dd>
+        <dt>영향</dt><dd>정산 주기가 월 1회로 확정되면 일별 표의 라벨을 "지급액"이 아니라 "발생 수익"으로 갈라 적어야 하고, 현황 카드에 다음 정산 예정일 표기가 필요해진다. 조회 기간 프리셋은 스토리보드 슬라이드7 그대로 <code>일주일</code>·<code>금월</code> 2종이다.</dd>
         <dt>주의</dt><dd class="caution">이 항목은 C2(지급 캘린더)와 대상이 다르다. C2는 가맹점 앞 선정산 지급 캘린더이고, 이 항목은 투자자 앞 수익금 정산 주기다. 두 캘린더를 합치지 않는다.</dd>
         <dt>출처</dt><dd class="src">analysis/figma_01_선정산시스템.md(노드 774:1054) / 스토리보드_Admin_투자자.pptx s7 / payhug-investor-admin/invest-profit.html · invest-profit--monthly.html</dd>
       </dl></div>

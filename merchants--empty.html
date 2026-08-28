@@ -42,6 +42,9 @@
   .empty-icon svg { width: 26px; height: 26px; }
   .empty-title { font-size: 16px; line-height: 24px; font-weight: 700; color: var(--gray-700); margin: 0 0 6px; }
   .empty-desc { font-size: 14px; line-height: 20px; color: var(--gray-400); margin: 0 0 20px; }
+  .pagination.with-count { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
+  .pagination.with-count .pg-count { justify-self: start; font-size: 12px; color: var(--gray-500); }
+  .pagination.with-count .pg-nums { display: flex; align-items: center; gap: 4px; justify-self: center; }
 </style>
 </head>
 <body data-active="merchants">
@@ -123,7 +126,6 @@
   <main class="content">
     <div class="page-header">
       <h1 class="page-title">가맹점 <span class="state-flag">결과 없음</span></h1>
-      <p class="page-sub">투자 대상 가맹점 목록.</p>
     </div>
 
     <!-- 검색 필터 — 조건 입력·적용 상태 -->
@@ -177,7 +179,6 @@
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-5.2-5.2m2.2-5.3a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z"/></svg>
                   </div>
                   <p class="empty-title">검색 결과 없음</p>
-                  <p class="empty-desc">다른 조건으로 다시 조회.</p>
                   <button class="btn btn-outline">조건 초기화</button>
                 </div>
               </td>
@@ -185,9 +186,9 @@
           </tbody>
         </table>
       </div>
-      <div class="pagination" style="justify-content:space-between">
-        <span style="font-size:12px; color:var(--gray-500)">총 <b class="mono">0</b>건</span>
-        <div style="display:flex; align-items:center; gap:4px">
+      <div class="pagination with-count">
+        <span class="pg-count">총 <b class="mono">0</b>건</span>
+        <div class="pg-nums">
           <button class="page-arrow" disabled>
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
           </button>
@@ -196,6 +197,7 @@
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </button>
         </div>
+        <span></span>
       </div>
     </div>
 

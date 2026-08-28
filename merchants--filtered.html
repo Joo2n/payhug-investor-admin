@@ -32,10 +32,9 @@
     background: none; border: 0; padding: 0;
     font-size: 12px; line-height: 16px; color: var(--gray-500); text-decoration: underline;
   }
-  .tbl-foot-note {
-    padding: 12px 20px; border-top: 1px solid var(--gray-100); background: var(--gray-50);
-    font-size: 12px; line-height: 18px; color: var(--gray-500);
-  }
+  .pagination.with-count { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
+  .pagination.with-count .pg-count { justify-self: start; font-size: 12px; color: var(--gray-500); }
+  .pagination.with-count .pg-nums { display: flex; align-items: center; gap: 4px; justify-self: center; }
 </style>
 </head>
 <body data-active="merchants">
@@ -117,7 +116,6 @@
   <main class="content">
     <div class="page-header">
       <h1 class="page-title">가맹점 <span class="state-flag">검색 적용</span></h1>
-      <p class="page-sub">투자 대상 가맹점 목록.</p>
     </div>
 
     <!-- 검색 필터 — 조건 입력·적용 상태 -->
@@ -185,10 +183,9 @@
           </tbody>
         </table>
       </div>
-      <div class="tbl-foot-note">가맹점 상세 화면은 이번 설계(안) 범위 밖. 행 클릭 목적지 없음.</div>
-      <div class="pagination" style="justify-content:space-between">
-        <span style="font-size:12px; color:var(--gray-500)">총 <b class="mono">2</b>건</span>
-        <div style="display:flex; align-items:center; gap:4px">
+      <div class="pagination with-count">
+        <span class="pg-count">총 <b class="mono">2</b>건</span>
+        <div class="pg-nums">
           <button class="page-arrow" disabled>
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
           </button>
@@ -197,6 +194,7 @@
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </button>
         </div>
+        <span></span>
       </div>
     </div>
 

@@ -24,7 +24,7 @@
   .tbl-head .card-title { margin: 0; }
   .tbl-head .toggle { margin-bottom: 0; }
   .tbl tfoot td { background: var(--gray-50); border-top: 1px solid var(--gray-100); border-bottom: 0; font-weight: 700; color: var(--gray-900); }
-  .tbl tfoot td .avg-note { font-size: 11px; font-weight: 400; color: var(--gray-400); margin-left: 4px; font-family: var(--font-sans); }
+  .avg-sub { display: block; font-size: 10px; line-height: 12px; font-weight: 400; color: var(--gray-400); font-family: var(--font-sans); }
 
   /* ── 상태 뱃지 (제안서 화면 구분용) ── */
   .page-title .state-badge {
@@ -123,16 +123,10 @@
   <main class="content">
     <div class="page-header">
       <h1 class="page-title">투자 수익 <span class="badge badge-gray state-badge">결과 없음</span></h1>
-      <p class="page-sub">기간별 투자 수익 현황 조회 · 수익 산정 기준 안내.</p>
     </div>
 
     <!-- 검색 카드 -->
     <div class="search-bar">
-      <div class="preset-row">
-        <button class="preset-btn">어제</button>
-        <button class="preset-btn">일주일</button>
-        <button class="preset-btn">이번달</button>
-      </div>
       <div class="filter-row">
         <div class="filter-field">
           <label>시작일</label>
@@ -143,8 +137,16 @@
           <label>종료일</label>
           <input type="date" class="input" value="2026-02-07">
         </div>
+        <div class="preset-row">
+          <button class="preset-btn">일주일</button>
+          <button class="preset-btn">금월</button>
+        </div>
         <button class="btn btn-primary">검색</button>
         <button class="btn btn-outline">초기화</button>
+      </div>
+      <div class="toggle">
+        <button class="toggle-btn active">일별</button>
+        <button class="toggle-btn">월별</button>
       </div>
     </div>
 
@@ -192,10 +194,6 @@
       <div class="tbl-head">
         <div class="left">
           <h2 class="card-title">일별 투자수익</h2>
-          <div class="toggle">
-            <button class="toggle-btn active">일별</button>
-            <button class="toggle-btn">월별</button>
-          </div>
         </div>
         <button class="btn btn-excel" disabled>
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -205,7 +203,6 @@
       <div class="empty-state">
         <div class="es-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17V7m4 10V11m4 6v-3M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
         <p class="es-title">조회된 투자수익 없음</p>
-        <p class="es-sub">선택한 기간에 상환된 정산채권이 없음.</p>
       </div>
     </div>
 
@@ -268,17 +265,6 @@
         </div>
       </div>
       <p class="formula-caption">산식·요율은 예시이며, 개별 계약 조건에 따라 확정됨.</p>
-    </div>
-
-    <!-- 용어 안내 -->
-    <div class="terms-note">
-      <span class="tn-title">용어 안내</span>
-      <dl>
-        <dt>금융일수</dt><dd>양수일로부터 지급예정일까지의 한편 넣기 일수</dd>
-        <dt>W금융일수</dt><dd>취소 등이 없다는 가정하에, 보유한 정산채권들의 투자금액을 가중한 금융일수 평균</dd>
-        <dt>S입금부족율</dt><dd>20일 전일자부터 11일 전일자까지인 기간의 거래금액을 샘플로 한 '입금부족액/선정산금액'</dd>
-        <dt>Ty수익율</dt><dd>할인율 × (365 / w금융일수)</dd>
-      </dl>
     </div>
 
   </main>

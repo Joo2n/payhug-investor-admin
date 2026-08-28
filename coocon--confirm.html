@@ -39,6 +39,8 @@
   .url-box .k { display: block; font-size: 12px; line-height: 16px; color: var(--secondary); margin-bottom: 4px; }
   .url-box .v { font-size: 13px; line-height: 20px; color: var(--gray-800); word-break: break-all; }
   .modal-guide { font-size: 12px; line-height: 18px; color: var(--gray-400); margin: 0; }
+  .link-check { width: 100%; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--gray-100); text-align: left; }
+  .link-check .card-title { display: block; margin: 0 0 12px; }
 </style>
 </head>
 <body data-active="kcoon">
@@ -120,7 +122,6 @@
   <main class="content">
     <div class="page-header">
       <h1 class="page-title">쿠콘 관리 현금 <span class="state-flag">이동 확인</span></h1>
-      <p class="page-sub">관리 현금 거래 내역 조회를 위한 외부 시스템 연결.</p>
     </div>
 
     <div class="link-wrap">
@@ -131,19 +132,15 @@
         </div>
         <h2 class="link-title">쿠콘 We-bank 전자금융서비스</h2>
         <p class="link-desc">
-          관리 현금의 입금·송금·펌뱅킹 거래 내역은 쿠콘 We-bank 전자금융서비스에서 조회함.<br>
-          별도 발급된 사용자 ID·비밀번호·기관코드·OTP로 로그인.
+          관리 현금의 입금·송금·펌뱅킹 거래 내역은 쿠콘 We-bank 전자금융서비스에서 조회하며, 별도 발급된 사용자 ID·비밀번호·기관코드·OTP로 로그인합니다.
+          아래 바로가기는 새 창으로 열리고, 계정 발급과 OTP 초기화는 페이허그 담당자가 처리합니다.
         </p>
         <a class="btn btn-primary" href="https://www.we-bank.co.kr/main_00100.act" target="_blank" rel="noopener">
           We-bank 바로가기
           <svg style="width:14px;height:14px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
         </a>
-        <p class="link-foot">새 창으로 열림 · 계정 발급 및 OTP 초기화는 페이허그 담당자에게 문의</p>
-      </div>
-
-      <!-- 참고 카드 -->
-      <div class="card" style="margin-top:16px">
-        <h3 class="card-title">We-bank에서 조회 가능한 내역</h3>
+        <div class="link-check">
+          <h3 class="card-title">We-bank에서 조회 가능한 내역</h3>
         <div class="ref-list">
           <div class="ref-item">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -158,6 +155,8 @@
             <span>펌뱅킹 제휴거래내역조회</span>
           </div>
         </div>
+      </div>
+
       </div>
     </div>
 

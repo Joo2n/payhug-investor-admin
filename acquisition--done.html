@@ -30,14 +30,6 @@
   .sign-row .m-date .mono { color: var(--gray-500); }
   .doc-link { font-size: 14px; font-weight: 500; color: var(--primary-600); text-decoration: none; white-space: nowrap; }
   .doc-link:hover { text-decoration: underline; }
-  .action-bar {
-    position: fixed; left: 240px; right: 0; bottom: 0; z-index: 40;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 32px; background: #fff;
-    border-top: 1px solid var(--gray-200); box-shadow: var(--shadow-card);
-  }
-  .action-bar .sel-count { font-size: 14px; color: var(--gray-600); }
-  .action-bar .sel-count b { color: var(--gray-900); }
   .sign-row.done .m-name { color: var(--gray-500); }
   .sign-row .chk:disabled { cursor: default; opacity: 0.6; }
   /* 서명 완료 모달 */
@@ -56,6 +48,12 @@
   .done-item svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--emerald-600); }
   .done-item .n { flex: 1; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--gray-900); }
   .done-item .d { font-size: 12px; line-height: 16px; color: var(--gray-400); }
+  .sign-foot { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px 24px 24px; border-top: 1px solid var(--gray-100); background: var(--gray-50); }
+  .sign-foot .sel-count { font-size: 13px; color: var(--gray-600); }
+  .sign-foot .sel-count b { color: var(--gray-900); }
+  .sign-foot .btn { min-width: 240px; justify-content: center; padding: 12px 40px; font-size: 16px; border-radius: 12px; }
+  .list-tools { display: flex; align-items: center; gap: 8px; }
+  .tbl-head-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--gray-100); }
 </style>
 </head>
 <body data-active="receivables">
@@ -137,7 +135,6 @@
   <main class="content" style="padding-bottom:120px">
     <div class="page-header">
       <h1 class="page-title">정산채권 양수 <span class="state-flag">서명 완료</span></h1>
-      <p class="page-sub">정산금채권 양수도 계약서 전자서명.</p>
     </div>
 
     <!-- 안내 배너 -->
@@ -148,8 +145,12 @@
 
     <!-- 서명 대기 목록 -->
     <div class="card" style="padding:0; overflow:hidden">
-      <div style="padding:16px 24px; border-bottom:1px solid var(--gray-100)">
+      <div class="tbl-head-bar">
         <span class="card-title" style="margin:0">양수도 계약 목록</span>
+        <div class="list-tools">
+          <button class="btn btn-ghost">전체 선택</button>
+          <button class="btn btn-ghost" disabled>선택 해제</button>
+        </div>
       </div>
 
       <div class="sign-row done">
@@ -170,7 +171,7 @@
         <span class="badge badge-green">서명 완료</span>
         <a class="doc-link" href="contracts.html">계약서 보기</a>
       </div>
-      <div class="sign-row">
+      <div class="sign-row" role="checkbox" tabindex="0" aria-checked="false">
         <input type="checkbox" class="chk">
         <div style="flex:1; min-width:0">
           <div class="m-name">바다마루 횟집</div>
@@ -179,15 +180,14 @@
         <span class="badge badge-amber">서명 대기</span>
         <a class="doc-link" href="assets/docs/계약서_서명대기_M2026-0004.pdf" target="_blank" rel="noopener">계약서 보기</a>
       </div>
+      <div class="sign-foot">
+        <span class="sel-count">선택 <b class="mono">0</b>건</span>
+        <button class="btn btn-primary" disabled>서명하기</button>
+      </div>
     </div>
 
   </main>
 
-  <!-- 하단 고정 액션 영역 -->
-  <div class="action-bar">
-    <span class="sel-count">선택 <b class="mono">0</b>건</span>
-    <button class="btn btn-primary" style="padding:12px 40px; font-size:16px; border-radius:12px" disabled>서명하기</button>
-  </div>
 
   <!-- 서명 완료 모달 -->
   <div class="modal-backdrop">
@@ -198,7 +198,7 @@
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
           </div>
           <h3 class="done-title">서명 완료</h3>
-          <p class="done-desc">정산금채권 양수도 계약 <b class="mono">2건</b> 서명 완료.<br>서명값은 계약기록에 보관됨. 인증서 발행기관 검증 회신전문의 형식·보관 경로는 확인 대상.</p>
+          <p class="done-desc">정산금채권 양수도 계약 <b class="mono">2건</b> 서명 완료.<br>서명값은 계약기록에 보관됩니다.</p>
         </div>
 
         <div class="done-list">

@@ -30,14 +30,12 @@
   .sign-row .m-date .mono { color: var(--gray-500); }
   .doc-link { font-size: 14px; font-weight: 500; color: var(--primary-600); text-decoration: none; white-space: nowrap; }
   .doc-link:hover { text-decoration: underline; }
-  .action-bar {
-    position: fixed; left: 240px; right: 0; bottom: 0; z-index: 40;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 32px; background: #fff;
-    border-top: 1px solid var(--gray-200); box-shadow: var(--shadow-card);
-  }
-  .action-bar .sel-count { font-size: 14px; color: var(--gray-600); }
-  .action-bar .sel-count b { color: var(--gray-900); }
+  .sign-foot { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px 24px 24px; border-top: 1px solid var(--gray-100); background: var(--gray-50); }
+  .sign-foot .sel-count { font-size: 13px; color: var(--gray-600); }
+  .sign-foot .sel-count b { color: var(--gray-900); }
+  .sign-foot .btn { min-width: 240px; justify-content: center; padding: 12px 40px; font-size: 16px; border-radius: 12px; }
+  .list-tools { display: flex; align-items: center; gap: 8px; }
+  .tbl-head-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--gray-100); }
 </style>
 </head>
 <body data-active="receivables">
@@ -119,7 +117,6 @@
   <main class="content" style="padding-bottom:120px">
     <div class="page-header">
       <h1 class="page-title">정산채권 양수 <span class="state-flag">서명 확인</span></h1>
-      <p class="page-sub">정산금채권 양수도 계약서 전자서명.</p>
     </div>
 
     <!-- 안내 배너 -->
@@ -130,11 +127,15 @@
 
     <!-- 서명 대기 목록 -->
     <div class="card" style="padding:0; overflow:hidden">
-      <div style="padding:16px 24px; border-bottom:1px solid var(--gray-100)">
+      <div class="tbl-head-bar">
         <span class="card-title" style="margin:0">서명 대기 목록</span>
+        <div class="list-tools">
+          <button class="btn btn-ghost">전체 선택</button>
+          <button class="btn btn-ghost" disabled>선택 해제</button>
+        </div>
       </div>
 
-      <div class="sign-row selected">
+      <div class="sign-row selected" role="checkbox" tabindex="0" aria-checked="true">
         <input type="checkbox" class="chk" checked>
         <div style="flex:1; min-width:0">
           <div class="m-name">김성호떡볶이 본점</div>
@@ -144,7 +145,7 @@
         <a class="doc-link" href="assets/docs/계약서_서명대기_M2026-0001.pdf" target="_blank" rel="noopener">계약서 보기</a>
       </div>
 
-      <div class="sign-row selected">
+      <div class="sign-row selected" role="checkbox" tabindex="0" aria-checked="true">
         <input type="checkbox" class="chk" checked>
         <div style="flex:1; min-width:0">
           <div class="m-name">달빛곱창 홍대점</div>
@@ -154,7 +155,7 @@
         <a class="doc-link" href="assets/docs/계약서_서명대기_M2026-0002.pdf" target="_blank" rel="noopener">계약서 보기</a>
       </div>
 
-      <div class="sign-row">
+      <div class="sign-row" role="checkbox" tabindex="0" aria-checked="false">
         <input type="checkbox" class="chk">
         <div style="flex:1; min-width:0">
           <div class="m-name">바다마루 횟집</div>
@@ -163,15 +164,14 @@
         <span class="badge badge-amber">서명 대기</span>
         <a class="doc-link" href="assets/docs/계약서_서명대기_M2026-0004.pdf" target="_blank" rel="noopener">계약서 보기</a>
       </div>
+      <div class="sign-foot">
+        <span class="sel-count">선택 <b class="mono">2</b>건</span>
+        <button class="btn btn-primary">서명하기</button>
+      </div>
     </div>
 
   </main>
 
-  <!-- 하단 고정 액션 영역 -->
-  <div class="action-bar">
-    <span class="sel-count">선택 <b class="mono">2</b>건</span>
-    <button class="btn btn-primary" style="padding:12px 40px; font-size:16px; border-radius:12px">서명하기</button>
-  </div>
 
   <!-- 서명 확인 모달 (열린 상태) -->
   <div class="modal-backdrop">
@@ -181,7 +181,7 @@
         <button class="close"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
       </div>
       <div class="modal-body">
-        <p class="modal-desc" style="margin:0">선택한 <b>2건</b>의 계약서에 전자서명함. 서명 수단은 확인 대상. 서명 후 취소 불가.</p>
+        <p class="modal-desc" style="margin:0">선택한 <b>2건</b>의 계약서에 전자서명합니다. 서명 후에는 취소할 수 없습니다.</p>
         <div style="background:var(--gray-50); border:1px solid var(--gray-100); border-radius:12px; padding:8px 16px">
           <div class="row-between" style="padding:6px 0; border-bottom:1px solid var(--gray-100)">
             <span style="font-size:14px; font-weight:600; color:var(--gray-900)">김성호떡볶이 본점</span>

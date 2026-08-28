@@ -22,10 +22,12 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 16px 20px; border-bottom: 1px solid var(--gray-100);
   }
-  .tbl-foot-note {
-    padding: 12px 20px; border-top: 1px solid var(--gray-100); background: var(--gray-50);
-    font-size: 12px; line-height: 18px; color: var(--gray-500);
-  }
+  .sign-foot { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px 24px 24px; border-top: 1px solid var(--gray-100); background: var(--gray-50); }
+  .sign-foot .sel-count { font-size: 13px; color: var(--gray-600); }
+  .sign-foot .sel-count b { color: var(--gray-900); }
+  .sign-foot .btn { min-width: 240px; justify-content: center; padding: 12px 40px; font-size: 16px; border-radius: 12px; }
+  .list-tools { display: flex; align-items: center; gap: 8px; }
+  .tbl-head-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--gray-100); }
 </style>
 </head>
 <body data-active="contracts">
@@ -107,7 +109,6 @@
   <main class="content">
     <div class="page-header">
       <h1 class="page-title">계약기록</h1>
-      <p class="page-sub">정산금채권 재양도합의서 보관함.</p>
     </div>
 
     <!-- 재양도합의서 목록 -->
@@ -117,10 +118,13 @@
           <span class="card-title" style="margin:0">재양도합의서 목록</span>
           <span style="font-size:12px; color:var(--gray-400); margin-left:8px">총 <b class="mono">16</b>건 · 표시 <b class="mono">1–8</b> · 선택 <b class="mono">3</b>건</span>
         </div>
-        <a class="btn btn-excel" href="assets/docs/재양도합의서_선택3건_20260827.zip" download>
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-          선택 문서 다운로드
-        </a>
+        <div class="list-tools">
+          <button class="btn btn-ghost" disabled>선택 해제</button>
+          <a class="btn btn-excel" href="assets/docs/재양도합의서_선택3건_20260827.zip" download>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            선택 문서 다운로드
+          </a>
+        </div>
       </div>
       <div class="tbl-scroll">
         <table class="tbl">
@@ -193,7 +197,6 @@
           </tbody>
         </table>
       </div>
-      <div class="tbl-foot-note">다운로드 시 선택한 각 가맹점의 재양도합의서 파일이 제공됨. 서명 검증 회신전문은 형식·전달 경로 미정의 — 확인 대상.</div>
       <div class="pagination" style="border-top:1px solid var(--gray-100)">
         <button class="page-arrow" disabled>
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
