@@ -1,0 +1,129 @@
+# 시연용 프로토타입 자동 동기화
+#
+#   payhug-investor-admin/app.html  ──변환──▶  payhug-investor-prototype/index.html  ──▶  Vercel 자동 배포
+#
+# app.html 이나 assets/ 가 main 에 올라가면 이 워크플로가 시연본을 다시 찍어 낸다.
+# 변환 로직은 이 파일에 박지 않고 scripts/sync_prototype.py 가 갖는다 — 로컬에서 같은 것을 돌려 검증할 수 있다.
+#
+# 바깥으로 나가는 통로가 1건이라도 남으면 실패하고 push 하지 않는다.
+
+name: 시연용 프로토타입 동기화
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app.html'
+      - 'assets/**'
+      - 'scripts/sync_prototype.py'
+      - '.github/workflows/sync-prototype.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: sync-prototype
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      TARGET_REPO: Joo2n/payhug-investor-prototype
+      LIVE_URL: https://payhug-investor-prototype.vercel.app/
+
+    steps:
+      - name: 토큰 확인
+        env:
+          TOKEN: ${{ secrets.PROTOTYPE_SYNC_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error title=PROTOTYPE_SYNC_TOKEN 없음::다른 저장소로 push 하려면 PAT 이 필요하다. GITHUB_TOKEN 은 이 저장소 밖으로 쓸 수 없다."
+            echo "등록 경로: 이 저장소 Settings > Secrets and variables > Actions > New repository secret"
+            echo "이름 PROTOTYPE_SYNC_TOKEN · 값은 ${TARGET_REPO} 에 contents:write 가 있는 Fine-grained PAT"
+            exit 1
+          fi
+          echo "토큰 확인됨"
+
+      - name: 원본 저장소 체크아웃
+        uses: actions/checkout@v4
+
+      - name: 시연본 저장소 체크아웃
+        uses: actions/checkout@v4
+        with:
+          repository: Joo2n/payhug-investor-prototype
+          token: ${{ secrets.PROTOTYPE_SYNC_TOKEN }}
+          path: prototype
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 변환 · 통로 차단 재적용 · 자산 역산 복사
+        run: python3 scripts/sync_prototype.py --dst prototype
+
+      - name: 통로 잔존 검사 (독립 확인)
+        run: |
+          set -uo pipefail
+          F=prototype/index.html
+          rc=0
+          for w in glossary capability feasibility inquiry archive review 랜딩 갤러리 문의서; do
+            n=$(grep -o -i -- "$w" "$F" | wc -l | tr -d ' ')
+            if [ "$n" != "0" ]; then
+              echo "::error title=금칙 문자열 잔존::$w x$n"
+              rc=1
+            fi
+          done
+          # 형제 문서 상대링크 — 해시·자산·자기 자신·외부 절대주소 외에는 없어야 한다
+          if grep -oE 'href="[^"#]*"' "$F" \
+             | grep -vE 'href="(https?:|mailto:|data:|assets/|index\.html)' | grep . ; then
+            echo "::error title=형제 문서 상대링크 잔존::위 목록"
+            rc=1
+          fi
+          # 허용 밖 외부 호스트
+          if grep -oE '(href|src|action)="https?://[^/"]+' "$F" | sed -E 's/.*https?:\/\///' | sort -u \
+             | grep -vE '^(fonts\.googleapis\.com|fonts\.gstatic\.com|www\.we-bank\.co\.kr)$' | grep . ; then
+            echo "::error title=허용하지 않은 외부 호스트::위 목록"
+            rc=1
+          fi
+          if [ "$rc" != "0" ]; then
+            echo "바깥으로 나가는 통로가 남았다. push 하지 않는다."
+            exit 1
+          fi
+          echo "통로 잔존 0건"
+
+      - name: 시연본 저장소에 반영
+        working-directory: prototype
+        run: |
+          set -e
+          git config user.name  "payhug-sync[bot]"
+          git config user.email "cx@payhug.io"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "바뀐 것 없음 — 커밋하지 않는다"
+            exit 0
+          fi
+          git commit -m "시연용 프로토타입 동기화 — 원본 app.html 기준 재생성
+
+원본 ${GITHUB_REPOSITORY}@${GITHUB_SHA} 에서 찍어 냈다.
+랜딩 갤러리 제거·로고 자기 자신 고정·형제 문서 링크 해시 전환을 다시 적용하고
+화면이 부르는 자산만 역산해 맞춘다."
+          git push origin HEAD:main
+          echo "반영 완료 — Vercel 이 이 push 를 받아 배포한다"
+
+      - name: 배포 반영 확인
+        run: |
+          set -e
+          WANT=$(shasum -a 256 prototype/index.html | cut -d' ' -f1)
+          echo "기대 sha256 ${WANT}"
+          for i in $(seq 1 40); do
+            GOT=$(curl -fsSL "$LIVE_URL" | shasum -a 256 | cut -d' ' -f1 || echo "")
+            if [ "$GOT" = "$WANT" ]; then
+              echo "배포 반영 확인 (${i}회차) — $LIVE_URL"
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "::warning title=배포 반영 지연::10분 안에 확인되지 않았다. Vercel 빌드 로그를 본다."
