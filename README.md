@@ -18,7 +18,7 @@
 | 루트 문서 | 2 | `README.md` `DESIGN_REF.md` |
 | `assets/` 공용 | 5 | `base.css` `sheet.css` `template.html` `components.html` `logo-icon.png` |
 | 내려받기 실물 | 28 | `assets/docs/` 20 · `assets/xlsx/` 8 |
-| 화면 캡처 | 15 | `assets/shots/` — 용어 해설이 카드마다 불러 쓴다 |
+| 화면 캡처 | 15 | `assets/shots/` — 정적 화면 촬영본. 용어 해설이 카드에 거는 것은 5장 |
 | 동기화 스크립트 | 2 | `scripts/` — 시연본·용어 단독본 변환기 |
 
 ## 진입점
@@ -88,7 +88,7 @@
     ├── logo-icon.png     # 로고 원본. 화면 렌더는 base.css의 .logo-mark data URI
     ├── docs/             # 내려받기 실물 20 (PDF · ZIP · TXT)
     ├── xlsx/             # 내려받기 실물 8 (XLSX)
-    └── shots/            # 화면 캡처 15 (용어 해설용)
+    └── shots/            # 화면 캡처 15 — 용어 해설이 거는 것 5
 ```
 
 ## 엑셀 다운로드 대응
@@ -103,7 +103,7 @@
 | 투자 수익 | 수익 현황 엑셀 다운로드 — 집계 단위 일별·주별·월별 | `assets/xlsx/투자수익현황_2026-03-01_2026-08-31.xlsx` · `assets/xlsx/투자수익현황_2026-08-03_2026-08-30.xlsx` · `assets/xlsx/투자수익현황_2026-08-21_2026-08-27.xlsx` | `xls-profit-status.html` |
 | 투자 수익 | 표 엑셀 다운로드 — 집계 단위 일별·주별·월별 | `assets/xlsx/월별투자수익_2026-03-01_2026-08-31.xlsx` · `assets/xlsx/일별투자수익_2026-08-21_2026-08-27.xlsx` · `assets/xlsx/주별투자수익_2026-08-03_2026-08-30.xlsx` | `xls-profit-daily.html` |
 
-계약기록의 `선택 문서 다운로드`는 고른 행의 전자서명 결과를 하나로 묶은 텍스트를 내려준다 — `assets/docs/전자서명결과_선택3건_20260827.txt` · `assets/docs/전자서명결과_전체16건_20260827.txt`. 재양도합의서 PDF 0건과 묶음 ZIP 0건도 같은 폴더에 있다.
+계약기록의 `선택 문서 다운로드`는 고른 행의 전자서명 결과를 하나로 묶은 텍스트를 내려준다 — `assets/docs/전자서명결과_선택3건_20260827.txt` · `assets/docs/전자서명결과_전체16건_20260827.txt`. 같은 폴더에 행별 전자서명 결과 16건과 계약서 원문이 텍스트로, 투자자산 증명서가 PDF 1건으로 있다.
 
 ## 참고
 
