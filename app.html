@@ -453,7 +453,7 @@
 </style>
 </head>
 <!--
-  통합 프로토타입 — 한 파일에서 화면 15 · 상태 20 전부를 조작한다.
+  통합 프로토타입 — 한 파일에서 화면 15 · 상태 21 전부를 조작한다.
   개별 HTML 34개는 Figma 임포트용 정적 원본으로 별도 보존한다(이 파일이 대체하지 않는다).
   화면은 데이터 모델에서만 그린다. 표·합계·비중은 조작 결과로 계산되며 하드코딩하지 않는다.
   딥링크: #<화면>/<상태>  예) #invest-assets/page2 · #acquisition-list/signing
@@ -1066,7 +1066,7 @@
       </div>
       <span class="hero-date">2026-08-27</span>
     </div>
-    <div class="sec-head"><h2>화면</h2><span class="sec-note">메뉴 대응 8 · 하위 6 · 상태 20</span></div>
+    <div class="sec-head"><h2>화면</h2><span class="sec-note">메뉴 대응 8 · 하위 6 · 상태 21</span></div>
     <div class="gallery" data-mount="ix-gallery"></div>
   </div>
 </section>
@@ -1263,22 +1263,22 @@ var BASE_DATE = '2026-08-27';
 var INVESTOR  = '㈜테스트인베스트';
 
 var MERCHANTS = [
-  {mid:'M2026-0001', name:'김성호떡볶이 본점', biz:'123-45-67890', ceo:'김성호', sector:'음식점업', item:'분식', tier:'고액', buyer:'A-001', buyerName:'㈜페이허그', amount:268181516, w:3.1, s:0.07, ty:12.95},
-  {mid:'M2026-0002', name:'달빛곱창 홍대점', biz:'234-56-78901', ceo:'이달빛', sector:'음식점업', item:'곱창', tier:'고액', buyer:'A-001', buyerName:'㈜페이허그', amount:229481786, w:2.7, s:0.05, ty:14.87},
-  {mid:'M2026-0004', name:'바다마루 횟집', biz:'456-78-90123', ceo:'조해민', sector:'음식점업', item:'일식', tier:'고액', buyer:'A-001', buyerName:'㈜페이허그', amount:193769717, w:2.7, s:0.04, ty:14.87},
-  {mid:'M2026-0009', name:'청춘포차 신촌점', biz:'901-23-45678', ceo:'오지훈', sector:'음식점업', item:'포차', tier:'고액', buyer:'A-001', buyerName:'㈜페이허그', amount:163790757, w:2.8, s:0.05, ty:14.34},
-  {mid:'M2026-0003', name:'성호분식 2호점', biz:'345-67-89012', ceo:'박성호', sector:'음식점업', item:'분식', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:118752635, w:3.5, s:0.09, ty:11.47},
-  {mid:'M2026-0005', name:'한강커피 잠원점', biz:'567-89-01234', ceo:'정한강', sector:'음식점업', item:'카페', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:105184126, w:3.3, s:0.08, ty:12.17},
-  {mid:'M2026-0008', name:'골목냉면', biz:'890-12-34567', ceo:'백미순', sector:'음식점업', item:'냉면', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:95552492, w:3.5, s:0.09, ty:11.47},
-  {mid:'M2026-0010', name:'왕십리곱창타운', biz:'112-34-56789', ceo:'한상철', sector:'음식점업', item:'곱창', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:87278628, w:3.4, s:0.08, ty:11.81},
-  {mid:'M2026-0012', name:'대박국수 사당점', biz:'334-56-78902', ceo:'서동혁', sector:'음식점업', item:'국수', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:80653847, w:3.6, s:0.10, ty:11.15},
-  {mid:'M2026-0014', name:'착한고기 은평점', biz:'556-78-90124', ceo:'강민호', sector:'음식점업', item:'고기', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:71448705, w:3.5, s:0.09, ty:11.47},
-  {mid:'M2026-0006', name:'김밥나라', biz:'678-90-12345', ceo:'김나라', sector:'음식점업', item:'김밥', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:24210117, w:4.0, s:0.12, ty:10.04},
-  {mid:'M2026-0007', name:'초록치킨 서초점', biz:'789-01-23456', ceo:'최초록', sector:'음식점업', item:'치킨', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:21337102, w:4.1, s:0.13, ty:9.79},
-  {mid:'M2026-0011', name:'소소한밥상', biz:'223-45-67891', ceo:'문소연', sector:'음식점업', item:'한식', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:19978251, w:4.7, s:0.15, ty:8.54},
-  {mid:'M2026-0013', name:'정든수산', biz:'445-67-89013', ceo:'정해수', sector:'음식점업', item:'수산', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:15974981, w:4.3, s:0.13, ty:9.34},
-  {mid:'M2026-0015', name:'커피한잔 마포점', biz:'667-89-01235', ceo:'윤지원', sector:'음식점업', item:'카페', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:14304296, w:3.9, s:0.11, ty:10.29},
-  {mid:'M2026-0016', name:'우리동네반찬', biz:'778-90-12346', ceo:'임보경', sector:'음식점업', item:'반찬', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:13201044, w:5.0, s:0.17, ty:8.03}
+  {mid:'M2026-0001', name:'김성호떡볶이 본점', biz:'123-45-67890', ceo:'김성호', sector:'음식점업', item:'분식', tier:'고액', buyer:'A-001', buyerName:'㈜페이허그', amount:268181516, w:3.6, s:0.07, ty:11.15},
+  {mid:'M2026-0002', name:'달빛곱창 홍대점', biz:'234-56-78901', ceo:'이달빛', sector:'음식점업', item:'곱창', tier:'고액', buyer:'A-001', buyerName:'㈜페이허그', amount:229481786, w:3.3, s:0.05, ty:12.17},
+  {mid:'M2026-0004', name:'바다마루 횟집', biz:'456-78-90123', ceo:'조해민', sector:'음식점업', item:'일식', tier:'고액', buyer:'A-001', buyerName:'㈜페이허그', amount:193769717, w:3.2, s:0.04, ty:12.55},
+  {mid:'M2026-0009', name:'청춘포차 신촌점', biz:'901-23-45678', ceo:'오지훈', sector:'음식점업', item:'포차', tier:'고액', buyer:'A-001', buyerName:'㈜페이허그', amount:163790757, w:3.4, s:0.05, ty:11.81},
+  {mid:'M2026-0003', name:'성호분식 2호점', biz:'345-67-89012', ceo:'박성호', sector:'음식점업', item:'분식', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:118752635, w:4.0, s:0.09, ty:10.04},
+  {mid:'M2026-0005', name:'한강커피 잠원점', biz:'567-89-01234', ceo:'정한강', sector:'음식점업', item:'카페', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:105184126, w:3.8, s:0.08, ty:10.57},
+  {mid:'M2026-0008', name:'골목냉면', biz:'890-12-34567', ceo:'백미순', sector:'음식점업', item:'냉면', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:95552492, w:4.1, s:0.09, ty:9.79},
+  {mid:'M2026-0010', name:'왕십리곱창타운', biz:'112-34-56789', ceo:'한상철', sector:'음식점업', item:'곱창', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:87278628, w:4.0, s:0.08, ty:10.04},
+  {mid:'M2026-0012', name:'대박국수 사당점', biz:'334-56-78902', ceo:'서동혁', sector:'음식점업', item:'국수', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:80653847, w:4.1, s:0.10, ty:9.79},
+  {mid:'M2026-0014', name:'착한고기 은평점', biz:'556-78-90124', ceo:'강민호', sector:'음식점업', item:'고기', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:71448705, w:4.0, s:0.09, ty:10.04},
+  {mid:'M2026-0006', name:'김밥나라', biz:'678-90-12345', ceo:'김나라', sector:'음식점업', item:'김밥', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:24210117, w:4.5, s:0.12, ty:8.92},
+  {mid:'M2026-0007', name:'초록치킨 서초점', biz:'789-01-23456', ceo:'최초록', sector:'음식점업', item:'치킨', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:21337102, w:4.6, s:0.13, ty:8.73},
+  {mid:'M2026-0011', name:'소소한밥상', biz:'223-45-67891', ceo:'문소연', sector:'음식점업', item:'한식', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:19978251, w:5.2, s:0.15, ty:7.72},
+  {mid:'M2026-0013', name:'정든수산', biz:'445-67-89013', ceo:'정해수', sector:'음식점업', item:'수산', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:15974981, w:4.8, s:0.13, ty:8.36},
+  {mid:'M2026-0015', name:'커피한잔 마포점', biz:'667-89-01235', ceo:'윤지원', sector:'음식점업', item:'카페', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:14304296, w:4.5, s:0.11, ty:8.92},
+  {mid:'M2026-0016', name:'우리동네반찬', biz:'778-90-12346', ceo:'임보경', sector:'음식점업', item:'반찬', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:13201044, w:5.5, s:0.17, ty:7.30}
 ];
 /* 업종 옵션은 원장 데이터에서 뽑는다 — 화면에 없는 업종을 옵션으로 내걸지 않는다.
    운영 어드민에는 업종 필터 자체가 없어(admin app/manage/page.tsx:223-255 · services/merchantService.ts:199-205)
@@ -1294,7 +1294,7 @@ var SECTORS = (function(){
 
 /* 현황 표 — 투자실행액 행의 W·S·Ty는 기록값(합계 행에서는 산정하지 않음) */
 var ASSET_ROWS = [
-  {name:'투자실행액', amount:1523100000, w:3.1, s:0.07, ty:12.95, keeper:'㈜페이허그'},
+  {name:'투자실행액', amount:1523100000, w:3.7, s:0.07, ty:10.85, keeper:'㈜페이허그'},
   {name:'순현금',     amount:105300000,  w:null,  s:null, ty:null, keeper:'㈜쿠콘'}
 ];
 
@@ -1516,17 +1516,17 @@ var SIGNQ = [
    (TransferRecordsTab.tsx:318 · overview/page.tsx:658 · PreSettlementTab.tsx:394 · LockAccountDeposits.tsx:219).
    투자자산 2건은 기준일 스냅샷이라 시작=종료, 투자수익 2건은 기본 조회기간(일주일). */
 var XLSX = {
-  'assets-status':   {file:'투자자산현황_2026-08-27_2026-08-27.xlsx',   size:'5.6 KB', made:'2026-08-29 00:18', sheet:'투자자산 현황',   screen:'xls-assets-status',   from:'invest-assets'},
-  'assets-merchant': {file:'가맹점별투자자산_2026-08-27_2026-08-27.xlsx', size:'6.4 KB', made:'2026-08-29 00:18', sheet:'가맹점별 투자자산', screen:'xls-assets-merchant', from:'invest-assets'},
-  'profit-status':   {file:'투자수익현황_2026-08-21_2026-08-27.xlsx',   size:'5.3 KB', made:'2026-08-29 00:18', sheet:'투자수익 현황',   screen:'xls-profit-status',   from:'invest-profit'},
-  'profit-daily':    {file:'일별투자수익_2026-08-21_2026-08-27.xlsx',   size:'5.7 KB', made:'2026-08-29 00:18', sheet:'일별 투자수익',   screen:'xls-profit-daily',    from:'invest-profit'},
+  'assets-status':   {file:'투자자산현황_2026-08-27_2026-08-27.xlsx',   size:'5.6 KB', made:'2026-08-29 01:55', sheet:'투자자산 현황',   screen:'xls-assets-status',   from:'invest-assets'},
+  'assets-merchant': {file:'가맹점별투자자산_2026-08-27_2026-08-27.xlsx', size:'6.4 KB', made:'2026-08-29 01:55', sheet:'가맹점별 투자자산', screen:'xls-assets-merchant', from:'invest-assets'},
+  'profit-status':   {file:'투자수익현황_2026-08-21_2026-08-27.xlsx',   size:'5.3 KB', made:'2026-08-29 01:55', sheet:'투자수익 현황',   screen:'xls-profit-status',   from:'invest-profit'},
+  'profit-daily':    {file:'일별투자수익_2026-08-21_2026-08-27.xlsx',   size:'5.7 KB', made:'2026-08-29 01:55', sheet:'일별 투자수익',   screen:'xls-profit-daily',    from:'invest-profit'},
   /* 주별·월별은 실물 파일만 둔다 — 미리보기 낱장은 일별 것 하나로 충분하다(서식이 같다).
      `수익 현황`도 집계 단위마다 기간이 달라 3벌이다 — 카드가 4주를 말하는데 파일이 일주일이면
      화면과 파일이 다른 기간을 말한다. */
-  'profit-weekly':   {file:'주별투자수익_2026-08-03_2026-08-30.xlsx',   size:'5.7 KB', made:'2026-08-29 00:18', sheet:'주별 투자수익',   screen:null, from:'invest-profit'},
-  'profit-monthly':  {file:'월별투자수익_2026-03-01_2026-08-31.xlsx',   size:'5.7 KB', made:'2026-08-29 00:18', sheet:'월별 투자수익',   screen:null, from:'invest-profit'},
-  'profit-status-weekly':  {file:'투자수익현황_2026-08-03_2026-08-30.xlsx', size:'5.3 KB', made:'2026-08-29 00:18', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
-  'profit-status-monthly': {file:'투자수익현황_2026-03-01_2026-08-31.xlsx', size:'5.3 KB', made:'2026-08-29 00:18', sheet:'투자수익 현황', screen:null, from:'invest-profit'}
+  'profit-weekly':   {file:'주별투자수익_2026-08-03_2026-08-30.xlsx',   size:'5.7 KB', made:'2026-08-29 01:55', sheet:'주별 투자수익',   screen:null, from:'invest-profit'},
+  'profit-monthly':  {file:'월별투자수익_2026-03-01_2026-08-31.xlsx',   size:'5.7 KB', made:'2026-08-29 01:55', sheet:'월별 투자수익',   screen:null, from:'invest-profit'},
+  'profit-status-weekly':  {file:'투자수익현황_2026-08-03_2026-08-30.xlsx', size:'5.3 KB', made:'2026-08-29 01:55', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
+  'profit-status-monthly': {file:'투자수익현황_2026-03-01_2026-08-31.xlsx', size:'5.3 KB', made:'2026-08-29 01:55', sheet:'투자수익 현황', screen:null, from:'invest-profit'}
 };
 
 /* 투자수익 표는 일별·주별·월별 3단이고 엑셀도 3벌이다 — 지금 보고 있는 표를 그대로 내려준다.
