@@ -466,15 +466,6 @@
             </div><span class="j j-chk">확인필요</span></li>
           </ul>
         </div>
-        <div class="blk">
-          <p class="blk-label">보여주는 데이터 항목과 출처</p>
-          <div class="scroll"><table class="dt">
-            <thead><tr><th style="width:26%">항목</th><th style="width:26%">출처</th><th>근거</th><th style="width:88px">판정</th></tr></thead>
-            <tbody>
-              <tr><td class="k">계정 발급 안내 문구</td><td>정책 아님(안내 카피)</td><td>화면 자체</td><td class="c"><span class="j j-fix">확정</span></td></tr>
-            </tbody>
-          </table></div>
-        </div>
         <div class="summ"><b>판정 요약</b> — 로그인 자체는 이미 돌아가는 기능이고 입력 항목까지 일치한다. 다만 스토리보드는 이 화면을 목업으로 그리지 않고 기존 가맹점 앱 로그인 화면 스크린샷을 참고자료로 붙여 두었을 뿐이다(<code>SB s2</code>). 투자자 로그인의 인증 수단·실패 처리·계정 잠금은 원 요구 단계에서 정의된 바가 없다. userType 열거형의 원본이 프론트가 아니라 백엔드라는 점도 함께 확인 대상(<code>lib/permissions.ts:3</code> 주석).</div>
       </div>
     </article>
@@ -918,7 +909,7 @@
             <thead><tr><th style="width:30%">항목</th><th style="width:14%">출처</th><th>근거와 판정 사유</th><th style="width:88px">판정</th></tr></thead>
             <tbody>
               <tr><td class="k">비밀번호 규칙<span class="src-line">8~16자 · 영문 · 숫자 · 특수문자 <code>!@#$%^&amp;*()</code> 한정 · 공백·한글 불가</span></td><td>가맹점 Web</td><td>스토리보드에 규칙 명시 없음. <strong>사내에 존재하는 유일한 비밀번호 정책</strong>인 <code>merchant lib/passwordPolicy.ts:8-10·:63-72</code>를 그대로 따랐다. 허용되지 않은 글자는 저장 기준(<code>:60</code>)이 걸러낸다 — 출력 가능한 ASCII 밖 문자 제거 + 16자 절단. 어드민 계정에 같은 규칙을 쓸지는 미확정</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
-              <tr><td class="k">화면 문구 8종<span class="src-line">안내 · 공백 · 허용밖 특수문자 · 규칙 미충족 · 통과 · 확인 기본/일치/불일치</span></td><td>가맹점 Web</td><td><code>merchant lib/passwordPolicy.ts:12-21</code>의 <code>PASSWORD_MESSAGES</code> 8개를 문자 그대로 옮겼다(제품 UI 문구이므로 문서 문체로 고치지 않는다). 완료 토스트는 <code>page.tsx:56</code>. <strong>재현 경로가 없어 화면에 넣지 않은 문구 3종</strong> — <code>비밀번호 변경에 실패했습니다.</code>(<code>page.tsx:67</code>) · <code>서버 통신 중 오류가 발생했습니다.</code>(<code>page.tsx:70</code>) · 제출 중 버튼 <code>변경 중...</code>(<code>page.tsx:144</code>). 셋 다 백엔드 응답에 달려 있어 정적 화면에서 만들 수 없다. 개발 시 반영 대상</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
+              <tr><td class="k">화면 문구 8종<span class="src-line">안내 · 공백 · 허용밖 특수문자 · 규칙 미충족 · 통과 · 확인 기본/일치/불일치</span></td><td>가맹점 Web</td><td><code>merchant lib/passwordPolicy.ts:12-19</code>의 <code>PASSWORD_MESSAGES</code> 8개를 문자 그대로 옮겼다(제품 UI 문구이므로 문서 문체로 고치지 않는다). 완료 토스트는 <code>page.tsx:54</code>. <strong>재현 경로가 없어 화면에 넣지 않은 문구 3종</strong> — <code>비밀번호 변경에 실패했습니다.</code>(<code>page.tsx:65</code>) · <code>서버 통신 중 오류가 발생했습니다.</code>(<code>page.tsx:69</code>) · 제출 중 버튼 <code>변경 중...</code>(<code>page.tsx:147</code>). 셋 다 백엔드 응답에 달려 있어 정적 화면에서 만들 수 없다. 구현 단계 항목</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
             </tbody>
           </table></div>
         </div>
@@ -1293,11 +1284,11 @@
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-17</span><div><div class="gi-title">투자자 계약의 상태 필드 부재</div><div class="gi-what">계약DB에 <code>계약상태</code>·<code>해지일</code>·<code>종료일</code> 필드가 없다(<code>분석 figma_policy_db.md</code>)</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 계약의 해지·만료를 어디에 기록합니까? 해지된 투자자의 어드민 접근은 어떻게 차단합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-18</span><div><div class="gi-title">투자 원금 잔액과 기존 "잔액" 필드 4종의 혼용 위험</div><div class="gi-what">코드에 남아 있는 잔액성 필드는 이관 부채(<code>debt.remainingAmount</code>)·미회수 이월(<code>carryForwardAmount</code>)·광고비 누적 미회수(<code>outstandingAmount</code>)·현장결제 미회수(<code>offlinePendingTotal</code>) 4종이며 전부 다른 개념이다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자 원금 잔액을 새 필드로 신설합니까? 위 4개 필드 중 어느 것도 원금 잔액으로 전용하지 않는다는 확인이 필요합니다.</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-18</span><div><div class="gi-title">투자 원금 잔액과 기존 "잔액" 필드 4종의 혼용 위험</div><div class="gi-what">코드에 남아 있는 잔액성 필드는 이관 부채(<code>debt.remainingAmount</code>)·미회수 이월(<code>carryForwardAmount</code>)·광고비 누적 미회수(<code>outstandingAmount</code>)·현장결제 미회수(<code>offlinePendingTotal</code>) 4종이며 전부 다른 개념이다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자 원금 잔액을 새 필드로 신설합니까? 위 4개 필드 중 어느 것도 원금 잔액으로 전용하지 않는다는 확인이 필요하다.</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-19</span><div><div class="gi-title">본인 비밀번호 변경 기능 부재</div><div class="gi-what">운영 어드민 전체에 본인 비밀번호 변경이 없다. 관리자가 가맹점 비밀번호를 초기화하는 모달만 존재. 가맹점 Web에는 완성된 화면·정책이 있어(<code>app/my-info/change-password/page.tsx</code>, <code>lib/passwordPolicy.ts</code>) 설계 화면은 그것을 따랐다 — 규칙은 8~16자·영문·숫자·허용 특수문자 <code>!@#$%^&amp;*()</code>, 세션 처리는 변경 1.5초 뒤 강제 로그아웃. <strong>어드민 적용 여부만 미결</strong></div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>참여자 계정의 본인 비밀번호 변경 API가 백엔드에 있습니까? 없다면 신규 개발 범위에 포함합니까? 비밀번호 규칙과 변경 후 세션 무효화 정책은 무엇입니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-20</span><div><div class="gi-title">서버측 인가 부재</div><div class="gi-what">서버사이드 미들웨어가 없고 라우트 보호가 클라이언트 기반. 참여자 5종의 프론트 화면이 동일해 차이가 전부 서버 응답 범위에서 난다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 계정에 대한 API 응답 필터링(타 투자자·페이허그 마진·미배정 가맹점 제외)을 백엔드에서 보장합니까? 프론트 조건부 렌더에 의존하지 않는다는 확인이 필요합니다.</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-20</span><div><div class="gi-title">서버측 인가 부재</div><div class="gi-what">서버사이드 미들웨어가 없고 라우트 보호가 클라이언트 기반. 참여자 5종의 프론트 화면이 동일해 차이가 전부 서버 응답 범위에서 난다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 계정에 대한 API 응답 필터링(타 투자자·페이허그 마진·미배정 가맹점 제외)을 백엔드에서 보장합니까? 프론트 조건부 렌더에 의존하지 않는다는 확인이 필요하다.</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-21</span><div><div class="gi-title">현행 <code>INVESTOR</code> 계정의 기존 노출 범위 처리</div><div class="gi-what">투자자는 이미 파트너 공용 4메뉴와 정산현황 3탭(선정산 결과·차액 정산·이체 내역)을 본다. 투자자 전용 뷰를 신설해도 이 경로는 그대로 남는다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 전용 메뉴를 신설하면 기존 참여자 공용 메뉴는 투자자에게 닫습니까, 병존시킵니까? `isInvestorUser()` 헬퍼를 신설해 메뉴 그룹을 분기하는 방향이 맞습니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
@@ -1388,59 +1379,55 @@
 
   <!-- ============================ 9. 부록 ============================ -->
   <section class="sec">
-    <div class="sec-head"><span class="sec-no">09</span><h2>부록 — 근거에서 제외된 것</h2></div>
-    <p class="sec-lead">근거 원천은 스토리보드 단독. 플로우차트 PPT는 제외했다. 아래는 그 제외로 삭제되거나 판정이 되돌아간 항목의 목록이며, 제외된 자료의 내용 자체는 옮기지 않는다.</p>
+    <div class="sec-head"><span class="sec-no">09</span><h2>부록 — 근거 범위</h2></div>
+    <p class="sec-lead">근거 원천은 스토리보드 단독. 플로우차트 PPT는 근거로 쓰지 않으며 그 내용은 이 문서에 옮기지 않는다.</p>
 
-    <div class="sub-head">삭제 — 근거가 사라져 항목째 뺀 것</div>
+    <div class="sub-head">근거가 없어 미정으로 두는 항목</div>
     <div class="panel tight">
       <div class="scroll">
         <table class="dt">
-          <thead><tr><th style="width:34%">삭제한 항목</th><th>그 자리의 현재 상태</th></tr></thead>
+          <thead><tr><th style="width:34%">항목</th><th>현재 상태</th></tr></thead>
           <tbody>
-            <tr><td class="k">데이터 계층 구조</td><td>투자자 자산을 담는 테이블 계층이 정의되지 않은 상태로 되돌림. 운영 백엔드에 대응 테이블이 확인되지 않는다는 서술만 남는다</td></tr>
-            <tr><td class="k">처리단계 번호 체계</td><td>항목 전량 삭제</td></tr>
-            <tr><td class="k"><code>투자 수익</code> 산식</td><td>산식 근거가 없어졌다. 스토리보드는 열 이름만 두고 산식을 적지 않는다 → 확인 질문 4-3</td></tr>
-            <tr><td class="k"><code>금융일적수</code> 산식</td><td>항목 삭제. 스토리보드 각주에 대응 개념이 없다</td></tr>
-            <tr><td class="k"><code>W금융일수</code> 계산식</td><td>계산식은 삭제. 남는 것은 <code>SB s3</code> 각주의 정의(투자금액 가중 금융일수 평균)뿐</td></tr>
-            <tr><td class="k"><code>Ty수익율</code> 대안 정의</td><td>항목 삭제. 스토리보드 각주의 <code>할인율 × (365 / w금융일수)</code> 하나만 남는다. 두 정의가 충돌한다는 지적도 함께 철회</td></tr>
+            <tr><td class="k">데이터 계층 구조</td><td>투자자 자산을 담는 테이블 계층이 정의되지 않았다. 운영 백엔드에 대응 테이블이 확인되지 않는다</td></tr>
+            <tr><td class="k"><code>투자 수익</code> 산식</td><td>산식 근거가 없다. 스토리보드는 열 이름만 두고 산식을 적지 않는다 → 확인 질문 4-3</td></tr>
+            <tr><td class="k"><code>금융일적수</code> 산식</td><td>스토리보드 각주에 대응 개념이 없다</td></tr>
+            <tr><td class="k"><code>W금융일수</code> 계산식</td><td>근거는 <code>SB s3</code> 각주의 정의(투자금액 가중 금융일수 평균) 하나뿐</td></tr>
+            <tr><td class="k"><code>Ty수익율</code> 정의</td><td>근거는 스토리보드 각주의 <code>할인율 × (365 / w금융일수)</code> 하나뿐</td></tr>
             <tr><td class="k">현황 <code>투자실행금</code> 정의</td><td>정의가 비었다 → 확인 질문 4-1</td></tr>
-            <tr><td class="k">조회 스코프 명시</td><td>스코프는 <strong>어디에도 정의되지 않은 상태</strong>로 다룬다 → 확인 질문 4-12, 후보 7-16</td></tr>
-            <tr><td class="k">ID 체계 대응 규칙</td><td>항목 삭제. <code>MID</code>·<code>채권매매업체ID</code>가 코드의 어느 필드에 대응하는지는 미정 → 확인 질문 4-16</td></tr>
-            <tr><td class="k">서명자 <code>HID</code>의 실체 추정</td><td>항목 자체 삭제</td></tr>
-            <tr><td class="k">계약DB 저장 단계의 필드 라벨 어긋남</td><td>항목 자체 삭제</td></tr>
-            <tr><td class="k">쿠콘 이동 주소의 근거</td><td>설계안이 인쇄한 주소는 <code>SB s10</code> 삽입 이미지 주소창에 축자로 존재 → <strong>근거 있음</strong>. 확인 질문 4-11은 계정 스코프만 남는다</td></tr>
-            <tr><td class="k">분기 6곳의 실패 경로 부재 지적</td><td>확인 질문 4-9로 재정의 — "스토리보드 17장에 오류·실패 화면이 0장"</td></tr>
-            <tr><td class="k">인증서 스윔레인</td><td>설계안의 <code>하나은행 인증서</code> 문구는 <strong>근거 없는 임의 추가</strong>로 분류 → 확인 질문 4-8</td></tr>
-            <tr><td class="k">서명 대기 목록 산출 조건</td><td>항목 삭제. 목록 산출 조건은 미정의로 되돌림</td></tr>
+            <tr><td class="k">조회 스코프</td><td><strong>어디에도 정의되지 않은 상태</strong>로 다룬다 → 확인 질문 4-12, 후보 7-16</td></tr>
+            <tr><td class="k">ID 체계 대응 규칙</td><td><code>MID</code>·<code>채권매매업체ID</code>가 코드의 어느 필드에 대응하는지 미정 → 확인 질문 4-16</td></tr>
+            <tr><td class="k">쿠콘 이동 주소</td><td>설계안이 인쇄한 주소는 <code>SB s10</code> 삽입 이미지 주소창에 축자로 존재 → <strong>근거 있음</strong>. 확인 질문 4-11은 계정 스코프만 남는다</td></tr>
+            <tr><td class="k">실패 경로</td><td>스토리보드 17장에 오류·실패 화면이 0장 → 확인 질문 4-9</td></tr>
+            <tr><td class="k">인증서 연동</td><td>설계안의 <code>하나은행 인증서</code> 문구는 <strong>근거 없는 임의 추가</strong> → 확인 질문 4-8</td></tr>
+            <tr><td class="k">서명 대기 목록 산출 조건</td><td>미정의</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <div class="sub-head">강등 — 판정을 되돌린 것</div>
+    <div class="sub-head">판정</div>
     <div class="panel tight">
       <div class="scroll">
         <table class="dt">
-          <thead><tr><th style="width:26%">대상</th><th style="width:90px">이전</th><th style="width:90px">현재</th><th>바뀐 이유</th></tr></thead>
+          <thead><tr><th style="width:26%">대상</th><th style="width:110px">판정</th><th>근거</th></tr></thead>
           <tbody>
-            <tr><td class="k">로그인 화면 블록</td><td class="c"><span class="j j-hyp">가설</span></td><td class="c"><span class="j j-hyp">가설</span></td><td>판정은 유지하되 근거를 운영 어드민 코드로 재설정. 스토리보드는 이 화면을 참고 스크린샷으로만 두었다는 사실을 명시</td></tr>
-            <tr><td class="k">증명서 발급 절차 #5·#8</td><td class="c"><span class="j j-chk">확인필요</span></td><td class="c"><span class="j j-chk">확인필요</span></td><td>절차 근거를 <code>SB s3</code>⑬ 원문으로 재설정. 검증 실패 분기 언급은 삭제</td></tr>
-            <tr><td class="k">정산채권 양수 #22 계약서 열람</td><td class="c"><span class="j j-fix">확정</span></td><td class="c"><span class="j j-hyp">가설</span></td><td>스토리보드는 리스트와 <code>서명하기</code>만 보여주고 열람 동선을 그리지 않는다</td></tr>
-            <tr><td class="k">정산채권 양수 #23 대상 선택</td><td class="c"><span class="j j-fix">확정</span></td><td class="c"><span class="j j-hyp">가설</span></td><td>개별 선택 UI가 스토리보드에 명시되지 않는다</td></tr>
-            <tr><td class="k">서명 대기 목록 데이터</td><td class="c"><span class="j j-hyp">가설</span></td><td class="c"><span class="j j-hyp">가설</span></td><td>판정 유지, 서술을 "목록 산출 조건이 스토리보드에 없다"로 변경</td></tr>
-            <tr><td class="k">계약기록 MID·재양도합의서</td><td class="c"><span class="j j-hyp">가설</span></td><td class="c"><span class="j j-hyp">가설</span></td><td>판정 유지, 근거를 <code>SB s16</code> 표 영역으로 재설정</td></tr>
-            <tr><td class="k">계약기록 화면 블록</td><td class="c"><span class="j j-hyp">가설</span></td><td class="c"><span class="j j-hyp">가설</span></td><td>판정 유지하되 "스코프 명시" 서술 삭제 — 스토리보드는 범위를 적지 않는다</td></tr>
-            <tr><td class="k">쿠콘 #16 외부 이동</td><td class="c"><span class="j j-fix">확정</span></td><td class="c"><span class="j j-fix">확정</span></td><td>요구 근거와 URL 근거 모두 유지. 주소는 <code>SB s10</code> 삽입 이미지 주소창이 원천</td></tr>
-            <tr><td class="k">쿠콘 화면 블록</td><td class="c"><span class="j j-fix">확정</span> <span class="j j-chk">병기</span></td><td class="c"><span class="j j-chk">확인필요</span></td><td>페이허그가 보여주는 데이터가 0건이고 계정 스코프가 미정</td></tr>
-            <tr><td class="k">투자 수익 화면 블록</td><td class="c"><span class="j j-hyp">가설</span></td><td class="c"><span class="j j-chk">확인필요</span></td><td>산식 근거가 사라져 <code>투자 수익</code> 열의 정의가 비었다</td></tr>
-            <tr><td class="k">투자 수익 #10~#12</td><td class="c"><span class="j j-fix">확정</span></td><td class="c"><span class="j j-fix">확정</span></td><td>판정 유지, 근거를 <code>SB s7</code> + 운영 어드민 부품으로 재설정</td></tr>
-            <tr><td class="k">가맹점 #17·#18 필터</td><td class="c"><span class="j j-chk">확인필요</span></td><td class="c"><span class="j j-chk">확인필요</span></td><td>판정 유지, 요구 근거를 <code>SB s14</code>로 재설정</td></tr>
-            <tr><td class="k">가맹점 #20 초기화</td><td class="c"><span class="j j-hyp">가설</span></td><td class="c"><span class="j j-fix">확정</span></td><td><code>SB s14</code>에 <code>초기화</code> 버튼이 있다</td></tr>
-            <tr><td class="k">엑셀 시트 제목·기준일 서식</td><td class="c"><span class="j j-fix">확정</span></td><td class="c"><span class="j j-hyp">가설</span></td><td>스토리보드에 엑셀 서식 규칙이 없다 → 확인 질문 4-22 신설</td></tr>
-            <tr><td class="k">W금융일수·S입금부족율·Ty수익율</td><td class="c"><span class="j j-hyp">가설</span></td><td class="c"><span class="j j-fix">확정</span> <span class="src">정의</span><br><span class="j j-chk">확인필요</span> <span class="src">원천</span></td><td>스토리보드 각주가 유일하고 확정적인 정의 근거이며, 이것이 현행 계산 기준이다</td></tr>
-            <tr><td class="k">미구현·선결 항목 수</td><td class="c">20건</td><td class="c">23건</td><td>전용 4건 삭제, 재정의 1건, 신설 6건</td></tr>
-            <tr><td class="k">후보 7-15</td><td class="c">산식 3개</td><td class="c">할인율 1개</td><td>산식 1개를 빼고 스토리보드 각주 중심으로 재작성</td></tr>
-            <tr><td class="k">후보 7-16</td><td class="c">표기 불일치</td><td class="c">범위 미표기</td><td>"스토리보드가 조회 범위를 한 번도 명시하지 않는다"가 근거</td></tr>
+            <tr><td class="k">로그인 화면 블록</td><td class="c"><span class="j j-hyp">가설</span></td><td>운영 어드민 코드. 스토리보드는 이 화면을 참고 스크린샷으로만 둔다</td></tr>
+            <tr><td class="k">증명서 발급 절차 #5·#8</td><td class="c"><span class="j j-chk">확인필요</span></td><td><code>SB s3</code>⑬ 원문</td></tr>
+            <tr><td class="k">정산채권 양수 #22 계약서 열람</td><td class="c"><span class="j j-hyp">가설</span></td><td>스토리보드는 리스트와 <code>서명하기</code>만 보여주고 열람 동선을 그리지 않는다</td></tr>
+            <tr><td class="k">정산채권 양수 #23 대상 선택</td><td class="c"><span class="j j-hyp">가설</span></td><td>개별 선택 UI가 스토리보드에 명시되지 않는다</td></tr>
+            <tr><td class="k">서명 대기 목록 데이터</td><td class="c"><span class="j j-hyp">가설</span></td><td>목록 산출 조건이 스토리보드에 없다</td></tr>
+            <tr><td class="k">계약기록 MID·재양도합의서</td><td class="c"><span class="j j-hyp">가설</span></td><td><code>SB s16</code> 표 영역</td></tr>
+            <tr><td class="k">계약기록 화면 블록</td><td class="c"><span class="j j-hyp">가설</span></td><td>스토리보드는 조회 범위를 적지 않는다</td></tr>
+            <tr><td class="k">쿠콘 #16 외부 이동</td><td class="c"><span class="j j-fix">확정</span></td><td>요구 근거와 URL 근거 모두 있다. 주소는 <code>SB s10</code> 삽입 이미지 주소창이 원천</td></tr>
+            <tr><td class="k">쿠콘 화면 블록</td><td class="c"><span class="j j-chk">확인필요</span></td><td>페이허그가 보여주는 데이터가 0건이고 계정 스코프가 미정</td></tr>
+            <tr><td class="k">투자 수익 화면 블록</td><td class="c"><span class="j j-chk">확인필요</span></td><td><code>투자 수익</code> 열의 정의가 비었다</td></tr>
+            <tr><td class="k">투자 수익 #10~#12</td><td class="c"><span class="j j-fix">확정</span></td><td><code>SB s7</code> + 운영 어드민 부품</td></tr>
+            <tr><td class="k">가맹점 #17·#18 필터</td><td class="c"><span class="j j-chk">확인필요</span></td><td>요구 근거는 <code>SB s14</code>. 운영 코드에 대응이 없다</td></tr>
+            <tr><td class="k">가맹점 #20 초기화</td><td class="c"><span class="j j-fix">확정</span></td><td><code>SB s14</code>에 <code>초기화</code> 버튼이 있다</td></tr>
+            <tr><td class="k">엑셀 시트 제목·기준일 서식</td><td class="c"><span class="j j-hyp">가설</span></td><td>스토리보드에 엑셀 서식 규칙이 없다 → 확인 질문 4-22</td></tr>
+            <tr><td class="k">W금융일수·S입금부족율·Ty수익율</td><td class="c"><span class="j j-fix">확정</span> <span class="src">정의</span><br><span class="j j-chk">확인필요</span> <span class="src">원천</span></td><td>스토리보드 각주가 유일하고 확정적인 정의 근거이며, 이것이 현행 계산 기준이다</td></tr>
+            <tr><td class="k">후보 7-15</td><td class="c"><span class="j j-chk">확인필요</span></td><td><code>할인율</code>의 실체 1건. 스토리보드 각주가 근거</td></tr>
+            <tr><td class="k">후보 7-16</td><td class="c"><span class="j j-chk">확인필요</span></td><td>스토리보드가 조회 범위를 한 번도 명시하지 않는다</td></tr>
           </tbody>
         </table>
       </div>

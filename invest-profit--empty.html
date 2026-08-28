@@ -25,6 +25,7 @@
   .tbl-head .toggle { margin-bottom: 0; }
   .tbl tfoot td { background: var(--gray-50); border-top: 1px solid var(--gray-100); border-bottom: 0; font-weight: 700; color: var(--gray-900); }
   .avg-sub { display: block; font-size: 10px; line-height: 12px; font-weight: 400; color: var(--gray-400); font-family: var(--font-sans); }
+  .range-warn { margin: 8px 0 0; font-size: 12px; line-height: 16px; color: var(--red-500); }
 
   /* ── 상태 뱃지 (제안서 화면 구분용) ── */
   .page-title .state-badge {
@@ -137,6 +138,7 @@
         <button class="btn btn-primary">검색</button>
         <button class="btn btn-outline">초기화</button>
       </div>
+      <p class="range-warn" hidden>시작일은 종료일보다 이후일 수 없습니다.</p>
       <div class="toggle">
         <button class="toggle-btn active">일별</button>
         <button class="toggle-btn">주별</button>

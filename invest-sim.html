@@ -27,6 +27,7 @@
   .tbl tr.total-row td { background: var(--gray-50); border-top: 1px solid var(--gray-100); font-weight: 700; color: var(--gray-900); }
   .tbl tfoot td { background: var(--gray-50); border-top: 1px solid var(--gray-100); border-bottom: 0; font-weight: 700; color: var(--gray-900); }
   .avg-sub { display: block; font-size: 10px; line-height: 12px; font-weight: 400; color: var(--gray-400); font-family: var(--font-sans); }
+  .range-warn { margin: 8px 0 0; font-size: 12px; line-height: 16px; color: var(--red-500); }
   /* ── 투자 시뮬레이션 ────────────────────────────────────────
      규격은 payhug-admin-web/app/settlement/simulation/page.tsx 의 유틸리티 값을 옮긴 것이다.
      :212 grid-cols-2 gap-4 → 항목이 6개라 3열, :265 flex items-center gap-3 bg-gray-50 rounded-lg px-3 py-2 → .sim-row,
@@ -179,6 +180,7 @@
           <input type="date" id="sim-to" class="input" value="2026-08-27">
         </div>
       </div>
+      <p class="range-warn" hidden>시작일은 종료일보다 이후일 수 없습니다.</p>
     </div>
 
     <div class="card mb-6">

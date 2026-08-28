@@ -192,8 +192,6 @@
   .step-note { display: block; font-size: 12px; line-height: 16px; font-weight: 400; color: var(--gray-400); margin-top: 2px; }
 
   /* ── 모달 부속 ────────────────────────────────────────────── */
-  .modal-guide { font-size: 12px; line-height: 18px; color: var(--gray-400); margin: 0; }
-  [data-modal="acquisition-signing"] .modal-guide { color: var(--gray-500); text-align: center; }
   .modal .done-head { text-align: center; }
   .modal .done-icon {
     width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 16px;
@@ -368,7 +366,6 @@
   .login-links a { font-size: 12px; line-height: 16px; color: var(--gray-500); text-decoration: none; cursor: pointer; }
   .login-links a:hover { color: var(--gray-700); text-decoration: underline; }
   .login-links .link-off { font-size: 12px; line-height: 16px; color: var(--gray-300); text-decoration: none; cursor: not-allowed; }
-  .login-note { width: 100%; max-width: 400px; margin: 20px 0 0; font-size: 12px; line-height: 18px; color: var(--gray-400); text-align: center; }
 
   /* ── 랜딩 갤러리 ──────────────────────────────────────────── */
   .wrap { max-width: 1024px; margin: 0 auto; padding: 56px 32px 64px; }
@@ -1099,8 +1096,6 @@
     </div>
 
   </div>
-
-  <p class="login-note">계정 발급은 페이허그 담당자에게 문의.</p>
   </div>
 </section>
 
@@ -1233,7 +1228,6 @@
           </span>
         </div>
       </div>
-      <p class="modal-guide">서명 완료까지 창을 닫지 말 것.</p>
     </div>
     <div class="modal-footer">
       <button class="btn btn-primary" disabled>서명 진행 중</button>
@@ -2043,7 +2037,7 @@ RENDER['invest-assets'] = function(){
 
   var h = '<thead><tr><th>자산 구분</th><th class="num">금액 (원)</th><th class="num">W금융일수</th>' +
           '<th class="num">S입금부족율</th><th class="num">Ty수익율</th><th class="num">비중</th><th>보관</th></tr></thead><tbody>';
-  if(!arows.length){ h += emptyRow(7, '조회된 자산 구분이 없습니다.'); }
+  if(!arows.length){ h += emptyRow(7, '조회 결과가 없습니다.'); }
   else {
     for(i = 0; i < arows.length; i++){
       var a = arows[i];
@@ -2072,7 +2066,7 @@ RENDER['invest-assets'] = function(){
   var IA_HEAD = '<th>가맹점</th><th class="num">투자금액 (원)</th><th class="num">W금융일수</th>' +
                 '<th class="num">S입금부족율</th><th class="num">Ty수익율</th><th class="num">비중</th>';
   if(!mrows.length){
-    mm.innerHTML = emptyTable(IA_HEAD, 6, '조회된 투자자산이 없습니다.');
+    mm.innerHTML = emptyTable(IA_HEAD, 6, '조회 결과가 없습니다.');
     mp.innerHTML = '';
     M('ia-size', 'invest-assets').innerHTML = '';
   } else {
@@ -2670,7 +2664,7 @@ RENDER['acquisition-list'] = function(){
       /* 계약서보기 — 서명하기와 별개 액션이다(대표 미팅 2026-08-28 M-1) */
       '<a class="doc-link" data-act="aq-view" data-i="' + i + '" href="#">계약서보기</a></div>';
   }
-  M('aq-rows', 'acquisition-list').innerHTML = shown ? h : emptyLine('서명 대기 계약이 없습니다.');
+  M('aq-rows', 'acquisition-list').innerHTML = shown ? h : emptyLine('조회 결과가 없습니다.');
 
   M('ab-count').textContent = aqCount();
   var btn = M('ab-btn');
@@ -2734,7 +2728,7 @@ RENDER['contracts'] = function(){
     box.innerHTML = emptyTable(
       '<th style="width:48px"><input type="checkbox" class="chk" disabled></th>' +
       '<th class="no">No</th><th>MID</th><th>가맹점</th>' +
-      '<th>전자서명 결과</th><th class="center">서명 수단</th>', 6, '보관된 계약문서가 없습니다.');
+      '<th>전자서명 결과</th><th class="center">서명 수단</th>', 6, '조회 결과가 없습니다.');
     ctp.innerHTML = ''; ctp.hidden = true;
     M('ct-size', 'contracts').innerHTML = '';
     return;

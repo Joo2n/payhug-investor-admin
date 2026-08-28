@@ -558,7 +558,10 @@ id 자체는 화면에 없다. `가맹점`의 `가맹점id` 열이 id의 첫 조
 
 **이 용어가 들어가는 기호** [`di`](#sym-di) [[shot: invest-profit | anchor: th:정산예정일 | kind: direct]]
 
-`투자 수익` 일별 투자수익 표의 첫 열. 현재 열 이름은 `입금일자`이고, 원문 지시대로면 `정산예정일`로 ">
+`투자 수익` 일별 투자수익 표의 첫 열. 열 이름은 `정산예정일`이다.
+
+
+`투자 시뮬레이션`에서는 정산금채">
 <div class="term-head"><span class="term-no">06</span><h3 data-field="term">정산예정일</h3><span class="chip screenlab">화면 표기 정산예정일</span><span class="chip lv ui">화면 용어</span></div>
 <p class="lede-line">카드사·배달앱이 돈을 넣어 주기로 한 날이다. 투자자 입장에서는 <b>돈이 돌아올 날</b>이다. 이 날이 지나면 그 채권은 잔액 계통에서 빠지고 유량 계통으로 넘어간다.</p>
 <div class="fld" data-field="var"><div class="fh"><span class="n">2</span>변수<span class="ko">대표 정의 원문 기호</span></div>
@@ -582,8 +585,7 @@ id 자체는 화면에 없다. `가맹점`의 `가맹점id` 열이 id의 첫 조
 </button>
 <figcaption><b>투자 수익</b> · 정산예정일
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><p><code>투자 수익</code> 일별 투자수익 표의 첫 열. 현재 열 이름은 <code>입금일자</code>이고, 원문 지시대로면 <code>정산예정일</code>로 바뀐다.</p>
-<p><b>2026-08-28 캡처 실측</b> — 화면에는 이미 <code>정산예정일</code>로 적용돼 있다. 원문 지시가 반영된 상태다.</p>
+</figure><p><code>투자 수익</code> 일별 투자수익 표의 첫 열. 열 이름은 <code>정산예정일</code>이다.</p>
 <p><code>투자 시뮬레이션</code>에서는 정산금채권 입력의 <code>정산예정일</code> 칸이고, 실행하면 일별 투자수익 표의 첫 열이 된다.</p>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
@@ -2630,10 +2632,10 @@ PSA + PSC = 4,248,171,647
 
 ⑤ = 12.9653% × 0.826490 = 10.7157%
 → 10.72%</pre>
-<p><b>현재 화면은 <code>10.70%</code>다.</b> 화면은 원문 산식(유량 기준) 그대로이고, <code>0.01%p</code> 차이는 <a class="xref" href="#t47"><code>④</code></a>를 <code>0.110121%</code>가 아니라 <code>0.11%</code>로 잡아 <code>12.9516%</code>에서 출발하기 때문이다.</p>
+<p>화면 표기도 <code>10.72%</code>다. 원문 산식(유량 기준)을 그대로 쓴다.</p>
 <p>분모를 잔액으로 놓으면 값이 크게 달라진다.</p>
-<pre class="calc">유량(원문·화면)  12.95% × (PSA 3,511,071,647 ÷ (PSA+PSC) 4,248,171,647) =  10.70%
-잔액             12.95% × (투자실행액 1,523,100,000 ÷ 투자자산 1,628,400,000) = 12.11%</pre>
+<pre class="calc">유량(원문·화면)  12.97% × (PSA 3,511,071,647 ÷ (PSA+PSC) 4,248,171,647) =  10.72%
+잔액             12.97% × (투자실행액 1,523,100,000 ÷ 투자자산 1,628,400,000) = 12.13%</pre>
 <p>차이가 나는 이유는 분모의 성격이다. 잔액 기준으로는 현금이 전체의 6.5%뿐이지만, 유량 기준으로는 <a class="xref" href="#t46"><code>PSC</code></a>가 잔액을 7번 더한 값이라 전체의 17.4%를 차지한다.</p>
 </div>
 <div class="fld" data-field="screen"><div class="fh"><span class="n">4</span>화면<span class="ko">눌러서 확대</span></div>
@@ -2881,13 +2883,12 @@ w금융일수     3.2
 <pre class="calc">[있음]  카드·배달 매출 원천        →  총 매출액 · 총 수수료 · 순지급액 · 선정산 지급액
         가맹점↔투자자 매칭          →  누가 누구 것인지
         요율 정책(투자자 몫 포함)    →  얼마씩 나눌지
-──────────────────────────────────────────────────────────────────────
+        화면 껍데기
+
 [없음]  ▸ 정산금채권이라는 단위 자체
         ▸ 채권 1건에 실제 입금액을 붙이는 대사
         ▸ 투자자별 쿠콘 가상계좌
-        ▸ 재양도 합의서와 그 효력기간
-──────────────────────────────────────────────────────────────────────
-[있음]  화면 껍데기(투자자 어드민 HTML 35종)</pre>
+        ▸ 재양도 합의서와 그 효력기간</pre>
 <p><b>가장 큰 병목은 첫 줄이다 — 정산금채권이라는 단위가 현행에 없다.</b></p>
 <p>대표 정의는 채권 하나를 <code>가맹점ID &amp; 플랫폼ID &amp; 매출일자</code>로 집는다. 그런데 지금 페이허그의 정산 배치는 <b><code>가맹점 × 매출일</code></b> 축까지만 쪼갠다(<code>payhug-admin-web/types/settlement.ts:33-48</code>). 플랫폼 차원이 없다. 그래서 한 배치 안에 신한카드 건과 배민 건이 섞여 들어가 한 덩어리로 이체된다.</p>
 <p>이게 왜 치명적이냐면, <b>채권 단위가 없으면 그 아래가 하나도 안 선다.</b></p>
@@ -2943,7 +2944,7 @@ w금융일수     3.2
 <section class="sec" id="apx6"><h2>부록 G. 물어야 할 것</h2>
 <p>정의가 없거나 근거가 갈려 아직 못 정한 것을 한자리에 모은 것이다. 누구에게 물을지로 갈라 두었다.</p>
 <h3 class="blk-title">G-1. 대표님께 — 정의가 없어서 못 정하는 것 (8)</h3>
-<div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>#</th><th>물음</th><th>왜 급한가</th></tr></thead><tbody><tr><td><b>Q-2</b></td><td><a class="xref" href="#t29"><code>미지급금</code></a>·<a class="xref" href="#t30"><code>과지급금</code></a>의 <b>주체와 방향</b></td><td>정책서 6대 개념(페이허그→가맹점)과 반대로 읽힌다. 잘못 붙이면 상환액이 거꾸로 계산된다</td></tr><tr><td><b>Q-3</b></td><td><code>SLi = 미지급액 − 과지급액</code>에는 <code>max(0, …)</code>가 없는데 상환액·투자수익에는 있다. <b>의도인가</b></td><td>S입금부족율이 음수로 나올 수 있다</td></tr><tr><td><b>Q-4</b></td><td><code>max(0, …)</code>로 잘려 나간 초과분(과지급 &gt; 미지급)은 <b>어디로 가나</b></td><td>이월인지 소멸인지</td></tr><tr><td><b>Q-5</b></td><td>1번 이미지 금융일수 예시 <code>선정산일 260827, 정산예정일 260808 → 1</code>은 <b>날짜가 역순이다.</b> 오타인가</td><td>판별 자체는 2번 예시로 닫혔으나 원문 확인이 필요하다</td></tr><tr><td><b>Q-6</b></td><td><a class="xref" href="#t26"><code>투자자산</code></a>이 <b>잔액(투자실행액+순현금)</b> 인가 <b>유량(PSA+PSC)</b> 인가</td><td><a class="xref" href="#t48"><code>⑤</code></a>가 <code>12.11%</code>와 <code>10.70%</code>로 갈린다</td></tr><tr><td><b>Q-7</b></td><td><a class="xref" href="#t22"><code>ty수익율</code></a>이 <b>1번 이미지 식(할인율 기준)</b> 과 <b>2번 이미지 식(실제 수익율 기준)</b> 두 개인데, 화면 어느 자리에 어느 것을 쓰나</td><td>두 화면이 같은 라벨을 달고 있다</td></tr><tr><td><b>Q-8</b></td><td><a class="xref" href="#t49"><code>⑥</code></a> 산식의 <code>③</code>이 무엇인가. 원문이 참조한 <b>이미지 두 장을 받을 수 있나</b></td><td>일별 표 열 번호로 읽으면 맞아떨어지나 확인이 필요하다</td></tr><tr><td><b>Q-9</b></td><td>배치 산출 목록의 <code>평균순현금</code>과 정의문의 <code>EC(자정 잔액)</code>, <code>PSC(EC들의 합)</code>가 <b>서로 안 맞는다.</b> 어느 쪽인가</td><td>평균이냐 합이냐에 따라 <a class="xref" href="#t48"><code>⑤</code></a>가 달라진다</td></tr></tbody></table></div></div>
+<div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>#</th><th>물음</th><th>왜 급한가</th></tr></thead><tbody><tr><td><b>Q-2</b></td><td><a class="xref" href="#t29"><code>미지급금</code></a>·<a class="xref" href="#t30"><code>과지급금</code></a>의 <b>주체와 방향</b></td><td>정책서 6대 개념(페이허그→가맹점)과 반대로 읽힌다. 잘못 붙이면 상환액이 거꾸로 계산된다</td></tr><tr><td><b>Q-3</b></td><td><code>SLi = 미지급액 − 과지급액</code>에는 <code>max(0, …)</code>가 없는데 상환액·투자수익에는 있다. <b>의도인가</b></td><td>S입금부족율이 음수로 나올 수 있다</td></tr><tr><td><b>Q-4</b></td><td><code>max(0, …)</code>로 잘려 나간 초과분(과지급 &gt; 미지급)은 <b>어디로 가나</b></td><td>이월인지 소멸인지</td></tr><tr><td><b>Q-5</b></td><td>1번 이미지 금융일수 예시 <code>선정산일 260827, 정산예정일 260808 → 1</code>은 <b>날짜가 역순이다.</b> 오타인가</td><td>판별 자체는 2번 예시로 닫혔으나 원문 확인이 필요하다</td></tr><tr><td><b>Q-6</b></td><td><a class="xref" href="#t26"><code>투자자산</code></a>이 <b>잔액(투자실행액+순현금)</b> 인가 <b>유량(PSA+PSC)</b> 인가</td><td><a class="xref" href="#t48"><code>⑤</code></a>가 <code>12.13%</code>와 <code>10.72%</code>로 갈린다</td></tr><tr><td><b>Q-7</b></td><td><a class="xref" href="#t22"><code>ty수익율</code></a>이 <b>1번 이미지 식(할인율 기준)</b> 과 <b>2번 이미지 식(실제 수익율 기준)</b> 두 개인데, 화면 어느 자리에 어느 것을 쓰나</td><td>두 화면이 같은 라벨을 달고 있다</td></tr><tr><td><b>Q-8</b></td><td><a class="xref" href="#t49"><code>⑥</code></a> 산식의 <code>③</code>이 무엇인가. 원문이 참조한 <b>이미지 두 장을 받을 수 있나</b></td><td>일별 표 열 번호로 읽으면 맞아떨어지나 확인이 필요하다</td></tr><tr><td><b>Q-9</b></td><td>배치 산출 목록의 <code>평균순현금</code>과 정의문의 <code>EC(자정 잔액)</code>, <code>PSC(EC들의 합)</code>가 <b>서로 안 맞는다.</b> 어느 쪽인가</td><td>평균이냐 합이냐에 따라 <a class="xref" href="#t48"><code>⑤</code></a>가 달라진다</td></tr></tbody></table></div></div>
 <h3 class="blk-title">G-2. 대표님·계약 담당에게 — 값의 범위 (3)</h3>
 <div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>#</th><th>물음</th><th>왜</th></tr></thead><tbody><tr><td><b>Q-11</b></td><td>할인율이 <b>가맹점마다 다른가, 전 채권 단일인가</b></td><td>가맹점별이면 <code>× (1−할인율)</code>을 합계 밖으로 못 뺀다. 정산상품은 가맹점별 배정이고(<code>app/merchants/[id]/page.tsx:226</code>) 계약서 제17조도 가맹점별 공란이다</td></tr><tr><td><b>Q-12</b></td><td>재양도 합의서의 <b>효력기간을 어떻게 정하나</b></td><td>서명일부터 무기한인지, 기간 계약인지. 대상 채권을 고르는 조건이다</td></tr><tr><td><b>Q-13</b></td><td>일별 표의 <a class="xref" href="#t35"><code>상환액</code></a>이라는 낱말을 <b>그대로 쓸 것인가</b></td><td>선정산은 계약상 상환청구권 없는 완전매입이라 <code>상환</code> 어감이 계약 성격과 어긋날 여지가 있다</td></tr></tbody></table></div></div>
 <h3 class="blk-title">G-3. 개발에게 — 실물 확인 (6)</h3>

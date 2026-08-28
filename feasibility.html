@@ -309,7 +309,7 @@
       <div class="vg-e">
         <div class="vg-label">정의가 없어 착수를 못 함</div>
         <div class="vg-val">0<span class="u">건 · E등급</span></div>
-        <div class="vg-desc">종전 3건(채권매입수수료 · 미지급금/과지급금 · ⑥ 지표의 ③)은 전부 내렸다. 근거는 §4.</div>
+        <div class="vg-desc">채권매입수수료 · 미지급금/과지급금 · ⑥ 지표의 ③ 세 건은 §4에서 B~C로 판정한다.</div>
       </div>
       <div class="vg-d">
         <div class="vg-label">외부에 의존</div>
@@ -619,24 +619,24 @@
     </div>
   </section>
 
-  <!-- ── 4. 종전 E등급 재판정 ── -->
+  <!-- ── 4. 정의 확인이 걸렸던 3건 ── -->
   <section class="sec">
-    <div class="sec-head"><span class="sec-no">4</span><h2>종전 E등급 3건 — 재판정 결과</h2></div>
-    <p class="sec-lead">종전에 착수 불가로 잡혔던 3건. 현재 판정은 전부 B~C이며 근거는 각 카드에 있다.</p>
+    <div class="sec-head"><span class="sec-no">4</span><h2>정의 확인이 걸렸던 3건</h2></div>
+    <p class="sec-lead">정의문 부재로 착수 가부가 갈리던 3건. 판정은 전부 B~C이며 근거는 각 카드에 있다.</p>
 
     <div class="ecard">
       <div class="ecard-head"><span class="eid">E-1</span><h4>채권매입수수료의 기준금액·요율</h4><span class="g g-B" style="margin-left:auto">B 계산만 추가</span></div>
       <dl>
         <dt>대상</dt>
         <dd>대표 정의 <code>투자수익 Mi = 채권매입수수료 − max(0, 미지급금−과지급금)</code>의 첫 항</dd>
-        <dt>종전 판정</dt>
-        <dd>E — <code>ceo_definitions.md</code>에 정의문이 없고, 재양도합의서 제8조 요율 칸이 공란(16건 전건)이라는 이유</dd>
-        <dt>재판정 근거</dt>
+        <dt>정의문 상태</dt>
+        <dd><code>ceo_definitions.md</code>에 정의문이 없고, 재양도합의서 제8조 요율 칸은 공란(16건 전건)</dd>
+        <dt>판정 근거</dt>
         <dd>요율은 <b>계약별로 달라지는 파라미터</b>다. 대표 자료에 기준이 있고, 실제 값은 계약 조건에 따라 정해져 어드민 요율 설정에 들어간다. 운영 코드에 <code>0.25</code>·<code>0.11</code> 리터럴이 0건인 것은 결함이 아니라 정상 — 값이 전부 DB <code>PolicyRate.rateBps</code>에서 내려온다(<code>app/settlement/policies/page.tsx:166</code>). 계약서 공란도 같은 이유다.</dd>
         <dt>재료</dt>
         <dd>금액 <code>marginFeeAmt</code> · <code>Payout.margin</code>(<code>types/settlement.ts:50</code>) · <code>LedgerItem.marginFee</code>(<code>usePurchaseLedger.ts:66</code>), 요율 행 <code>{ feeType: "MARGIN", targetRole: "INVESTOR" }</code>(<code>policies/page.tsx:108</code>·<code>:120</code>), 투자자 몫 판별 <code>role === "INVESTOR"</code>(<code>BatchDetailTab.tsx:609-675</code>)</dd>
         <dt>남는 것</dt>
-        <dd>요율 <b>값</b>은 C1 미확정 유지 — 화면 숫자는 계속 <code>예시값</code>으로 둔다. 값이 미확정인 것과 구현이 막히는 것은 별개다. 통 전체냐 투자자 몫이냐는 요율 행의 <code>targetRole</code>로 이미 갈려 있다.</dd>
+        <dd>요율 <b>값</b>은 정책서 C1 미확정 유지. 이 산출물의 화면은 D-22에 따라 <code>0.11%</code>를 고정 입력값으로 쓴다. 값이 미확정인 것과 구현이 막히는 것은 별개다. 통 전체냐 투자자 몫이냐는 요율 행의 <code>targetRole</code>로 이미 갈려 있다.</dd>
       </dl>
     </div>
 
@@ -645,10 +645,10 @@
       <dl>
         <dt>대상</dt>
         <dd><code>SB = 순지급액 − max(0, 미지급금−과지급금)</code> · <code>Mi = 채권매입수수료 − max(0, …)</code> · <code>SLi = 미지급액 − 과지급액</code></dd>
-        <dt>종전 판정</dt>
-        <dd>E — 정의문 부재. 방향을 <b>플랫폼 → 락계좌</b>(덜 들어온 돈)로 역산해 6대 개념과 <b>다른 개념</b>으로 격리했다.</dd>
-        <dt>정정</dt>
-        <dd>방향 역산이 틀렸다. 정의는 <b>미지급금 = 선정산으로 가맹점에 지급해야 하는데 못 준 금액</b>, <b>과지급금 = 가맹점에 더 나간 금액</b>이다. 어드민 정산 로직에 이미 있는 개념이고, 정책서 6대 개념의 <code>미지급금</code>(02 §2)·<code>과지급</code>(02 §4)과 <b>같은 것</b>이다. 제7의 축 격리는 해제한다.</dd>
+        <dt>정의문 상태</dt>
+        <dd><code>ceo_definitions.md</code>에 정의문이 없다. 방향을 <b>플랫폼 → 락계좌</b>(덜 들어온 돈)로 읽으면 6대 개념과 어긋난다</dd>
+        <dt>판정 근거</dt>
+        <dd>정의는 <b>미지급금 = 선정산으로 가맹점에 지급해야 하는데 못 준 금액</b>, <b>과지급금 = 가맹점에 더 나간 금액</b>이다. 어드민 정산 로직에 이미 있는 개념이고, 정책서 6대 개념의 <code>미지급금</code>(02 §2)·<code>과지급</code>(02 §4)과 <b>같은 것</b>이다. 제7의 축 격리는 해제한다.</dd>
         <dt>미지급금 — A</dt>
         <dd>미정산 누락 도메인이 그대로 이 값이다. 전체 합 <code>MissedSettlementsData.totalAmount</code>(<code>types/settlement.ts:651</code>) · 가맹점별 <code>totalNetPayoutAmt</code>(<code>:645</code>) · 날짜별 <code>netPayoutAmt</code>(<code>:635</code>) · 건별 <code>netPayoutAmt</code>(<code>:624</code>). 화면 라벨 <b>미지급</b>(<code>PreSettlementTab.tsx:1269</code>), 엑셀 헤더 <b>미지급액</b>(<code>:385</code>). 조회 <code>GET /admin/settlement/missed-settlements</code>(<code>useSettlementOverview.ts:349</code>). 배너 정의문(<code>PreSettlementTab.tsx:1197</code>) — “정산 배치가 완료된 날짜에 뒤늦게 도착하여 선정산 처리가 누락된 건”. 해소 액션도 <code>바로이체</code>·<code>이미지급(기록만)</code> 두 갈래(<code>:1214</code>·<code>:1221</code>)로 <b>미지급 상태</b>임을 확인시킨다.</dd>
         <dt>과지급금 — B</dt>
@@ -665,10 +665,10 @@
       <dl>
         <dt>대상</dt>
         <dd><code>⑥ = (④ / ③) × 365 / ⑤</code> — 일별 투자수익 표의 마지막 열</dd>
-        <dt>종전 판정</dt>
-        <dd>E — 참조 이미지가 <code>ceo_definitions.docx</code>에 없어 번호가 가리키는 자리를 모른다는 이유</dd>
-        <dt>재판정 근거</dt>
-        <dd><code>marker_legend.md</code>가 스토리보드 캡처 2장의 번호 마커로 대응을 전건 복원했다. ⑥의 내부 ④③⑤ = 일별 표의 4·3·5(투자수익·투자실행금·w금융일수). 즉 <code>③</code> = <b>일별표 투자실행금</b>이다. 종전 문서가 이 갱신을 놓쳤다.</dd>
+        <dt>정의문 상태</dt>
+        <dd>참조 이미지가 <code>ceo_definitions.docx</code>에 없어 번호가 가리키는 자리를 원문만으로는 못 짚는다</dd>
+        <dt>판정 근거</dt>
+        <dd><code>marker_legend.md</code>가 스토리보드 캡처 2장의 번호 마커로 대응을 전건 복원했다. ⑥의 내부 ④③⑤ = 일별 표의 4·3·5(투자수익·투자실행금·w금융일수). 즉 <code>③</code> = <b>일별표 투자실행금</b>이다.</dd>
         <dt>산식</dt>
         <dd><code>⑥ = (투자수익 ÷ 투자실행금) × 365 ÷ w금융일수</code></dd>
         <dt>동명 문제</dt>
@@ -953,7 +953,7 @@
           <li><span class="qid">D-18</span><span class="qtx">투자자 계약의 해지·만료를 어디에 기록합니까? 해지된 투자자의 어드민 접근은 어떻게 차단합니까?</span></li>
           <li><span class="qid">D-19</span><span class="qtx">전자서명을 어느 벤더·어느 방식으로 붙입니까? 현행 <code>POST /admin/contracts/{id}/sign</code>은 직인 이미지 기반 자체 방식이고 인증서 연동이 레포 전체에 0건이다. 현행 플로우를 대체합니까, 별도 경로를 만듭니까?</span></li>
           <li><span class="qid">D-20</span><span class="qtx">서명검증 회신전문의 형식(xml·txt·pdf)과 수신 방식(동기 처리·비동기 콜백)은 무엇입니까? 검증 실패 건은 목록에 남깁니까 숨깁니까?</span></li>
-          <li><span class="qid">D-21</span><span class="qtx">재양도합의서 파일과 검증회신전문을 묶어 내려주는 API(zip 등)를 신설합니까? 현행 첨부 다운로드는 단건이고 pdf·image 2종만 지원합니다.</span></li>
+          <li><span class="qid">D-21</span><span class="qtx">재양도합의서 파일과 검증회신전문을 묶어 내려주는 API(zip 등)를 신설합니까? 현행 첨부 다운로드는 단건이고 pdf·image 2종만 지원한다.</span></li>
         </ul>
       </div>
 
