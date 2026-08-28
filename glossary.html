@@ -296,8 +296,16 @@ a.chip:hover { background: var(--primary-50); color: var(--primary-700); border-
 }
 
 /* ── 화면 기준 매핑표 ── */
-.map-tbl { min-width: 980px; }
-.map-tbl td { font-size: 12.5px; line-height: 20px; }
+.map-tbl { min-width: 860px; table-layout: fixed; }
+.t-card .map-tbl th { white-space: normal; }
+.map-tbl th, .map-tbl td { padding-left: 12px; padding-right: 12px; }
+.map-tbl td { font-size: 12.5px; line-height: 20px; word-break: keep-all; overflow-wrap: anywhere; }
+.map-tbl th:nth-child(1), .map-tbl td:nth-child(1) { width: 13.5%; }
+.map-tbl th:nth-child(2), .map-tbl td:nth-child(2) { width: 19%; }
+.map-tbl th:nth-child(3), .map-tbl td:nth-child(3) { width: 25.5%; }
+.map-tbl th:nth-child(4), .map-tbl td:nth-child(4) { width: 28%; }
+.map-tbl th:nth-child(5), .map-tbl td:nth-child(5) { width: 14%; }
+.map-tbl .grp td { width: auto; }
 .map-tbl tr.grp td { background: var(--gray-100); font-weight: 700; color: var(--gray-700); font-size: 12px; }
 .map-tbl code.q {
   display: block; white-space: normal; font-size: 11.5px; line-height: 18px;
