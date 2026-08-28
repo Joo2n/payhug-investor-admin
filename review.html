@@ -68,13 +68,13 @@ button:disabled{opacity:.4;cursor:default}
 </div>
 
 <script>
-const CNT = {menus:8, screens:15, states:20, xlsx:8};
+const CNT = {menus:8, screens:15, states:21, appStates:20, xlsx:8};
 const STEPS = [
  {t:"통합 프로토타입이 무엇인가", kind:"ok", kl:"동작함",
   what:"메뉴·버튼이 실제로 눌리는 단 하나의 파일. 시연은 전부 여기서 한다.",
   href:"app.html", label:"통합 프로토타입 열기",
   check:["왼쪽 메뉴 "+CNT.menus+"개를 눌러 화면이 바뀌는지","기간 프리셋이 먹는지","일별·주별·월별 토글이 먹는지"],
-  note:{k:"", v:"화면 "+CNT.screens+"개·상태 "+CNT.states+"개가 전부 이 파일 안에서 조작으로 이어진다. 투자 수익의 달력 열림은 낱장으로만 있고 통합본에는 없다."}},
+  note:{k:"", v:"화면 "+CNT.screens+"개·상태 "+CNT.appStates+"개가 전부 이 파일 안에서 조작으로 이어진다. 상태 낱장은 "+CNT.states+"개이고, 투자 수익의 시작일 달력 팝오버 열림은 Figma 임포트용 낱장으로만 둔다."}},
 
  {t:"정적 화면은 왜 안 움직이나", kind:"warn", kl:"설계상 정상",
   what:"화면 한 장을 그대로 굳혀 놓은 스냅샷. Figma로 넘기기 위한 것이라 JS가 없다.",
