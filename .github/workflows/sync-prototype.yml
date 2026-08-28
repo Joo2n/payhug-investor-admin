@@ -105,11 +105,9 @@ jobs:
             echo "바뀐 것 없음 — 커밋하지 않는다"
             exit 0
           fi
-          git commit -m "시연용 프로토타입 동기화 — 원본 app.html 기준 재생성
-
-원본 ${GITHUB_REPOSITORY}@${GITHUB_SHA} 에서 찍어 냈다.
-랜딩 갤러리 제거·로고 자기 자신 고정·형제 문서 링크 해시 전환을 다시 적용하고
-화면이 부르는 자산만 역산해 맞춘다."
+          git commit \
+            -m "시연용 프로토타입 동기화 — 원본 app.html 기준 재생성" \
+            -m "원본 ${GITHUB_REPOSITORY}@${GITHUB_SHA} 에서 찍어 냈다. 랜딩 갤러리 제거·로고 자기 자신 고정·형제 문서 링크 해시 전환을 다시 적용하고 화면이 부르는 자산만 역산해 맞춘다."
           git push origin HEAD:main
           echo "반영 완료 — Vercel 이 이 push 를 받아 배포한다"
 
