@@ -10,14 +10,14 @@
 | https://payhug-investor-prototype.vercel.app/ | 시연본. `app.html` 한 판만, 바깥으로 나가는 통로 없음 |
 | https://payhug-investor-glossary.vercel.app/ | 용어 해설 단독본 |
 
-전체본은 `main` 에 올라간 114개 파일을 그대로 서비스한다. 한글 이름을 쓰는 PDF·ZIP·XLSX·TXT 도 같은 주소에서 바로 열린다.
+전체본은 `main` 에 올라간 116개 파일을 그대로 서비스한다. 한글 이름을 쓰는 PDF·ZIP·XLSX·TXT 도 같은 주소에서 바로 열린다.
 
 | 구획 | 수 | 내역 |
 |---|---|---|
 | 루트 HTML | 43 | 통합 프로토타입 1 · 기본 화면 14 · 상태 20 · 폐기 상태 1 · 랜딩 1 · 설명 문서 6 |
 | 루트 문서 | 2 | `README.md` `DESIGN_REF.md` |
 | `assets/` 공용 | 5 | `base.css` `sheet.css` `template.html` `components.html` `logo-icon.png` |
-| 내려받기 실물 | 47 | `assets/docs/` 41 · `assets/xlsx/` 6 |
+| 내려받기 실물 | 49 | `assets/docs/` 41 · `assets/xlsx/` 8 |
 | 화면 캡처 | 15 | `assets/shots/` — 용어 해설이 카드마다 불러 쓴다 |
 | 동기화 스크립트 | 2 | `scripts/` — 시연본·용어 단독본 변환기 |
 
@@ -87,7 +87,7 @@
     ├── components.html   # 컴포넌트 갤러리
     ├── logo-icon.png     # 로고 원본. 화면 렌더는 base.css의 .logo-mark data URI
     ├── docs/             # 내려받기 실물 41 (PDF · ZIP · TXT)
-    ├── xlsx/             # 내려받기 실물 6 (XLSX)
+    ├── xlsx/             # 내려받기 실물 8 (XLSX)
     └── shots/            # 화면 캡처 15 (용어 해설용)
 ```
 
@@ -100,7 +100,7 @@
 |---|---|---|---|
 | 투자 자산 | 엑셀 다운로드 (현황) | `assets/xlsx/투자자산현황_2026-08-27_2026-08-27.xlsx` | `xls-assets-status.html` |
 | 투자 자산 | 엑셀 다운로드 (가맹점별) | `assets/xlsx/가맹점별투자자산_2026-08-27_2026-08-27.xlsx` | `xls-assets-merchant.html` |
-| 투자 수익 | 엑셀 다운로드 (수익 현황) | `assets/xlsx/투자수익현황_2026-08-21_2026-08-27.xlsx` | `xls-profit-status.html` |
+| 투자 수익 | 수익 현황 엑셀 다운로드 — 집계 단위 일별·주별·월별 | `assets/xlsx/투자수익현황_2026-03-01_2026-08-31.xlsx` · `assets/xlsx/투자수익현황_2026-08-03_2026-08-30.xlsx` · `assets/xlsx/투자수익현황_2026-08-21_2026-08-27.xlsx` | `xls-profit-status.html` |
 | 투자 수익 | 표 엑셀 다운로드 — 집계 단위 일별·주별·월별 | `assets/xlsx/월별투자수익_2026-03-01_2026-08-31.xlsx` · `assets/xlsx/일별투자수익_2026-08-21_2026-08-27.xlsx` · `assets/xlsx/주별투자수익_2026-08-03_2026-08-30.xlsx` | `xls-profit-daily.html` |
 
 계약기록의 `선택 문서 다운로드`는 고른 행의 전자서명 결과를 하나로 묶은 텍스트를 내려준다 — `assets/docs/전자서명결과_선택3건_20260827.txt` · `assets/docs/전자서명결과_전체16건_20260827.txt`. 재양도합의서 PDF 16건과 묶음 ZIP 2건도 같은 폴더에 있다.
