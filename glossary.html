@@ -46,6 +46,8 @@ body { background: var(--gray-50); }
 .sec { margin-top: 56px; scroll-margin-top: 72px; }
 .sec > h2 { font-size: 22px; line-height: 30px; font-weight: 700; color: var(--gray-900); margin: 0; letter-spacing: -.01em; }
 .sec > .sec-lede { font-size: 14px; line-height: 24px; color: var(--gray-600); margin: 10px 0 0; max-width: 60em; }
+.sec > .sec-lede > *:first-child { margin-top: 0; }
+.sec > .sec-lede p { font-size: 14px; line-height: 24px; color: var(--gray-600); margin: 12px 0 0; }
 h3.blk-title { font-size: 16px; line-height: 25px; font-weight: 700; color: var(--gray-900); margin: 32px 0 0; }
 h4.mini-h { font-size: 14px; line-height: 22px; font-weight: 700; color: var(--gray-800); margin: 22px 0 0; }
 p { font-size: 14px; line-height: 25px; color: var(--gray-700); margin: 12px 0 0; max-width: 62em; }
@@ -373,7 +375,7 @@ table.tbl td:first-child { color: var(--gray-900); }
 <h3 class="blk-title">목차</h3>
 <div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>#</th><th>용어명</th><th>변수</th><th>한 줄 뜻</th></tr></thead><tbody><tr><td></td><td><b>1단계 — 채권 한 건이 무엇으로 되어 있나</b></td><td></td><td></td></tr><tr><td>1</td><td><a class="xref" href="#t01">정산금채권</a></td><td>-</td><td>특정 플랫폼이 특정 가맹점에게 정산예정일에 주기로 한 돈, 그 받을 권리다.</td></tr><tr><td>2</td><td><a class="xref" href="#t02">정산금채권 ID</a></td><td><code>i</code></td><td>채권 한 건에 붙는 이름표다. 매출 일자 단위로 끊긴다.</td></tr><tr><td>3</td><td><a class="xref" href="#t03">플랫폼ID</a></td><td>-</td><td>카드사와 배달앱마다 페이허그가 붙여 준 번호표다.</td></tr><tr><td>4</td><td><a class="xref" href="#t04">매출일자</a></td><td>-</td><td>손님이 카드를 긁은 날, 또는 배달 주문이 일어난 날이다.</td></tr><tr><td>5</td><td><a class="xref" href="#t05">선정산일</a></td><td>-</td><td>페이허그가 가맹점에 돈을 먼저 내준 날이다.</td></tr><tr><td>6</td><td><a class="xref" href="#t06">정산예정일</a></td><td>-</td><td>카드사·배달앱이 돈을 넣어 주기로 한 날이다.</td></tr><tr><td>7</td><td><a class="xref" href="#t07">순지급액</a></td><td>-</td><td>그 채권으로 실제 들어올 돈이다.</td></tr><tr><td>8</td><td><a class="xref" href="#t08">금융일수</a></td><td><a class="xref" href="#t20"><code>Di</code></a></td><td>투자자 돈이 그 채권 하나에 묶여 있는 날수다.</td></tr><tr><td></td><td><b>2단계 — 그중 투자자 것만 어떻게 고르나</b></td><td></td><td></td></tr><tr><td>9</td><td><a class="xref" href="#t09">유동화투자자</a></td><td>-</td><td>페이허그가 사 둔 정산금채권을 다시 사서 자금을 대 주는 쪽이다.</td></tr><tr><td>10</td><td><a class="xref" href="#t10">정산금채권 재양도 합의서</a></td><td>-</td><td>"이 가맹점에서 나오는 정산금채권은 이 투자자가 사 간다"고 못 박는 계약서다.</td></tr><tr><td>11</td><td><a class="xref" href="#t11">효력기간</a></td><td>-</td><td>합의서가 살아 있는 기간이다.</td></tr><tr><td>12</td><td><a class="xref" href="#t12">대상정산금채권</a></td><td>-</td><td>정산금채권 중 투자자에게 속하는 것 전부다. 가맹점 단위로 매입한다.</td></tr><tr><td></td><td><b>3단계 — 투자자가 얼마에 샀나</b></td><td></td><td></td></tr><tr><td>13</td><td><a class="xref" href="#t13">유동화투자자의 할인율</a></td><td>-</td><td>투자자가 채권을 액면보다 얼마나 싸게 사느냐다. 내부 이름은 <code>(채권매입)수수료율</code>.</td></tr><tr><td>14</td><td><a class="xref" href="#t14">Ai</a></td><td><a class="xref" href="#t14"><code>Ai</code></a></td><td>채권 한 건을 투자자가 산 값이다.</td></tr><tr><td>15</td><td><a class="xref" href="#t15">채권매입수수료</a></td><td>-</td><td>가맹점이 선정산을 받으면서 낸 수수료다. 이 요율의 이름이 <code>(채권매입)수수료율</code>이다.</td></tr><tr><td></td><td><b>4단계 — 지금 얼마가 깔려 있나 (<code>투자 자산</code> 화면)</b></td><td></td><td></td></tr><tr><td>16</td><td><a class="xref" href="#t16">회수되지 않은 순지급액</a></td><td>-</td><td>아직 카드사가 안 넣어 준 채권들의 순지급액이다.</td></tr><tr><td>17</td><td><a class="xref" href="#t17">투자 실행액</a></td><td>-</td><td>투자자가 지금 채권에 깔아 놓은 돈이다.</td></tr><tr><td>18</td><td><a class="xref" href="#t18">순현금 (투자 자산 · 잔액)</a></td><td>-</td><td>쿠콘 가상계좌의 현 잔액이다.</td></tr><tr><td>19</td><td><a class="xref" href="#t19">쿠콘 가상계좌</a></td><td>-</td><td>페이허그용으로 개설된 ㈜쿠콘 명의의 케이뱅크 계좌다. 지금은 1개다.</td></tr><tr><td>20</td><td><a class="xref" href="#t20">Di</a></td><td><a class="xref" href="#t20"><code>Di</code></a></td><td><a class="xref" href="#t08"><code>금융일수</code></a>에 붙인 기호 이름일 뿐이다.</td></tr><tr><td>21</td><td><a class="xref" href="#t21">w금융일수 (투자 자산 · 잔액)</a></td><td><code>w</code></td><td>지금 깔려 있는 채권들이 평균 며칠짜리냐다.</td></tr><tr><td>22</td><td><a class="xref" href="#t22">ty수익율 (투자 자산 · 잔액)</a></td><td><code>Ty / ty</code></td><td>지금 굴리는 방식대로 1년을 꼬박 굴리면 몇 %가 되느냐다.</td></tr><tr><td>23</td><td><a class="xref" href="#t23">비중</a></td><td>-</td><td>투자자 돈 전체를 100으로 놓고, 채권에 나가 있는 몫과 통장에 남은 몫이 각각 몇 %냐다.</td></tr><tr><td>24</td><td><a class="xref" href="#t24">자산 구분</a></td><td>-</td><td>현황표의 세로축이다.</td></tr><tr><td>25</td><td><a class="xref" href="#t25">보관</a></td><td>-</td><td>그 자산을 실제로 누가 들고 있느냐다.</td></tr><tr><td>26</td><td><a class="xref" href="#t26">투자자산</a></td><td>-</td><td>투자자가 굴리고 있는 돈 전부다.</td></tr><tr><td>27</td><td><a class="xref" href="#t27">가맹점별 투자금액</a></td><td>-</td><td>가맹점 한 곳에 투자자 돈이 얼마나 물려 있느냐다.</td></tr><tr><td>28</td><td><a class="xref" href="#t28">기준일자</a></td><td>-</td><td>표 제목 옆 괄호에 찍히는 날짜다.</td></tr><tr><td></td><td><b>5단계 — 얼마나 덜 들어오나 (위험 지표)</b></td><td></td><td></td></tr><tr><td>29</td><td><a class="xref" href="#t29">미지급금</a></td><td>-</td><td>선정산으로 가맹점에 지급해야 하는데 아직 못 준 금액이다.</td></tr><tr><td>30</td><td><a class="xref" href="#t30">과지급금</a></td><td>-</td><td>가맹점에 더 나간 금액이다.</td></tr><tr><td>31</td><td><a class="xref" href="#t31">SLi</a></td><td><a class="xref" href="#t31"><code>SLi</code></a></td><td>채권 한 건에서 순수하게 덜 들어온 금액이다.</td></tr><tr><td>32</td><td><a class="xref" href="#t32">SAi</a></td><td><a class="xref" href="#t32"><code>SAi</code></a></td><td>표본 구간에 속한 채권 한 건에 투자자가 넣은 돈이다.</td></tr><tr><td>33</td><td><a class="xref" href="#t33">표본집합</a></td><td>-</td><td><a class="xref" href="#t34"><code>S입금부족율</code></a>을 낼 때 쓰는 채권 묶음이다.</td></tr><tr><td>34</td><td><a class="xref" href="#t34">S입금부족율</a></td><td>-</td><td>최근 열흘치 채권을 표본으로, 넣은 돈 대비 얼마나 덜 들어왔는지를 본 비율이다.</td></tr><tr><td></td><td><b>6단계 — 하루가 끝나면 무엇을 기록하나 (배치)</b></td><td></td><td></td></tr><tr><td>35</td><td><a class="xref" href="#t35">상환액 (일별 배치 · 하루치)</a></td><td><code>SB(D-1)</code></td><td>어제 만기가 돌아온 채권들에서 실제로 회수한 돈이다.</td></tr><tr><td>36</td><td><a class="xref" href="#t36">투자실행금 (일별 배치 · 하루치)</a></td><td><code>SA(D-1)</code></td><td>어제 만기가 돌아온 채권들에 원래 얼마를 넣었었나다.</td></tr><tr><td>37</td><td><a class="xref" href="#t37">투자수익 (일별 배치 · 하루치)</a></td><td><code>SM(D-1)</code></td><td>어제 만기가 돌아온 채권들에서 남긴 돈이다.</td></tr><tr><td>38</td><td><a class="xref" href="#t38">투자수익율 (일별 배치 · 하루치)</a></td><td><code>SMR(D-1)</code></td><td>어제 하루치로 몇 % 벌었나다.</td></tr><tr><td>39</td><td><a class="xref" href="#t39">w금융일수 (일별 배치 · 하루치)</a></td><td><code>SD(D-1)</code></td><td>어제 만기가 돌아온 채권들이 평균 며칠짜리였나다.</td></tr><tr><td>40</td><td><a class="xref" href="#t40">ty수익율 (일별 배치 · 하루치)</a></td><td>-</td><td>어제 하루치 성과를 연 환산한 값이다.</td></tr><tr><td>41</td><td><a class="xref" href="#t41">순현금 (일별 배치 · 자정 시점)</a></td><td><a class="xref" href="#t41"><code>EC</code></a></td><td>어제 자정에 통장에 남아 있던 현금이다.</td></tr><tr><td></td><td><b>7단계 — 기간을 합치면 무엇이 나오나 (<code>투자 수익</code> 화면)</b></td><td></td><td></td></tr><tr><td>42</td><td><a class="xref" href="#t42">투자실행금 (투자 수익 · 기간 합계)</a></td><td><a class="xref" href="#t42"><code>PSA</code></a></td><td>고른 기간 동안 만기가 돌아온 채권들에 원래 얼마를 넣었었나다.</td></tr><tr><td>43</td><td><a class="xref" href="#t43">투자수익 (투자 수익 · 기간 합계)</a></td><td><a class="xref" href="#t43"><code>PSM</code></a></td><td>고른 기간 동안 남긴 돈이다.</td></tr><tr><td>44</td><td><a class="xref" href="#t44">PSMR</a></td><td><a class="xref" href="#t44"><code>PSMR</code></a></td><td>고른 기간 동안 몇 % 벌었나다.</td></tr><tr><td>45</td><td><a class="xref" href="#t45">PSD</a></td><td><a class="xref" href="#t45"><code>PSD</code></a></td><td>고른 기간 동안 만기가 돌아온 채권들이 평균 며칠짜리였나다.</td></tr><tr><td>46</td><td><a class="xref" href="#t46">PSC</a></td><td><a class="xref" href="#t46"><code>PSC</code></a></td><td>고른 기간의 하루하루 자정 현금 잔액을 전부 더한 값이다.</td></tr><tr><td>47</td><td><a class="xref" href="#t47">ty수익율 › 투자실행금액 대비 (투자 수익 · 기간 합계)</a></td><td><a class="xref" href="#t47"><code>④</code></a></td><td><b>채권에 실제로 나간 돈만 놓고</b> 본 연 환산 수익률이다.</td></tr><tr><td>48</td><td><a class="xref" href="#t48">ty수익율 › 투자자산 대비 (투자 수익 · 기간 합계)</a></td><td><a class="xref" href="#t48"><code>⑤</code></a></td><td><b>놀고 있는 현금까지 포함한 돈 전부</b>를 놓고 본 연 환산 수익률이다.</td></tr><tr><td>49</td><td><a class="xref" href="#t49">ty수익율 (일별 표 · 행 단위)</a></td><td><a class="xref" href="#t49"><code>⑥</code></a></td><td>일별 표의 마지막 열이다.</td></tr><tr><td>50</td><td><a class="xref" href="#t50">검색대상기간</a></td><td>-</td><td><code>투자 수익</code> 화면이 어느 구간을 합쳤는지 알려 주는 값이다.</td></tr></tbody></table></div></div>
 <section class="sec stage-sec" id="s0"><h2>1단계 — 채권 한 건이 무엇으로 되어 있나</h2>
-<p class="sec-lede">투자자 어드민의 모든 숫자는 <a class="xref" href="#t01"><code>정산금채권</code></a> 한 건에서 출발한다. 이 단계 8개를 알면 채권 1건의 주민등록등본을 읽을 수 있게 된다.</p>
+<div class="sec-lede"><p>투자자 어드민의 모든 숫자는 <a class="xref" href="#t01"><code>정산금채권</code></a> 한 건에서 출발한다. 이 단계 8개를 알면 채권 1건의 주민등록등본을 읽을 수 있게 된다.</p></div>
 <article class="term" id="t01" data-k="정산금채권 **특정 플랫폼**이 **특정 가맹점**에게 서로의 약속으로 `정산예정일`에 주기로 한 돈, 그 받을 권리다. 가맹점은 그 권리를 페이허그에 팔고 돈을 미리 받는다. 선정산은 대출이 아니라 **권리를 사고파는 것** 기호 없음 — 대표 정의 원문이 이 용어에 기호를 붙이지 않았다. [[shot: invest-assets | anchor: th:가맹점 | kind: indirect]]
 
 채권 1건이 행으로 그대로 뜨는 곳은 `투자 시뮬레이션`의 채권별 산출 표다 — 한 행이 채권 한 건이고, `">
@@ -700,7 +702,7 @@ id 자체는 화면에 없다. `가맹점`의 `가맹점id` 열이 id의 첫 조
 </article>
 </section>
 <section class="sec stage-sec" id="s1"><h2>2단계 — 그중 투자자 것만 어떻게 고르나</h2>
-<p class="sec-lede">페이허그가 가진 채권이 전부 투자자 것은 아니다. 투자자 어드민에 뜨는 숫자는 <b>그 투자자 몫으로 골라낸 채권</b>만 합친 값이다. 골라내는 규칙이 이 단계 4개다.</p>
+<div class="sec-lede"><p>페이허그가 가진 채권이 전부 투자자 것은 아니다. 투자자 어드민에 뜨는 숫자는 <b>그 투자자 몫으로 골라낸 채권</b>만 합친 값이다. 골라내는 규칙이 이 단계 4개다.</p></div>
 <article class="term" id="t09" data-k="유동화투자자 페이허그가 사 둔 정산금채권을 다시 사서 자금을 대 주는 쪽이다. 어드민에 로그인하는 그 사람이다. 화면 곳곳의 `투자자`가 이 사람을 가리킨다. 기호 없음 — 대표 정의 원문이 이 용어에 기호를 붙이지 않았다. [[shot: merchants | anchor: th:채권매입업체id | kind: direct]]
 
 투자자 어드민 전 화면. 사이드바 프로필의 `㈜테스트인베스트 님` + `투자자` 배지가 로그인한 유동화투자자다.">
@@ -861,7 +863,7 @@ M000654 &amp; BM0007 &amp; 20260728, 선정산일 07-29   → 조건2 ✗       
 </article>
 </section>
 <section class="sec stage-sec" id="s2"><h2>3단계 — 투자자가 얼마에 샀나</h2>
-<p class="sec-lede">여기서 처음 돈 이야기가 나온다. 채권 액면이 100원이면 투자자는 100원보다 싸게 산다. 그 싸게 사는 폭이 곧 수익이다.</p>
+<div class="sec-lede"><p>여기서 처음 돈 이야기가 나온다. 채권 액면이 100원이면 투자자는 100원보다 싸게 산다. 그 싸게 사는 폭이 곧 수익이다.</p></div>
 <article class="term" id="t13" data-k="유동화투자자의 할인율 투자자가 채권을 액면보다 얼마나 싸게 사느냐다. 100원짜리 채권을 99.89원에 사면 할인율 0.11%다. 만기에 100원을 받으니 0.11원이 남는다. 그게 투자자 수익의 원천이다.
 
 **실체는 `(채권매입)수수 기호 없음 — 대표 정의 원문이 이 용어에 기호를 붙이지 않았다.
@@ -1015,18 +1017,14 @@ ty수익율  = 할인율 × (365 / w금융일수)</pre>
 </div>
 </article>
 </section>
-<section class="sec stage-sec" id="s3"><h2>4단계 — 지금 얼마가 깔려 있나 (`투자 자산` 화면)</h2>
-<p class="sec-lede">여기서부터 화면에 뜨는 숫자다. 이 단계 전부가 <b>조회하는 그 순간의 잔액</b>을 본다. 아직 안 들어온 채권만 세는 것이다.
-
-<code>투자 자산</code> 현황표 한 장이 이 단계의 결과물이다.
-
-``<code>
-자산 구분    금액           W금융일수  S입금부족율  ty수익율  비중     보관
+<section class="sec stage-sec" id="s3"><h2>4단계 — 지금 얼마가 깔려 있나 (<code>투자 자산</code> 화면)</h2>
+<div class="sec-lede"><p>여기서부터 화면에 뜨는 숫자다. 이 단계 전부가 <b>조회하는 그 순간의 잔액</b>을 본다. 아직 안 들어온 채권만 세는 것이다.</p>
+<p><code>투자 자산</code> 현황표 한 장이 이 단계의 결과물이다.</p>
+<pre class="calc">자산 구분    금액           W금융일수  S입금부족율  ty수익율  비중     보관
 ──────────────────────────────────────────────────────────────────────
 투자실행액   1,523,100,000     3.1일     0.07%     12.95%   93.5%   ㈜페이허그
 순현금         105,300,000      -          -          -      6.5%   ㈜쿠콘
-합계         1,628,400,000      -          -          -     100.0%    -
-</code>``</p>
+합계         1,628,400,000      -          -          -     100.0%    -</pre></div>
 <article class="term" id="t16" data-k="회수되지 않은 순지급액 아직 카드사가 안 넣어 준 채권들의 순지급액이다. 투자자 돈이 아직 밖에 나가 있는 부분이다. 기호 없음 — 대표 정의 원문이 이 용어에 기호를 붙이지 않았다. [[shot: invest-assets | anchor: td:투자실행액 | kind: indirect]]
 
 직접 안 뜬다. `투자 실행액`의 재료다.">
@@ -1583,18 +1581,14 @@ w = 6.2일 (요기요)       →  0.11% × (365÷6.2) =  6.48%</pre>
 </article>
 </section>
 <section class="sec stage-sec" id="s4"><h2>5단계 — 얼마나 덜 들어오나 (위험 지표)</h2>
-<p class="sec-lede"><a class="xref" href="#t34"><code>S입금부족율</code></a>은 현황표에 한 칸으로 뜨는 작은 숫자지만, 투자자 입장에서는 가장 중요한 값이다. <b>"약속한 돈이 실제로 얼마나 안 들어오나"</b> 를 보는 유일한 지표이기 때문이다.
-
-만드는 순서는 이렇다.
-
-``<code>
-채권 한 건마다     미지급금 − 과지급금  =  SLi   (덜 들어온 금액)
+<div class="sec-lede"><p><a class="xref" href="#t34"><code>S입금부족율</code></a>은 현황표에 한 칸으로 뜨는 작은 숫자지만, 투자자 입장에서는 가장 중요한 값이다. <b>"약속한 돈이 실제로 얼마나 안 들어오나"</b> 를 보는 유일한 지표이기 때문이다.</p>
+<p>만드는 순서는 이렇다.</p>
+<pre class="calc">채권 한 건마다     미지급금 − 과지급금  =  SLi   (덜 들어온 금액)
 채권 한 건마다     순지급액 × (1−할인율) =  SAi   (그 채권에 넣은 돈)
         │
         │  최근 열흘치 채권만 골라서 (= 표본집합)
         ▼
-S입금부족율 = Σ SLi ÷ Σ SAi
-</code>``</p>
+S입금부족율 = Σ SLi ÷ Σ SAi</pre></div>
 <article class="term" id="t29" data-k="미지급금 선정산으로 가맹점에 지급해야 하는데 아직 못 준 금액이다. 정산 배치가 돈 뒤에 매출이 뒤늦게 도착해 그 배치에서 빠진 건이 여기 쌓인다.
 
 **정책서 6대 개념의 `미지급금`과 같은 것이다.** 02 §2의 &quot;원래 기호 없음 — 대표 정의 원문이 이 용어에 기호를 붙이지 않았다.
@@ -1883,12 +1877,9 @@ D-11   = 2026-08-16     ← 표본 끝
 </article>
 </section>
 <section class="sec stage-sec" id="s5"><h2>6단계 — 하루가 끝나면 무엇을 기록하나 (배치)</h2>
-<p class="sec-lede">여기서 계통이 바뀐다. 4·5단계가 <b>아직 안 들어온 채권</b>을 봤다면, 6단계부터는 <b>이미 들어온 채권</b>을 본다.
-
-원문이 정한 절차는 이렇다.
-
-``<code>
-매일 자정이 지나면
+<div class="sec-lede"><p>여기서 계통이 바뀐다. 4·5단계가 <b>아직 안 들어온 채권</b>을 봤다면, 6단계부터는 <b>이미 들어온 채권</b>을 본다.</p>
+<p>원문이 정한 절차는 이렇다.</p>
+<pre class="calc">매일 자정이 지나면
   └ 유동화투자자별로
       └ 정산예정일이 어제(D-1)인 정산금채권의 ID들을 뽑고
           └ 그 채권들의 선정산일자를 찾아
@@ -1900,12 +1891,9 @@ D-11   = 2026-08-16     ← 표본 끝
               SMR(D-1)  투자수익율
               SD(D-1)   w금융일수
               ty수익율
-              EC        순현금
-</code>`<code>
-
-<b>하루에 한 줄씩 쌓는 것</b>이다. 그 줄들이 </code>투자 수익<code>의 일별 투자수익 표가 된다.
-
-기호 읽는 법: 앞의 </code>S<code>는 Sum(합계), 뒤의 </code>D-1<code>은 전일자를 뜻한다. </code>SB(D-1)<code> = "전일자 상환액 합계"다. 원문은 아래첨자 없이 </code>SBD-1`로 붙여 썼다.</p>
+              EC        순현금</pre>
+<p><b>하루에 한 줄씩 쌓는 것</b>이다. 그 줄들이 <code>투자 수익</code>의 일별 투자수익 표가 된다.</p>
+<p>기호 읽는 법: 앞의 <code>S</code>는 Sum(합계), 뒤의 <code>D-1</code>은 전일자를 뜻한다. <code>SB(D-1)</code> = "전일자 상환액 합계"다. 원문은 아래첨자 없이 <code>SBD-1</code>로 붙여 썼다.</p></div>
 <article class="term" id="t35" data-k="상환액 (일별 배치 · 하루치) 어제 만기가 돌아온 채권들에서 실제로 회수한 돈이다. 카드사가 예정대로 넣었으면 순지급액 그대로, 덜 넣었으면 그만큼 깎인다. [`sb(d-1)`](#sym-sbd1) — **상환액**  `원문 명명`
 
 | | |
@@ -2274,24 +2262,16 @@ ec 자체는 화면에 안 뜬다. 기간 합인 `psc`가 `⑤ 투자자산 대�
 </div>
 </article>
 </section>
-<section class="sec stage-sec" id="s6"><h2>7단계 — 기간을 합치면 무엇이 나오나 (`투자 수익` 화면)</h2>
-<p class="sec-lede">6단계에서 하루 한 줄씩 쌓아 둔 것을, 사용자가 고른 기간만큼 잘라 합치는 단계다.
-
-원문:
-``<code>
-상기 배치작업이 완료된 후, 위 DB를 이용해, 사용자가 선택한 기간 (default = 일주일)에 해당하는
-기간에 정산예정일인, 레코드들을 활용해 아래와 같이 산출
-</code>`<code>
-
-기호 앞의 </code>P<code>가 무엇의 머리글자인지는 원문에 근거가 없다. 다만 </code>P<code>가 붙은 기호 다섯(</code>PSA<code> </code>PSM<code> </code>PSMR<code> </code>PSD<code> </code>PSC<code>)이 <b>전부</b> ‘선택한 기간’ 집계에만 쓰인다는 것은 원문으로 확인된다. </code>PSA<code>는 기간 투자실행금 합계다.
-
-이 단계 결과가 </code>투자 수익<code> 현황 카드 네 칸이 된다.
-
-</code>`<code>
-검색대상기간   투자실행금        투자수익      Ty수익율
+<section class="sec stage-sec" id="s6"><h2>7단계 — 기간을 합치면 무엇이 나오나 (<code>투자 수익</code> 화면)</h2>
+<div class="sec-lede"><p>6단계에서 하루 한 줄씩 쌓아 둔 것을, 사용자가 고른 기간만큼 잘라 합치는 단계다.</p>
+<p>원문:</p>
+<pre class="calc">상기 배치작업이 완료된 후, 위 DB를 이용해, 사용자가 선택한 기간 (default = 일주일)에 해당하는
+기간에 정산예정일인, 레코드들을 활용해 아래와 같이 산출</pre>
+<p>기호 앞의 <code>P</code>가 무엇의 머리글자인지는 원문에 근거가 없다. 다만 <code>P</code>가 붙은 기호 다섯(<a class="xref" href="#t42"><code>PSA</code></a> <a class="xref" href="#t43"><code>PSM</code></a> <a class="xref" href="#t44"><code>PSMR</code></a> <a class="xref" href="#t45"><code>PSD</code></a> <a class="xref" href="#t46"><code>PSC</code></a>)이 <b>전부</b> ‘선택한 기간’ 집계에만 쓰인다는 것은 원문으로 확인된다. <a class="xref" href="#t42"><code>PSA</code></a>는 기간 투자실행금 합계다.</p>
+<p>이 단계 결과가 <code>투자 수익</code> 현황 카드 네 칸이 된다.</p>
+<pre class="calc">검색대상기간   투자실행금        투자수익      Ty수익율
                                           투자실행금액 대비 | 투자자산 대비
-일주일        3,511,071,647    3,866,428     12.97%      |   10.72%
-</code>``</p>
+일주일        3,511,071,647    3,866,428     12.97%      |   10.72%</pre></div>
 <article class="term" id="t42" data-k="투자실행금 (투자 수익 · 기간 합계) 고른 기간 동안 만기가 돌아온 채권들에 원래 얼마를 넣었었나다. 하루치 `sa`를 기간만큼 더한 것이다. [`psa`](#sym-psa) — **투자실행금**  `원문 명명`
 
 | | |

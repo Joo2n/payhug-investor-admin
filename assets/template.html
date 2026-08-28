@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1440">
+<!-- 이 파일만 assets/ 안에 있다. 상대경로 기준을 루트로 되돌린다 — 없으면 사이드바 링크가 /assets/ 아래로 가 404. 루트로 복사할 때는 지운다 -->
+<base href="../">
 <title>PayHug Admin — 화면명</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,8 +12,9 @@
 <link rel="stylesheet" href="assets/base.css">
 </head>
 <!--
-  ★ 사용법: 이 파일을 payhug-investor-admin/ 루트에 <화면명>.html 로 복사해 시작한다.
-    (assets/base.css · assets/logo-icon.png 상대경로가 루트 기준 — assets/ 안에서 열면 스타일이 깨진다)
+  ★ 사용법: 이 파일을 payhug-investor-admin/ 루트에 <화면명>.html 로 복사하고 머리의 base 태그 한 줄을 지운다.
+    상대경로는 전부 루트 기준으로 적혀 있다. 이 파일 자체는 assets/ 안에 있어 base 태그로 기준을 루트로 되돌린다 —
+    없으면 사이드바 8링크가 /assets/<화면>.html 로 가서 배포에서 404 가 난다.
   활성 메뉴 지정: body data-active 에 메뉴 ID를 넣으면 해당 메뉴·그룹이 하이라이트된다.
   메뉴 ID: invest-assets | invest-returns | invest-sim | merchants | receivables | contracts | kcoon | password
 -->
@@ -21,7 +24,7 @@
   <!-- ═══════════ 사이드바 (수정 금지 — 화면마다 동일) ═══════════ -->
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <a href="#">
+      <a href="index.html">
         <span class="logo-mark" role="img" aria-label="PayHug"></span>
         <span class="wordmark">PayHug <em>Admin</em></span>
       </a>
