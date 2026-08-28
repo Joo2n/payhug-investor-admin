@@ -128,10 +128,6 @@
   .toast-info .t-close { color: var(--primary-600); }
   .toast .t-close svg { width: 16px; height: 16px; }
 
-  /* ── 필터 입력 포커스 ─────────────────────────────────────── */
-  .filter-field { position: relative; }
-  .input.is-focused { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(127,225,65,0.2); }
-
   /* ── 서명 목록·하단 액션바 ────────────────────────────────── */
   .sign-row { display: flex; align-items: center; gap: 16px; padding: 16px 24px; border-bottom: 1px solid var(--gray-50); }
   .sign-row:last-child { border-bottom: 0; }
@@ -453,7 +449,7 @@
 </style>
 </head>
 <!--
-  통합 프로토타입 — 한 파일에서 화면 15 · 상태 21 전부를 조작한다.
+  통합 프로토타입 — 한 파일에서 화면 15 · 상태 20 전부를 조작한다.
   개별 HTML 34개는 Figma 임포트용 정적 원본으로 별도 보존한다(이 파일이 대체하지 않는다).
   화면은 데이터 모델에서만 그린다. 표·합계·비중은 조작 결과로 계산되며 하드코딩하지 않는다.
   딥링크: #<화면>/<상태>  예) #invest-assets/page2 · #acquisition-list/signing
@@ -1066,7 +1062,7 @@
       </div>
       <span class="hero-date">2026-08-27</span>
     </div>
-    <div class="sec-head"><h2>화면</h2><span class="sec-note">메뉴 대응 8 · 하위 6 · 상태 21</span></div>
+    <div class="sec-head"><h2>화면</h2><span class="sec-note">메뉴 대응 8 · 하위 6 · 상태 20</span></div>
     <div class="gallery" data-mount="ix-gallery"></div>
   </div>
 </section>
@@ -1845,7 +1841,7 @@ var SEED = {
     clearSignTimer();
     AQ.doc = null;
     if(s === 'default'){ AQ.sel = [false, false, false]; AQ.signed = [false, false, false]; AQ.phase = 'list'; }
-    else if(s === 'done'){ AQ.sel = [true, true, false]; AQ.signed = [true, true, false]; AQ.phase = 'done'; }
+    else if(s === 'done'){ AQ.sel = [false, false, false]; AQ.signed = [true, true, false]; AQ.phase = 'done'; }
     else if(s === 'doc'){ AQ.sel = [false, false, false]; AQ.signed = [false, false, false]; AQ.phase = 'list'; AQ.doc = 0; }
     else { AQ.sel = [true, true, false]; AQ.signed = [false, false, false]; AQ.phase = s; }
   },
@@ -3231,7 +3227,8 @@ ACT['aq-sign-go'] = function(){
   clearSignTimer();
   signTimer = setTimeout(function(){
     signTimer = null;
-    for(var i = 0; i < AQ.sel.length; i++) if(AQ.sel[i]) AQ.signed[i] = true;
+    /* 서명된 행은 대기 목록에서 빠진다 — 선택도 함께 비워야 선택 건수가 없는 행을 세지 않는다 */
+    for(var i = 0; i < AQ.sel.length; i++) if(AQ.sel[i]){ AQ.signed[i] = true; AQ.sel[i] = false; }
     AQ.phase = 'done';
     DIRTY['acquisition-list'] = 1;         /* 메뉴를 오가도 서명 결과가 남는다 */
     refresh('acquisition-list');

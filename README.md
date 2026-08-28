@@ -10,14 +10,14 @@
 | https://payhug-investor-prototype.vercel.app/ | 시연본. `app.html` 한 판만, 바깥으로 나가는 통로 없음 |
 | https://payhug-investor-glossary.vercel.app/ | 용어 해설 단독본 |
 
-전체본은 `main` 에 올라간 116개 파일을 그대로 서비스한다. 한글 이름을 쓰는 PDF·ZIP·XLSX·TXT 도 같은 주소에서 바로 열린다.
+전체본은 `main` 에 올라간 94개 파일을 그대로 서비스한다. 한글 이름을 쓰는 PDF·ZIP·XLSX·TXT 도 같은 주소에서 바로 열린다.
 
 | 구획 | 수 | 내역 |
 |---|---|---|
-| 루트 HTML | 43 | 통합 프로토타입 1 · 기본 화면 14 · 상태 21 · 랜딩 1 · 설명 문서 6 |
+| 루트 HTML | 42 | 통합 프로토타입 1 · 기본 화면 14 · 상태 20 · 랜딩 1 · 설명 문서 6 |
 | 루트 문서 | 2 | `README.md` `DESIGN_REF.md` |
 | `assets/` 공용 | 5 | `base.css` `sheet.css` `template.html` `components.html` `logo-icon.png` |
-| 내려받기 실물 | 49 | `assets/docs/` 41 · `assets/xlsx/` 8 |
+| 내려받기 실물 | 28 | `assets/docs/` 20 · `assets/xlsx/` 8 |
 | 화면 캡처 | 15 | `assets/shots/` — 용어 해설이 카드마다 불러 쓴다 |
 | 동기화 스크립트 | 2 | `scripts/` — 시연본·용어 단독본 변환기 |
 
@@ -37,7 +37,7 @@
 | 파일 | 그룹 | 화면 | 상태 파일 |
 |---|---|---|---|
 | `invest-assets.html` | 투자 | 투자 자산 | `--cert-confirm` `--download` `--empty` `--page2` |
-| `invest-profit.html` | 투자 | 투자 수익 | `--datepicker` `--empty` `--monthly` `--weekly` |
+| `invest-profit.html` | 투자 | 투자 수익 | `--empty` `--monthly` `--weekly` |
 | `invest-sim.html` | 투자 | 투자 시뮬레이션 | `--result` |
 | `merchants.html` | 가맹점 | 가맹점 | `--empty` `--filtered` |
 | `acquisition.html` | 가맹점 | 정산채권 양수 | `--confirm` `--doc` `--done` `--signing` |
@@ -60,7 +60,7 @@
 
 `xls-*.html` 4종은 Figma 임포트 전용 서식이다. 화면 흐름의 진입점이 아니며, 엑셀 버튼은 미리보기를 거치지 않고 파일을 바로 내려준다.
 
-상태 낱장 21종은 전량이 랜딩·아카이브·구현 가능성 판정에 등재된다. 배포에 실려 주소로 열리는 낱장을 목록 밖에 두지 않는다. 통합본이 태우는 상태는 20종이고, `invest-profit--datepicker`(시작일 달력 팝오버 열림)는 Figma 임포트용 낱장으로만 둔다.
+상태 낱장 20종은 전량이 랜딩·아카이브·구현 가능성 판정에 등재되고, 통합본이 태우는 상태 20종과 같다. 배포에 실려 주소로 열리는 낱장을 목록 밖에 두지 않는다.
 
 ### 설명 문서 6
 
@@ -78,7 +78,7 @@
 ```
 ├── index.html            # 랜딩 (통합본 진입 + 전량 목록)
 ├── app.html              # 통합 프로토타입
-├── *.html                # 기본 화면 14 + 상태 21 + 설명 문서 6
+├── *.html                # 기본 화면 14 + 상태 20 + 설명 문서 6
 ├── scripts/              # 시연본·용어 단독본 변환기
 └── assets/
     ├── base.css          # 공용 스타일 (실측 토큰: 사이드바 #1B2537, primary #7FE141 등)
@@ -86,7 +86,7 @@
     ├── template.html     # 화면 스켈레톤
     ├── components.html   # 컴포넌트 갤러리
     ├── logo-icon.png     # 로고 원본. 화면 렌더는 base.css의 .logo-mark data URI
-    ├── docs/             # 내려받기 실물 41 (PDF · ZIP · TXT)
+    ├── docs/             # 내려받기 실물 20 (PDF · ZIP · TXT)
     ├── xlsx/             # 내려받기 실물 8 (XLSX)
     └── shots/            # 화면 캡처 15 (용어 해설용)
 ```
@@ -103,7 +103,7 @@
 | 투자 수익 | 수익 현황 엑셀 다운로드 — 집계 단위 일별·주별·월별 | `assets/xlsx/투자수익현황_2026-03-01_2026-08-31.xlsx` · `assets/xlsx/투자수익현황_2026-08-03_2026-08-30.xlsx` · `assets/xlsx/투자수익현황_2026-08-21_2026-08-27.xlsx` | `xls-profit-status.html` |
 | 투자 수익 | 표 엑셀 다운로드 — 집계 단위 일별·주별·월별 | `assets/xlsx/월별투자수익_2026-03-01_2026-08-31.xlsx` · `assets/xlsx/일별투자수익_2026-08-21_2026-08-27.xlsx` · `assets/xlsx/주별투자수익_2026-08-03_2026-08-30.xlsx` | `xls-profit-daily.html` |
 
-계약기록의 `선택 문서 다운로드`는 고른 행의 전자서명 결과를 하나로 묶은 텍스트를 내려준다 — `assets/docs/전자서명결과_선택3건_20260827.txt` · `assets/docs/전자서명결과_전체16건_20260827.txt`. 재양도합의서 PDF 16건과 묶음 ZIP 2건도 같은 폴더에 있다.
+계약기록의 `선택 문서 다운로드`는 고른 행의 전자서명 결과를 하나로 묶은 텍스트를 내려준다 — `assets/docs/전자서명결과_선택3건_20260827.txt` · `assets/docs/전자서명결과_전체16건_20260827.txt`. 재양도합의서 PDF 0건과 묶음 ZIP 0건도 같은 폴더에 있다.
 
 ## 참고
 
