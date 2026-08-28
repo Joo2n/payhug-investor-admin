@@ -114,10 +114,10 @@ jobs:
       - name: 배포 반영 확인
         run: |
           set -e
-          WANT=$(shasum -a 256 prototype/index.html | cut -d' ' -f1)
+          WANT=$(sha256sum prototype/index.html | cut -d' ' -f1)
           echo "기대 sha256 ${WANT}"
           for i in $(seq 1 40); do
-            GOT=$(curl -fsSL "$LIVE_URL" | shasum -a 256 | cut -d' ' -f1 || echo "")
+            GOT=$(curl -fsSL "$LIVE_URL" | sha256sum | cut -d' ' -f1 || echo "")
             if [ "$GOT" = "$WANT" ]; then
               echo "배포 반영 확인 (${i}회차) — $LIVE_URL"
               exit 0
