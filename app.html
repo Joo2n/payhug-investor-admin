@@ -417,6 +417,42 @@
   /* ── 쿠콘 안내 카드 — 조회 가능 내역을 같은 카드 아래쪽에 잇는다 ── */
   .link-check { width: 100%; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--gray-100); text-align: left; }
   .link-check .card-title { display: block; margin: 0 0 12px; }
+
+  /* ── 투자 시뮬레이션 ────────────────────────────────────────
+     규격은 payhug-admin-web/app/settlement/simulation/page.tsx 의 유틸리티 값을 옮긴 것이다.
+     :212 grid-cols-2 gap-4 → 항목이 6개라 3열, :265 flex items-center gap-3 bg-gray-50 rounded-lg px-3 py-2 → .sim-row,
+     :299-302 text-xs text-gray-500 pt-1 → .sim-total, :306-312 w-full py-3 rounded-xl font-semibold → .sim-run. */
+  .sim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .sim-grid .input { width: 100%; }
+  .sim-rows { display: flex; flex-direction: column; gap: 8px; }
+  .sim-row { display: flex; align-items: center; gap: 12px; background: var(--gray-50); border-radius: 8px; padding: 8px 12px; }
+  .sim-row .input { background: #fff; }
+  .sim-head {
+    display: flex; align-items: center; gap: 12px; padding: 0 12px 4px;
+    font-size: 12px; line-height: 16px; color: var(--secondary);
+  }
+  .sim-no    { width: 24px; flex-shrink: 0; font-size: 12px; line-height: 16px; color: var(--gray-400); }
+  .sim-plat  { width: 112px; flex-shrink: 0; }
+  .sim-amt   { width: 160px; flex-shrink: 0; text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .sim-unit  { width: 16px; flex-shrink: 0; font-size: 12px; line-height: 16px; color: var(--gray-400); }
+  .sim-date  { width: 150px; flex-shrink: 0; }
+  .sim-days  { width: 64px; flex-shrink: 0; text-align: right; font-size: 12px; line-height: 16px; color: var(--gray-500); font-variant-numeric: tabular-nums; }
+  .sim-del {
+    margin-left: auto; background: none; border: 0; padding: 0 4px;
+    font-size: 14px; line-height: 20px; color: var(--red-400);
+    transition: color 0.15s var(--ease-default);
+  }
+  .sim-del:hover { color: var(--red-600); }
+  .sim-total { font-size: 12px; line-height: 16px; color: var(--gray-500); padding-top: 12px; }
+  .sim-run {
+    display: block; width: 100%; padding: 12px 20px; border-radius: 12px;
+    background: var(--primary); color: #fff; font-size: 14px; line-height: 20px; font-weight: 600;
+    margin-bottom: 24px;
+  }
+  .sim-run:hover:not(:disabled) { background: var(--primary-600); }
+  .sim-run:disabled { background: var(--gray-300); color: #fff; cursor: not-allowed; }
+  .tbl tr.sim-skip td { color: var(--gray-400); font-style: italic; }
+  .tbl tr.sim-skip td .strong, .tbl tr.sim-skip td .name { color: var(--gray-400); font-weight: 400; }
 </style>
 </head>
 <!--
@@ -450,6 +486,10 @@
         <a class="nav-item" data-menu="invest-returns" href="invest-profit.html">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
           <span>투자 수익</span>
+        </a>
+        <a class="nav-item" data-menu="invest-sim" href="invest-sim.html">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm3.75-6.75A2.25 2.25 0 0119.5 4.5h-15A2.25 2.25 0 002.25 6.75v10.5A2.25 2.25 0 004.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75z"/></svg>
+          <span>투자 시뮬레이션</span>
         </a>
       </div>
 
@@ -752,6 +792,68 @@
             </div>
           </div>
         </div>
+      </section>
+
+      <!-- ═════════ 투자 시뮬레이션 ═════════ -->
+      <!-- 골격은 payhug-admin-web/app/settlement/simulation/page.tsx 를 따른다 —
+           :210-248 고정 변수 블록 · :251-303 반복 행 블록 · :299-302 합계 한 줄 ·
+           :306-312 폭 전체 실행 버튼 · :321 결과 게이트(실행 전에는 결과가 없다). -->
+      <section class="screen" data-screen="invest-sim" data-state="default" hidden>
+        <div class="page-header">
+          <h1 class="page-title">투자 시뮬레이션<span data-state-mark></span></h1>
+        </div>
+
+        <div class="card mb-6">
+          <div class="card-head">
+            <h2 class="card-title">기준 변수</h2>
+          </div>
+          <div class="sim-grid">
+            <div class="filter-field">
+              <label for="sim-r">할인율 (%)</label>
+              <input type="number" id="sim-r" class="input" step="0.01" min="0.01" max="5" data-mount="sim-r" data-act="sim-var" data-k="r">
+            </div>
+            <div class="filter-field">
+              <label for="sim-cash">순현금 (원)</label>
+              <input type="number" id="sim-cash" class="input" step="100000" min="0" data-mount="sim-cash" data-act="sim-var" data-k="cash">
+            </div>
+            <div class="filter-field">
+              <label for="sim-unpaid">미지급률 (%)</label>
+              <input type="number" id="sim-unpaid" class="input" step="0.01" min="0" max="100" data-mount="sim-unpaid" data-act="sim-var" data-k="unpaid">
+            </div>
+            <div class="filter-field">
+              <label for="sim-over">과지급률 (%)</label>
+              <input type="number" id="sim-over" class="input" step="0.01" min="0" max="100" data-mount="sim-over" data-act="sim-var" data-k="over">
+            </div>
+            <div class="filter-field">
+              <label for="sim-from">시작일</label>
+              <input type="date" id="sim-from" class="input" data-mount="sim-from" data-act="sim-var" data-k="from">
+            </div>
+            <div class="filter-field">
+              <label for="sim-to">종료일</label>
+              <input type="date" id="sim-to" class="input" data-mount="sim-to" data-act="sim-var" data-k="to">
+            </div>
+          </div>
+          <p class="range-warn" data-mount="sim-warn" hidden>시작일은 종료일보다 이후일 수 없습니다.</p>
+        </div>
+
+        <div class="card mb-6">
+          <div class="card-head">
+            <h2 class="card-title">정산금채권 입력</h2>
+            <button class="btn btn-primary" data-act="sim-add">+ 채권 추가</button>
+          </div>
+          <div class="sim-head">
+            <span class="sim-no"></span><span class="sim-plat">플랫폼</span>
+            <span class="sim-amt">순지급액</span><span class="sim-unit"></span>
+            <span class="sim-date">선정산일</span><span class="sim-date">정산예정일</span>
+            <span class="sim-days">금융일수</span>
+          </div>
+          <div class="sim-rows" data-mount="sim-rows"></div>
+          <div class="sim-total" data-mount="sim-total"></div>
+        </div>
+
+        <button class="sim-run" data-act="sim-run" data-mount="sim-go">시뮬레이션 실행</button>
+
+        <div data-mount="sim-out"></div>
       </section>
 
       <!-- ═════════ 가맹점 ═════════ -->
@@ -1432,6 +1534,7 @@ var MENU_OF = {
   'invest-assets':'invest-assets', 'certificate':'invest-assets',
   'xls-assets-status':'invest-assets', 'xls-assets-merchant':'invest-assets',
   'invest-profit':'invest-returns', 'xls-profit-status':'invest-returns', 'xls-profit-daily':'invest-returns',
+  'invest-sim':'invest-sim',
   'merchants':'merchants', 'acquisition-list':'receivables', 'contracts':'contracts',
   'coocon':'kcoon', 'password':'password', 'index':'', 'login':''
 };
@@ -1468,6 +1571,10 @@ var STATE_META = {
     'downloaded': {label:'다운로드 완료', cls:'badge-green'},
     'empty':      {label:'문서 없음',     cls:'badge-gray'}
   },
+  'invest-sim': {
+    'default':null,
+    'result': {label:'실행 결과', cls:'badge-primary'}
+  },
   'coocon':   {'default':null},
   'password': {
     'default':null,
@@ -1483,14 +1590,15 @@ var SCREEN_LABEL = {
   'index':'랜딩 갤러리', 'login':'로그인', 'invest-assets':'투자 자산', 'certificate':'투자자산 증명서',
   'xls-assets-status':'엑셀 산출물 서식 — 투자자산 현황', 'xls-assets-merchant':'엑셀 산출물 서식 — 가맹점별 투자자산',
   'invest-profit':'투자 수익', 'xls-profit-status':'엑셀 산출물 서식 — 투자수익 현황',
-  'xls-profit-daily':'엑셀 산출물 서식 — 일별 투자수익', 'merchants':'가맹점',
+  'xls-profit-daily':'엑셀 산출물 서식 — 일별 투자수익', 'invest-sim':'투자 시뮬레이션', 'merchants':'가맹점',
   'acquisition-list':'정산채권 양수', 'contracts':'계약기록', 'coocon':'쿠콘 관리 현금', 'password':'비밀번호 변경'
 };
 var SCREEN_ORDER = ['index','login','invest-assets','certificate','xls-assets-status','xls-assets-merchant',
-  'invest-profit','xls-profit-status','xls-profit-daily','merchants','acquisition-list','contracts','coocon','password'];
+  'invest-profit','xls-profit-status','xls-profit-daily','invest-sim','merchants','acquisition-list','contracts','coocon','password'];
 var FILE2SCREEN = {
   'index.html':'index', 'login.html':'login', 'invest-assets.html':'invest-assets', 'certificate.html':'certificate',
-  'invest-profit.html':'invest-profit', 'merchants.html':'merchants', 'acquisition.html':'acquisition-list',
+  'invest-profit.html':'invest-profit', 'invest-sim.html':'invest-sim',
+  'merchants.html':'merchants', 'acquisition.html':'acquisition-list',
   'contracts.html':'contracts', 'coocon.html':'coocon', 'password.html':'password',
   'xls-assets-status.html':'xls-assets-status', 'xls-assets-merchant.html':'xls-assets-merchant',
   'xls-profit-status.html':'xls-profit-status', 'xls-profit-daily.html':'xls-profit-daily'
@@ -1501,6 +1609,7 @@ var STATEFILE = {
   'invest-profit--weekly.html':'invest-profit/weekly',
   'invest-profit--monthly.html':'invest-profit/monthly',
   'invest-profit--empty.html':'invest-profit/empty',
+  'invest-sim--result.html':'invest-sim/result',
   'merchants--filtered.html':'merchants/filtered', 'merchants--empty.html':'merchants/empty',
   'acquisition--confirm.html':'acquisition-list/confirm', 'acquisition--signing.html':'acquisition-list/signing',
   'acquisition--done.html':'acquisition-list/done', 'acquisition--doc.html':'acquisition-list/doc',
@@ -1678,6 +1787,7 @@ var DERIVE = {
     if(PF.gran === 'monthly') return 'monthly';
     return 'default';
   },
+  'invest-sim': function(){ return SIM.result ? 'result' : 'default'; },
   'merchants': function(){
     if(MC.applied){ return mcRows().length === 0 ? 'empty' : 'filtered'; }
     return 'default';
@@ -1707,6 +1817,14 @@ var SEED = {
     else if(s === 'monthly'){ PF.gran = 'monthly'; PF.from = PRESET_RANGE.m6[0]; PF.to = PRESET_RANGE.m6[1]; }
     else if(s === 'empty'){ PF.gran = 'daily'; PF.from = '2026-02-01'; PF.to = '2026-02-07'; }
     else { PF.gran = 'daily'; PF.from = PRESET_RANGE.week[0]; PF.to = PRESET_RANGE.week[1]; }
+  },
+  'invest-sim': function(s){
+    clearSimTimer();
+    SIM.r = 0.11; SIM.cash = 105300000; SIM.unpaid = 0.03; SIM.over = 0.01;
+    SIM.from = '2026-08-21'; SIM.to = '2026-08-27';
+    SIM.rows = simSeedRows();
+    SIM.running = false; SIM.redraw = true; SIM.result = null;
+    if(s === 'result') simRun();
   },
   'merchants': function(s){
     MC.page = 1;
@@ -1753,6 +1871,7 @@ function go(screen, state){
   var st = state || PEND[screen] || ((fresh && !DIRTY[screen]) ? 'default' : null);
   delete PEND[screen];
   clearSignTimer();
+  clearSimTimer();
   if(fresh) hideToast();          /* 화면이 바뀌면 이전 화면의 토스트는 내린다 */
   CUR = screen;
   QA('section.screen').forEach(function(s){ s.hidden = (s.dataset.screen !== screen); });
@@ -2147,6 +2266,299 @@ RENDER['invest-profit'] = function(){
   
 };
 
+
+/* ───────── 투자 시뮬레이션 ─────────
+   기존 화면과 완전히 별개다. SIM 은 IA·PF·MC·AQ·CT 와 독립된 상태 객체이고
+   simRun() 은 MERCHANTS·ASSET_ROWS·DAILY 를 읽지도 쓰지도 않는다.
+   산식 출처 — 대표 정의서 [1번 이미지] Ai·Di·W·Ty·S · [2번 이미지] Mi·Bi·PSA·PSM·PSD·PSMR·PSC.
+   앵커는 순지급액이다(채권매입수수료 = 순지급액 x 할인율). 현행 일별 원장의 투자실행금 앵커와 다르고,
+   그 차이는 시뮬레이션 안에서만 산다 — 투자 자산·투자 수익 화면은 손대지 않는다. */
+var SIM_PLAT = [
+  {k:'card', label:'카드사',     d:2},
+  {k:'bm',   label:'배달의민족', d:3},
+  {k:'cpe',  label:'쿠팡이츠',   d:5},
+  {k:'yo',   label:'요기요',     d:6}
+];
+/* 플랫폼별 만기 = round(DURATION) — platform_duration.py:46 실측 2.0 / 3.4 / 4.7 / 6.2.
+   채권 한 건의 금융일수는 날짜 차이라 정수다. */
+var SIM_DUR = {card:2, bm:3, cpe:5, yo:6};
+function simLabel(k){ for(var i = 0; i < SIM_PLAT.length; i++) if(SIM_PLAT[i].k === k) return SIM_PLAT[i].label; return k; }
+function simDue(sd, plat){ return sd ? addDays(sd, SIM_DUR[plat] || 0) : sd; }
+function simSeedRows(){
+  return [
+    {plat:'card', amt:400000000, sd:'2026-08-26', dd:'2026-08-28'},
+    {plat:'bm',   amt:400000000, sd:'2026-08-26', dd:'2026-08-29'},
+    {plat:'cpe',  amt:100000000, sd:'2026-08-26', dd:'2026-08-31'},
+    {plat:'yo',   amt:100000000, sd:'2026-08-26', dd:'2026-09-01'},
+    {plat:'card', amt:200000000, sd:'2026-08-22', dd:'2026-08-24'},
+    {plat:'bm',   amt:200000000, sd:'2026-08-22', dd:'2026-08-25'},
+    {plat:'cpe',  amt:50000000,  sd:'2026-08-21', dd:'2026-08-26'},
+    {plat:'yo',   amt:50000000,  sd:'2026-08-21', dd:'2026-08-27'}
+  ];
+}
+var SIM = {
+  r:0.11, cash:105300000, unpaid:0.03, over:0.01,
+  from:'2026-08-21', to:'2026-08-27',
+  rows:simSeedRows(),
+  result:null, running:false, redraw:true
+};
+
+function simNum(v){ var n = parseFloat(v); return isFinite(n) ? n : 0; }
+function simDays(a, b){ return Math.round((dt(b) - dt(a)) / 86400000); }
+/* 절사 전에 부동소수 잡음만 걷어낸다 — 0.03 - 0.01 이 0.019999999999999997 로 잡히는 자리.
+   산식은 그대로 절사(대표 정의서 원 단위)다. */
+function simFloor(x){ return Math.floor(Number(Number(x).toFixed(6))); }
+function simAmtTotal(){ var t = 0, i; for(i = 0; i < SIM.rows.length; i++) t += SIM.rows[i].amt; return t; }
+
+/* 채권 1건 — Ai · Di · 채권매입수수료 · 미지급 차감 · 투자수익 Mi · 상환액 Bi */
+function simBond(row, r, dedRate){
+  var A   = simFloor(row.amt * (1 - r));
+  var D   = simDays(row.sd, row.dd);
+  var fee = simFloor(row.amt * r);
+  var ded = simFloor(Math.max(0, dedRate) * row.amt);
+  return {plat:row.plat, amt:row.amt, sd:row.sd, dd:row.dd,
+          D:D, A:A, fee:fee, ded:ded, M:fee - ded, B:row.amt - ded};
+}
+
+function simRun(){
+  var r = SIM.r / 100, ded = (SIM.unpaid - SIM.over) / 100, i;
+  var bonds = SIM.rows.map(function(x){ return simBond(x, r, ded); });
+  var out = [], mat = [];
+  for(i = 0; i < bonds.length; i++){
+    var b = bonds[i];
+    if(b.dd > SIM.to){ b.kind = '미회수'; out.push(b); }
+    else if(b.dd >= SIM.from){ b.kind = '만기'; mat.push(b); }
+    else b.kind = '기간 밖';
+  }
+
+  /* ── 투자 자산 (회수되지 않은 순지급액) ── */
+  var EXEC = sum(out, 'A');
+  var W    = EXEC ? out.reduce(function(t, b){ return t + b.A * b.D; }, 0) / EXEC : 0;
+  var TY   = W ? SIM.r * 365 / W : 0;
+  var S    = (SIM.unpaid - SIM.over) / (1 - r);
+  var TOT  = EXEC + SIM.cash;
+  var SH   = ratios([{amount:EXEC}, {amount:SIM.cash}], TOT);
+
+  /* ── 투자 수익 (기간 안에 만기가 도래한 채권) ── */
+  var PSA  = sum(mat, 'A'), PSM = sum(mat, 'M'), PSB = sum(mat, 'B');
+  var PSD  = PSA ? mat.reduce(function(t, b){ return t + b.A * b.D; }, 0) / PSA : 0;
+  var PSMR = PSA ? PSM / PSA * 100 : 0;
+  var TY4  = PSD ? PSMR * 365 / PSD : 0;
+  var ECD  = (SIM.from && SIM.to) ? simDays(SIM.from, SIM.to) + 1 : 0;
+  var PSC  = SIM.cash * ECD;
+  var TY5  = (PSA + PSC) ? TY4 * PSA / (PSA + PSC) : 0;
+
+  /* ── 일별 ── */
+  var day = {}, keys = [];
+  mat.forEach(function(b){
+    var g = day[b.dd];
+    if(!g){ g = day[b.dd] = {d:b.dd, A:0, M:0, B:0, wx:0}; keys.push(b.dd); }
+    g.A += b.A; g.M += b.M; g.B += b.B; g.wx += b.A * b.D;
+  });
+  keys.sort();
+  var rows = keys.map(function(k){
+    var g = day[k];
+    g.W  = g.A ? g.wx / g.A : 0;
+    g.TY = (g.A && g.W) ? (g.M / g.A * 100) * 365 / g.W : 0;
+    return g;
+  });
+
+  SIM.result = {bonds:bonds, out:out, mat:mat, cash:SIM.cash, from:SIM.from, to:SIM.to,
+                EXEC:EXEC, W:W, TY:TY, S:S, TOT:TOT, SH:SH,
+                PSA:PSA, PSM:PSM, PSB:PSB, PSD:PSD, PSMR:PSMR,
+                TY4:TY4, TY5:TY5, ECD:ECD, PSC:PSC, rows:rows};
+}
+
+/* 실행 가능 조건 — 어드민 page.tsx:308 과 같은 방식으로, 못 돌릴 입력이면 버튼을 막는다 */
+function simCanRun(){
+  if(!SIM.rows.length) return false;
+  if(!SIM.from || !SIM.to || SIM.from > SIM.to) return false;
+  if(!(SIM.r > 0) || SIM.r >= 100) return false;
+  for(var i = 0; i < SIM.rows.length; i++){
+    var x = SIM.rows[i];
+    if(!x.sd || !x.dd || x.sd > x.dd) return false;
+  }
+  return true;
+}
+
+/* ── 그리기 ── */
+function simSetVal(name, v){
+  var el = M(name, 'invest-sim');
+  if(!el || document.activeElement === el) return;   /* 치는 중에는 캐럿을 건드리지 않는다 */
+  if(el.value !== String(v)) el.value = v;
+}
+function simRowHtml(x, i, n){
+  var o = '', j;
+  for(j = 0; j < SIM_PLAT.length; j++)
+    o += '<option value="' + SIM_PLAT[j].k + '"' + (SIM_PLAT[j].k === x.plat ? ' selected' : '') + '>' + SIM_PLAT[j].label + '</option>';
+  return '<div class="sim-row" data-row="' + i + '">' +
+    '<span class="sim-no">' + (i + 1) + '</span>' +
+    '<select class="input sim-plat" data-act="sim-row" data-i="' + i + '" data-f="plat" aria-label="플랫폼">' + o + '</select>' +
+    '<input type="number" class="input sim-amt" data-act="sim-row" data-i="' + i + '" data-f="amt" step="1000000" min="0" value="' + x.amt + '" aria-label="순지급액">' +
+    '<span class="sim-unit">원</span>' +
+    '<input type="date" class="input sim-date" data-act="sim-row" data-i="' + i + '" data-f="sd" value="' + x.sd + '" aria-label="선정산일">' +
+    '<input type="date" class="input sim-date" data-act="sim-row" data-i="' + i + '" data-f="dd" value="' + x.dd + '" aria-label="정산예정일">' +
+    '<span class="sim-days"></span>' +
+    (n > 1 ? '<button type="button" class="sim-del" data-act="sim-del" data-i="' + i + '">삭제</button>' : '') +
+    '</div>';
+}
+function simDrawRows(){
+  var h = '', i;
+  for(i = 0; i < SIM.rows.length; i++) h += simRowHtml(SIM.rows[i], i, SIM.rows.length);
+  M('sim-rows', 'invest-sim').innerHTML = h;
+}
+/* 값 칸은 그대로 두고 파생 표시만 고친다 — 한 글자 칠 때마다 행을 다시 그리면 포커스가 날아간다 */
+function simSyncRows(){
+  var els = QA('.sim-row', M('sim-rows', 'invest-sim')), i;
+  for(i = 0; i < els.length; i++){
+    var x = SIM.rows[i]; if(!x) continue;
+    var ok = x.sd && x.dd && x.sd <= x.dd;
+    Q('.sim-days', els[i]).textContent = ok ? (simDays(x.sd, x.dd) + '일') : '-';
+    var dd = Q('[data-f="dd"]', els[i]);
+    if(dd && document.activeElement !== dd && dd.value !== x.dd) dd.value = x.dd;
+  }
+}
+function simTyTip(R){
+  return '<div class="stat"><div class="summary-label">Ty수익율</div><div class="ty-split">' +
+    '<div><div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자실행금액 대비</span>' +
+      '<span class="tip-panel">PSMR × 365 ÷ PSD' +
+        '<span class="tip-row"><span>PSMR</span><span class="tip-green">투자수익 ÷ 투자실행금</span></span>' +
+        '<span class="tip-row"><span>PSD</span><span class="tip-green">투자실행금 가중평균 금융일수</span></span>' +
+      '</span></span></div>' +
+      '<div class="summary-value' + (R.TY4 < 0 ? ' neg' : '') + '">' + fx(R.TY4, 2) + '<span class="unit">%</span></div></div>' +
+    '<div><div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자자산 대비</span>' +
+      '<span class="tip-panel">(투자실행금액 대비 × PSA) ÷ (PSA + PSC)' +
+        '<span class="tip-row"><span>PSA</span><span class="tip-green">' + fmt(R.PSA) + '원</span></span>' +
+        '<span class="tip-row"><span>PSC</span><span class="tip-green">' + fmt(R.PSC) + '원</span></span>' +
+        '<span class="tip-row sum"><span>EC ' + R.ECD + '일 합</span><span>기간 순현금 합계</span></span>' +
+      '</span></span></div>' +
+      '<div class="summary-value' + (R.TY5 < 0 ? ' neg' : '') + '">' + fx(R.TY5, 2) + '<span class="unit">%</span></div></div>' +
+  '</div></div>';
+}
+function simResultHtml(){
+  var R = SIM.result, i, b, h = '';
+
+  /* ① 투자 요약 */
+  h += '<div class="summary-grid">' +
+    '<div class="summary-card highlight"><div class="summary-label">투자자산</div>' +
+      '<div class="summary-value">' + fmt(R.TOT) + '<span class="unit">원</span></div>' +
+      '<div class="summary-sub">투자실행액 + 순현금</div></div>' +
+    '<div class="summary-card"><div class="summary-label">투자실행액</div>' +
+      '<div class="summary-value">' + fmt(R.EXEC) + '<span class="unit">원</span></div>' +
+      '<div class="summary-sub">비중 ' + fx(R.SH[0], 1) + '% · 보관 ㈜페이허그</div></div>' +
+    '<div class="summary-card"><div class="summary-label">순현금</div>' +
+      '<div class="summary-value">' + fmt(R.cash) + '<span class="unit">원</span></div>' +
+      '<div class="summary-sub">비중 ' + fx(R.SH[1], 1) + '% · 보관 ㈜쿠콘</div></div>' +
+    '<div class="summary-card"><div class="summary-label">Ty수익율</div>' +
+      '<div class="summary-value">' + fx(R.TY, 2) + '<span class="unit">%</span></div>' +
+      '<div class="summary-sub">W금융일수 ' + fx(R.W, 1) + '일 기준</div></div>' +
+  '</div>';
+
+  /* ② 채권별 산출 — 기간 밖 행은 회색 이탤릭으로 두고 집계에서 뺀다 (page.tsx:366-369 · :560) */
+  h += '<div class="tbl-wrap mb-6"><div class="tbl-head"><h2>채권별 산출</h2></div>' +
+    '<div class="tbl-scroll"><table class="tbl"><thead><tr>' +
+    '<th class="num">#</th><th>구분</th><th>플랫폼</th><th class="num">순지급액</th>' +
+    '<th class="num">금융일수</th><th class="num">투자실행금</th><th class="num">채권매입수수료</th>' +
+    '<th class="num">미지급 차감</th><th class="num">투자수익</th><th class="num">상환액</th>' +
+    '</tr></thead><tbody>';
+  for(i = 0; i < R.bonds.length; i++){
+    b = R.bonds[i];
+    h += '<tr' + (b.kind === '기간 밖' ? ' class="sim-skip"' : '') + '>' +
+      '<td class="num">' + (i + 1) + '</td><td>' + b.kind + '</td><td>' + simLabel(b.plat) + '</td>' +
+      '<td class="num">' + fmt(b.amt) + '</td><td class="num">' + b.D + '</td>' +
+      '<td class="num">' + fmt(b.A) + '</td><td class="num">' + fmt(b.fee) + '</td>' +
+      '<td class="num">' + fmt(b.ded) + '</td>' +
+      '<td class="num"><span class="strong">' + fmt(b.M) + '</span></td>' +
+      '<td class="num">' + fmt(b.B) + '</td></tr>';
+  }
+  h += '</tbody></table></div></div>';
+
+  /* ③ 현황 — 투자 자산 */
+  h += '<div class="tbl-wrap mb-6"><div class="tbl-head"><h2>현황</h2></div>' +
+    '<div class="tbl-scroll"><table class="tbl"><thead><tr><th>자산 구분</th><th class="num">금액 (원)</th>' +
+    '<th class="num">W금융일수</th><th class="num">S입금부족율</th><th class="num">Ty수익율</th>' +
+    '<th class="num">비중</th><th>보관</th></tr></thead><tbody>' +
+    '<tr><td><span class="name">투자실행액</span></td><td class="num"><span class="strong">' + fmt(R.EXEC) + '</span></td>' +
+      '<td class="num">' + fx(R.W, 1) + '일</td><td class="num">' + pct(R.S, 2) + '</td>' +
+      '<td class="num">' + pct(R.TY, 2) + '</td><td class="num">' + fx(R.SH[0], 1) + '%</td><td>㈜페이허그</td></tr>' +
+    '<tr><td><span class="name">순현금</span></td><td class="num"><span class="strong">' + fmt(R.cash) + '</span></td>' +
+      '<td class="num"><span class="none">-</span></td><td class="num"><span class="none">-</span></td>' +
+      '<td class="num"><span class="none">-</span></td><td class="num">' + fx(R.SH[1], 1) + '%</td><td>㈜쿠콘</td></tr>' +
+    '<tr class="total-row"><td>합계 (투자자산)</td><td class="num">' + fmt(R.TOT) + '</td>' +
+      '<td class="num"><span class="none">-</span></td><td class="num"><span class="none">-</span></td>' +
+      '<td class="num"><span class="none">-</span></td>' +
+      '<td class="num">' + fx(R.SH[0] + R.SH[1], 1) + '%</td><td><span class="none">-</span></td></tr>' +
+    '</tbody></table></div></div>';
+
+  /* ④ 수익 현황 — 투자 수익 */
+  h += '<div class="card mb-6"><div class="card-head"><h2 class="card-title">수익 현황</h2></div>' +
+    '<div class="stat-grid">' +
+    '<div class="stat"><div class="summary-label">검색대상기간</div>' +
+      '<div class="stat-period">' + R.ECD + '일</div>' +
+      '<div class="summary-sub mono">' + R.from + ' ~ ' + R.to + '</div></div>' +
+    '<div class="stat"><div class="summary-label">투자실행금</div>' +
+      '<div class="summary-value">' + fmt(R.PSA) + '<span class="unit">원</span></div></div>' +
+    '<div class="stat"><div class="summary-label">투자수익</div>' +
+      '<div class="summary-value' + (R.PSM < 0 ? ' neg' : '') + '">' + fmt(R.PSM) + '<span class="unit">원</span></div></div>' +
+    simTyTip(R) +
+    '</div></div>';
+
+  /* ⑤ 일별 투자수익 */
+  var HEAD = '<th>정산예정일</th><th class="num">상환액</th><th class="num">투자실행금</th>' +
+             '<th class="num">투자 수익</th><th class="num">W금융일수</th><th class="num">Ty수익율</th>';
+  h += '<div class="tbl-wrap mb-6"><div class="tbl-head"><div class="left">' +
+       '<h2 class="card-title">일별 투자수익</h2></div></div>';
+  if(!R.rows.length){
+    h += emptyTable(HEAD, 6, '조회 결과가 없습니다.');
+  } else {
+    h += '<div class="tbl-scroll"><table class="tbl"><thead><tr>' + HEAD + '</tr></thead><tbody>';
+    for(i = 0; i < R.rows.length; i++){
+      var g = R.rows[i];
+      h += '<tr><td class="mono">' + g.d + '</td><td class="num">' + fmt(g.B) + '</td>' +
+        '<td class="num">' + fmt(g.A) + '</td><td class="num"><span class="strong">' + fmt(g.M) + '</span></td>' +
+        '<td class="num">' + fx(g.W, 1) + '</td><td class="num">' + pct(g.TY, 2) + '</td></tr>';
+    }
+    h += '</tbody><tfoot><tr><td>합계</td><td class="num">' + fmt(R.PSB) + '</td>' +
+      '<td class="num">' + fmt(R.PSA) + '</td><td class="num">' + fmt(R.PSM) + '</td>' +
+      '<td class="num">' + fx(R.PSD, 1) + '<span class="avg-sub">가중평균</span></td>' +
+      '<td class="num">' + fx(R.TY4, 2) + '%<span class="avg-sub">가중평균</span></td></tr></tfoot></table></div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+RENDER['invest-sim'] = function(){
+  simSetVal('sim-r', SIM.r); simSetVal('sim-cash', SIM.cash);
+  simSetVal('sim-unpaid', SIM.unpaid); simSetVal('sim-over', SIM.over);
+  simSetVal('sim-from', SIM.from); simSetVal('sim-to', SIM.to);
+  if(SIM.redraw){ simDrawRows(); SIM.redraw = false; }
+  simSyncRows();
+  M('sim-total', 'invest-sim').textContent = '총 ' + SIM.rows.length + '건, 합계 ' + fmt(simAmtTotal()) + '원';
+  /* 기간 역전 안내 — 원문 payhug-admin-web/components/DateRangeFilter.tsx:14 · 표시 조건 :79 · 자리 :139 */
+  M('sim-warn', 'invest-sim').hidden = !(SIM.from && SIM.to && SIM.from > SIM.to);
+  var btn = M('sim-go', 'invest-sim');
+  btn.textContent = SIM.running ? '계산 중...' : '시뮬레이션 실행';
+  btn.disabled = SIM.running || !simCanRun();
+  M('sim-out', 'invest-sim').innerHTML = SIM.result ? simResultHtml() : '';
+};
+
+/* ── 조작 ── */
+var simTimer = null;
+function clearSimTimer(){ if(simTimer){ clearTimeout(simTimer); simTimer = null; } }
+function simTakeVar(el){
+  var k = el.dataset.k;
+  if(k === 'from' || k === 'to') SIM[k] = el.value;
+  else SIM[k] = simNum(el.value);
+  refresh('invest-sim');
+}
+function simTakeRow(el){
+  var i = parseInt(el.dataset.i, 10), f = el.dataset.f, x = SIM.rows[i];
+  if(!x) return;
+  if(f === 'amt') x.amt = Math.max(0, simNum(el.value));
+  else if(f === 'plat'){ x.plat = el.value; x.dd = simDue(x.sd, x.plat); }
+  else x[f] = el.value;
+  refresh('invest-sim');
+}
 
 /* ───────── 가맹점 ───────── */
 function mcRows(){
@@ -2635,6 +3047,7 @@ var GALLERY = [
   ['invest-assets','card','badge-primary','투자','현황·가맹점별 투자자산·산식·엑셀/증명서 다운로드'],
   ['certificate','shield','badge-primary','투자','전자문서 미리보기·서명 검증'],
   ['invest-profit','trend','badge-primary','투자','기간 검색·일별/월별 투자수익·산식'],
+  ['invest-sim','chart','badge-primary','투자','기준 변수·채권 입력·투자 자산/수익 산출'],
   ['merchants','users','badge-blue','가맹점','목록·업종/채권매입업체 필터·검색'],
   ['acquisition-list','cards','badge-blue','가맹점','계약서보기 · 양수도 계약서 전자서명'],
   ['contracts','doc','badge-blue','가맹점','전자서명 결과 일괄 다운로드'],
@@ -2898,6 +3311,32 @@ ACT['aq-view']  = function(el){ AQ.doc = parseInt(el.dataset.i, 10); refresh('ac
 ACT['aq-file']  = function(){};   /* 모달 안 파일 링크는 기본 동작(새 창)으로 흘린다 */
 ACT['ct-clear'] = function(){ CT.sel = {}; refresh('contracts'); };
 
+/* 투자 시뮬레이션 */
+ACT['sim-add'] = function(){
+  var sd = SIM.to ? addDays(SIM.to, -SIM_DUR.card) : SIM.to;
+  SIM.rows.push({plat:'card', amt:100000000, sd:sd, dd:SIM.to});
+  SIM.redraw = true;
+  refresh('invest-sim');
+};
+ACT['sim-del'] = function(el){
+  if(SIM.rows.length <= 1) return;
+  SIM.rows.splice(parseInt(el.dataset.i, 10), 1);
+  SIM.redraw = true;
+  refresh('invest-sim');
+};
+ACT['sim-run'] = function(){
+  if(SIM.running || !simCanRun()) return;
+  clearSimTimer();
+  SIM.running = true;
+  refresh('invest-sim');
+  /* 계산은 그 자리에서 끝난다. 300ms 는 진행 상태를 보이기 위한 것 — 어드민 page.tsx:311 이 라벨만 바꾼다 */
+  simTimer = setTimeout(function(){
+    simTimer = null; SIM.running = false;
+    simRun();
+    refresh('invest-sim');
+  }, 300);
+};
+
 /* ═══ 이벤트 바인딩 ═══ */
 document.addEventListener('click', function(e){
   var t = e.target;
@@ -2975,6 +3414,8 @@ document.addEventListener('change', function(e){
     refresh('invest-profit');
     return;
   }
+  if(el.dataset.act === 'sim-var'){ simTakeVar(el); return; }
+  if(el.dataset.act === 'sim-row'){ simTakeRow(el); return; }
   if(el.dataset.act === 'pg-size'){
     var k = el.dataset.key;
     PS[k] = parseInt(el.value, 10);
@@ -3010,6 +3451,8 @@ document.addEventListener('input', function(e){
     refresh('merchants');
     return;
   }
+  if(el.dataset.act === 'sim-var'){ simTakeVar(el); return; }
+  if(el.dataset.act === 'sim-row'){ simTakeRow(el); return; }
   if(el.dataset.act === 'pw-input'){
     /* IME(한글 등) 조합 중에는 값을 건드리지 않는다 — 조합이 끝난 뒤 compositionend 에서 최종 값을 한 번에 받는다.
        (PasswordInput.tsx:68-78 — 이벤트마다 isComposing 을 그때그때 보므로 한영전환으로 조합이

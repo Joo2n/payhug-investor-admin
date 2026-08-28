@@ -151,6 +151,7 @@ svg.icon-lg { width: 20px; height: 20px; flex-shrink: 0; }    /* w-5 h-5 */
 /* body[data-active="메뉴ID"] 로 화면별 활성 메뉴 지정 (template.html의 data-menu와 짝) */
 body[data-active="invest-assets"]  .nav-item[data-menu="invest-assets"],
 body[data-active="invest-returns"] .nav-item[data-menu="invest-returns"],
+body[data-active="invest-sim"]     .nav-item[data-menu="invest-sim"],
 body[data-active="merchants"]      .nav-item[data-menu="merchants"],
 body[data-active="receivables"]    .nav-item[data-menu="receivables"],
 body[data-active="contracts"]      .nav-item[data-menu="contracts"],
@@ -160,6 +161,7 @@ body[data-active="password"]       .nav-item[data-menu="password"] {
 }
 body[data-active="invest-assets"]  .nav-group[data-group="invest"] .nav-group-label,
 body[data-active="invest-returns"] .nav-group[data-group="invest"] .nav-group-label,
+body[data-active="invest-sim"]     .nav-group[data-group="invest"] .nav-group-label,
 body[data-active="merchants"]      .nav-group[data-group="merchant"] .nav-group-label,
 body[data-active="receivables"]    .nav-group[data-group="merchant"] .nav-group-label,
 body[data-active="contracts"]      .nav-group[data-group="merchant"] .nav-group-label,
