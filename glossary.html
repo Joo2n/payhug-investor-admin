@@ -58,6 +58,9 @@ body { background: var(--gray-50); }
 .fchip[data-src="new"][aria-pressed="true"]    { background: var(--amber-700);   border-color: var(--amber-700); }
 .fchip[data-src="check"][aria-pressed="true"]  { background: var(--red-700);     border-color: var(--red-700); }
 .fchip[data-src="track"][aria-pressed="true"]  { background: var(--gray-600);    border-color: var(--gray-600); }
+.fchip[data-layer="screen"][aria-pressed="true"] { background: var(--primary-600); border-color: var(--primary-600); }
+.fchip[data-layer="calc"][aria-pressed="true"]   { background: var(--gray-500);    border-color: var(--gray-500); }
+.tb-flabel { font-size: 11px; line-height: 16px; font-weight: 700; color: var(--gray-400); letter-spacing: 0.04em; }
 .tb-count { font-size: 12px; line-height: 16px; color: var(--gray-400); font-family: var(--font-mono); white-space: nowrap; }
 .tb-count b { color: var(--primary-700); font-weight: 700; }
 
@@ -279,6 +282,32 @@ a.chip:hover { background: var(--primary-50); color: var(--primary-700); border-
 .src-check  { background: var(--red-100);     color: var(--red-700); }
 .src-track  { background: var(--gray-100);    color: var(--gray-500); }
 
+/* ── 층위 뱃지 · 기호 부제 ── */
+.lb {
+  align-self: center; border-radius: 7px; padding: 3px 9px; white-space: nowrap;
+  font-size: 11px; line-height: 16px; font-weight: 700; border: 1px solid transparent;
+}
+.lb-screen { background: var(--primary-50); color: var(--primary-700); border-color: var(--primary-200); }
+.lb-calc   { background: var(--gray-50);    color: var(--gray-500);   border-color: var(--gray-200); }
+.tsub {
+  align-self: center; font-family: var(--font-mono); font-size: 12px; line-height: 18px; font-weight: 700;
+  color: var(--gray-500); background: var(--gray-50); border: 1px solid var(--gray-200);
+  border-radius: 6px; padding: 1px 7px; white-space: nowrap;
+}
+
+/* ── 화면 기준 매핑표 ── */
+.map-tbl { min-width: 980px; }
+.map-tbl td { font-size: 12.5px; line-height: 20px; }
+.map-tbl tr.grp td { background: var(--gray-100); font-weight: 700; color: var(--gray-700); font-size: 12px; }
+.map-tbl code.q {
+  display: block; white-space: normal; font-size: 11.5px; line-height: 18px;
+  color: var(--gray-700); background: var(--violet-50); border: 1px solid var(--violet-200);
+  border-radius: 6px; padding: 5px 8px;
+}
+.map-tbl .pick { display: block; font-size: 12.5px; line-height: 20px; color: var(--gray-600); }
+.map-tbl .pick + .pick { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--gray-200); }
+.mini { display: inline-block; font-size: 11.5px; line-height: 17px; color: var(--gray-400); }
+
 .lede-line {
   font-size: 16px; line-height: 28px; color: var(--gray-800); margin: 14px 0 0;
   padding-left: 14px; border-left: 3px solid var(--primary); max-width: 60em;
@@ -400,6 +429,11 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
       <button class="fchip" type="button" data-src="check"  aria-pressed="false">확인필요 <span class="n">1</span></button>
       <button class="fchip" type="button" data-src="track"  aria-pressed="false">추적 중 <span class="n">1</span></button>
     </div>
+    <div class="tb-filters" id="lfilters">
+      <span class="tb-flabel">층위</span>
+      <button class="fchip" type="button" data-layer="screen" aria-pressed="false">화면 용어 <span class="n">28</span></button>
+      <button class="fchip" type="button" data-layer="calc"   aria-pressed="false">계산 재료 <span class="n">22</span></button>
+    </div>
     <div class="tb-count" id="hitCount">용어 <b>50</b>건</div>
   </div>
 </div>
@@ -408,6 +442,7 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
 
 <nav class="toc" id="toc" aria-label="목차">
   <div class="toc-h">목차</div>
+  <a href="#s0">0 · 화면에서 본 이름으로 찾기</a>
   <a href="#s1">1 · 전체 그림</a>
   <a href="#s2">2 · 그림 가운데가 비어 있다</a>
   <a href="#s3">3 · 읽는 순서</a>
@@ -457,6 +492,175 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
     </div>
   </div>
 </header>
+
+<!-- ══════════════════ 0. 화면에서 본 이름으로 찾기 ══════════════════ -->
+<section class="sec" id="s0">
+  <div class="sec-num">00</div>
+  <h2>화면에서 본 이름으로 찾기</h2>
+  <p class="sec-lede">화면에서 눈으로 읽은 이름을 왼쪽에서 찾으면 이 문서 어느 카드로 가야 하는지가 오른쪽에 있다. 행 13개는 대표님께 보낸 화면 항목 나열 그대로다 — <code>투자 자산</code> 6개 · <code>투자 수익</code> 7개.</p>
+
+  <div class="note-inline"><b>한 이름이 여러 카드로 갈리는 행이 있다.</b> 화면 이름은 하나인데 뒤에 붙은 계통이 셋(<code>잔액</code> · <code>하루치</code> · <code>기간 합계</code>)이라 값이 달라지기 때문이다. 갈리는 행은 카드를 전부 적고, 어느 자리에서 어느 것을 쓰는지 한 줄로 붙였다.</div>
+
+  <h3 class="blk-title">0-1. 대표님께 보낸 13항목</h3>
+  <div class="t-card">
+    <div class="t-scroll">
+      <table class="tbl map-tbl">
+        <thead><tr><th>화면에서 보는 이름</th><th>어느 화면 · 어느 자리</th><th>대표님 정의 원문</th><th>이 문서에서는</th><th>한 줄 뜻</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="5">1번 이미지 — <a class="scr" href="invest-assets.html">투자 자산</a> 화면</td></tr>
+
+          <tr>
+            <td class="key">① 투자 실행액</td>
+            <td>현황표 <code>투자실행액</code> 행 · 요약 카드<br><span class="mini">화면 표기는 <code>투자실행액</code>(붙여쓰기)</span></td>
+            <td><code class="q">투자 실행액: ‘유동화투자자와 정산금채권 재양도 합의서 체결한 가맹점들의 순지급액들 중 회수되지 않은 순지급액 합계’ x (1- 유동화투자자의 할인율)</code></td>
+            <td><a class="xref" href="#t17">투자 실행액</a></td>
+            <td>투자자가 지금 채권에 깔아 놓은 돈</td>
+          </tr>
+
+          <tr>
+            <td class="key">② 순현금</td>
+            <td>현황표 <code>순현금</code> 행 · 요약 카드 · <code>보관 ㈜쿠콘</code></td>
+            <td><code class="q">순현금: 조회시점 현재의 ‘유동화투자자에게 할당된 쿠콘제공 가상계좌’의 현금잔액</code></td>
+            <td><span class="pick"><a class="xref" href="#t18">순현금 (투자 자산 · 잔액)</a> — 화면에 뜨는 값. 조회 시점 잔액</span><span class="pick"><a class="xref" href="#t41">순현금 (일별 배치 · 자정 시점)</a> — 배치가 자정에 찍는 <code>EC</code>. 화면에는 안 뜬다</span><span class="pick"><a class="xref" href="#t46">PSC</a> — 위 <code>EC</code>를 기간만큼 더한 것. <code>⑤</code>의 분모 재료</span></td>
+            <td>투자자 몫 가상계좌에 놀고 있는 현금</td>
+          </tr>
+
+          <tr>
+            <td class="key">③ W금융일수</td>
+            <td>현황표 · 가맹점별 표 <code>W금융일수</code> 열 · 요약 카드 부제 · 각주 <code>용어 안내</code><br><span class="mini">원문 표기는 소문자 <code>w</code></span></td>
+            <td><code class="q">w금융일수 = Σ Ai x Di / Σ Ai</code></td>
+            <td><span class="pick"><a class="xref" href="#t21">w금융일수 (투자 자산 · 잔액)</a> — <code>투자 자산</code> 화면 두 표의 값</span><span class="pick"><a class="xref" href="#t39">w금융일수 (일별 배치 · 하루치)</a> — <code>투자 수익</code> 일별 표 각 행의 값</span><span class="pick"><a class="xref" href="#t45">PSD</a> — 일별 표 <b>합계 행</b>의 <code>11.3(평균)</code>. 기간 가중평균</span></td>
+            <td>지금 깔려 있는 채권들이 평균 며칠짜리냐</td>
+          </tr>
+
+          <tr>
+            <td class="key">④ S입금부족율</td>
+            <td>현황표 · 가맹점별 표 <code>S입금부족율</code> 열 · 각주 <code>용어 안내</code></td>
+            <td><code class="q">S입금부족율 = Σ SLi / Σ SAi</code></td>
+            <td><a class="xref" href="#t34">S입금부족율</a></td>
+            <td>넣은 돈 대비 얼마나 덜 들어왔나</td>
+          </tr>
+
+          <tr>
+            <td class="key">⑤ ty수익율</td>
+            <td>현황표 · 가맹점별 표 <code>Ty수익율</code> 열 · 요약 카드 · 각주 <code>용어 안내</code><br><span class="mini">화면 표기는 <code>Ty</code>, 원문 표기는 <code>ty</code></span></td>
+            <td><code class="q">ty수익율 = 유동화투자자의 할인율 x (365 / w금융일수)</code></td>
+            <td><span class="pick"><a class="xref" href="#t22">ty수익율 (투자 자산 · 잔액)</a> — <b>이 화면이 쓰는 것.</b> 분자가 할인율이라 계획값</span><span class="pick"><a class="xref" href="#t40">ty수익율 (일별 배치 · 하루치)</a> — 분자가 실제 수익률이라 실적값. <code>투자 수익</code> 일별 표 행</span><span class="pick"><a class="xref" href="#t47">ty수익율 › 투자실행금액 대비</a> — <code>투자 수익</code> 현황 카드 왼쪽. 원문 <code>④</code></span><span class="pick"><a class="xref" href="#t48">ty수익율 › 투자자산 대비</a> — 같은 카드 오른쪽. 분모에 순현금까지 넣은 것. 원문 <code>⑤</code></span><span class="pick"><a class="xref" href="#t49">ty수익율 (일별 표 · 행 단위)</a> — 일별 표 마지막 열의 계산식. 원문 <code>⑥</code></span></td>
+            <td>지금 굴리는 방식대로 1년을 굴리면 몇 %냐</td>
+          </tr>
+
+          <tr>
+            <td class="key">⑥ 비중</td>
+            <td>현황표 <code>비중</code> 열 3행 · 가맹점별 표 <code>비중</code> 열 · 요약 카드 부제</td>
+            <td><code class="q">투자 실행액의 비중 = 투자실행액 / (투자실행액 + 순현금)<br>순현금의 비중 = 순현금 / (투자실행액 + 순현금)</code></td>
+            <td><a class="xref" href="#t23">비중</a><br><span class="mini">두 표의 분모가 다르다 — <a class="xref" href="#s6">§6</a> 참조</span></td>
+            <td>돈 전체를 100으로 놓은 각자의 몫</td>
+          </tr>
+
+          <tr class="grp"><td colspan="5">2번 이미지 — <a class="scr" href="invest-profit.html">투자 수익</a> 화면</td></tr>
+
+          <tr>
+            <td class="key">① 투자 실행금</td>
+            <td>현황 카드 <code>투자실행금</code> · 일별 표 <code>투자실행금</code> 열 · 합계 행</td>
+            <td><code class="q">투자 실행금(PSA) =  정산예정일이 위 선택한 기간에 해당하는 투자실행금( SAD-1)들 합계</code></td>
+            <td><span class="pick"><a class="xref" href="#t42">투자실행금 (투자 수익 · 기간 합계)</a> — 현황 카드 값. 원문 <code>PSA</code></span><span class="pick"><a class="xref" href="#t36">투자실행금 (일별 배치 · 하루치)</a> — 일별 표 각 행. 원문 <code>SA</code></span></td>
+            <td>고른 기간 만기 채권에 넣었던 돈</td>
+          </tr>
+
+          <tr>
+            <td class="key">② 투자수익</td>
+            <td>현황 카드 <code>투자수익</code> · 일별 표 <code>투자 수익</code> 열 · 합계 행<br><span class="mini">현황 카드는 붙여쓰기, 표 열은 띄어쓰기</span></td>
+            <td><code class="q">투자수익(PSM) =  정산예정일이 위 선택한 기간에 해당하는 투자수익(SMD-1)들 합계</code></td>
+            <td><span class="pick"><a class="xref" href="#t43">투자수익 (투자 수익 · 기간 합계)</a> — 현황 카드 값. 원문 <code>PSM</code></span><span class="pick"><a class="xref" href="#t37">투자수익 (일별 배치 · 하루치)</a> — 일별 표 각 행. 원문 <code>SM</code></span><span class="pick"><a class="xref" href="#t38">투자수익율 (일별 배치 · 하루치)</a> — 금액이 아니라 <b>율</b>. 화면에는 안 뜨고 <code>ty수익율</code>의 재료</span></td>
+            <td>고른 기간에 남긴 돈</td>
+          </tr>
+
+          <tr>
+            <td class="key">③ ty수익율</td>
+            <td>현황 카드 <code>Ty수익율</code> 두 칸 · 일별 표 마지막 열</td>
+            <td><code class="q">투자실행금액 대비 ty수익율(이미지의 ④) = PSMR  x 365 / PSD<br>전일자(D-1) 대상정산금채권의 ty수익율 = SMRD-1 x 365 / SDD-1</code></td>
+            <td><span class="pick"><a class="xref" href="#t47">ty수익율 › 투자실행금액 대비</a> — 현황 카드 왼쪽 칸</span><span class="pick"><a class="xref" href="#t48">ty수익율 › 투자자산 대비</a> — 현황 카드 오른쪽 칸</span><span class="pick"><a class="xref" href="#t49">ty수익율 (일별 표 · 행 단위)</a> — 일별 표 마지막 열</span><span class="pick"><a class="xref" href="#t40">ty수익율 (일별 배치 · 하루치)</a> — 위 행 값을 배치가 미리 계산해 둔 것. 값은 같다</span><span class="pick"><a class="xref" href="#t22">ty수익율 (투자 자산 · 잔액)</a> — <b>이 화면 것이 아니다.</b> <code>투자 자산</code> 화면 쪽</span></td>
+            <td>1년으로 환산하면 몇 %냐</td>
+          </tr>
+
+          <tr>
+            <td class="key">④ 투자실행금액 대비</td>
+            <td>현황 카드 <code>Ty수익율 › 투자실행금액 대비</code> 왼쪽 칸</td>
+            <td><code class="q">투자실행금액 대비 ty수익율(이미지의 ④) = PSMR  x 365 / PSD</code></td>
+            <td><a class="xref" href="#t47">ty수익율 › 투자실행금액 대비 (투자 수익 · 기간 합계)</a></td>
+            <td>채권에 나간 돈만 놓고 본 연 환산 수익률</td>
+          </tr>
+
+          <tr>
+            <td class="key">⑤ 투자자산 대비</td>
+            <td>현황 카드 <code>Ty수익율 › 투자자산 대비</code> 오른쪽 칸</td>
+            <td><code class="q">투자자산 대비 ty수익율 (이미지의 ⑤) = (이미지의 ④ x PSA) / (PSA + PSC)</code></td>
+            <td><a class="xref" href="#t48">ty수익율 › 투자자산 대비 (투자 수익 · 기간 합계)</a></td>
+            <td>놀고 있는 현금까지 포함해 본 연 환산 수익률</td>
+          </tr>
+
+          <tr>
+            <td class="key">⑥ 상환액</td>
+            <td>일별 표 <code>상환액</code> 열 · 합계 행</td>
+            <td><code class="q">상환액 (이미지의 ②) = 위 일별로 마감후 배치작업으로 업데이트하는 DB에서, 정산예정일이 해당 표의 입금일(“정산예정일”로 변경 필요)에 해당하는 SBD-1</code></td>
+            <td><a class="xref" href="#t35">상환액 (일별 배치 · 하루치)</a></td>
+            <td>어제 만기 채권에서 실제로 회수한 돈</td>
+          </tr>
+
+          <tr>
+            <td class="key">⑦ 투자실행금액 대비 ty수익율</td>
+            <td>일별 표 마지막 열<br><span class="mini">현재 화면 열 이름은 <code>Ty수익율</code>, 스토리보드 열 이름이 <code>투자실행금액 대비 ty수익율</code></span></td>
+            <td><code class="q">투자실행금액 대비 ty수익율 (이미지의 ⑥) = (이미지의 ④ / 이미지의 ③) x 365 / 이미지의 ⑤</code></td>
+            <td><span class="pick"><a class="xref" href="#t49">ty수익율 (일별 표 · 행 단위)</a> — 열 이름이 가리키는 것. 원문 <code>⑥</code></span><span class="pick"><a class="xref" href="#t40">ty수익율 (일별 배치 · 하루치)</a> — 같은 값을 배치식으로 쓴 것</span></td>
+            <td>그 하루치만 놓고 본 연 환산 수익률</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3 class="blk-title">0-2. 화면에 있는데 13항목에 없는 것 — 14건</h3>
+  <p class="tight">위 13개만으로는 화면이 다 안 덮인다. 나머지 라벨도 카드가 있으므로 여기에 함께 건다.</p>
+  <div class="t-card">
+    <div class="t-scroll">
+      <table class="tbl map-tbl">
+        <thead><tr><th>화면에서 보는 이름</th><th>어느 화면 · 어느 자리</th><th>대표님 정의 원문</th><th>이 문서에서는</th><th>한 줄 뜻</th></tr></thead>
+        <tbody>
+          <tr><td class="key">자산 구분</td><td>투자 자산 · 현황표 첫 열</td><td class="dim">정의문 없음 — 스토리보드 슬라이드 3</td><td><a class="xref" href="#t24">자산 구분</a></td><td>현황표의 세로축</td></tr>
+          <tr><td class="key">보관</td><td>투자 자산 · 현황표 마지막 열</td><td class="dim">정의문 없음 — 스토리보드 슬라이드 3</td><td><a class="xref" href="#t25">보관</a></td><td>그 자산을 실제로 누가 들고 있느냐</td></tr>
+          <tr><td class="key">합계 (투자자산)</td><td>투자 자산 · 현황표 3행 · 요약 카드</td><td><code class="q">투자자산 대비 ty수익율 (이미지의 ⑤) = (이미지의 ④ x PSA) / (PSA + PSC)</code><br><span class="mini">이름만 쓰였고 잔액 기준 정의문은 없다</span></td><td><a class="xref" href="#t26">투자자산</a></td><td>투자자가 굴리고 있는 돈 전부</td></tr>
+          <tr><td class="key">가맹점</td><td>투자 자산 · 가맹점별 투자자산 표 첫 열</td><td class="dim">정의문 없음 — 채권을 <code>가맹점ID</code>로 묶은 축</td><td><a class="xref" href="#t12">대상정산금채권</a> · <a class="xref" href="#t02">정산금채권 ID</a></td><td>채권을 가맹점 단위로 묶은 것</td></tr>
+          <tr><td class="key">투자금액 (원)</td><td>투자 자산 · 가맹점별 투자자산 표 2열</td><td class="dim">정의문 없음 — <code>투자 실행액</code>을 가맹점으로 쪼갠 것</td><td><a class="xref" href="#t27">가맹점별 투자금액</a></td><td>가맹점 한 곳에 물려 있는 돈</td></tr>
+          <tr><td class="key">기준일</td><td>투자 자산 · 페이지 헤더 <code>기준일 2026-08-27</code></td><td class="dim">정의문 없음 — 스토리보드는 표마다 다른 날짜</td><td><a class="xref" href="#t28">기준일자</a></td><td>표에 찍히는 날짜</td></tr>
+          <tr><td class="key">금융일수</td><td>두 화면 각주 <code>용어 안내</code> 1행</td><td><code class="q">금융일수 = 선정산일로부터 정산예정일까지의 한편넣기 일수 (예, 선정산일 =260827, 정산예정일 = 260808 이면 금융일수 = 1)</code></td><td><a class="xref" href="#t08">금융일수</a></td><td>투자자 돈이 그 채권에 묶여 있는 날수</td></tr>
+          <tr><td class="key">할인율</td><td>두 화면 각주 <code>Ty수익율: 할인율 × (365 / w금융일수)</code> · <code>배분 요율 0.11%</code></td><td><code class="q">유동화투자자의 할인율 = 0.11% 예정</code><span class="tag-plan">예정</span></td><td><a class="xref" href="#t13">유동화투자자의 할인율</a></td><td>채권을 액면보다 얼마나 싸게 사느냐</td></tr>
+          <tr><td class="key">정산예정일</td><td>투자 수익 · 일별 표 첫 열<br><span class="mini">현재 화면은 <code>입금일자</code></span></td><td><code class="q">해당 표의 입금일(“정산예정일”로 변경 필요)</code></td><td><a class="xref" href="#t06">정산예정일</a></td><td>카드사·배달앱이 돈을 넣어 주기로 한 날</td></tr>
+          <tr><td class="key">검색대상기간</td><td>투자 수익 · 현황 카드 첫 칸 · 검색 컨트롤</td><td><code class="q">사용자가 선택한 기간 (default = 일주일)에 해당하는 기간에 정산예정일인, 레코드들을 활용해</code></td><td><a class="xref" href="#t50">검색대상기간</a></td><td>어느 구간을 합쳤는지 알려 주는 값</td></tr>
+          <tr><td class="key">재양도합의서</td><td><a class="scr" href="contracts.html">계약기록</a> 표 열 · <a class="scr" href="acquisition.html">정산채권 양수</a> 서명 대상</td><td class="dim">단독 정의문 없음 — <code>대상정산금채권</code> 정의문 안에서만 등장</td><td><a class="xref" href="#t10">정산금채권 재양도 합의서</a></td><td>그 가맹점 채권을 투자자에게 넘긴다는 문서</td></tr>
+          <tr><td class="key">채권매입업체</td><td><a class="scr" href="merchants.html">가맹점</a> 표 열 · 필터</td><td class="dim">정의문 없음 — 원문 용어는 <code>유동화투자자</code></td><td><a class="xref" href="#t09">유동화투자자</a><br><span class="mini">이름 충돌 — <a class="xref" href="#s6">§6</a> 참조</span></td><td>자금을 대고 채권을 사 가는 주체</td></tr>
+          <tr><td class="key">쿠콘 관리 현금</td><td>좌측 메뉴 · <a class="scr" href="coocon.html">coocon.html</a></td><td class="dim">정의문 없음 — 원문은 <code>쿠콘제공 가상계좌</code>만 언급</td><td><a class="xref" href="#t19">쿠콘 가상계좌</a></td><td>순현금이 실제로 들어 있는 통장</td></tr>
+          <tr><td class="key">투자자</td><td>전 화면 사이드바 프로필 배지</td><td class="dim">단독 정의문 없음 — 모든 산식이 <code>유동화투자자</code>를 주어로 쓴다</td><td><a class="xref" href="#t09">유동화투자자</a></td><td>로그인한 그 투자자</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3 class="blk-title">0-3. 이름이 갈릴 때 붙이는 꼬리표</h3>
+  <p class="tight">카드 이름의 괄호는 <code>용어 (어느 계통 · 어느 집계 단위)</code> 한 규칙으로만 붙인다. 계통은 셋이다.</p>
+  <div class="t-card">
+    <div class="t-scroll">
+      <table class="tbl">
+        <thead><tr><th>꼬리표</th><th>언제 만들어지나</th><th>어디에 뜨나</th><th>예</th></tr></thead>
+        <tbody>
+          <tr><td class="key">투자 자산 · 잔액</td><td>화면을 조회하는 그 순간에 계산</td><td><a class="scr" href="invest-assets.html">invest-assets.html</a> 두 표</td><td><a class="xref" href="#t21">w금융일수</a> · <a class="xref" href="#t22">ty수익율</a> · <a class="xref" href="#t18">순현금</a></td></tr>
+          <tr><td class="key">일별 배치 · 하루치</td><td>매일 자정 배치가 D-1치로 한 줄 기록</td><td><a class="scr" href="invest-profit.html">invest-profit.html</a> 일별 표 각 행</td><td><a class="xref" href="#t35">상환액</a> · <a class="xref" href="#t36">투자실행금</a> · <a class="xref" href="#t39">w금융일수</a></td></tr>
+          <tr><td class="key">투자 수익 · 기간 합계</td><td>고른 기간만큼 하루치를 더해 계산</td><td><a class="scr" href="invest-profit.html">invest-profit.html</a> 현황 카드</td><td><a class="xref" href="#t42">투자실행금</a> · <a class="xref" href="#t43">투자수익</a> · <a class="xref" href="#t47">ty수익율 › 투자실행금액 대비</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p>기호(<code>SB</code> <code>SA</code> <code>SM</code> <code>SMR</code> <code>SD</code> <code>EC</code> <code>PSA</code> <code>PSM</code>)는 이름에서 빼고 카드 제목 옆 <b>부제</b>로 내렸다. 기호로 찾을 때는 위 검색창에 그대로 쳐도 걸린다.</p>
+</section>
 
 <!-- ══════════════════ 1. 전체 그림 ══════════════════ -->
 <section class="sec" id="s1">
@@ -730,7 +934,7 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
     <div class="stg-body">
       <p class="stg-learn"><b>여기서 배울 것</b> — 조회하는 그 순간의 잔액을 보는 지표들. <a class="scr" href="invest-assets.html">invest-assets.html</a> 현황표 한 장이 이 단계의 결과물이다.</p>
       <div class="chips">
-        <a class="chip" href="#t16">회수되지 않은 순지급액</a><a class="chip" href="#t17">투자 실행액</a><a class="chip" href="#t18">순현금</a><a class="chip" href="#t19">쿠콘 가상계좌</a><a class="chip" href="#t20">Di</a><a class="chip" href="#t21">w금융일수(잔액)</a><a class="chip" href="#t22">ty수익율(잔액)</a><a class="chip" href="#t23">비중</a><a class="chip" href="#t24">자산 구분</a><a class="chip" href="#t25">보관</a><a class="chip" href="#t26">투자자산</a><a class="chip" href="#t27">가맹점별 투자금액</a><a class="chip" href="#t28">기준일자</a>
+        <a class="chip" href="#t16">회수되지 않은 순지급액</a><a class="chip" href="#t17">투자 실행액</a><a class="chip" href="#t18">순현금 (투자 자산 · 잔액)</a><a class="chip" href="#t19">쿠콘 가상계좌</a><a class="chip" href="#t20">Di</a><a class="chip" href="#t21">w금융일수 (투자 자산 · 잔액)</a><a class="chip" href="#t22">ty수익율 (투자 자산 · 잔액)</a><a class="chip" href="#t23">비중</a><a class="chip" href="#t24">자산 구분</a><a class="chip" href="#t25">보관</a><a class="chip" href="#t26">투자자산</a><a class="chip" href="#t27">가맹점별 투자금액</a><a class="chip" href="#t28">기준일자</a>
       </div>
     </div>
   </details>
@@ -750,7 +954,7 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
     <div class="stg-body">
       <p class="stg-learn"><b>여기서 배울 것</b> — 계통이 잔액에서 유량으로 바뀌는 지점. 자정마다 한 줄씩 쌓이는 일곱 값.</p>
       <div class="chips">
-        <a class="chip" href="#t35">상환액 SB</a><a class="chip" href="#t36">투자실행금 SA</a><a class="chip" href="#t37">투자수익 SM</a><a class="chip" href="#t38">투자수익율 SMR</a><a class="chip" href="#t39">w금융일수 SD</a><a class="chip" href="#t40">ty수익율(일별)</a><a class="chip" href="#t41">순현금 EC</a>
+        <a class="chip" href="#t35">상환액 (일별 배치 · 하루치)</a><a class="chip" href="#t36">투자실행금 (일별 배치 · 하루치)</a><a class="chip" href="#t37">투자수익 (일별 배치 · 하루치)</a><a class="chip" href="#t38">투자수익율 (일별 배치 · 하루치)</a><a class="chip" href="#t39">w금융일수 (일별 배치 · 하루치)</a><a class="chip" href="#t40">ty수익율 (일별 배치 · 하루치)</a><a class="chip" href="#t41">순현금 (일별 배치 · 자정 시점)</a>
       </div>
     </div>
   </details>
@@ -760,12 +964,12 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
     <div class="stg-body">
       <p class="stg-learn"><b>여기서 배울 것</b> — 하루치를 기간만큼 잘라 더하는 법. <a class="scr" href="invest-profit.html">invest-profit.html</a> 현황 카드 네 칸이 이 단계 결과다.</p>
       <div class="chips">
-        <a class="chip" href="#t42">PSA</a><a class="chip" href="#t43">PSM</a><a class="chip" href="#t44">PSMR</a><a class="chip" href="#t45">PSD</a><a class="chip" href="#t46">PSC</a><a class="chip" href="#t47">④</a><a class="chip" href="#t48">⑤</a><a class="chip" href="#t49">⑥</a><a class="chip" href="#t50">검색대상기간</a>
+        <a class="chip" href="#t42">투자실행금 (투자 수익 · 기간 합계)</a><a class="chip" href="#t43">투자수익 (투자 수익 · 기간 합계)</a><a class="chip" href="#t44">PSMR</a><a class="chip" href="#t45">PSD</a><a class="chip" href="#t46">PSC</a><a class="chip" href="#t47">ty수익율 › 투자실행금액 대비 (투자 수익 · 기간 합계)</a><a class="chip" href="#t48">ty수익율 › 투자자산 대비 (투자 수익 · 기간 합계)</a><a class="chip" href="#t49">ty수익율 (일별 표 · 행 단위)</a><a class="chip" href="#t50">검색대상기간</a>
       </div>
     </div>
   </details>
 
-  <p>용어는 모두 50개다. 1~3단계 15개는 전부 <b>재료</b>라 화면에 안 보인다. 4단계부터가 화면에 뜨는 숫자다. 시간이 없으면 1·3·4단계만 읽어도 <code>투자 자산</code> 화면은 기획할 수 있다.</p>
+  <p>용어는 모두 50개다. 단계와 별개로 카드마다 <span class="lb lb-screen">화면 용어</span> <span class="lb lb-calc">계산 재료</span> 둘 중 하나가 붙는다. 화면에 라벨이나 값으로 실제로 뜨는 것이 <b>화면 용어 28개</b>, 화면에 안 뜨고 산식 안에서만 쓰이는 것이 <b>계산 재료 22개</b>다. 기호 <code>Ai</code> <code>Di</code> <code>SLi</code> <code>SAi</code> <code>PSMR</code> <code>PSD</code> <code>PSC</code>는 전부 뒤쪽이다. 상단 <b>층위</b> 필터로 한쪽만 볼 수 있다. 시간이 없으면 1·3·4단계만 읽어도 <code>투자 자산</code> 화면은 기획할 수 있다.</p>
 
   <h3 class="blk-title">50개가 어디서 오나</h3>
   <p class="tight">이 분포가 곧 개발 범위다.</p>
@@ -791,6 +995,7 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
   <div class="sec-num">04</div>
   <h2>용어 카드 50건</h2>
   <p class="sec-lede">카드마다 블록이 같은 순서로 나온다. 이름 → 한마디로 뭐냐 → 어떻게 계산하나 → 이 값은 어디서 오나 → 화면 어디에 보이나 → 다른 용어와 어떻게 이어지나 → 기획할 때 정해야 할 것.</p>
+  <p class="sec-lede">이름이 갈리는 카드는 괄호에 <code>(어느 계통 · 어느 집계 단위)</code>를 붙여 뒀다. 규칙은 <a class="xref" href="#s0">§0-3</a>에 있다. 제목 오른쪽 <span class="lb lb-screen">화면 용어</span> <span class="lb lb-calc">계산 재료</span>가 층위, 그 왼쪽 회색 글자가 원문 기호다.</p>
 
   <div class="pane">
     <div class="pane-h">계산 예시에 쓰는 숫자 한 벌 — 카드마다 같은 데이터를 쓴다</div>
@@ -834,8 +1039,8 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
     <div class="tblock-h"><span class="bn">1</span><h3>1단계 — 채권 한 건이 무엇으로 되어 있나</h3><span class="bc">8건</span></div>
     <p class="b-lede">투자자 어드민의 모든 숫자는 <code>정산금채권</code> 한 건에서 출발한다. 이 단계 8개를 알면 채권 1건의 주민등록등본을 읽을 수 있게 된다.</p>
 
-    <article class="term" id="t01" data-src="design">
-      <div class="term-head"><span class="term-no">01</span><h4>정산금채권</h4><span class="src src-design">설계에만 있음</span></div>
+    <article class="term" id="t01" data-src="design" data-layer="calc">
+      <div class="term-head"><span class="term-no">01</span><h4>정산금채권</h4><span class="src src-design">설계에만 있음</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">카드사나 배달플랫폼이 “며칠 뒤에 이 가맹점한테 돈 줄게” 하고 약속한 것, 그 받을 권리다. 가맹점은 그 권리를 페이허그에 팔고 돈을 미리 받는다. 그러니까 선정산은 대출이 아니라 <b>권리를 사고파는 것</b>이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -862,8 +1067,8 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
       <div class="blk todo"><div class="blk-h">기획할 때 정해야 할 것</div><p class="none-todo">없음.</p></div>
     </article>
 
-    <article class="term" id="t02" data-src="design">
-      <div class="term-head"><span class="term-no">02</span><h4>정산금채권 ID</h4><span class="src src-design">설계에만 있음</span></div>
+    <article class="term" id="t02" data-src="design" data-layer="calc">
+      <div class="term-head"><span class="term-no">02</span><h4>정산금채권 ID</h4><span class="src src-design">설계에만 있음</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">채권 한 건에 붙는 이름표다. 세 조각을 이어 붙여 만든다. 같은 가맹점이라도 카드사가 다르거나 매출 날짜가 다르면 다른 채권이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -908,8 +1113,8 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
       </div>
     </article>
 
-    <article class="term" id="t03" data-src="admin">
-      <div class="term-head"><span class="term-no">03</span><h4>플랫폼ID</h4><span class="src src-admin">기존 어드민에 있음</span></div>
+    <article class="term" id="t03" data-src="admin" data-layer="calc">
+      <div class="term-head"><span class="term-no">03</span><h4>플랫폼ID</h4><span class="src src-admin">기존 어드민에 있음</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">카드사와 배달앱마다 페이허그가 붙여 준 번호표다. “신한카드는 SH0002” 하는 식이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -957,8 +1162,8 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
       </div>
     </article>
 
-    <article class="term" id="t04" data-src="admin">
-      <div class="term-head"><span class="term-no">04</span><h4>매출일자</h4><span class="src src-admin">기존 어드민에 있음</span></div>
+    <article class="term" id="t04" data-src="admin" data-layer="calc">
+      <div class="term-head"><span class="term-no">04</span><h4>매출일자</h4><span class="src src-admin">기존 어드민에 있음</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">손님이 카드를 긁은 날, 또는 배달 주문이 일어난 날이다. 채권 이름표의 마지막 조각이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -986,8 +1191,8 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
       </div>
     </article>
 
-    <article class="term" id="t05" data-src="admin">
-      <div class="term-head"><span class="term-no">05</span><h4>선정산일</h4><span class="src src-admin">기존 어드민에 있음</span></div>
+    <article class="term" id="t05" data-src="admin" data-layer="calc">
+      <div class="term-head"><span class="term-no">05</span><h4>선정산일</h4><span class="src src-admin">기존 어드민에 있음</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">페이허그가 가맹점에 돈을 먼저 내준 날이다. 투자자 입장에서는 <b>돈이 나간 날</b>, 즉 시계가 돌기 시작한 날이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1023,8 +1228,8 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
       </div>
     </article>
 
-    <article class="term" id="t06" data-src="admin">
-      <div class="term-head"><span class="term-no">06</span><h4>정산예정일</h4><span class="src src-admin">기존 어드민에 있음</span></div>
+    <article class="term" id="t06" data-src="admin" data-layer="screen">
+      <div class="term-head"><span class="term-no">06</span><h4>정산예정일</h4><span class="src src-admin">기존 어드민에 있음</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">카드사·배달앱이 돈을 넣어 주기로 한 날이다. 투자자 입장에서는 <b>돈이 돌아올 날</b>이다. 이 날이 지나면 그 채권은 잔액 계통에서 빠지고 유량 계통으로 넘어간다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1070,8 +1275,8 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
       </div>
     </article>
 
-    <article class="term" id="t07" data-src="admin">
-      <div class="term-head"><span class="term-no">07</span><h4>순지급액</h4><span class="src src-admin">기존 어드민에 있음</span></div>
+    <article class="term" id="t07" data-src="admin" data-layer="calc">
+      <div class="term-head"><span class="term-no">07</span><h4>순지급액</h4><span class="src src-admin">기존 어드민에 있음</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">그 채권으로 실제 들어올 돈이다. 손님이 결제한 금액 전부가 아니라, 카드 수수료·부가세 대리납부 같은 걸 다 떼고 남은 순액이다. 투자자 어드민의 거의 모든 금액이 이 값에서 출발한다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1133,8 +1338,8 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
       </div>
     </article>
 
-    <article class="term" id="t08" data-src="new">
-      <div class="term-head"><span class="term-no">08</span><h4>금융일수</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t08" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">08</span><h4>금융일수</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">투자자 돈이 그 채권 하나에 묶여 있는 날수다. 돈 내준 날부터 돈 돌아올 날까지 며칠이냐다. 짧을수록 같은 이익이라도 연 수익률은 커진다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1189,8 +1394,8 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
     <div class="tblock-h"><span class="bn">2</span><h3>2단계 — 그중 투자자 것만 어떻게 고르나</h3><span class="bc">4건</span></div>
     <p class="b-lede">페이허그가 가진 채권이 전부 투자자 것은 아니다. 투자자 어드민에 뜨는 숫자는 <b>그 투자자 몫으로 골라낸 채권</b>만 합친 값이다. 골라내는 규칙이 이 단계 4개다.</p>
 
-    <article class="term" id="t09" data-src="admin">
-      <div class="term-head"><span class="term-no">09</span><h4>유동화투자자</h4><span class="src src-admin">기존 어드민에 있음</span></div>
+    <article class="term" id="t09" data-src="admin" data-layer="screen">
+      <div class="term-head"><span class="term-no">09</span><h4>유동화투자자</h4><span class="src src-admin">기존 어드민에 있음</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">페이허그가 사 둔 정산금채권을 다시 사서 자금을 대 주는 쪽이다. 어드민에 로그인하는 그 사람이다. 화면 곳곳의 <code>투자자</code>가 이 사람을 가리킨다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1240,8 +1445,8 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
       </div>
     </article>
 
-    <article class="term" id="t10" data-src="new">
-      <div class="term-head"><span class="term-no">10</span><h4>정산금채권 재양도 합의서</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t10" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">10</span><h4>정산금채권 재양도 합의서</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">“이 가맹점에서 나오는 정산금채권은 이 투자자가 사 간다”고 못 박는 계약서다. 가맹점 단위로 한 장씩 쓴다. 이 종이가 있어야 그 가맹점 채권이 투자자 어드민 숫자에 들어온다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1280,8 +1485,8 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
       </div>
     </article>
 
-    <article class="term" id="t11" data-src="new">
-      <div class="term-head"><span class="term-no">11</span><h4>효력기간</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t11" data-src="new" data-layer="calc">
+      <div class="term-head"><span class="term-no">11</span><h4>효력기간</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">합의서가 살아 있는 기간이다. 이 기간 안에 <b>선정산이 나간</b> 채권만 투자자 몫으로 친다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1321,8 +1526,8 @@ ul.sym li code { background: var(--violet-100); color: var(--violet-700); font-w
       </div>
     </article>
 
-    <article class="term" id="t12" data-src="check">
-      <div class="term-head"><span class="term-no">12</span><h4>대상정산금채권</h4><span class="src src-check">확인필요</span></div>
+    <article class="term" id="t12" data-src="check" data-layer="calc">
+      <div class="term-head"><span class="term-no">12</span><h4>대상정산금채권</h4><span class="src src-check">확인필요</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">투자자 어드민이 다루는 채권 전부다. <b>화면의 모든 숫자는 이 집합만 합친 것</b>이다. 이 집합 밖의 채권은 아무리 페이허그가 갖고 있어도 투자자 화면에 안 뜬다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1396,8 +1601,8 @@ M000654 &amp; BM0007 &amp; 20260728, 선정산일 07-29   → 조건2 ✗       
     <div class="tblock-h"><span class="bn">3</span><h3>3단계 — 투자자가 얼마에 샀나</h3><span class="bc">3건</span></div>
     <p class="b-lede">여기서 처음 돈 이야기가 나온다. 채권 액면이 100원이면 투자자는 100원보다 싸게 산다. 그 싸게 사는 폭이 곧 수익이다.</p>
 
-    <article class="term" id="t13" data-src="design">
-      <div class="term-head"><span class="term-no">13</span><h4>유동화투자자의 할인율</h4><span class="src src-design">설계에만 있음</span></div>
+    <article class="term" id="t13" data-src="design" data-layer="screen">
+      <div class="term-head"><span class="term-no">13</span><h4>유동화투자자의 할인율</h4><span class="src src-design">설계에만 있음</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">투자자가 채권을 액면보다 얼마나 싸게 사느냐다. 100원짜리 채권을 99.89원에 사면 할인율 0.11%다. 만기에 100원을 받으니 0.11원이 남는다. 그게 투자자 수익의 원천이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1445,8 +1650,8 @@ ty수익율  = 할인율 × (365 / w금융일수)</pre>
       </div>
     </article>
 
-    <article class="term" id="t14" data-src="new">
-      <div class="term-head"><span class="term-no">14</span><h4>Ai</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t14" data-src="new" data-layer="calc">
+      <div class="term-head"><span class="term-no">14</span><h4>Ai</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">채권 한 건을 투자자가 산 값이다. “이 채권에 내 돈이 얼마 들어갔나”다. 화면의 <code>투자실행액</code>·<code>투자실행금</code>은 전부 이 <code>Ai</code>를 합친 것이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1505,8 +1710,8 @@ ty수익율  = 할인율 × (365 / w금융일수)</pre>
       </div>
     </article>
 
-    <article class="term" id="t15" data-src="admin">
-      <div class="term-head"><span class="term-no">15</span><h4>채권매입수수료</h4><span class="src src-admin">기존 어드민에 있음</span></div>
+    <article class="term" id="t15" data-src="admin" data-layer="calc">
+      <div class="term-head"><span class="term-no">15</span><h4>채권매입수수료</h4><span class="src src-admin">기존 어드민에 있음</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">가맹점이 선정산을 받으면서 낸 수수료다. 이 수수료를 투자자·페이허그·총판·영업이 나눠 갖는다. <b>투자자 수익을 계산할 때 이 낱말이 나오는데, 전체를 말하는지 투자자 몫만 말하는지가 갈린다.</b></p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1591,8 +1796,8 @@ MARGIN × SALES      영업조직</pre>
 순현금         105,300,000      -          -          -      6.5%   ㈜쿠콘
 합계         1,628,400,000      -          -          -     100.0%    -</pre>
 
-    <article class="term" id="t16" data-src="new">
-      <div class="term-head"><span class="term-no">16</span><h4>회수되지 않은 순지급액</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t16" data-src="new" data-layer="calc">
+      <div class="term-head"><span class="term-no">16</span><h4>회수되지 않은 순지급액</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">아직 카드사가 안 넣어 준 채권들의 순지급액이다. 투자자 돈이 아직 밖에 나가 있는 부분이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1631,8 +1836,8 @@ MARGIN × SALES      영업조직</pre>
       </div>
     </article>
 
-    <article class="term" id="t17" data-src="new">
-      <div class="term-head"><span class="term-no">17</span><h4>투자 실행액</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t17" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">17</span><h4>투자 실행액</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">투자자가 지금 채권에 깔아 놓은 돈이다. “내 돈이 지금 얼마나 나가서 일하고 있나”다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1680,8 +1885,8 @@ MARGIN × SALES      영업조직</pre>
       </div>
     </article>
 
-    <article class="term" id="t18" data-src="new">
-      <div class="term-head"><span class="term-no">18</span><h4>순현금</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t18" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">18</span><h4>순현금 (투자 자산 · 잔액)</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">투자자 몫으로 잡혀 있는 가상계좌에 그냥 놀고 있는 현금이다. 채권으로 안 나가고 통장에 남아 있는 돈이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1722,8 +1927,8 @@ MARGIN × SALES      영업조직</pre>
       </div>
     </article>
 
-    <article class="term" id="t19" data-src="new">
-      <div class="term-head"><span class="term-no">19</span><h4>쿠콘 가상계좌</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t19" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">19</span><h4>쿠콘 가상계좌</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">㈜쿠콘이 발급해 준 가상계좌로, 투자자마다 하나씩 할당된다. 이 통장에 든 돈이 곧 <code>순현금</code>이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1761,8 +1966,8 @@ MARGIN × SALES      영업조직</pre>
       </div>
     </article>
 
-    <article class="term" id="t20" data-src="new">
-      <div class="term-head"><span class="term-no">20</span><h4>Di</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t20" data-src="new" data-layer="calc">
+      <div class="term-head"><span class="term-no">20</span><h4>Di</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line"><code>금융일수</code>에 붙인 기호 이름일 뿐이다. i번 채권이 며칠짜리냐다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1796,8 +2001,8 @@ D③ = 2026-08-24 − 2026-08-11 = 13</pre>
       <div class="blk todo"><div class="blk-h">기획할 때 정해야 할 것</div><p class="none-todo">없음. (판정은 <a class="xref" href="#t08">금융일수</a> 카드에 모아 두었다)</p></div>
     </article>
 
-    <article class="term" id="t21" data-src="new">
-      <div class="term-head"><span class="term-no">21</span><h4>w금융일수 (잔액 기준)</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t21" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">21</span><h4>w금융일수 (투자 자산 · 잔액)</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">지금 깔려 있는 채권들이 평균 며칠짜리냐다. 그냥 평균이 아니라 <b>금액이 큰 채권의 만기를 더 무겁게 쳐서</b> 낸 평균이다. 100만 원짜리 30일과 1만 원짜리 1일을 단순 평균하면 15.5일이지만, 실제로 묶인 돈을 보면 30일에 훨씬 가깝기 때문이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1851,8 +2056,8 @@ w금융일수 = 1,335,029.85 ÷ 118,669.32 = <b>11.25일</b></pre>
       </div>
     </article>
 
-    <article class="term" id="t22" data-src="new">
-      <div class="term-head"><span class="term-no">22</span><h4>ty수익율 (잔액 기준)</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t22" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">22</span><h4>ty수익율 (투자 자산 · 잔액)</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">지금 굴리는 방식대로 1년을 꼬박 굴리면 몇 %가 되느냐다. 열흘짜리로 0.11% 벌었으면 1년이면 몇 번 굴릴 수 있으니 얼마, 하고 환산한 값이다. <b>만기가 짧을수록 같은 할인 폭이라도 연 환산 수치는 커진다.</b></p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1902,8 +2107,8 @@ w =  2일     →  0.11% × (365÷2)     = 20.08%</pre>
       </div>
     </article>
 
-    <article class="term" id="t23" data-src="new">
-      <div class="term-head"><span class="term-no">23</span><h4>비중</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t23" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">23</span><h4>비중</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">투자자 돈 전체를 100으로 놓고, 채권에 나가 있는 몫과 통장에 남은 몫이 각각 몇 %냐다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1944,8 +2149,8 @@ w =  2일     →  0.11% × (365÷2)     = 20.08%</pre>
       </div>
     </article>
 
-    <article class="term" id="t24" data-src="new">
-      <div class="term-head"><span class="term-no">24</span><h4>자산 구분</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t24" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">24</span><h4>자산 구분</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">현황표의 세로축이다. 투자자 돈을 <code>투자실행액</code> / <code>순현금</code> / <code>합계</code> 세 줄로 가른다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1965,8 +2170,8 @@ w =  2일     →  0.11% × (365÷2)     = 20.08%</pre>
       <div class="blk todo"><div class="blk-h">기획할 때 정해야 할 것</div><p class="none-todo">없음.</p></div>
     </article>
 
-    <article class="term" id="t25" data-src="new">
-      <div class="term-head"><span class="term-no">25</span><h4>보관</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t25" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">25</span><h4>보관</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">그 자산을 실제로 누가 들고 있느냐다. 채권 형태로 나가 있는 건 페이허그가, 현금은 쿠콘이 들고 있다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -1989,8 +2194,8 @@ w =  2일     →  0.11% × (365÷2)     = 20.08%</pre>
       <div class="blk todo"><div class="blk-h">기획할 때 정해야 할 것</div><p>합계 행의 <code>보관</code> 칸 처리. 현재 <code>-</code>로 비워 두었다.</p></div>
     </article>
 
-    <article class="term" id="t26" data-src="new">
-      <div class="term-head"><span class="term-no">26</span><h4>투자자산</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t26" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">26</span><h4>투자자산</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">투자자가 굴리고 있는 돈 전부다. 채권에 나간 것과 통장에 남은 것을 합한 값이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2029,8 +2234,8 @@ w =  2일     →  0.11% × (365÷2)     = 20.08%</pre>
       </div>
     </article>
 
-    <article class="term" id="t27" data-src="new">
-      <div class="term-head"><span class="term-no">27</span><h4>가맹점별 투자금액</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t27" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">27</span><h4>가맹점별 투자금액</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">가맹점 한 곳에 투자자 돈이 얼마나 물려 있느냐다. <code>투자 실행액</code>을 가맹점 단위로 쪼갠 것이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2068,8 +2273,8 @@ w =  2일     →  0.11% × (365÷2)     = 20.08%</pre>
       </div>
     </article>
 
-    <article class="term" id="t28" data-src="track">
-      <div class="term-head"><span class="term-no">28</span><h4>기준일자</h4><span class="src src-track">추적 중</span></div>
+    <article class="term" id="t28" data-src="track" data-layer="screen">
+      <div class="term-head"><span class="term-no">28</span><h4>기준일자</h4><span class="src src-track">추적 중</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">표 제목 옆 괄호에 찍히는 날짜다. “이 숫자는 며칠 자 기준이다”를 알려 준다. 증명서의 작성일자로도 그대로 쓰인다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2111,8 +2316,8 @@ w =  2일     →  0.11% × (365÷2)     = 20.08%</pre>
         ▼
 <b>S입금부족율 = Σ SLi ÷ Σ SAi</b></pre>
 
-    <article class="term" id="t29" data-src="admin">
-      <div class="term-head"><span class="term-no">29</span><h4>미지급금</h4><span class="src src-admin">기존 어드민에 있음</span></div>
+    <article class="term" id="t29" data-src="admin" data-layer="calc">
+      <div class="term-head"><span class="term-no">29</span><h4>미지급금</h4><span class="src src-admin">기존 어드민에 있음</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">선정산으로 가맹점에 지급해야 하는데 아직 못 준 금액이다. 정산 배치가 돈 뒤에 매출이 뒤늦게 도착해 그 배치에서 빠진 건이 여기 쌓인다.</p>
       <div class="ok-inline"><b>정책서 6대 개념의 <code>미지급금</code>과 같은 것이다.</b> 02 §2의 “원래 가맹점에게 지급해야 했으나 실제 지급되지 않은 금액”과 정의가 일치한다. 종전에 이 카드가 “방향이 반대”라고 적었던 것은 산식 위치에서 역산한 추정이었고, 그 추정이 틀렸다.</div>
 
@@ -2168,8 +2373,8 @@ SLi     = 미지급액 − 과지급액</pre>
       </div>
     </article>
 
-    <article class="term" id="t30" data-src="admin">
-      <div class="term-head"><span class="term-no">30</span><h4>과지급금</h4><span class="src src-admin">기존 어드민에 있음</span></div>
+    <article class="term" id="t30" data-src="admin" data-layer="calc">
+      <div class="term-head"><span class="term-no">30</span><h4>과지급금</h4><span class="src src-admin">기존 어드민에 있음</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">가맹점에 더 나간 금액이다. 선정산으로 먼저 내준 뒤에 매출이 취소되거나, 가맹점이 현장에서 현금을 직접 받아 같은 돈이 두 번 나간 경우가 여기 해당한다.</p>
       <div class="ok-inline"><b>정책서 6대 개념의 <code>과지급</code>과 같은 것이다.</b> 02 §4의 “PayHug가 가맹점에게 실제 지급해야 할 금액보다 더 지급한 발생 금액”과 정의가 일치한다. 종전에 이 카드가 “방향이 반대”라고 적었던 것은 역산 추정이었고, 그 추정이 틀렸다.</div>
 
@@ -2223,8 +2428,8 @@ SLi     = 미지급액 − 과지급액</pre>
       </div>
     </article>
 
-    <article class="term" id="t31" data-src="new">
-      <div class="term-head"><span class="term-no">31</span><h4>SLi</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t31" data-src="new" data-layer="calc">
+      <div class="term-head"><span class="term-no">31</span><h4>SLi</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">채권 한 건에서 순수하게 덜 들어온 금액이다. <code>S입금부족율</code>의 분자를 만드는 재료다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2266,8 +2471,8 @@ SLi     = 미지급액 − 과지급액</pre>
       <div class="blk todo"><div class="blk-h">기획할 때 정해야 할 것</div><p>음수 허용 여부. (<a class="xref" href="#t30">과지급금</a> 카드 3번 항목과 같은 건이다)</p></div>
     </article>
 
-    <article class="term" id="t32" data-src="new">
-      <div class="term-head"><span class="term-no">32</span><h4>SAi</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t32" data-src="new" data-layer="calc">
+      <div class="term-head"><span class="term-no">32</span><h4>SAi</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">표본 구간에 속한 채권 한 건에 투자자가 넣은 돈이다. <code>S입금부족율</code>의 분모를 만드는 재료다. 계산식은 <code>Ai</code>와 똑같고 범위만 표본집합으로 좁힌 것이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2326,8 +2531,8 @@ SLi     = 미지급액 − 과지급액</pre>
       </div>
     </article>
 
-    <article class="term" id="t33" data-src="new">
-      <div class="term-head"><span class="term-no">33</span><h4>표본집합</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t33" data-src="new" data-layer="calc">
+      <div class="term-head"><span class="term-no">33</span><h4>표본집합</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line"><code>S입금부족율</code>을 낼 때 쓰는 채권 묶음이다. 전부 다 쓰지 않고 <b>최근 열흘치만</b> 쓴다. 너무 최근 것은 아직 입금될 시간이 안 지나 부족처럼 보이기 때문에 앞쪽으로 열흘 물려 잡는다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2367,8 +2572,8 @@ D-11   = 2026-08-16     ← 표본 끝
       </div>
     </article>
 
-    <article class="term" id="t34" data-src="new">
-      <div class="term-head"><span class="term-no">34</span><h4>S입금부족율</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t34" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">34</span><h4>S입금부족율</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">최근 열흘치 채권을 표본으로, 넣은 돈 대비 얼마나 덜 들어왔는지를 본 비율이다. 이 값이 크면 카드사·플랫폼 입금이 잘 안 되고 있다는 뜻이고, 투자자에게는 위험 신호다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2443,8 +2648,8 @@ D-11   = 2026-08-16     ← 표본 끝
               <b>EC</b>        순현금</pre>
     <p><b>하루에 한 줄씩 쌓는 것</b>이다. 그 줄들이 <a class="scr" href="invest-profit.html">invest-profit.html</a>의 일별 투자수익 표가 된다. 기호 읽는 법: 앞의 <code>S</code>는 Sum(합계), 뒤의 <code>D-1</code>은 전일자를 뜻한다. <code>SB(D-1)</code> = “전일자 상환액 합계”다. 원문은 아래첨자 없이 <code>SBD-1</code>로 붙여 썼다.</p>
 
-    <article class="term" id="t35" data-src="new">
-      <div class="term-head"><span class="term-no">35</span><h4>상환액 (SB)</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t35" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">35</span><h4>상환액 (일별 배치 · 하루치)</h4><span class="tsub">SB</span><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">어제 만기가 돌아온 채권들에서 실제로 회수한 돈이다. 카드사가 예정대로 넣었으면 순지급액 그대로, 덜 넣었으면 그만큼 깎인다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2497,8 +2702,8 @@ SB         = 179,097,006.71  (미지급 0이므로 순지급액 그대로)</pre>
       </div>
     </article>
 
-    <article class="term" id="t36" data-src="new">
-      <div class="term-head"><span class="term-no">36</span><h4>투자실행금 (SA)</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t36" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">36</span><h4>투자실행금 (일별 배치 · 하루치)</h4><span class="tsub">SA</span><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">어제 만기가 돌아온 채권들에 원래 얼마를 넣었었나다. <b>4단계의 <code>투자 실행액</code>과 이름이 비슷하지만 완전히 다른 값이다.</b> <code>투자 실행액</code>은 지금 깔려 있는 잔액이고, <code>투자실행금</code>은 하루치 흐름이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2545,8 +2750,8 @@ SA(D-1)                         <b>119,868.00</b></pre>
       </div>
     </article>
 
-    <article class="term" id="t37" data-src="new">
-      <div class="term-head"><span class="term-no">37</span><h4>투자수익 (SM)</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t37" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">37</span><h4>투자수익 (일별 배치 · 하루치)</h4><span class="tsub">SM</span><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">어제 만기가 돌아온 채권들에서 남긴 돈이다. 수수료로 번 것에서 못 받은 걸 뺀 값이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2598,8 +2803,8 @@ SM(D-1) = <b>197,006</b></pre>
       </div>
     </article>
 
-    <article class="term" id="t38" data-src="new">
-      <div class="term-head"><span class="term-no">38</span><h4>투자수익율 (SMR)</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t38" data-src="new" data-layer="calc">
+      <div class="term-head"><span class="term-no">38</span><h4>투자수익율 (일별 배치 · 하루치)</h4><span class="tsub">SMR</span><span class="src src-new">투자자용 신설</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">어제 하루치로 몇 % 벌었나다. 번 돈을 넣은 돈으로 나눈 것이다. 아직 연 환산 전이라 숫자가 아주 작다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2639,8 +2844,8 @@ SMR   = 할인율 ÷ (1 − 할인율)
       <div class="blk todo"><div class="blk-h">기획할 때 정해야 할 것</div><p class="none-todo">없음.</p></div>
     </article>
 
-    <article class="term" id="t39" data-src="new">
-      <div class="term-head"><span class="term-no">39</span><h4>w금융일수 (SD)</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t39" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">39</span><h4>w금융일수 (일별 배치 · 하루치)</h4><span class="tsub">SD</span><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">어제 만기가 돌아온 채권들이 평균 며칠짜리였나다. 4단계의 <code>w금융일수</code>와 계산법은 같고, 세는 채권 묶음만 다르다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2681,8 +2886,8 @@ SD = 1,338,526.00 ÷ 119,868.00 = <b>11.17일</b></pre>
       </div>
     </article>
 
-    <article class="term" id="t40" data-src="new">
-      <div class="term-head"><span class="term-no">40</span><h4>ty수익율 (일별)</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t40" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">40</span><h4>ty수익율 (일별 배치 · 하루치)</h4><span class="tsub">배치 정의</span><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">어제 하루치 성과를 연 환산한 값이다. 4단계의 <code>ty수익율</code>과 이름은 같은데 <b>분자가 다르다.</b></p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2725,8 +2930,8 @@ SD  = 11.4일
       </div>
     </article>
 
-    <article class="term" id="t41" data-src="new">
-      <div class="term-head"><span class="term-no">41</span><h4>순현금 (EC)</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t41" data-src="new" data-layer="calc">
+      <div class="term-head"><span class="term-no">41</span><h4>순현금 (일별 배치 · 자정 시점)</h4><span class="tsub">EC</span><span class="src src-new">투자자용 신설</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">어제 자정에 통장에 남아 있던 현금이다. 4단계 <code>순현금</code>과 같은 통장인데 <b>읽는 시각만 다르다.</b></p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2772,8 +2977,8 @@ SD  = 11.4일
                                           투자실행금액 대비 | 투자자산 대비
 일주일        1,250,800,000    1,375,880      3.55%      |    3.32%</pre>
 
-    <article class="term" id="t42" data-src="new">
-      <div class="term-head"><span class="term-no">42</span><h4>투자 실행금 (PSA)</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t42" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">42</span><h4>투자실행금 (투자 수익 · 기간 합계)</h4><span class="tsub">PSA</span><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">고른 기간 동안 만기가 돌아온 채권들에 원래 얼마를 넣었었나다. 하루치 <code>SA</code>를 기간만큼 더한 것이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2815,8 +3020,8 @@ PSA   <b>1,250,800,000</b></pre>
       <div class="blk todo"><div class="blk-h">기획할 때 정해야 할 것</div><p><a class="xref" href="#t17">투자실행액</a>과 화면에서 구분되게 이름을 붙일지.</p></div>
     </article>
 
-    <article class="term" id="t43" data-src="new">
-      <div class="term-head"><span class="term-no">43</span><h4>투자수익 (PSM)</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t43" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">43</span><h4>투자수익 (투자 수익 · 기간 합계)</h4><span class="tsub">PSM</span><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">고른 기간 동안 남긴 돈이다. 하루치 <code>SM</code>을 기간만큼 더한 것이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2857,8 +3062,8 @@ PSM   <b>1,377,392</b></pre>
       </div>
     </article>
 
-    <article class="term" id="t44" data-src="new">
-      <div class="term-head"><span class="term-no">44</span><h4>PSMR</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t44" data-src="new" data-layer="calc">
+      <div class="term-head"><span class="term-no">44</span><h4>PSMR</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">고른 기간 동안 몇 % 벌었나다. 연 환산 전 값이라 아주 작다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2891,8 +3096,8 @@ PSMR = 1,377,392 ÷ 1,250,800,000
       <div class="blk todo"><div class="blk-h">기획할 때 정해야 할 것</div><p class="none-todo">없음.</p></div>
     </article>
 
-    <article class="term" id="t45" data-src="new">
-      <div class="term-head"><span class="term-no">45</span><h4>PSD</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t45" data-src="new" data-layer="calc">
+      <div class="term-head"><span class="term-no">45</span><h4>PSD</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">고른 기간 동안 만기가 돌아온 채권들이 평균 며칠짜리였나다. 하루치 <code>SD</code>를 그냥 평균 내지 않고, 채권 단위로 다시 금액 가중평균한다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2937,8 +3142,8 @@ PSD = 14,127,260,000 ÷ 1,250,800,000 = <b>11.2946일</b>
       </div>
     </article>
 
-    <article class="term" id="t46" data-src="new">
-      <div class="term-head"><span class="term-no">46</span><h4>PSC</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t46" data-src="new" data-layer="calc">
+      <div class="term-head"><span class="term-no">46</span><h4>PSC</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-calc">계산 재료</span></div>
       <p class="lede-line">고른 기간의 하루하루 자정 현금 잔액을 전부 더한 값이다. <b>평균이 아니라 합이다.</b></p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -2978,8 +3183,8 @@ PSC     <b>737,100,000</b>   (= 105,300,000 × 7일)</pre>
       </div>
     </article>
 
-    <article class="term" id="t47" data-src="new">
-      <div class="term-head"><span class="term-no">47</span><h4>④ 투자실행금액 대비 ty수익율</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t47" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">47</span><h4>ty수익율 › 투자실행금액 대비 (투자 수익 · 기간 합계)</h4><span class="tsub">원문 ④</span><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line"><b>채권에 실제로 나간 돈만 놓고</b> 본 연 환산 수익률이다. 통장에 놀고 있는 현금은 계산에서 뺀다. “일하고 있는 돈이 얼마나 벌었나”다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -3017,8 +3222,8 @@ PSD  = 11.2946일
       </div>
     </article>
 
-    <article class="term" id="t48" data-src="new">
-      <div class="term-head"><span class="term-no">48</span><h4>⑤ 투자자산 대비 ty수익율</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t48" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">48</span><h4>ty수익율 › 투자자산 대비 (투자 수익 · 기간 합계)</h4><span class="tsub">원문 ⑤</span><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line"><b>놀고 있는 현금까지 포함한 돈 전부</b>를 놓고 본 연 환산 수익률이다. 현금은 아무것도 안 벌므로 ④보다 낮게 나온다. 투자자 입장에서 실제 체감 수익률에 가깝다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -3065,8 +3270,8 @@ PSA + PSC = 1,987,900,000
       </div>
     </article>
 
-    <article class="term" id="t49" data-src="new">
-      <div class="term-head"><span class="term-no">49</span><h4>⑥ 일별 투자실행금액 대비 ty수익율</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t49" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">49</span><h4>ty수익율 (일별 표 · 행 단위)</h4><span class="tsub">원문 ⑥</span><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line">일별 표의 마지막 열이다. 그 하루치만 놓고 본 연 환산 수익률이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -3108,8 +3313,8 @@ w금융일수    11.4
       </div>
     </article>
 
-    <article class="term" id="t50" data-src="new">
-      <div class="term-head"><span class="term-no">50</span><h4>검색대상기간</h4><span class="src src-new">투자자용 신설</span></div>
+    <article class="term" id="t50" data-src="new" data-layer="screen">
+      <div class="term-head"><span class="term-no">50</span><h4>검색대상기간</h4><span class="src src-new">투자자용 신설</span><span class="lb lb-screen">화면 용어</span></div>
       <p class="lede-line"><code>투자 수익</code> 화면이 어느 구간을 합쳤는지 알려 주는 값이다. 기본이 일주일이다.</p>
 
       <div class="blk"><div class="blk-h">어떻게 계산하나</div>
@@ -3156,7 +3361,7 @@ w금융일수    11.4
     </article>
   </div>
 
-  <div class="no-hit hidden" id="noHit">검색 결과에 맞는 용어가 없다. 검색어를 지우거나 출처 필터를 풀어야 한다.</div>
+  <div class="no-hit hidden" id="noHit">검색 결과에 맞는 용어가 없다. 검색어를 지우거나 출처·층위 필터를 풀어야 한다.</div>
   </div>
 </section>
 
@@ -3169,30 +3374,30 @@ w금융일수    11.4
   <div class="rev">
     <div class="rev-h"><h4>화면 ① 투자 자산</h4><span class="rf"><a class="scr" href="invest-assets.html">invest-assets.html</a> · 스토리보드 슬라이드 3 · 10항목</span></div>
     <div class="rev-row"><div class="rev-slot">현황표 <code>자산 구분</code> 열 — <code>투자실행액</code> 행</div><div class="rev-terms"><a class="chip" href="#t17">투자 실행액</a><a class="chip" href="#t16">회수되지 않은 순지급액</a><a class="chip" href="#t07">순지급액</a><a class="chip" href="#t13">유동화투자자의 할인율</a><a class="chip" href="#t14">Ai</a></div></div>
-    <div class="rev-row"><div class="rev-slot">현황표 <code>투자실행액</code> 행의 <code>W금융일수</code></div><div class="rev-terms"><a class="chip" href="#t21">w금융일수(잔액)</a><a class="chip" href="#t20">Di</a><a class="chip" href="#t08">금융일수</a><a class="chip" href="#t05">선정산일</a><a class="chip" href="#t06">정산예정일</a></div></div>
+    <div class="rev-row"><div class="rev-slot">현황표 <code>투자실행액</code> 행의 <code>W금융일수</code></div><div class="rev-terms"><a class="chip" href="#t21">w금융일수 (투자 자산 · 잔액)</a><a class="chip" href="#t20">Di</a><a class="chip" href="#t08">금융일수</a><a class="chip" href="#t05">선정산일</a><a class="chip" href="#t06">정산예정일</a></div></div>
     <div class="rev-row"><div class="rev-slot">현황표 <code>투자실행액</code> 행의 <code>S입금부족율</code></div><div class="rev-terms"><a class="chip" href="#t34">S입금부족율</a><a class="chip" href="#t31">SLi</a><a class="chip" href="#t32">SAi</a><a class="chip" href="#t33">표본집합</a><a class="chip" href="#t29">미지급금</a><a class="chip" href="#t30">과지급금</a></div></div>
-    <div class="rev-row"><div class="rev-slot">현황표 <code>투자실행액</code> 행의 <code>ty수익율</code></div><div class="rev-terms"><a class="chip" href="#t22">ty수익율(잔액)</a></div></div>
-    <div class="rev-row"><div class="rev-slot">현황표 <code>순현금</code> 행</div><div class="rev-terms"><a class="chip" href="#t18">순현금</a><a class="chip" href="#t19">쿠콘 가상계좌</a></div></div>
+    <div class="rev-row"><div class="rev-slot">현황표 <code>투자실행액</code> 행의 <code>ty수익율</code></div><div class="rev-terms"><a class="chip" href="#t22">ty수익율 (투자 자산 · 잔액)</a></div></div>
+    <div class="rev-row"><div class="rev-slot">현황표 <code>순현금</code> 행</div><div class="rev-terms"><a class="chip" href="#t18">순현금 (투자 자산 · 잔액)</a><a class="chip" href="#t19">쿠콘 가상계좌</a></div></div>
     <div class="rev-row"><div class="rev-slot">현황표 <code>비중</code> 열</div><div class="rev-terms"><a class="chip" href="#t23">비중</a></div></div>
     <div class="rev-row"><div class="rev-slot">현황표 <code>보관</code> 열</div><div class="rev-terms"><a class="chip" href="#t25">보관</a></div></div>
     <div class="rev-row"><div class="rev-slot">현황표 <code>합계</code> 행</div><div class="rev-terms"><a class="chip" href="#t26">투자자산</a></div></div>
-    <div class="rev-row"><div class="rev-slot">가맹점별 투자자산 표 6열 전체</div><div class="rev-terms"><a class="chip" href="#t12">대상정산금채권</a><a class="chip" href="#t02">정산금채권 ID</a><a class="chip" href="#t27">가맹점별 투자금액</a><a class="chip" href="#t23">가맹점별 비중</a></div></div>
+    <div class="rev-row"><div class="rev-slot">가맹점별 투자자산 표 6열 전체</div><div class="rev-terms"><a class="chip" href="#t12">대상정산금채권</a><a class="chip" href="#t02">정산금채권 ID</a><a class="chip" href="#t27">가맹점별 투자금액</a><a class="chip" href="#t23">비중</a><span class="w-item" style="padding:2px 8px;font-size:11.5px">가맹점별 표는 분모가 다르다 — <a class="xref" href="#s6">§6</a></span></div></div>
     <div class="rev-row"><div class="rev-slot">표 제목 옆 괄호 날짜</div><div class="rev-terms"><a class="chip" href="#t28">기준일자</a></div></div>
   </div>
 
   <div class="rev">
     <div class="rev-h"><h4>화면 ② 투자 수익</h4><span class="rf"><a class="scr" href="invest-profit.html">invest-profit.html</a> · 스토리보드 슬라이드 7 · 11항목</span></div>
     <div class="rev-row"><div class="rev-slot">현황 카드 <code>검색대상기간</code></div><div class="rev-terms"><a class="chip" href="#t50">검색대상기간</a></div></div>
-    <div class="rev-row"><div class="rev-slot">현황 카드 <code>투자실행금</code></div><div class="rev-terms"><a class="chip" href="#t42">PSA</a><a class="chip" href="#t36">투자실행금 SA</a><a class="chip" href="#t14">Ai</a></div></div>
-    <div class="rev-row"><div class="rev-slot">현황 카드 <code>투자수익</code></div><div class="rev-terms"><a class="chip" href="#t43">PSM</a><a class="chip" href="#t37">투자수익 SM</a><a class="chip" href="#t15">채권매입수수료</a></div></div>
-    <div class="rev-row"><div class="rev-slot">현황 카드 <code>ty수익율 › 투자실행금액 대비</code></div><div class="rev-terms"><a class="chip" href="#t47">④</a><a class="chip" href="#t44">PSMR</a><a class="chip" href="#t45">PSD</a></div></div>
-    <div class="rev-row"><div class="rev-slot">현황 카드 <code>ty수익율 › 투자자산 대비</code></div><div class="rev-terms"><a class="chip" href="#t48">⑤</a><a class="chip" href="#t46">PSC</a><a class="chip" href="#t41">순현금 EC</a><a class="chip" href="#t26">투자자산</a></div></div>
+    <div class="rev-row"><div class="rev-slot">현황 카드 <code>투자실행금</code></div><div class="rev-terms"><a class="chip" href="#t42">투자실행금 (투자 수익 · 기간 합계)</a><a class="chip" href="#t36">투자실행금 (일별 배치 · 하루치)</a><a class="chip" href="#t14">Ai</a></div></div>
+    <div class="rev-row"><div class="rev-slot">현황 카드 <code>투자수익</code></div><div class="rev-terms"><a class="chip" href="#t43">투자수익 (투자 수익 · 기간 합계)</a><a class="chip" href="#t37">투자수익 (일별 배치 · 하루치)</a><a class="chip" href="#t15">채권매입수수료</a></div></div>
+    <div class="rev-row"><div class="rev-slot">현황 카드 <code>ty수익율 › 투자실행금액 대비</code></div><div class="rev-terms"><a class="chip" href="#t47">ty수익율 › 투자실행금액 대비 (투자 수익 · 기간 합계)</a><a class="chip" href="#t44">PSMR</a><a class="chip" href="#t45">PSD</a></div></div>
+    <div class="rev-row"><div class="rev-slot">현황 카드 <code>ty수익율 › 투자자산 대비</code></div><div class="rev-terms"><a class="chip" href="#t48">ty수익율 › 투자자산 대비 (투자 수익 · 기간 합계)</a><a class="chip" href="#t46">PSC</a><a class="chip" href="#t41">순현금 (일별 배치 · 자정 시점)</a><a class="chip" href="#t26">투자자산</a></div></div>
     <div class="rev-row"><div class="rev-slot">일별 표 <code>입금일자</code> 열</div><div class="rev-terms"><a class="chip" href="#t06">정산예정일</a><span class="w-item" style="padding:2px 8px;font-size:11.5px">원문이 열 이름 변경을 지시</span></div></div>
-    <div class="rev-row"><div class="rev-slot">일별 표 <code>상환액</code> 열</div><div class="rev-terms"><a class="chip" href="#t35">상환액 SB</a><a class="chip" href="#t07">순지급액</a><a class="chip" href="#t29">미지급금</a><a class="chip" href="#t30">과지급금</a></div></div>
-    <div class="rev-row"><div class="rev-slot">일별 표 <code>투자실행금</code> 열</div><div class="rev-terms"><a class="chip" href="#t36">투자실행금 SA</a></div></div>
-    <div class="rev-row"><div class="rev-slot">일별 표 <code>투자 수익</code> 열</div><div class="rev-terms"><a class="chip" href="#t37">투자수익 SM</a><a class="chip" href="#t15">채권매입수수료</a></div></div>
-    <div class="rev-row"><div class="rev-slot">일별 표 <code>w금융일수</code> 열</div><div class="rev-terms"><a class="chip" href="#t39">w금융일수 SD</a></div></div>
-    <div class="rev-row"><div class="rev-slot">일별 표 <code>투자실행금액 대비 ty수익율</code> 열</div><div class="rev-terms"><a class="chip" href="#t49">⑥</a><a class="chip" href="#t38">투자수익율 SMR</a></div></div>
+    <div class="rev-row"><div class="rev-slot">일별 표 <code>상환액</code> 열</div><div class="rev-terms"><a class="chip" href="#t35">상환액 (일별 배치 · 하루치)</a><a class="chip" href="#t07">순지급액</a><a class="chip" href="#t29">미지급금</a><a class="chip" href="#t30">과지급금</a></div></div>
+    <div class="rev-row"><div class="rev-slot">일별 표 <code>투자실행금</code> 열</div><div class="rev-terms"><a class="chip" href="#t36">투자실행금 (일별 배치 · 하루치)</a></div></div>
+    <div class="rev-row"><div class="rev-slot">일별 표 <code>투자 수익</code> 열</div><div class="rev-terms"><a class="chip" href="#t37">투자수익 (일별 배치 · 하루치)</a><a class="chip" href="#t15">채권매입수수료</a></div></div>
+    <div class="rev-row"><div class="rev-slot">일별 표 <code>w금융일수</code> 열</div><div class="rev-terms"><a class="chip" href="#t39">w금융일수 (일별 배치 · 하루치)</a></div></div>
+    <div class="rev-row"><div class="rev-slot">일별 표 <code>투자실행금액 대비 ty수익율</code> 열</div><div class="rev-terms"><a class="chip" href="#t49">ty수익율 (일별 표 · 행 단위)</a><a class="chip" href="#t38">투자수익율 (일별 배치 · 하루치)</a></div></div>
   </div>
 
   <div class="rev">
@@ -3210,7 +3415,7 @@ w금융일수    11.4
 
   <div class="rev">
     <div class="rev-h"><h4>화면 ⑤ 쿠콘 관리 현금</h4><span class="rf"><a class="scr" href="coocon.html">coocon.html</a> · 슬라이드 10~13 · 1항목</span></div>
-    <div class="rev-row"><div class="rev-slot">외부 이동 안내</div><div class="rev-terms"><a class="chip" href="#t18">순현금</a><a class="chip" href="#t41">순현금 EC</a><a class="chip" href="#t19">쿠콘 가상계좌</a></div></div>
+    <div class="rev-row"><div class="rev-slot">외부 이동 안내</div><div class="rev-terms"><a class="chip" href="#t18">순현금 (투자 자산 · 잔액)</a><a class="chip" href="#t41">순현금 (일별 배치 · 자정 시점)</a><a class="chip" href="#t19">쿠콘 가상계좌</a></div></div>
   </div>
 </section>
 
@@ -3501,6 +3706,7 @@ w금융일수    11.4
     return {
       el: el,
       src: el.getAttribute('data-src') || '',
+      layer: el.getAttribute('data-layer') || '',
       text: (el.textContent || '').toLowerCase().replace(/\s+/g, ' ')
     };
   });
@@ -3512,16 +3718,19 @@ w금융일수    11.4
   var noHit = document.getElementById('noHit');
   var chips = [].slice.call(document.querySelectorAll('.fchip'));
   var active = {};
+  var activeL = {};
 
   function apply() {
     var q = (qInput.value || '').toLowerCase().trim();
     var srcOn = Object.keys(active).filter(function (k) { return active[k]; });
+    var layOn = Object.keys(activeL).filter(function (k) { return activeL[k]; });
     var hits = 0;
 
     index.forEach(function (rec) {
       var okQ = !q || rec.text.indexOf(q) !== -1;
       var okS = srcOn.length === 0 || srcOn.indexOf(rec.src) !== -1;
-      var show = okQ && okS;
+      var okL = layOn.length === 0 || layOn.indexOf(rec.layer) !== -1;
+      var show = okQ && okS && okL;
       rec.el.classList.toggle('hidden', !show);
       if (show) hits++;
     });
@@ -3542,9 +3751,15 @@ w금융일수    11.4
 
   chips.forEach(function (c) {
     c.addEventListener('click', function () {
-      var key = c.getAttribute('data-src');
-      active[key] = !active[key];
-      c.setAttribute('aria-pressed', active[key] ? 'true' : 'false');
+      var lk = c.getAttribute('data-layer');
+      if (lk) {
+        activeL[lk] = !activeL[lk];
+        c.setAttribute('aria-pressed', activeL[lk] ? 'true' : 'false');
+      } else {
+        var key = c.getAttribute('data-src');
+        active[key] = !active[key];
+        c.setAttribute('aria-pressed', active[key] ? 'true' : 'false');
+      }
       apply();
     });
   });
