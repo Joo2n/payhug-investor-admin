@@ -43,6 +43,12 @@
   .sign-foot .btn { min-width: 240px; justify-content: center; padding: 12px 40px; font-size: 16px; border-radius: 12px; }
   .list-tools { display: flex; align-items: center; gap: 8px; }
   .tbl-head-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--gray-100); }
+  .notice-green { background: var(--primary-50); border-color: var(--primary-200); color: var(--primary-700); }
+  .pagination.with-count { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
+  .pagination.with-count .pg-count { justify-self: start; font-size: 12px; color: var(--gray-500); }
+  .pagination.with-count .pg-nums { display: flex; align-items: center; gap: 4px; justify-self: center; }
+  .pg-size { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--gray-500); }
+  .input.sz { padding: 4px 24px 4px 10px; font-size: 12px; height: 28px; border-radius: 8px; }
 </style>
 </head>
 <body data-active="contracts">
@@ -127,6 +133,7 @@
     </div>
 
     <!-- 재양도합의서 목록 — 보관 문서 없음 -->
+
     <div class="tbl-wrap">
       <div class="tbl-head-bar">
         <div>
@@ -134,6 +141,7 @@
           <span class="tbl-count">총 <b class="mono">0</b>건</span>
         </div>
         <div class="list-tools">
+          <label class="pg-size">보기<select class="input sz" aria-label="보기 갯수"><option value="10" selected>10개</option><option value="20">20개</option><option value="50">50개</option></select></label>
           <button class="btn btn-ghost" disabled>선택 해제</button>
           <button class="btn btn-excel" disabled>
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>

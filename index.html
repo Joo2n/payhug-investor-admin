@@ -50,6 +50,7 @@
 
   /* 문서 링크 카드 */
   .doc-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
+  @media (min-width: 760px) { .doc-row { grid-template-columns: repeat(3, 1fr); } }
   @media (min-width: 1000px) { .doc-row { grid-template-columns: repeat(4, 1fr); } }
   a.doc-card {
     display: flex; align-items: center; gap: 12px; text-decoration: none;
@@ -92,7 +93,6 @@
   .shot-icon svg { width: 18px; height: 18px; }
   .shot-id { min-width: 0; }
   .shot-name { font-size: 16px; line-height: 22px; font-weight: 700; color: var(--gray-900); }
-  .shot-file { font-size: 11px; line-height: 15px; color: var(--gray-400); font-family: var(--font-mono); margin-top: 1px; }
   .shot-top .badge.sm { margin-left: auto; flex-shrink: 0; }
   .shot-desc { font-size: 13px; line-height: 19px; color: var(--gray-500); margin: 12px 0 0; }
 
@@ -113,9 +113,7 @@
   }
   .state-list a:hover { background: #fff; }
   .state-list .s-name { font-size: 13px; line-height: 18px; font-weight: 500; color: var(--gray-700); }
-  .state-list .s-file { font-size: 11px; line-height: 16px; color: var(--gray-400); font-family: var(--font-mono); margin-left: auto; }
 
-  .foot-note { text-align: center; font-size: 12px; line-height: 16px; color: var(--gray-400); margin-top: 44px; }
 </style>
 </head>
 <body>
@@ -133,8 +131,8 @@
   <a class="app-card" href="app.html">
     <div class="app-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></div>
     <div>
-      <div class="app-name">통합 프로토타입 <em>app.html</em></div>
-      <p class="app-desc">실제 서비스처럼 동작하는 통합본. 사이드바 메뉴 7개 전환, 엑셀 실제 내려받기, 증명서·전자서명·검색·페이지네이션까지 화면 14개와 상태 18개가 한 파일 안에서 연결됨.</p>
+      <div class="app-name"><em>통합</em> 프로토타입</div>
+      <p class="app-desc">사이드바 메뉴 7개 &mdash; 투자(투자 자산 &middot; 투자 수익) / 가맹점(가맹점 &middot; 정산채권 양수 &middot; 계약기록) / 관리(쿠콘 관리 현금 &middot; 비밀번호 변경). 아래 화면과 상태를 눌러서 오갈 수 있고 엑셀은 실제로 내려받는다.</p>
     </div>
     <span class="app-go">열기</span>
   </a>
@@ -144,28 +142,49 @@
       <div class="doc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
       <div>
         <div class="d-name">용어 해설 <span class="d-tag">최신</span></div>
-        <div class="d-desc">glossary.html · 용어 50건을 카드로. 용어명·변수·계산식·화면 위치·관련 용어</div>
+        <div class="d-desc">화면과 엑셀에 쓰인 계산식 용어 50건</div>
       </div>
     </a>
     <a class="doc-card" href="glossary-legacy.html">
       <div class="doc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
       <div>
         <div class="d-name">용어 구버전</div>
-        <div class="d-desc">glossary-legacy.html · 서술 중심의 이전 판. 비교용</div>
+        <div class="d-desc">서술 중심의 이전 판</div>
       </div>
     </a>
     <a class="doc-card" href="capability.html">
       <div class="doc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
       <div>
         <div class="d-name">기능·데이터 명세</div>
-        <div class="d-desc">capability.html · 투자자에게 노출되는 기능과 데이터 범위</div>
+        <div class="d-desc">투자자에게 노출되는 기능과 데이터 범위</div>
+      </div>
+    </a>
+    <a class="doc-card" href="feasibility.html">
+      <div class="doc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div>
+      <div>
+        <div class="d-name">구현 가능성</div>
+        <div class="d-desc">화면·데이터 항목별로 지금 만들 수 있는 범위</div>
+      </div>
+    </a>
+    <a class="doc-card" href="inquiry.html">
+      <div class="doc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
+      <div>
+        <div class="d-name">대표 확인 요청</div>
+        <div class="d-desc">계산식 문항 4건과 개발·백엔드 부록</div>
+      </div>
+    </a>
+    <a class="doc-card" href="review.html">
+      <div class="doc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div>
+      <div>
+        <div class="d-name">순차 확인</div>
+        <div class="d-desc">무엇을 어느 순서로 볼지 한 단계씩</div>
       </div>
     </a>
     <a class="doc-card" href="archive.html">
       <div class="doc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M3 15h18M9 5v14M15 5v14M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
       <div>
         <div class="d-name">작업물 아카이브</div>
-        <div class="d-desc">archive.html · 산출물 전체 목록</div>
+        <div class="d-desc">산출물 전체 목록 — 경로·설명·수정 시각</div>
       </div>
     </a>
   </div>
@@ -181,7 +200,6 @@
           <div class="shot-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
           <div class="shot-id">
             <div class="shot-name">투자 자산</div>
-            <div class="shot-file">invest-assets.html</div>
           </div>
           <span class="badge sm badge-primary">투자</span>
         </div>
@@ -190,10 +208,10 @@
       <details class="state-fold">
         <summary>상태 4개</summary>
         <ul class="state-list">
-          <li><a href="invest-assets--page2.html"><span class="s-name">2페이지</span><span class="s-file">invest-assets--page2.html</span></a></li>
-          <li><a href="invest-assets--download.html"><span class="s-name">엑셀 다운로드 완료</span><span class="s-file">invest-assets--download.html</span></a></li>
-          <li><a href="invest-assets--cert-confirm.html"><span class="s-name">증명서 발급 확인</span><span class="s-file">invest-assets--cert-confirm.html</span></a></li>
-          <li><a href="invest-assets--empty.html"><span class="s-name">데이터 없음</span><span class="s-file">invest-assets--empty.html</span></a></li>
+          <li><a href="invest-assets--page2.html"><span class="s-name">2페이지</span></a></li>
+          <li><a href="invest-assets--download.html"><span class="s-name">엑셀 다운로드 완료</span></a></li>
+          <li><a href="invest-assets--cert-confirm.html"><span class="s-name">증명서 발급 확인</span></a></li>
+          <li><a href="invest-assets--empty.html"><span class="s-name">데이터 없음</span></a></li>
         </ul>
       </details>
     </div>
@@ -203,7 +221,6 @@
           <div class="shot-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
           <div class="shot-id">
             <div class="shot-name">투자자산 증명서</div>
-            <div class="shot-file">certificate.html</div>
           </div>
           <span class="badge sm badge-primary">투자</span>
         </div>
@@ -216,17 +233,17 @@
           <div class="shot-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div>
           <div class="shot-id">
             <div class="shot-name">투자 수익</div>
-            <div class="shot-file">invest-profit.html</div>
           </div>
           <span class="badge sm badge-primary">투자</span>
         </div>
-        <p class="shot-desc">기간 검색·일별 투자수익·산식</p>
+        <p class="shot-desc">기간 검색·일별/주별/월별 투자수익·산식</p>
       </a>
       <details class="state-fold">
-        <summary>상태 2개</summary>
+        <summary>상태 3개</summary>
         <ul class="state-list">
-          <li><a href="invest-profit--monthly.html"><span class="s-name">월별</span><span class="s-file">invest-profit--monthly.html</span></a></li>
-          <li><a href="invest-profit--empty.html"><span class="s-name">결과 없음</span><span class="s-file">invest-profit--empty.html</span></a></li>
+          <li><a href="invest-profit--weekly.html"><span class="s-name">주별</span></a></li>
+          <li><a href="invest-profit--monthly.html"><span class="s-name">월별</span></a></li>
+          <li><a href="invest-profit--empty.html"><span class="s-name">결과 없음</span></a></li>
         </ul>
       </details>
     </div>
@@ -236,18 +253,11 @@
           <div class="shot-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
           <div class="shot-id">
             <div class="shot-name">쿠콘 관리 현금</div>
-            <div class="shot-file">coocon.html</div>
           </div>
           <span class="badge sm badge-gray">관리</span>
         </div>
-        <p class="shot-desc">We-bank 외부 연결</p>
+        <p class="shot-desc">메뉴에서 We-bank 로 바로 이동</p>
       </a>
-      <details class="state-fold">
-        <summary>상태 1개</summary>
-        <ul class="state-list">
-          <li><a href="coocon--confirm.html"><span class="s-name">이동 확인</span><span class="s-file">coocon--confirm.html</span></a></li>
-        </ul>
-      </details>
     </div>
     <div class="shot-card">
       <a class="shot-link" href="merchants.html">
@@ -255,7 +265,6 @@
           <div class="shot-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
           <div class="shot-id">
             <div class="shot-name">가맹점</div>
-            <div class="shot-file">merchants.html</div>
           </div>
           <span class="badge sm badge-blue">가맹점</span>
         </div>
@@ -264,8 +273,8 @@
       <details class="state-fold">
         <summary>상태 2개</summary>
         <ul class="state-list">
-          <li><a href="merchants--filtered.html"><span class="s-name">검색 적용</span><span class="s-file">merchants--filtered.html</span></a></li>
-          <li><a href="merchants--empty.html"><span class="s-name">결과 없음</span><span class="s-file">merchants--empty.html</span></a></li>
+          <li><a href="merchants--filtered.html"><span class="s-name">검색 적용</span></a></li>
+          <li><a href="merchants--empty.html"><span class="s-name">결과 없음</span></a></li>
         </ul>
       </details>
     </div>
@@ -275,18 +284,18 @@
           <div class="shot-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
           <div class="shot-id">
             <div class="shot-name">정산채권 양수</div>
-            <div class="shot-file">acquisition.html</div>
           </div>
           <span class="badge sm badge-blue">가맹점</span>
         </div>
-        <p class="shot-desc">양수도 계약서 전자서명</p>
+        <p class="shot-desc">계약서보기 · 양수도 계약서 전자서명</p>
       </a>
       <details class="state-fold">
-        <summary>상태 3개</summary>
+        <summary>상태 4개</summary>
         <ul class="state-list">
-          <li><a href="acquisition--confirm.html"><span class="s-name">서명 확인</span><span class="s-file">acquisition--confirm.html</span></a></li>
-          <li><a href="acquisition--signing.html"><span class="s-name">서명 진행</span><span class="s-file">acquisition--signing.html</span></a></li>
-          <li><a href="acquisition--done.html"><span class="s-name">서명 완료</span><span class="s-file">acquisition--done.html</span></a></li>
+          <li><a href="acquisition--doc.html"><span class="s-name">계약서보기</span></a></li>
+          <li><a href="acquisition--confirm.html"><span class="s-name">서명 확인</span></a></li>
+          <li><a href="acquisition--signing.html"><span class="s-name">서명 진행</span></a></li>
+          <li><a href="acquisition--done.html"><span class="s-name">서명 완료</span></a></li>
         </ul>
       </details>
     </div>
@@ -296,18 +305,17 @@
           <div class="shot-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
           <div class="shot-id">
             <div class="shot-name">계약기록</div>
-            <div class="shot-file">contracts.html</div>
           </div>
           <span class="badge sm badge-blue">가맹점</span>
         </div>
-        <p class="shot-desc">재양도합의서 일괄 다운로드</p>
+        <p class="shot-desc">전자서명 결과 일괄 다운로드</p>
       </a>
       <details class="state-fold">
         <summary>상태 3개</summary>
         <ul class="state-list">
-          <li><a href="contracts--all.html"><span class="s-name">전체 선택</span><span class="s-file">contracts--all.html</span></a></li>
-          <li><a href="contracts--downloaded.html"><span class="s-name">다운로드 완료</span><span class="s-file">contracts--downloaded.html</span></a></li>
-          <li><a href="contracts--empty.html"><span class="s-name">문서 없음</span><span class="s-file">contracts--empty.html</span></a></li>
+          <li><a href="contracts--all.html"><span class="s-name">전체 선택</span></a></li>
+          <li><a href="contracts--downloaded.html"><span class="s-name">다운로드 완료</span></a></li>
+          <li><a href="contracts--empty.html"><span class="s-name">문서 없음</span></a></li>
         </ul>
       </details>
     </div>
@@ -317,7 +325,6 @@
           <div class="shot-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div>
           <div class="shot-id">
             <div class="shot-name">비밀번호 변경</div>
-            <div class="shot-file">password.html</div>
           </div>
           <span class="badge sm badge-gray">관리</span>
         </div>
@@ -326,9 +333,9 @@
       <details class="state-fold">
         <summary>상태 3개</summary>
         <ul class="state-list">
-          <li><a href="password--weak.html"><span class="s-name">규칙 미충족</span><span class="s-file">password--weak.html</span></a></li>
-          <li><a href="password--error.html"><span class="s-name">확인값 불일치</span><span class="s-file">password--error.html</span></a></li>
-          <li><a href="password--done.html"><span class="s-name">변경 완료</span><span class="s-file">password--done.html</span></a></li>
+          <li><a href="password--weak.html"><span class="s-name">규칙 미충족</span></a></li>
+          <li><a href="password--error.html"><span class="s-name">확인값 불일치</span></a></li>
+          <li><a href="password--done.html"><span class="s-name">변경 완료</span></a></li>
         </ul>
       </details>
     </div>
@@ -336,7 +343,7 @@
 
   <div class="sec-head">
     <h2>하위 화면</h2>
-    <span class="sec-note">인증 1 · 엑셀 산출물 서식 4 (Figma 임포트 전용, 화면 흐름 진입점 아님)</span>
+    <span class="sec-note">인증 1 · 엑셀 산출물 서식 4</span>
   </div>
   <div class="gallery">
     <div class="shot-card">
@@ -345,7 +352,6 @@
           <div class="shot-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div>
           <div class="shot-id">
             <div class="shot-name">로그인</div>
-            <div class="shot-file">login.html</div>
           </div>
           <span class="badge sm badge-gray">인증</span>
         </div>
@@ -358,11 +364,10 @@
           <div class="shot-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M3 15h18M9 5v14M15 5v14M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
           <div class="shot-id">
             <div class="shot-name">엑셀 산출물 서식 — 투자자산 현황</div>
-            <div class="shot-file">xls-assets-status.html</div>
           </div>
           <span class="badge sm badge-gray">Figma 전용</span>
         </div>
-        <p class="shot-desc">Figma 임포트 전용 · 화면 흐름 진입점 아님 — 투자 자산 &gt; 현황 표의 엑셀 서식</p>
+        <p class="shot-desc">투자 자산 &gt; 현황 표를 내려받았을 때의 엑셀 서식</p>
       </a>
     </div>
     <div class="shot-card">
@@ -371,11 +376,10 @@
           <div class="shot-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M3 15h18M9 5v14M15 5v14M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
           <div class="shot-id">
             <div class="shot-name">엑셀 산출물 서식 — 가맹점별 투자자산</div>
-            <div class="shot-file">xls-assets-merchant.html</div>
           </div>
           <span class="badge sm badge-gray">Figma 전용</span>
         </div>
-        <p class="shot-desc">Figma 임포트 전용 · 화면 흐름 진입점 아님 — 투자 자산 &gt; 가맹점별 표의 엑셀 서식</p>
+        <p class="shot-desc">투자 자산 &gt; 가맹점별 투자자산 표를 내려받았을 때의 엑셀 서식</p>
       </a>
     </div>
     <div class="shot-card">
@@ -384,11 +388,10 @@
           <div class="shot-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M3 15h18M9 5v14M15 5v14M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
           <div class="shot-id">
             <div class="shot-name">엑셀 산출물 서식 — 투자수익 현황</div>
-            <div class="shot-file">xls-profit-status.html</div>
           </div>
           <span class="badge sm badge-gray">Figma 전용</span>
         </div>
-        <p class="shot-desc">Figma 임포트 전용 · 화면 흐름 진입점 아님 — 투자 수익 &gt; 수익 현황 표의 엑셀 서식</p>
+        <p class="shot-desc">투자 수익 &gt; 수익 현황 표를 내려받았을 때의 엑셀 서식</p>
       </a>
     </div>
     <div class="shot-card">
@@ -397,16 +400,14 @@
           <div class="shot-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M3 15h18M9 5v14M15 5v14M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
           <div class="shot-id">
             <div class="shot-name">엑셀 산출물 서식 — 일별 투자수익</div>
-            <div class="shot-file">xls-profit-daily.html</div>
           </div>
           <span class="badge sm badge-gray">Figma 전용</span>
         </div>
-        <p class="shot-desc">Figma 임포트 전용 · 화면 흐름 진입점 아님 — 투자 수익 &gt; 일별 표의 엑셀 서식</p>
+        <p class="shot-desc">투자 수익 &gt; 일별 투자수익 표를 내려받았을 때의 엑셀 서식</p>
       </a>
     </div>
   </div>
 
-  <p class="foot-note">표기 금액·요율·상호는 전부 예시.</p>
 
 </div>
 </body>

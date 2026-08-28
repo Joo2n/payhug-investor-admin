@@ -32,6 +32,9 @@
   .pagination.with-count .pg-count { justify-self: start; font-size: 12px; color: var(--gray-500); }
   .pagination.with-count .pg-nums { display: flex; align-items: center; gap: 4px; justify-self: center; }
   .pagination.with-count .sel-pill { margin-left: 0; }
+  .notice-green { background: var(--primary-50); border-color: var(--primary-200); color: var(--primary-700); }
+  .pg-size { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--gray-500); }
+  .input.sz { padding: 4px 24px 4px 10px; font-size: 12px; height: 28px; border-radius: 8px; }
 </style>
 </head>
 <body data-active="contracts">
@@ -115,6 +118,7 @@
       <h1 class="page-title">계약기록</h1>
     </div>
 
+
     <!-- 재양도합의서 목록 -->
     <div class="tbl-wrap">
       <div class="tbl-head-bar">
@@ -123,8 +127,9 @@
           <span style="font-size:12px; color:var(--gray-400); margin-left:8px">총 <b class="mono">16</b>건</span>
         </div>
         <div class="list-tools">
+          <label class="pg-size">보기<select class="input sz" aria-label="보기 갯수"><option value="10" selected>10개</option><option value="20">20개</option><option value="50">50개</option></select></label>
           <button class="btn btn-ghost" disabled>선택 해제</button>
-          <a class="btn btn-excel" href="assets/docs/재양도합의서_선택3건_20260827.zip" download>
+          <a class="btn btn-excel" href="assets/docs/전자서명결과_선택3건_20260827.txt" download>
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             선택 문서 다운로드
           </a>
@@ -138,8 +143,8 @@
               <th class="no">No</th>
               <th>MID</th>
               <th>가맹점</th>
-              <th>재양도합의서</th>
-              <th class="center">검증</th>
+              <th>전자서명 결과</th>
+              <th class="center">서명 수단</th>
             </tr>
           </thead>
           <tbody>
@@ -148,64 +153,80 @@
               <td class="no">1</td>
               <td class="mono">M2026-0001</td>
               <td><span class="name">김성호떡볶이 본점</span></td>
-              <td><a class="file-link" href="assets/docs/재양도합의서_M2026-0001.pdf" target="_blank" rel="noopener">재양도합의서_M2026-0001.pdf</a></td>
-              <td class="center"><span class="badge badge-gray">확인 대상</span></td>
+              <td><a class="file-link" href="assets/docs/전자서명결과_M2026-0001.txt" target="_blank" rel="noopener">전자서명결과_M2026-0001.txt</a></td>
+              <td class="center"><span class="badge badge-green">하나인증서</span></td>
             </tr>
             <tr class="clickable" role="checkbox" tabindex="0" aria-checked="false">
               <td><input type="checkbox" class="chk"></td>
               <td class="no">2</td>
               <td class="mono">M2026-0002</td>
               <td><span class="name">달빛곱창 홍대점</span></td>
-              <td><a class="file-link" href="assets/docs/재양도합의서_M2026-0002.pdf" target="_blank" rel="noopener">재양도합의서_M2026-0002.pdf</a></td>
-              <td class="center"><span class="badge badge-gray">확인 대상</span></td>
+              <td><a class="file-link" href="assets/docs/전자서명결과_M2026-0002.txt" target="_blank" rel="noopener">전자서명결과_M2026-0002.txt</a></td>
+              <td class="center"><span class="badge badge-green">하나인증서</span></td>
             </tr>
             <tr class="clickable" role="checkbox" tabindex="0" aria-checked="false">
               <td><input type="checkbox" class="chk"></td>
               <td class="no">3</td>
               <td class="mono">M2026-0003</td>
               <td><span class="name">성호분식 2호점</span></td>
-              <td><a class="file-link" href="assets/docs/재양도합의서_M2026-0003.pdf" target="_blank" rel="noopener">재양도합의서_M2026-0003.pdf</a></td>
-              <td class="center"><span class="badge badge-gray">확인 대상</span></td>
+              <td><a class="file-link" href="assets/docs/전자서명결과_M2026-0003.txt" target="_blank" rel="noopener">전자서명결과_M2026-0003.txt</a></td>
+              <td class="center"><span class="badge badge-green">하나인증서</span></td>
             </tr>
             <tr class="clickable selected" role="checkbox" tabindex="0" aria-checked="true">
               <td><input type="checkbox" class="chk" checked></td>
               <td class="no">4</td>
               <td class="mono">M2026-0004</td>
               <td><span class="name">바다마루 횟집</span></td>
-              <td><a class="file-link" href="assets/docs/재양도합의서_M2026-0004.pdf" target="_blank" rel="noopener">재양도합의서_M2026-0004.pdf</a></td>
-              <td class="center"><span class="badge badge-gray">확인 대상</span></td>
+              <td><a class="file-link" href="assets/docs/전자서명결과_M2026-0004.txt" target="_blank" rel="noopener">전자서명결과_M2026-0004.txt</a></td>
+              <td class="center"><span class="badge badge-green">하나인증서</span></td>
             </tr>
             <tr class="clickable" role="checkbox" tabindex="0" aria-checked="false">
               <td><input type="checkbox" class="chk"></td>
               <td class="no">5</td>
               <td class="mono">M2026-0005</td>
               <td><span class="name">한강커피 잠원점</span></td>
-              <td><a class="file-link" href="assets/docs/재양도합의서_M2026-0005.pdf" target="_blank" rel="noopener">재양도합의서_M2026-0005.pdf</a></td>
-              <td class="center"><span class="badge badge-gray">확인 대상</span></td>
+              <td><a class="file-link" href="assets/docs/전자서명결과_M2026-0005.txt" target="_blank" rel="noopener">전자서명결과_M2026-0005.txt</a></td>
+              <td class="center"><span class="badge badge-green">하나인증서</span></td>
             </tr>
             <tr class="clickable selected" role="checkbox" tabindex="0" aria-checked="true">
               <td><input type="checkbox" class="chk" checked></td>
               <td class="no">6</td>
               <td class="mono">M2026-0006</td>
               <td><span class="name">김밥나라</span></td>
-              <td><a class="file-link" href="assets/docs/재양도합의서_M2026-0006.pdf" target="_blank" rel="noopener">재양도합의서_M2026-0006.pdf</a></td>
-              <td class="center"><span class="badge badge-gray">확인 대상</span></td>
+              <td><a class="file-link" href="assets/docs/전자서명결과_M2026-0006.txt" target="_blank" rel="noopener">전자서명결과_M2026-0006.txt</a></td>
+              <td class="center"><span class="badge badge-green">하나인증서</span></td>
             </tr>
             <tr class="clickable" role="checkbox" tabindex="0" aria-checked="false">
               <td><input type="checkbox" class="chk"></td>
               <td class="no">7</td>
               <td class="mono">M2026-0007</td>
               <td><span class="name">초록치킨 서초점</span></td>
-              <td><a class="file-link" href="assets/docs/재양도합의서_M2026-0007.pdf" target="_blank" rel="noopener">재양도합의서_M2026-0007.pdf</a></td>
-              <td class="center"><span class="badge badge-gray">확인 대상</span></td>
+              <td><a class="file-link" href="assets/docs/전자서명결과_M2026-0007.txt" target="_blank" rel="noopener">전자서명결과_M2026-0007.txt</a></td>
+              <td class="center"><span class="badge badge-green">하나인증서</span></td>
             </tr>
             <tr class="clickable" role="checkbox" tabindex="0" aria-checked="false">
               <td><input type="checkbox" class="chk"></td>
               <td class="no">8</td>
               <td class="mono">M2026-0008</td>
               <td><span class="name">골목냉면</span></td>
-              <td><a class="file-link" href="assets/docs/재양도합의서_M2026-0008.pdf" target="_blank" rel="noopener">재양도합의서_M2026-0008.pdf</a></td>
-              <td class="center"><span class="badge badge-gray">확인 대상</span></td>
+              <td><a class="file-link" href="assets/docs/전자서명결과_M2026-0008.txt" target="_blank" rel="noopener">전자서명결과_M2026-0008.txt</a></td>
+              <td class="center"><span class="badge badge-green">하나인증서</span></td>
+            </tr>
+            <tr class="clickable" role="checkbox" tabindex="0" aria-checked="false">
+              <td><input type="checkbox" class="chk"></td>
+              <td class="no">9</td>
+              <td class="mono">M2026-0009</td>
+              <td><span class="name">청춘포차 신촌점</span></td>
+              <td><a class="file-link" href="assets/docs/전자서명결과_M2026-0009.txt" target="_blank" rel="noopener">전자서명결과_M2026-0009.txt</a></td>
+              <td class="center"><span class="badge badge-green">하나인증서</span></td>
+            </tr>
+            <tr class="clickable" role="checkbox" tabindex="0" aria-checked="false">
+              <td><input type="checkbox" class="chk"></td>
+              <td class="no">10</td>
+              <td class="mono">M2026-0010</td>
+              <td><span class="name">왕십리곱창타운</span></td>
+              <td><a class="file-link" href="assets/docs/전자서명결과_M2026-0010.txt" target="_blank" rel="noopener">전자서명결과_M2026-0010.txt</a></td>
+              <td class="center"><span class="badge badge-green">하나인증서</span></td>
             </tr>
           </tbody>
         </table>

@@ -18,14 +18,6 @@
     display: flex; align-items: center; justify-content: center;
   }
   .link-icon svg { width: 26px; height: 26px; }
-  .link-title { font-size: 18px; line-height: 28px; font-weight: 700; color: var(--gray-900); margin: 0 0 8px; }
-  .link-desc { font-size: 14px; line-height: 22px; color: var(--gray-500); margin: 0 0 24px; }
-  .link-foot { font-size: 12px; line-height: 16px; color: var(--gray-400); margin: 16px 0 0; }
-  .ref-list { display: flex; flex-direction: column; gap: 10px; }
-  .ref-item { display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 20px; color: var(--gray-700); }
-  .ref-item svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--emerald-600); }
-  .link-check { width: 100%; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--gray-100); text-align: left; }
-  .link-check .card-title { display: block; margin: 0 0 12px; }
 </style>
 </head>
 <body data-active="kcoon">
@@ -110,41 +102,16 @@
     </div>
 
     <div class="link-wrap">
-      <!-- 중앙 안내 카드 -->
       <div class="card link-card">
         <div class="link-icon">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
         </div>
-        <h2 class="link-title">쿠콘 We-bank 전자금융서비스</h2>
-        <p class="link-desc">
-          관리 현금의 입금·송금·펌뱅킹 거래 내역은 쿠콘 We-bank 전자금융서비스에서 조회하며, 별도 발급된 사용자 ID·비밀번호·기관코드·OTP로 로그인합니다.
-          아래 바로가기는 새 창으로 열리고, 계정 발급과 OTP 초기화는 페이허그 담당자가 처리합니다.
-        </p>
         <a class="btn btn-primary" href="https://www.we-bank.co.kr/main_00100.act" target="_blank" rel="noopener">
           We-bank 바로가기
           <svg style="width:14px;height:14px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
         </a>
-        <div class="link-check">
-          <h3 class="card-title">We-bank에서 조회 가능한 내역</h3>
-        <div class="ref-list">
-          <div class="ref-item">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            <span>가상계좌 입금내역조회</span>
-          </div>
-          <div class="ref-item">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            <span>가상계좌 송금내역조회</span>
-          </div>
-          <div class="ref-item">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            <span>펌뱅킹 제휴거래내역조회</span>
-          </div>
-        </div>
-      </div>
-
       </div>
     </div>
-
   </main>
 
 </div>

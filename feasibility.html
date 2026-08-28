@@ -622,7 +622,7 @@
   <!-- ── 4. 종전 E등급 재판정 ── -->
   <section class="sec">
     <div class="sec-head"><span class="sec-no">4</span><h2>종전 E등급 3건 — 재판정 결과</h2></div>
-    <p class="sec-lead">착수 불가로 잡았던 3건은 전부 내렸다. 근거는 아래와 같다.</p>
+    <p class="sec-lead">종전에 착수 불가로 잡혔던 3건. 현재 판정은 전부 B~C이며 근거는 각 카드에 있다.</p>
 
     <div class="ecard">
       <div class="ecard-head"><span class="eid">E-1</span><h4>채권매입수수료의 기준금액·요율</h4><span class="g g-B" style="margin-left:auto">B 계산만 추가</span></div>
@@ -680,7 +680,7 @@
   <!-- ── 5. 판정 전량 ── -->
   <section class="sec">
     <div class="sec-head"><span class="sec-no">5</span><h2>판정 전량 124건</h2></div>
-    <p class="sec-lead">등급 뱃지를 눌러 거르거나 검색어로 찾는다. 근거의 파일 경로는 전부 <code>/Users/semi/cursor/payhug-admin-web/</code> 기준이고, <b>물을 것</b>은 §6 개발 문의 ID다.</p>
+    <p class="sec-lead">근거의 파일 경로는 전부 <code>/Users/semi/cursor/payhug-admin-web/</code> 기준. <b>물을 것</b>은 §6 개발 문의 ID.</p>
 
     <div class="toolbar">
       <input type="search" class="tb-search" id="q" placeholder="용어·화면·기능·필드명으로 검색 (예: 순지급액, payoutDt, 쿠콘)" aria-label="판정 항목 검색">
@@ -766,20 +766,20 @@
       <table class="dt">
         <thead><tr><th style="width:36px"></th><th style="width:140px">화면</th><th style="width:74px">등급</th><th>근거</th><th>무엇이 없나</th><th style="width:110px">선행</th><th style="width:82px">물을 것</th></tr></thead>
         <tbody id="tb-screen">
-          <tr data-g="A"><td class="no">1</td><td class="k">로그인<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">login.html</span></td><td class="c"><span class="g g-A">A</span></td><td><code>POST /auth/login</code>(<code>services/authService.ts:22-24</code>) + <code>admin_access_token</code> 쿠키 + <code>isAllowedLoginUserType</code>(<code>lib/permissions.ts:26</code>)에 <b>INVESTOR 이미 포함</b>. 입력 항목도 동일(<code>app/login/page.tsx:132·149</code>)</td><td>실패·잠금 상태 미설계. 비밀번호 찾기 대상 화면 없음</td><td class="muted">—</td><td>D-31</td></tr>
-          <tr data-g="C"><td class="no">2</td><td class="k">투자 자산<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">invest-assets.html</span></td><td class="c"><span class="g g-C">C</span></td><td>7열 중 실데이터로 채울 수 있는 것은 <b>가맹점명 하나</b></td><td>투자실행액·순현금·W금융일수·S입금부족율·ty수익율·비중의 원천 전부</td><td>N-1 N-2 N-3</td><td>D-01 D-13</td></tr>
-          <tr data-g="D"><td class="no">3</td><td class="k">가맹점별 투자자산 증명서<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">certificate.html</span></td><td class="c"><span class="g g-D">D</span></td><td>전자문서 형태는 정의됨. <b>인증서 서명 모듈이 레포 전체에 0건</b> — 존재하는 것은 직인 이미지 기반 자체 다자간 서명뿐(<code>app/partners/page.tsx:521·599</code>)</td><td>서명 벤더 · 검증 회신전문 수신 경로</td><td>N-8 N-9 N-10 · 서명 벤더</td><td>D-19 D-20</td></tr>
-          <tr data-g="C"><td class="no">4</td><td class="k">투자 수익<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">invest-profit.html</span></td><td class="c"><span class="g g-C">C</span></td><td>조회·필터·엑셀 골격은 부품 실재. 표를 채울 원자료의 가장 가까운 실물은 <b>배분 원장</b> — <code>GET /admin/settlement/batch-payouts?dateFrom&amp;dateTo</code>(<code>hooks/useSettlementOverview.ts:276</code>), 행 타입 <code>BatchPayoutRow</code>(<code>types/settlement.ts:60-73</code>). <code>role==="INVESTOR"</code> 행을 <code>targetDate</code>로 묶으면 일별 표의 뼈대가 선다. <b>현재 이 엔드포인트는 엑셀 생성에만 쓰이고 화면이 없다</b></td><td>원장은 <code>정액 합산 + 다자 배분율</code> 구조이고 스토리보드는 <code>할인 매입한 채권의 상환 결과</code> 구조 — 두 모델이 만나지 않는다. 상환액·투자실행금·할인율 축이 없다</td><td>N-1 N-5 N-7</td><td>D-28 D-29</td></tr>
-          <tr data-g="A"><td class="no">5</td><td class="k">쿠콘 관리 현금<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">coocon.html</span></td><td class="c"><span class="g g-A">A</span></td><td>페이허그가 보여주는 데이터 <b>0건</b>. 외부 링크 1개 + 안내 문구가 전부라 지금도 만들 수 있다</td><td><b>쿠콘 계정 스코프.</b> 투자자에게 We-bank 계정을 발급하면 페이허그 전체 자금 이동이 열린다. <code>We-bank</code>·<code>펌뱅킹</code>·<code>오픈뱅킹</code> 문자열 레포 전수 0건</td><td class="muted">계정 발급은 D</td><td>D-15</td></tr>
-          <tr data-g="C"><td class="no">6</td><td class="k">가맹점<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">merchants.html</span></td><td class="c"><span class="g g-C">C</span></td><td>7열 중 4열 실재 — 가맹점ID(<code>types/merchant.ts:17-18</code>)·가맹점명(<code>:20</code>)·사업자번호(<code>:19</code>)·대표자(<code>:21</code>). 검색 4항목도 동일한 것이 실재(<code>app/manage/page.tsx:249-255</code>)</td><td>업종·종목은 <b>상세에만 있고 목록 타입·목록 API에 없다</b>. <b>채권매매업체ID는 필드 자체가 없다.</b> 필터 2종도 운영 어드민에 없다. 검색이 <b>클라이언트 필터</b>라 전체 목록이 브라우저로 내려온다(<code>:121-131</code>)</td><td>N-11</td><td>D-22 D-23 D-24</td></tr>
-          <tr data-g="B"><td class="no">7</td><td class="k">정산채권 양수<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">acquisition.html</span></td><td class="c"><span class="g g-B">B</span></td><td><b>9개 화면 중 기존 구현에 가장 가깝다.</b> 다자간 서명 플로우가 이미 돈다 — <code>GET /admin/contracts/{id}/signing-status</code>(<code>merchants/[id]/page.tsx:246</code>) · <code>POST /admin/contracts/{id}/sign</code>(<code>:582</code>) · 서명 현황 UI(<code>:1576-1622</code>). <b>서명자 역할에 INVESTOR가 이미 있고</b>(<code>:1590</code>) 본인 차례일 때만 버튼이 뜬다(<code>:1588</code>)</td><td>투자자 시점의 서명 대기 목록 화면. 인증서 기반 서명 수단. <b>문서 명칭이 계약 골격과 어긋난다</b> — 투자자가 당사자인 문서는 재양도 합의서다</td><td class="muted">서명 벤더(D)</td><td>D-16 D-19</td></tr>
-          <tr data-g="C"><td class="no">8</td><td class="k">계약기록<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">contracts.html</span></td><td class="c"><span class="g g-C">C</span></td><td>3열(MID·가맹점·재양도합의서)까지 요구 정의 있음</td><td>문서 유형 목록에 재양도합의서·양수도계약서·증명서 <b>없음</b>(<code>merchants/[id]/page.tsx:101-111</code>). 첨부 다운로드는 <b>단건</b>이고 pdf·image 2종만(<code>AttachmentPreviewModal.tsx:5·41·49-50</code>). 일괄 압축 경로 없음. 서명일·검증 2열은 출처 없음</td><td>N-4</td><td>D-16 D-20 D-21</td></tr>
-          <tr data-g="C"><td class="no">9</td><td class="k">비밀번호 변경<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">password.html</span></td><td class="c"><span class="g g-C">C</span></td><td><b>운영 어드민 전체에 본인 비밀번호 변경이 없다.</b> 있는 것은 관리자가 가맹점 비밀번호를 초기화하는 <code>PUT /admin/merchants/{id}/reset-password</code>(<code>services/merchantService.ts:290</code>)뿐</td><td>신규 API. 비밀번호 규칙·세션 무효화 정책</td><td class="muted">—</td><td>D-25</td></tr>
-          <tr data-g="N"><td class="no">10</td><td class="k">랜딩 갤러리<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">index.html</span></td><td class="c"><span class="g g-N">해당없음</span></td><td>검토용 갤러리</td><td>실서비스 미포함. 구현 시 삭제 대상</td><td class="muted">—</td><td class="muted">—</td></tr>
-          <tr data-g="C"><td class="no">11</td><td class="k">엑셀 미리보기 ①<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">xls-assets-status.html</span></td><td class="c"><span class="g g-C">C</span></td><td>생성 부품 실재 — <code>lib/excel.ts</code> <code>downloadExcel:57</code>·<code>downloadExcelSheets:72</code></td><td>내려받을 데이터. 대응 화면을 따름</td><td>화면 2</td><td>D-32</td></tr>
-          <tr data-g="C"><td class="no">12</td><td class="k">엑셀 미리보기 ②<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">xls-assets-merchant.html</span></td><td class="c"><span class="g g-C">C</span></td><td>동일</td><td>동일</td><td>화면 2</td><td>D-32</td></tr>
-          <tr data-g="C"><td class="no">13</td><td class="k">엑셀 미리보기 ③<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">xls-profit-status.html</span></td><td class="c"><span class="g g-C">C</span></td><td>동일. 빈 시트를 만들지 않고 전부 비면 <code>데이터 없음</code> 시트 1장만 남겨(<code>:79-81</code>) 스코프로 일부가 빠지는 상황과 궁합이 좋다</td><td>동일</td><td>화면 4</td><td>D-32</td></tr>
-          <tr data-g="C"><td class="no">14</td><td class="k">엑셀 미리보기 ④<span style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-mono)">xls-profit-daily.html</span></td><td class="c"><span class="g g-C">C</span></td><td>동일</td><td>동일</td><td>화면 4</td><td>D-32</td></tr>
+          <tr data-g="A"><td class="no">1</td><td class="k">로그인</td><td class="c"><span class="g g-A">A</span></td><td><code>POST /auth/login</code>(<code>services/authService.ts:22-24</code>) + <code>admin_access_token</code> 쿠키 + <code>isAllowedLoginUserType</code>(<code>lib/permissions.ts:26</code>)에 <b>INVESTOR 이미 포함</b>. 입력 항목도 동일(<code>app/login/page.tsx:132·149</code>)</td><td>실패·잠금 상태 미설계. 비밀번호 찾기 대상 화면 없음</td><td class="muted">—</td><td>D-31</td></tr>
+          <tr data-g="C"><td class="no">2</td><td class="k">투자 자산</td><td class="c"><span class="g g-C">C</span></td><td>7열 중 실데이터로 채울 수 있는 것은 <b>가맹점명 하나</b></td><td>투자실행액·순현금·W금융일수·S입금부족율·ty수익율·비중의 원천 전부</td><td>N-1 N-2 N-3</td><td>D-01 D-13</td></tr>
+          <tr data-g="D"><td class="no">3</td><td class="k">가맹점별 투자자산 증명서</td><td class="c"><span class="g g-D">D</span></td><td>전자문서 형태는 정의됨. <b>인증서 서명 모듈이 레포 전체에 0건</b> — 존재하는 것은 직인 이미지 기반 자체 다자간 서명뿐(<code>app/partners/page.tsx:521·599</code>)</td><td>서명 벤더 · 검증 회신전문 수신 경로</td><td>N-8 N-9 N-10 · 서명 벤더</td><td>D-19 D-20</td></tr>
+          <tr data-g="C"><td class="no">4</td><td class="k">투자 수익</td><td class="c"><span class="g g-C">C</span></td><td>조회·필터·엑셀 골격은 부품 실재. 표를 채울 원자료의 가장 가까운 실물은 <b>배분 원장</b> — <code>GET /admin/settlement/batch-payouts?dateFrom&amp;dateTo</code>(<code>hooks/useSettlementOverview.ts:276</code>), 행 타입 <code>BatchPayoutRow</code>(<code>types/settlement.ts:60-73</code>). <code>role==="INVESTOR"</code> 행을 <code>targetDate</code>로 묶으면 일별 표의 뼈대가 선다. <b>현재 이 엔드포인트는 엑셀 생성에만 쓰이고 화면이 없다</b></td><td>원장은 <code>정액 합산 + 다자 배분율</code> 구조이고 스토리보드는 <code>할인 매입한 채권의 상환 결과</code> 구조 — 두 모델이 만나지 않는다. 상환액·투자실행금·할인율 축이 없다</td><td>N-1 N-5 N-7</td><td>D-28 D-29</td></tr>
+          <tr data-g="A"><td class="no">5</td><td class="k">쿠콘 관리 현금</td><td class="c"><span class="g g-A">A</span></td><td>페이허그가 보여주는 데이터 <b>0건</b>. 외부 링크 1개 + 안내 문구가 전부라 지금도 만들 수 있다</td><td><b>쿠콘 계정 스코프.</b> 투자자에게 We-bank 계정을 발급하면 페이허그 전체 자금 이동이 열린다. <code>We-bank</code>·<code>펌뱅킹</code>·<code>오픈뱅킹</code> 문자열 레포 전수 0건</td><td class="muted">계정 발급은 D</td><td>D-15</td></tr>
+          <tr data-g="C"><td class="no">6</td><td class="k">가맹점</td><td class="c"><span class="g g-C">C</span></td><td>7열 중 4열 실재 — 가맹점ID(<code>types/merchant.ts:17-18</code>)·가맹점명(<code>:20</code>)·사업자번호(<code>:19</code>)·대표자(<code>:21</code>). 검색 4항목도 동일한 것이 실재(<code>app/manage/page.tsx:249-255</code>)</td><td>업종·종목은 <b>상세에만 있고 목록 타입·목록 API에 없다</b>. <b>채권매매업체ID는 필드 자체가 없다.</b> 필터 2종도 운영 어드민에 없다. 검색이 <b>클라이언트 필터</b>라 전체 목록이 브라우저로 내려온다(<code>:121-131</code>)</td><td>N-11</td><td>D-22 D-23 D-24</td></tr>
+          <tr data-g="B"><td class="no">7</td><td class="k">정산채권 양수</td><td class="c"><span class="g g-B">B</span></td><td><b>9개 화면 중 기존 구현에 가장 가깝다.</b> 다자간 서명 플로우가 이미 돈다 — <code>GET /admin/contracts/{id}/signing-status</code>(<code>merchants/[id]/page.tsx:246</code>) · <code>POST /admin/contracts/{id}/sign</code>(<code>:582</code>) · 서명 현황 UI(<code>:1576-1622</code>). <b>서명자 역할에 INVESTOR가 이미 있고</b>(<code>:1590</code>) 본인 차례일 때만 버튼이 뜬다(<code>:1588</code>)</td><td>투자자 시점의 서명 대기 목록 화면. 인증서 기반 서명 수단. <b>문서 명칭이 계약 골격과 어긋난다</b> — 투자자가 당사자인 문서는 재양도 합의서다</td><td class="muted">서명 벤더(D)</td><td>D-16 D-19</td></tr>
+          <tr data-g="C"><td class="no">8</td><td class="k">계약기록</td><td class="c"><span class="g g-C">C</span></td><td>3열(MID·가맹점·재양도합의서)까지 요구 정의 있음</td><td>문서 유형 목록에 재양도합의서·양수도계약서·증명서 <b>없음</b>(<code>merchants/[id]/page.tsx:101-111</code>). 첨부 다운로드는 <b>단건</b>이고 pdf·image 2종만(<code>AttachmentPreviewModal.tsx:5·41·49-50</code>). 일괄 압축 경로 없음. 서명일·검증 2열은 출처 없음</td><td>N-4</td><td>D-16 D-20 D-21</td></tr>
+          <tr data-g="C"><td class="no">9</td><td class="k">비밀번호 변경</td><td class="c"><span class="g g-C">C</span></td><td><b>운영 어드민 전체에 본인 비밀번호 변경이 없다.</b> 있는 것은 관리자가 가맹점 비밀번호를 초기화하는 <code>PUT /admin/merchants/{id}/reset-password</code>(<code>services/merchantService.ts:290</code>)뿐</td><td>신규 API. 비밀번호 규칙·세션 무효화 정책</td><td class="muted">—</td><td>D-25</td></tr>
+          <tr data-g="N"><td class="no">10</td><td class="k">랜딩 갤러리</td><td class="c"><span class="g g-N">해당없음</span></td><td>검토용 갤러리</td><td>실서비스 미포함. 구현 시 삭제 대상</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="C"><td class="no">11</td><td class="k">엑셀 미리보기 ①</td><td class="c"><span class="g g-C">C</span></td><td>생성 부품 실재 — <code>lib/excel.ts</code> <code>downloadExcel:57</code>·<code>downloadExcelSheets:72</code></td><td>내려받을 데이터. 대응 화면을 따름</td><td>화면 2</td><td>D-32</td></tr>
+          <tr data-g="C"><td class="no">12</td><td class="k">엑셀 미리보기 ②</td><td class="c"><span class="g g-C">C</span></td><td>동일</td><td>동일</td><td>화면 2</td><td>D-32</td></tr>
+          <tr data-g="C"><td class="no">13</td><td class="k">엑셀 미리보기 ③</td><td class="c"><span class="g g-C">C</span></td><td>동일. 빈 시트를 만들지 않고 전부 비면 <code>데이터 없음</code> 시트 1장만 남겨(<code>:79-81</code>) 스코프로 일부가 빠지는 상황과 궁합이 좋다</td><td>동일</td><td>화면 4</td><td>D-32</td></tr>
+          <tr data-g="C"><td class="no">14</td><td class="k">엑셀 미리보기 ④</td><td class="c"><span class="g g-C">C</span></td><td>동일</td><td>동일</td><td>화면 4</td><td>D-32</td></tr>
         </tbody>
       </table>
       </div>
@@ -887,7 +887,7 @@
   <!-- ── 6. 개발 문의 ── -->
   <section class="sec">
     <div class="sec-head"><span class="sec-no">6</span><h2>개발에 물을 것 — 32건</h2></div>
-    <p class="sec-lead">판정을 확정하려면 아래가 있어야 한다. 평문으로 그대로 던질 수 있게 썼다.</p>
+    <p class="sec-lead">판정을 확정하려면 아래가 있어야 한다.</p>
 
     <div class="q-head">
       <button type="button" class="btn-copy" id="copyAll">
@@ -904,8 +904,8 @@
           <li><span class="qid">D-01</span><span class="qtx">현행 배치(<code>가맹점 × 매출일</code>)를 플랫폼 축으로 쪼개 <code>가맹점ID × 플랫폼ID × 매출일자</code> 단위 레코드를 만들 수 있습니까? 매출 원장(<code>/admin/purchase-ledger</code>)의 <code>bizNo</code>·<code>salesSource</code>·<code>cardCorp</code>·<code>transactionDt</code>로 묶으면 그 축이 나오는데, 결과를 테이블로 적재하는 방식입니까 조회 시점 집계로 충분합니까?</span></li>
           <li><span class="qid">D-02</span><span class="qtx">Figma 정산채권DB(정산채권ID·양수가액·할인율·상환부족액)에 대응하는 운영 백엔드 테이블이 실제로 존재합니까? 존재하면 어느 테이블입니까?</span></li>
           <li><span class="qid">D-03</span><span class="qtx">순지급액(<code>netPayoutAmt</code>)의 "총 매출액 − 총 수수료"에서 총 수수료에 페이허그 채권매입수수료가 포함됩니까? 포함되면 대표 정의의 순지급액과 다른 값이 되어 화면 금액이 통째로 밀립니다.</span></li>
-          <li><span class="qid">D-09</span><span class="qtx">플랫폼 식별자가 <code>salesSource</code>(CARD/BM/YO/CPE)·<code>platformType</code>(CARD/BAEMIN/YOGIYO/COUPANG)·<code>platformCode</code>(HANA_CARD…)·<code>cardCorp</code>(문자열) 4체계로 병존합니다. 정산금채권ID의 플랫폼ID로 어느 것을 씁니까? 4체계를 잇는 매핑 테이블이 있습니까?</span></li>
-          <li><span class="qid">D-10</span><span class="qtx"><code>/admin/purchase-ledger</code>가 <code>bizNo</code> 필수 단건 조회입니다. 투자자 1명에게 매칭된 가맹점 전체를 횡단 조회하는 경로를 신설할 수 있습니까?</span></li>
+          <li><span class="qid">D-09</span><span class="qtx">플랫폼 식별자가 <code>salesSource</code>(CARD/BM/YO/CPE)·<code>platformType</code>(CARD/BAEMIN/YOGIYO/COUPANG)·<code>platformCode</code>(HANA_CARD…)·<code>cardCorp</code>(문자열) 4체계로 병존한다. 정산금채권ID의 플랫폼ID로 어느 것을 씁니까? 4체계를 잇는 매핑 테이블이 있습니까?</span></li>
+          <li><span class="qid">D-10</span><span class="qtx"><code>/admin/purchase-ledger</code>가 <code>bizNo</code> 필수 단건 조회다. 투자자 1명에게 매칭된 가맹점 전체를 횡단 조회하는 경로를 신설할 수 있습니까?</span></li>
         </ul>
       </div>
 
@@ -913,24 +913,24 @@
         <h4>날짜</h4>
         <ul class="qlist">
           <li><span class="qid">D-04</span><span class="qtx">배달플랫폼(배민·요기요·쿠팡이츠) 거래의 <code>payoutDt</code>(정산예정일)가 실제로 채워집니까? 카드는 여신협회 매입내역 스크래핑 원본값인데 배달 쪽 원천은 무엇입니까?</span></li>
-          <li><span class="qid">D-05</span><span class="qtx"><code>payoutDt</code>가 <code>LedgerItem</code>·<code>MissedTransaction</code> 두 타입에만 있습니다. 선정산 도메인(<code>Batch</code>·<code>PreSettlementMerchant</code>·<code>PreSettlementTransaction</code>)에서 정산예정일을 조회할 경로가 있습니까?</span></li>
-          <li><span class="qid">D-06</span><span class="qtx">지급이 하루 2회라 같은 날 배치가 2건 생깁니다(<code>closedAt</code> 타임스탬프). 채권의 선정산일을 오전·오후 어느 배치로 잡습니까?</span></li>
+          <li><span class="qid">D-05</span><span class="qtx"><code>payoutDt</code>가 <code>LedgerItem</code>·<code>MissedTransaction</code> 두 타입에만 있다. 선정산 도메인(<code>Batch</code>·<code>PreSettlementMerchant</code>·<code>PreSettlementTransaction</code>)에서 정산예정일을 조회할 경로가 있습니까?</span></li>
+          <li><span class="qid">D-06</span><span class="qtx">지급이 하루 2회라 같은 날 배치가 2건 생긴다(<code>closedAt</code> 타임스탬프). 채권의 선정산일을 오전·오후 어느 배치로 잡습니까?</span></li>
         </ul>
       </div>
 
       <div class="qgrp">
         <h4>입금 대사 — 미지급금·과지급금을 채권 1건에 붙이기</h4>
         <ul class="qlist">
-          <li><span class="qid">D-07</span><span class="qtx">락계좌 입금(<code>platformCode</code>·<code>tranDate</code>·<code>inAmount</code>)과 채권 단위 예정액을 금액으로 대사하는 로직이 백엔드에 있습니까? 현행 "락계좌 검증"은 계좌번호 일치 검증(<code>PlatformDepositTarget.accountNumber</code>)으로 보입니다.</span></li>
-          <li><span class="qid">D-08</span><span class="qtx">카드사가 여러 매출일자 건을 묶어 1건으로 입금할 때, 입금 명세 원본에 매출일자별 내역이 들어옵니까? 안 들어오면 채권 1건 단위 대사가 성립하지 않습니다.</span></li>
+          <li><span class="qid">D-07</span><span class="qtx">락계좌 입금(<code>platformCode</code>·<code>tranDate</code>·<code>inAmount</code>)과 채권 단위 예정액을 금액으로 대사하는 로직이 백엔드에 있습니까? 현행 "락계좌 검증"은 계좌번호 일치 검증(<code>PlatformDepositTarget.accountNumber</code>)으로 보인다.</span></li>
+          <li><span class="qid">D-08</span><span class="qtx">카드사가 여러 매출일자 건을 묶어 1건으로 입금할 때, 입금 명세 원본에 매출일자별 내역이 들어옵니까? 안 들어오면 채권 1건 단위 대사가 성립하지 않는다.</span></li>
         </ul>
       </div>
 
       <div class="qgrp">
         <h4>권한 · 스코프</h4>
         <ul class="qlist">
-          <li><span class="qid">D-11</span><span class="qtx">투자자 계정(<code>userType = INVESTOR</code>)에 대한 API 응답 필터링을 백엔드가 보장합니까? <code>/admin/merchants</code>는 인자가 없어 범위가 전적으로 토큰 해석에 달려 있고, 프론트에 스코프 로직이 0줄입니다.</span></li>
-          <li><span class="qid">D-12</span><span class="qtx">서버사이드 미들웨어가 없습니다(<code>middleware.ts</code> 부재). 투자자에게 타 투자자 배분액·페이허그 마진·미배정 가맹점이 응답에 실려 내려오지 않는다는 보장이 있습니까?</span></li>
+          <li><span class="qid">D-11</span><span class="qtx">투자자 계정(<code>userType = INVESTOR</code>)에 대한 API 응답 필터링을 백엔드가 보장합니까? <code>/admin/merchants</code>는 인자가 없어 범위가 전적으로 토큰 해석에 달려 있고, 프론트에 스코프 로직이 0줄이다.</span></li>
+          <li><span class="qid">D-12</span><span class="qtx">서버사이드 미들웨어가 없다(<code>middleware.ts</code> 부재). 투자자에게 타 투자자 배분액·페이허그 마진·미배정 가맹점이 응답에 실려 내려오지 않는다는 보장이 있습니까?</span></li>
           <li><span class="qid">D-30</span><span class="qtx">투자자 전용 메뉴를 신설하면 기존 참여자 공용 메뉴(가맹점관리·매출조회·정산현황 3탭)를 투자자에게 닫습니까, 병존시킵니까?</span></li>
           <li><span class="qid">D-31</span><span class="qtx"><code>userType</code> 열거형의 원본이 백엔드(<code>payhug-core-api UserRoleUtil</code>)인데, <code>INVESTOR</code>만 분기하는 헬퍼(<code>isInvestorUser</code>)를 신설하는 방향이 맞습니까?</span></li>
         </ul>
@@ -939,7 +939,7 @@
       <div class="qgrp">
         <h4>쿠콘 — 병목 ②</h4>
         <ul class="qlist">
-          <li><span class="qid">D-13</span><span class="qtx">투자자별 쿠콘 가상계좌를 개설할 수 있습니까? 현행 잔액 조회는 <code>POST /coocon/deposit-pg/balance</code> 모 계좌 1건뿐입니다. 쿠콘 상품에 투자자 단위 가상계좌·잔액조회가 있습니까?</span></li>
+          <li><span class="qid">D-13</span><span class="qtx">투자자별 쿠콘 가상계좌를 개설할 수 있습니까? 현행 잔액 조회는 <code>POST /coocon/deposit-pg/balance</code> 모 계좌 1건뿐이다. 쿠콘 상품에 투자자 단위 가상계좌·잔액조회가 있습니까?</span></li>
           <li><span class="qid">D-14</span><span class="qtx">자정 마감 시점 가상계좌 잔액 스냅샷을 보관하는 배치를 만들 수 있습니까? 보관 주기와 보존 기간은 어떻게 잡습니까?</span></li>
           <li><span class="qid">D-15</span><span class="qtx">쿠콘 We-bank가 조회 범위를 계정 단위로 제한하는 기능을 제공합니까? 못 하면 투자자에게 페이허그 전체 자금 이동이 열립니다. 안 되면 페이허그가 발췌본을 제공하는 방식이 가능합니까?</span></li>
         </ul>
@@ -948,10 +948,10 @@
       <div class="qgrp">
         <h4>계약 · 서명</h4>
         <ul class="qlist">
-          <li><span class="qid">D-16</span><span class="qtx">재양도 합의서를 계약 문서 유형에 추가할 수 있습니까? 현행 <code>CONTRACT_TYPE_LABELS</code>는 3종(이용약관 동의서·선정산 이용계약서·이관 계약서)뿐입니다.</span></li>
-          <li><span class="qid">D-17</span><span class="qtx">재양도 합의서에 효력 시작일·종료일 필드를 둘 수 있습니까? 지금은 투자자 매칭(<code>assign-investor</code>)만 있고 기간 필드가 없습니다.</span></li>
+          <li><span class="qid">D-16</span><span class="qtx">재양도 합의서를 계약 문서 유형에 추가할 수 있습니까? 현행 <code>CONTRACT_TYPE_LABELS</code>는 3종(이용약관 동의서·선정산 이용계약서·이관 계약서)뿐이다.</span></li>
+          <li><span class="qid">D-17</span><span class="qtx">재양도 합의서에 효력 시작일·종료일 필드를 둘 수 있습니까? 지금은 투자자 매칭(<code>assign-investor</code>)만 있고 기간 필드가 없다.</span></li>
           <li><span class="qid">D-18</span><span class="qtx">투자자 계약의 해지·만료를 어디에 기록합니까? 해지된 투자자의 어드민 접근은 어떻게 차단합니까?</span></li>
-          <li><span class="qid">D-19</span><span class="qtx">전자서명을 어느 벤더·어느 방식으로 붙입니까? 현행 <code>POST /admin/contracts/{id}/sign</code>은 직인 이미지 기반 자체 방식이고 인증서 연동이 레포 전체에 0건입니다. 현행 플로우를 대체합니까, 별도 경로를 만듭니까?</span></li>
+          <li><span class="qid">D-19</span><span class="qtx">전자서명을 어느 벤더·어느 방식으로 붙입니까? 현행 <code>POST /admin/contracts/{id}/sign</code>은 직인 이미지 기반 자체 방식이고 인증서 연동이 레포 전체에 0건이다. 현행 플로우를 대체합니까, 별도 경로를 만듭니까?</span></li>
           <li><span class="qid">D-20</span><span class="qtx">서명검증 회신전문의 형식(xml·txt·pdf)과 수신 방식(동기 처리·비동기 콜백)은 무엇입니까? 검증 실패 건은 목록에 남깁니까 숨깁니까?</span></li>
           <li><span class="qid">D-21</span><span class="qtx">재양도합의서 파일과 검증회신전문을 묶어 내려주는 API(zip 등)를 신설합니까? 현행 첨부 다운로드는 단건이고 pdf·image 2종만 지원합니다.</span></li>
         </ul>
@@ -960,9 +960,9 @@
       <div class="qgrp">
         <h4>가맹점 목록</h4>
         <ul class="qlist">
-          <li><span class="qid">D-22</span><span class="qtx">가맹점 목록에 업종(<code>businessTypeMain</code>)·종목(<code>businessItemMain</code>)을 실을 수 있습니까? 현재 상세에만 있고 목록 타입·목록 API에 없습니다. 참고로 같은 필드의 라벨이 화면마다 다릅니다 — 가맹점 상세는 업태, 회원 관리는 종목.</span></li>
-          <li><span class="qid">D-23</span><span class="qtx">"채권매매업체ID"가 어느 테이블·어느 필드입니까? 가맹점 목록·상세 어디에도 대응 필드가 없습니다. 이 값이 총판(파트너)을 가리키는 것이 맞습니까?</span></li>
-          <li><span class="qid">D-24</span><span class="qtx">가맹점 목록에 서버 페이징이 있습니까? <code>GET /admin/merchants</code>는 인자가 없고 화면에 페이지네이션이 없어 전체가 브라우저로 내려옵니다.</span></li>
+          <li><span class="qid">D-22</span><span class="qtx">가맹점 목록에 업종(<code>businessTypeMain</code>)·종목(<code>businessItemMain</code>)을 실을 수 있습니까? 현재 상세에만 있고 목록 타입·목록 API에 없다. 참고로 같은 필드의 라벨이 화면마다 다르다 — 가맹점 상세는 업태, 회원 관리는 종목.</span></li>
+          <li><span class="qid">D-23</span><span class="qtx">"채권매매업체ID"가 어느 테이블·어느 필드입니까? 가맹점 목록·상세 어디에도 대응 필드가 없다. 이 값이 총판(파트너)을 가리키는 것이 맞습니까?</span></li>
+          <li><span class="qid">D-24</span><span class="qtx">가맹점 목록에 서버 페이징이 있습니까? <code>GET /admin/merchants</code>는 인자가 없고 화면에 페이지네이션이 없어 전체가 브라우저로 내려온다.</span></li>
         </ul>
       </div>
 
@@ -971,7 +971,7 @@
         <ul class="qlist">
           <li><span class="qid">D-26</span><span class="qtx"><code>순지급액 × (1 − 할인율)</code>의 원 단위 처리는 반올림입니까, <code>순지급액 − 버림(순지급액 × 할인율)</code>입니까?</span></li>
           <li><span class="qid">D-27</span><span class="qtx">투자자 요율(<code>PolicyRate</code>의 <code>MARGIN × INVESTOR</code>, <code>rateBps</code>)이 대표 정의의 "유동화투자자의 할인율"과 같은 값입니까? 요율이 가맹점별로 다르게 저장됩니까, 투자자 단위 단일입니까?</span></li>
-          <li><span class="qid">D-28</span><span class="qtx">투자자 몫 배분액(<code>Payout.margin</code>의 <code>role = "INVESTOR"</code> 행)을 기간·가맹점 축으로 조회하는 경로가 <code>GET /admin/settlement/batch-payouts</code> 말고 또 있습니까? 이 엔드포인트는 현재 엑셀 생성에만 쓰입니다.</span></li>
+          <li><span class="qid">D-28</span><span class="qtx">투자자 몫 배분액(<code>Payout.margin</code>의 <code>role = "INVESTOR"</code> 행)을 기간·가맹점 축으로 조회하는 경로가 <code>GET /admin/settlement/batch-payouts</code> 말고 또 있습니까? 이 엔드포인트는 현재 엑셀 생성에만 쓰인다.</span></li>
           <li><span class="qid">D-29</span><span class="qtx">월별 집계 전환 시 W금융일수·Ty수익율을 가중평균으로 재산정합니까, 일별 값의 단순평균입니까?</span></li>
         </ul>
       </div>
@@ -979,7 +979,7 @@
       <div class="qgrp">
         <h4>산출물</h4>
         <ul class="qlist">
-          <li><span class="qid">D-25</span><span class="qtx">참여자 계정의 본인 비밀번호 변경 API가 백엔드에 있습니까? 어드민에는 관리자가 가맹점 비밀번호를 초기화하는 <code>PUT /admin/merchants/{id}/reset-password</code>만 있습니다. 비밀번호 규칙과 변경 후 세션 무효화 정책은 무엇입니까?</span></li>
+          <li><span class="qid">D-25</span><span class="qtx">참여자 계정의 본인 비밀번호 변경 API가 백엔드에 있습니까? 어드민에는 관리자가 가맹점 비밀번호를 초기화하는 <code>PUT /admin/merchants/{id}/reset-password</code>만 있다. 비밀번호 규칙과 변경 후 세션 무효화 정책은 무엇입니까?</span></li>
           <li><span class="qid">D-32</span><span class="qtx">엑셀 4종을 서버에서 생성합니까, 현행처럼 브라우저에서 ExcelJS로 만듭니까? 서버 생성이면 스코프 필터가 자동으로 걸립니다.</span></li>
         </ul>
       </div>
