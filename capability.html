@@ -1452,6 +1452,7 @@
         <table class="dt">
           <thead><tr><th style="width:22%">대상</th><th style="width:30%">운영 어드민</th><th>이 산출물</th></tr></thead>
           <tbody>
+            <tr><td class="k">날짜 칸을 눌렀을 때</td><td>오른쪽 달력 아이콘을 정확히 눌러야만 달력이 열린다. 숫자 부분을 누르면 캐럿만 잡힌다 — 레포 전체에 <code>showPicker</code> 0건이고 <code>DateRangeFilter.tsx:116, 122</code>는 맨 <code>&lt;input type="date"&gt;</code>다</td><td><strong>칸 어디를 눌러도 열린다.</strong> 클릭에서 <code>input.showPicker()</code>를 호출한다(제스처 밖·미지원이면 <code>try</code>로 흘려 기본 동작 유지). 키보드 Tab 포커스에서는 열지 않는다 — 탭 이동마다 달력이 덮이면 키보드 조작이 막힌다</td></tr>
             <tr><td class="k">기간 프리셋을 눌렀을 때</td><td>날짜만 채우고 조회는 따로 누른다(<code>components/DateRangeFilter.tsx:63-67</code>)</td><td><strong>즉시 조회한다.</strong> 프리셋을 누른 뒤 조회를 또 누르게 하지 않는다. 집계 단위 전환도 같다</td></tr>
             <tr><td class="k">달력 상호 제한</td><td>시작일에 <code>max={dateTo}</code>, 종료일에 <code>min={dateFrom}</code>(<code>DateRangeFilter.tsx:116, 122</code>)</td><td><strong>걸지 않는다.</strong> 지금 기간보다 앞으로 옮기려고 종료일부터 열면 달력이 통째로 잠겨 피커가 죽는다. 역전 범위는 안내문 + 조회 버튼 비활성으로만 막는다(원본 <code>:79, :138-140</code>은 유지)</td></tr>
             <tr><td class="k">집계 단위</td><td>없다. 일별/주별/월별 전환이 어느 화면에도 없다</td><td>일별·주별·월별 3단. <code>SB s7</code>은 일별·월별 2단이고 주별은 신설이다</td></tr>

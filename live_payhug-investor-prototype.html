@@ -59,7 +59,6 @@
   .tbl-count { font-size: 12px; color: var(--gray-400); margin-left: 8px; }
   .sel-pill { margin-left: 8px; font-weight: 600; }
 
-
   /* ── 체크박스·선택 행 ─────────────────────────────────────── */
   .chk { width: 16px; height: 16px; accent-color: var(--primary); flex-shrink: 0; cursor: pointer; vertical-align: middle; }
   .chk:disabled { cursor: default; opacity: 0.6; }
@@ -370,40 +369,6 @@
   .login-links .link-off { font-size: 12px; line-height: 16px; color: var(--gray-300); text-decoration: none; cursor: not-allowed; }
   .login-note { width: 100%; max-width: 400px; margin: 20px 0 0; font-size: 12px; line-height: 18px; color: var(--gray-400); text-align: center; }
 
-  /* ── 랜딩 갤러리 ──────────────────────────────────────────── */
-  .wrap { max-width: 1024px; margin: 0 auto; padding: 56px 32px 64px; }
-  .hero { display: flex; align-items: center; gap: 16px; }
-  .hero .logo-mark { display: block; width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; }
-  .hero h1 { font-size: 26px; line-height: 34px; font-weight: 700; color: var(--gray-900); margin: 0; }
-  .hero h1 em { font-style: normal; color: var(--primary-600); }
-  .hero .sub { font-size: 14px; line-height: 20px; color: var(--secondary); margin: 4px 0 0; }
-  .hero-date {
-    margin-left: auto; align-self: flex-start; font-size: 12px; line-height: 16px; color: var(--gray-400);
-    font-family: var(--font-mono); font-variant-numeric: tabular-nums;
-    background: #fff; border: 1px solid var(--gray-200); border-radius: 6px; padding: 4px 10px;
-  }
-  .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 20px; }
-  .shot-card {
-    display: block; text-decoration: none; cursor: pointer; text-align: left; width: 100%;
-    background: #fff; border-radius: 16px; padding: 20px 24px;
-    box-shadow: var(--shadow-card); border: 1px solid var(--gray-100);
-    transition: box-shadow 0.15s var(--ease-default), border-color 0.15s var(--ease-default), transform 0.15s var(--ease-default);
-  }
-  .shot-card:hover { box-shadow: var(--shadow-card-hover); border-color: var(--primary-200); transform: translateY(-2px); }
-  .shot-top { display: flex; align-items: center; gap: 12px; }
-  .shot-icon {
-    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
-    background: var(--primary-50); color: var(--primary-600);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .shot-icon svg { width: 18px; height: 18px; }
-  .shot-name { font-size: 16px; line-height: 22px; font-weight: 700; color: var(--gray-900); }
-  .shot-top .badge.sm { margin-left: auto; flex-shrink: 0; }
-  .shot-desc { font-size: 13px; line-height: 19px; color: var(--gray-500); margin: 12px 0 0; }
-  .sec-head { display: flex; align-items: baseline; gap: 10px; margin: 36px 0 0; }
-  .sec-head h2 { font-size: 16px; line-height: 24px; font-weight: 700; color: var(--gray-900); margin: 0; }
-  .sec-head .sec-note { font-size: 12px; line-height: 16px; color: var(--gray-400); }
-
   /* ── 페이지네이션 — 쪽번호는 가운데, 건수는 같은 줄 왼쪽 ────────
      원본 app/activity-logs/page.tsx:339 · app/sales/[bizNo]/page.tsx:1243 이 justify-center,
      components/LockAccountDeposits.tsx:435 이 같은 줄 맨 왼쪽에 총 건수를 둔다. 둘을 겹쳐 쓴다. */
@@ -420,9 +385,14 @@
 </style>
 </head>
 <!--
-  통합 프로토타입 — 화면 14 · 상태 18을 한 파일에서 조작한다.
-  개별 HTML 34개는 Figma 임포트용 정적 원본으로 별도 보존한다(이 파일이 대체하지 않는다).
-  화면은 데이터 모델에서만 그린다. 표·합계·비중은 조작 결과로 계산되며 하드코딩하지 않는다.
+  시연 전용 배포본 — 통합 프로토타입 한 파일뿐이다.
+  이 저장소에는 이 파일과 화면이 실제로 내려주는 자산만 있다. 다른 문서로 가는 통로도, 파일도 없다.
+  바깥으로 나가는 링크는 쿠콘 We-bank 1건뿐이며 이는 화면 기능이다(원본 어드민과 동일).
+  사이드바 로고는 자기 자신의 메인 화면으로만 이동한다.
+
+  이 파일은 payhug-investor-admin/scripts/sync_prototype.py 가 app.html 에서 찍어 낸다.
+  직접 고치지 않는다 — 다음 동기화에서 덮어쓰인다.
+
   딥링크: #<화면>/<상태>  예) #invest-assets/page2 · #acquisition-list/signing
 -->
 <body data-active="invest-assets" data-view="invest-assets">
@@ -431,7 +401,7 @@
   <!-- ═══════════ 사이드바 (개별 화면 32개와 동일 마크업) ═══════════ -->
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <a href="#">
+      <a href="index.html" data-nav="invest-assets" title="투자 자산으로">
         <span class="logo-mark" role="img" aria-label="PayHug"></span>
         <span class="wordmark">PayHug <em>Admin</em></span>
       </a>
@@ -443,11 +413,11 @@
           <span>투자</span>
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
         </button>
-        <a class="nav-item" data-menu="invest-assets" href="invest-assets.html">
+        <a class="nav-item" data-menu="invest-assets" href="#invest-assets">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           <span>투자 자산</span>
         </a>
-        <a class="nav-item" data-menu="invest-returns" href="invest-profit.html">
+        <a class="nav-item" data-menu="invest-returns" href="#invest-profit">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
           <span>투자 수익</span>
         </a>
@@ -458,15 +428,15 @@
           <span>가맹점</span>
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
         </button>
-        <a class="nav-item" data-menu="merchants" href="merchants.html">
+        <a class="nav-item" data-menu="merchants" href="#merchants">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
           <span>가맹점</span>
         </a>
-        <a class="nav-item" data-menu="receivables" href="acquisition.html">
+        <a class="nav-item" data-menu="receivables" href="#acquisition-list">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
           <span>정산채권 양수</span>
         </a>
-        <a class="nav-item" data-menu="contracts" href="contracts.html">
+        <a class="nav-item" data-menu="contracts" href="#contracts">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           <span>계약기록</span>
         </a>
@@ -482,7 +452,7 @@
           <span>쿠콘 관리 현금</span>
           <svg class="ext" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
         </a>
-        <a class="nav-item" data-menu="password" href="password.html">
+        <a class="nav-item" data-menu="password" href="#password">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
           <span>비밀번호 변경</span>
         </a>
@@ -602,7 +572,7 @@
 
       <!-- ═════════ 투자자산 증명서 ═════════ -->
       <section class="screen" data-screen="certificate" data-state="default" hidden>
-        <a class="back-link" href="invest-assets.html" data-nav="invest-assets"><svg style="width:14px;height:14px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 자산</a>
+        <a class="back-link" href="#invest-assets" data-nav="invest-assets"><svg style="width:14px;height:14px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 자산</a>
         <div class="page-header">
           <h1 class="page-title">가맹점별 투자자산 증명서<span data-state-mark></span></h1>
         </div>
@@ -909,7 +879,7 @@
       </section>
 
       <section class="screen" data-screen="xls-assets-status" data-state="default" hidden>
-        <a class="back-link" href="invest-assets.html" data-nav="invest-assets"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 자산</a>
+        <a class="back-link" href="#invest-assets" data-nav="invest-assets"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 자산</a>
         <div class="page-header">
           <h1 class="page-title">엑셀 산출물 서식 — 투자자산 현황<span data-state-mark></span></h1>
         </div>
@@ -920,7 +890,7 @@
         </div>
       </section>
       <section class="screen" data-screen="xls-assets-merchant" data-state="default" hidden>
-        <a class="back-link" href="invest-assets.html" data-nav="invest-assets"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 자산</a>
+        <a class="back-link" href="#invest-assets" data-nav="invest-assets"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 자산</a>
         <div class="page-header">
           <h1 class="page-title">엑셀 산출물 서식 — 가맹점별 투자자산<span data-state-mark></span></h1>
         </div>
@@ -931,7 +901,7 @@
         </div>
       </section>
       <section class="screen" data-screen="xls-profit-status" data-state="default" hidden>
-        <a class="back-link" href="invest-profit.html" data-nav="invest-profit"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 수익</a>
+        <a class="back-link" href="#invest-profit" data-nav="invest-profit"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 수익</a>
         <div class="page-header">
           <h1 class="page-title">엑셀 산출물 서식 — 투자수익 현황<span data-state-mark></span></h1>
         </div>
@@ -942,7 +912,7 @@
         </div>
       </section>
       <section class="screen" data-screen="xls-profit-daily" data-state="default" hidden>
-        <a class="back-link" href="invest-profit.html" data-nav="invest-profit"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 수익</a>
+        <a class="back-link" href="#invest-profit" data-nav="invest-profit"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 투자 수익</a>
         <div class="page-header">
           <h1 class="page-title">엑셀 산출물 서식 — 일별 투자수익<span data-state-mark></span></h1>
         </div>
@@ -957,20 +927,6 @@
 </div>
 
 <!-- ═══════════ 사이드바 없는 독립 화면 ═══════════ -->
-<section class="screen" data-screen="index" data-state="default" hidden>
-  <div class="wrap">
-    <div class="hero">
-      <span class="logo-mark" role="img" aria-label="PayHug"></span>
-      <div>
-        <h1>PayHug <em>투자자 어드민</em> — 화면 설계(안)</h1>
-        <p class="sub">사이드바 메뉴 7개 — 투자(투자 자산 · 투자 수익) / 가맹점(가맹점 · 정산채권 양수 · 계약기록) / 관리(쿠콘 관리 현금 · 비밀번호 변경). 아래 화면과 상태를 눌러서 오갈 수 있고 엑셀은 실제로 내려받는다.</p>
-      </div>
-      <span class="hero-date">2026-08-27</span>
-    </div>
-    <div class="sec-head"><h2>화면</h2><span class="sec-note">메뉴 대응 7 · 하위 6 · 상태 18</span></div>
-    <div class="gallery" data-mount="ix-gallery"></div>
-  </div>
-</section>
 
 <section class="screen" data-screen="login" data-state="default" hidden>
   <div class="login-wrap">
@@ -990,7 +946,7 @@
       <input type="password" class="input" data-login="pw" placeholder="비밀번호 입력">
     </div>
 
-    <a class="btn btn-primary login-submit" href="invest-assets.html">로그인</a>
+    <a class="btn btn-primary login-submit" href="#invest-assets">로그인</a>
 
     <div class="login-links">
       <span class="link-off" aria-disabled="true">비밀번호 찾기</span>
@@ -1433,9 +1389,9 @@ var MENU_OF = {
   'xls-assets-status':'invest-assets', 'xls-assets-merchant':'invest-assets',
   'invest-profit':'invest-returns', 'xls-profit-status':'invest-returns', 'xls-profit-daily':'invest-returns',
   'merchants':'merchants', 'acquisition-list':'receivables', 'contracts':'contracts',
-  'coocon':'kcoon', 'password':'password', 'index':'', 'login':''
+  'coocon':'kcoon', 'password':'password', 'login':''
 };
-var STANDALONE = ['index', 'login'];
+var STANDALONE = ['login'];
 var STATE_META = {
   'invest-assets': {
     'default':null,
@@ -1477,19 +1433,19 @@ var STATE_META = {
   },
   'certificate':{'default':null}, 'xls-assets-status':{'default':null}, 'xls-assets-merchant':{'default':null},
   'xls-profit-status':{'default':null}, 'xls-profit-daily':{'default':null},
-  'index':{'default':null}, 'login':{'default':null}
+  'login':{'default':null}
 };
 var SCREEN_LABEL = {
-  'index':'랜딩 갤러리', 'login':'로그인', 'invest-assets':'투자 자산', 'certificate':'투자자산 증명서',
+  'login':'로그인', 'invest-assets':'투자 자산', 'certificate':'투자자산 증명서',
   'xls-assets-status':'엑셀 산출물 서식 — 투자자산 현황', 'xls-assets-merchant':'엑셀 산출물 서식 — 가맹점별 투자자산',
   'invest-profit':'투자 수익', 'xls-profit-status':'엑셀 산출물 서식 — 투자수익 현황',
   'xls-profit-daily':'엑셀 산출물 서식 — 일별 투자수익', 'merchants':'가맹점',
   'acquisition-list':'정산채권 양수', 'contracts':'계약기록', 'coocon':'쿠콘 관리 현금', 'password':'비밀번호 변경'
 };
-var SCREEN_ORDER = ['index','login','invest-assets','certificate','xls-assets-status','xls-assets-merchant',
+var SCREEN_ORDER = ['login','invest-assets','certificate','xls-assets-status','xls-assets-merchant',
   'invest-profit','xls-profit-status','xls-profit-daily','merchants','acquisition-list','contracts','coocon','password'];
 var FILE2SCREEN = {
-  'index.html':'index', 'login.html':'login', 'invest-assets.html':'invest-assets', 'certificate.html':'certificate',
+  'login.html':'login', 'invest-assets.html':'invest-assets', 'certificate.html':'certificate',
   'invest-profit.html':'invest-profit', 'merchants.html':'merchants', 'acquisition.html':'acquisition-list',
   'contracts.html':'contracts', 'coocon.html':'coocon', 'password.html':'password',
   'xls-assets-status.html':'xls-assets-status', 'xls-assets-merchant.html':'xls-assets-merchant',
@@ -2060,8 +2016,7 @@ function cashRow(){
 /* ── 투자자산 대비 Ty수익율 (현황 ⑤) — 대표 정의서 ────────────────
    ⑤ = (④ × PSA) / (PSA + PSC).  PSA = 기간 투자실행금 합, PSC = 기간 동안 EC들의 합.
    EC = 전일자 마감시점 순현금이며 하루에 한 건 쌓인다(유량). 기준일 잔액 1개(스톡)로 나누지 않는다.
-   일별 EC 원장이 없어 EC 는 순현금 잔액으로 고정한다 — 실데이터 연결은 확인 대상.
-   (D-22 — 배포본 표식 대조가 원본 바이트를 훑으므로 주석에도 고지성 낱말을 남기지 않는다) */
+   일별 EC 원장이 없어 EC 예시값은 순현금 잔액으로 고정한다 — 실데이터 연결은 확인 대상. */
 /* EC 는 하루에 한 건 쌓이는 유량이라 조회 기간에 걸린 일수만큼 센다.
    일별·월별 어느 쪽으로 보든 같은 기간이면 같은 일수라야 하므로 원장 일수 하나로 센다. */
 function ecDays(){ return pfDays().length; }
@@ -2147,7 +2102,6 @@ RENDER['invest-profit'] = function(){
   x1.disabled = !rows.length; x2.disabled = !rows.length;
   
 };
-
 
 /* ───────── 가맹점 ───────── */
 function mcRows(){
@@ -2631,34 +2585,6 @@ RENDER['xls-assets-merchant'] = function(){ renderXls('assets-merchant'); };
 RENDER['xls-profit-status']   = function(){ renderXls('profit-status'); };
 RENDER['xls-profit-daily']    = function(){ renderXls('profit-daily'); };
 
-/* ───────── 랜딩 갤러리 ───────── */
-var GALLERY = [
-  ['invest-assets','card','badge-primary','투자','현황·가맹점별 투자자산·산식·엑셀/증명서 다운로드'],
-  ['certificate','shield','badge-primary','투자','전자문서 미리보기·서명 검증'],
-  ['invest-profit','trend','badge-primary','투자','기간 검색·일별/월별 투자수익·산식'],
-  ['merchants','users','badge-blue','가맹점','목록·업종/채권매입업체 필터·검색'],
-  ['acquisition-list','cards','badge-blue','가맹점','계약서보기 · 양수도 계약서 전자서명'],
-  ['contracts','doc','badge-blue','가맹점','전자서명 결과 일괄 다운로드'],
-  ['coocon','coin','badge-gray','관리','메뉴에서 We-bank 로 바로 이동'],
-  ['password','lock','badge-gray','관리','로그인 비밀번호 변경'],
-  ['login','lock','badge-gray','인증','사업자번호·휴대전화 로그인'],
-  ['xls-assets-status','grid','badge-primary','투자','투자 자산 › 현황 표를 내려받았을 때의 엑셀 서식'],
-  ['xls-assets-merchant','grid','badge-primary','투자','투자 자산 › 가맹점별 투자자산 표를 내려받았을 때의 엑셀 서식'],
-  ['xls-profit-status','grid','badge-primary','투자','투자 수익 › 수익 현황 표를 내려받았을 때의 엑셀 서식'],
-  ['xls-profit-daily','grid','badge-primary','투자','투자 수익 › 일별 투자수익 표를 내려받았을 때의 엑셀 서식']
-];
-RENDER['index'] = function(){
-  var h = '';
-  for(var i = 0; i < GALLERY.length; i++){
-    var g = GALLERY[i], states = Object.keys(STATE_META[g[0]] || {}).filter(function(k){ return k !== 'default'; });
-    h += '<button class="shot-card" data-nav="' + g[0] + '"><div class="shot-top">' +
-      '<div class="shot-icon">' + svg(g[1], 1.8) + '</div><div>' +
-      '<div class="shot-name">' + SCREEN_LABEL[g[0]] + '</div></div>' +
-      '<span class="badge sm ' + g[2] + '">' + g[3] + '</span></div>' +
-      '<p class="shot-desc">' + g[4] + (states.length ? ' · 상태 ' + states.length : '') + '</p></button>';
-  }
-  M('ix-gallery', 'index').innerHTML = h;
-};
 RENDER['login'] = function(){};
 RENDER['coocon'] = function(){};
 
@@ -2918,7 +2844,6 @@ document.addEventListener('click', function(e){
   }
   var n = t.closest('[data-nav]');
   if(n){ e.preventDefault(); go(n.dataset.nav); return; }
-  if(t.closest('.sidebar-logo a')){ e.preventDefault(); go('index'); return; }
   if(t.closest('button.logout')){ e.preventDefault(); go('login'); return; }
   var link = t.closest('a[href]');
   if(link){
@@ -2930,6 +2855,8 @@ document.addEventListener('click', function(e){
     if(STATEFILE[href]){ e.preventDefault(); var p = STATEFILE[href].split('/'); go(p[0], p[1]); return; }
     if(href.charAt(0) === '#'){
       e.preventDefault();
+      var tg = href.slice(1).split('/');
+      if(SEC(tg[0])){ go(tg[0], tg[1]); return; }        /* 시연본: 형제 파일 대신 해시로 이동한다 */
       return;
     }
   }

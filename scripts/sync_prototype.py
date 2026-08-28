@@ -26,6 +26,8 @@ import argparse, io, os, re, shutil, sys
 BANNED = ['glossary', 'capability', 'feasibility', 'inquiry', 'archive', 'review']
 ALLOWED_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com', 'www.we-bank.co.kr']
 BANNED_WORDS = ['랜딩', '갤러리', '문의서']
+# 화면이 내려줄 수 있는 자산 확장자 — 역산 규칙과 되짚기 검사가 함께 쓴다
+ASSET_EXT = ['.xlsx', '.pdf', '.txt', '.zip', '.csv']
 
 NEW_HEAD = '''<!--
   시연 전용 배포본 — 통합 프로토타입 한 파일뿐이다.
@@ -181,23 +183,40 @@ def gate(s):
 
 
 def wanted_assets(s):
-    """산출물 문서에서 참조를 역산한다. 참조 0건인 파일은 목록에 오르지 않는다."""
+    """산출물 문서에서 참조를 역산한다. 참조 0건인 파일은 목록에 오르지 않는다.
+
+    규칙은 이름이 아니라 **모양**으로 잡는다. 파일명·상수명을 하나씩 박아 두면 화면이 바뀔 때마다 낡는다
+    (전례: PDF 시절 `재양도합의서_*.pdf`·`계약서_서명대기_*.pdf`·`CT_ZIP_*` 를 박아 두었다가 전자서명 텍스트로 갈리며 전부 죽었다).
+    마지막에 되짚기 검사를 둬서, 문서가 이름을 부르는데 목록에 못 오른 파일이 있으면 조용히 빠지지 않고 멈춘다.
+    """
     want = set()
     for f in re.findall(r"file:'([^']+\.xlsx)'", s):
         want.add('xlsx/' + f)
-    # 계약기록 행 파일 — 전자서명 결과 텍스트 (PDF 시절 이름 아님)
+    # 계약기록 행 파일 — 접두사 + 가맹점번호 + 확장자로 조립되는 것들(지금은 전자서명 결과 텍스트)
     pre = re.search(r"var CT_SIG_PREFIX\s*=\s*'([^']*)'", s)
     ext = re.search(r"var CT_SIG_EXT\s*=\s*'([^']*)'", s)
     if pre and ext:
         for m in set(re.findall(r"\{mid:'(M2026-\d{4})'", s)):
             want.add('docs/%s%s%s' % (pre.group(1), m, ext.group(1)))
-    # 단일 파일 상수 — 증명서·묶음·계약서 원문
-    for v in re.findall(r"var (?:CERT_PDF|CT_SIG_ALL|CT_SIG_SEL3)\s*=\s*'([^']+)'", s):
+    # 단일 파일 상수 — 상수 이름을 나열하지 않고 "대문자 상수 = 확장자 붙은 파일명 하나" 모양으로 잡는다
+    for _n, v in re.findall(
+            r"var\s+([A-Z][A-Z_0-9]*)\s*=\s*'([^'/]+\.(?:%s))'" % '|'.join(e[1:] for e in ASSET_EXT), s):
         want.add('docs/' + v)
     for v in set(re.findall(r"'(?:assets/docs/)?([^'/]+\.txt)'", s)):
         want.add('docs/' + v)
     for c in re.findall(r'<link rel="stylesheet" href="assets/([^"]+)"', s):
         want.add(c)
+    # 문서에 리터럴로 박힌 assets/ 경로(스타일시트 외 직접 참조)
+    for p in set(re.findall(r"assets/([A-Za-z0-9_\-][A-Za-z0-9_\-./]*\.[A-Za-z0-9]+)", s)):
+        want.add(p)
+
+    # 되짚기 — 확장자가 붙은 파일명이 문서에 박혀 있는데 복사 목록에 없으면 여기서 멈춘다.
+    named = re.findall(r"'([^'/\\]+(?:%s))'" % '|'.join(re.escape(e) for e in ASSET_EXT), s)
+    missed = sorted(set(n for n in named if not any(w == n or w.endswith('/' + n) for w in want)))
+    if missed:
+        fail('자산 역산 누락 — 문서가 이름을 부르는데 복사 목록에 없다: %s' % missed)
+    else:
+        ok('자산 역산 %d건 · 되짚기 통과(문서가 부르는 파일명 %d개 전건 포함)' % (len(want), len(set(named))))
     return want
 
 
@@ -215,10 +234,11 @@ def main():
     src = io.open(a.src, encoding='utf-8').read()
     out = transform(src)
     gate(out)
+    want = wanted_assets(out)   # 되짚기 검사가 여기 있다 — 쓰기 전에 돌려야 실패했을 때 index.html 이 남지 않는다
 
     if hard:
         print('\n'.join(notes))
-        print('\n중단 — 통로 검사 실패 %d건. index.html 을 쓰지 않았다.' % len(hard))
+        print('\n중단 — 검사 실패 %d건. index.html 을 쓰지 않았다.' % len(hard))
         return 1
     if a.check_only:
         print('\n'.join(notes))
@@ -229,7 +249,6 @@ def main():
         print('중단 — 대상 저장소가 없다: %s' % a.dst); return 1
     io.open(os.path.join(a.dst, 'index.html'), 'w', encoding='utf-8').write(out)
 
-    want = wanted_assets(out)
     dst_assets = os.path.join(a.dst, 'assets')
     if os.path.isdir(dst_assets):
         shutil.rmtree(dst_assets)
