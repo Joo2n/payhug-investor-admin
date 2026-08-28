@@ -395,7 +395,7 @@
             <tr>
               <td class="k">문서 산출</td>
               <td>엑셀(정산목록·배분·계산서 자료), 세금계산서 자료</td>
-              <td>엑셀 4종 + 투자자산 증명서(전자서명값 표시) + 재양도합의서 원본. 검증회신전문 동봉은 확인 대상</td>
+              <td>엑셀 6종 + 투자자산 증명서(전자서명값 표시) + 재양도합의서 원본. 검증회신전문 동봉은 확인 대상</td>
             </tr>
             <tr>
               <td class="k">외부 연동</td>
@@ -647,7 +647,7 @@
               <tr><td class="k">검색대상기간</td><td>기본값 <code>일주일</code></td><td><code>SB s7</code></td><td class="c"><span class="j j-fix">확정</span><br><span class="src">표기</span></td></tr>
               <tr><td class="k">투자실행금<span class="src-line">현황</span></td><td>—</td><td>스토리보드가 현황의 <code>투자실행금</code>과 일별표 동명 열의 관계를 정의하지 않는다. 현행 예시값은 두 자리가 같은 3,511,071,647원이나 어느 정의로 같아진 것인지는 적혀 있지 않다</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
               <tr><td class="k">투자수익<span class="src-line">현황</span></td><td>—</td><td>위와 동일</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
-              <tr><td class="k">Ty수익율<span class="src-line">투자실행금액 대비 / 투자자산 대비</span></td><td>2행 구성</td><td>구성은 <code>SB s7</code>로 확정. 두 값의 관계가 스토리보드에 없다. 현행 화면값은 투자실행금액 대비 3.55% · 투자자산 대비 2.24%다. 두 값은 대표 정의 마커 ⑤ <code>(④ × 투자실행금) ÷ (투자실행금 + 기간 순현금 합)</code>으로 이어지며, <code>④ × 투자실행액 비중</code>(3.55% × 93.5% = 3.32%)과는 다른 산식이다</td><td class="c"><span class="j j-fix">확정</span> <span class="src">구성</span><br><span class="j j-chk">확인필요</span> <span class="src">산식</span></td></tr>
+              <tr><td class="k">Ty수익율<span class="src-line">투자실행금액 대비 / 투자자산 대비</span></td><td>2행 구성</td><td>구성은 <code>SB s7</code>로 확정. 두 값의 관계가 스토리보드에 없다. 기본 조회 기간(일주일) 화면값은 투자실행금액 대비 12.97% · 투자자산 대비 10.72%다. 두 값은 대표 정의 마커 ⑤ <code>(④ × 투자실행금) ÷ (투자실행금 + 기간 순현금 합)</code>으로 이어지며, <code>④ × 투자실행액 비중</code>(12.97% × 93.5% = 12.13%)과는 다른 산식이다</td><td class="c"><span class="j j-fix">확정</span> <span class="src">구성</span><br><span class="j j-chk">확인필요</span> <span class="src">산식</span></td></tr>
               <tr><td class="k">입금일자</td><td>—</td><td><code>SB s7</code></td><td class="c"><span class="j j-hyp">가설</span></td></tr>
               <tr><td class="k">상환액</td><td>Figma 정산채권DB <code>입금액</code>(노드 <code>529:2950</code>)이 대응 후보</td><td><code>SB s7</code></td><td class="c"><span class="j j-hyp">가설</span></td></tr>
               <tr><td class="k">투자실행금<span class="src-line">일별</span></td><td>—</td><td><code>SB s7</code></td><td class="c"><span class="j j-hyp">가설</span></td></tr>
@@ -1040,7 +1040,7 @@
           <li><div class="expo-item">투자자산 증명서</div><div class="expo-why">전자문서 + 서명값 + 검증회신전문. 문서명은 미확정<span class="expo-src">SB s3⑬ · SB s6</span></div></li>
           <li><div class="expo-item">서명 대기 계약 목록</div><div class="expo-why">목록 산출 조건은 미정의<span class="expo-src">SB s15</span></div></li>
           <li><div class="expo-item">자기 계정 비밀번호 변경</div><div class="expo-why">기능 자체가 미구현<span class="expo-src">SB s17</span></div></li>
-          <li><div class="expo-item">엑셀 산출물 4종</div><div class="expo-why">시트 서식 규칙은 가설<span class="expo-src">SB s4·s5·s8·s9</span></div></li>
+          <li><div class="expo-item">엑셀 산출물 6종</div><div class="expo-why">시트 서식 규칙은 가설<span class="expo-src">SB s4·s5·s8·s9</span></div></li>
           <li><div class="expo-item">쿠콘 We-bank 콘솔 이동과 조회 메뉴 3종</div><div class="expo-why">계정 스코프는 노출 불가 항목 7과 함께 결정<span class="expo-src">SB s10~s13</span></div></li>
         </ul>
       </div>
@@ -1239,8 +1239,8 @@
             </tr>
             <tr>
               <td class="k">현황 <code>Ty수익율</code> 2행</td>
-              <td class="n">3.55% / 2.24%</td>
-              <td>대표 정의 마커 ⑤ <code>(④ × 투자실행금) ÷ (투자실행금 + 기간 순현금 합)</code>로 산출된다. <code>④ × 투자실행액 비중</code>(3.32%)과는 값이 다르며, 스토리보드에 두 값의 관계가 없다</td>
+              <td class="n">12.97% / 10.72%</td>
+              <td>대표 정의 마커 ⑤ <code>(④ × 투자실행금) ÷ (투자실행금 + 기간 순현금 합)</code>로 산출된다. <code>④ × 투자실행액 비중</code>(12.13%)과는 값이 다르며, 스토리보드에 두 값의 관계가 없다</td>
             </tr>
           </tbody>
         </table>
@@ -1301,7 +1301,7 @@
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-21</span><div><div class="gi-title">현행 <code>INVESTOR</code> 계정의 기존 노출 범위 처리</div><div class="gi-what">투자자는 이미 파트너 공용 4메뉴와 정산현황 3탭(선정산 결과·차액 정산·이체 내역)을 본다. 투자자 전용 뷰를 신설해도 이 경로는 그대로 남는다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 전용 메뉴를 신설하면 기존 참여자 공용 메뉴는 투자자에게 닫습니까, 병존시킵니까? `isInvestorUser()` 헬퍼를 신설해 메뉴 그룹을 분기하는 방향이 맞습니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-22</span><div><div class="gi-title">엑셀 시트 서식 규칙 미정</div><div class="gi-what">산출물 4종의 존재는 <code>SB s4</code>·<code>s5</code>·<code>s8</code>·<code>s9</code>로 확인되나 시트 제목·기준일 표기 규칙이 스토리보드에 없다. 설계안이 쓴 <code>※</code> 주석에는 미확정 항목(비중 분모·Ty수익율 첫 항)이 확정처럼 인쇄돼 있다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>엑셀 시트에 표 명칭과 기준일자를 넣습니까? 산식 주석을 넣는다면 미확정 항목은 어떻게 표기합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-22</span><div><div class="gi-title">엑셀 시트 서식 규칙 미정</div><div class="gi-what">산출물 6종의 존재는 <code>SB s4</code>·<code>s5</code>·<code>s8</code>·<code>s9</code>로 확인되나 시트 제목·기준일 표기 규칙이 스토리보드에 없다. 설계안이 쓴 <code>※</code> 주석에는 미확정 항목(비중 분모·Ty수익율 첫 항)이 확정처럼 인쇄돼 있다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>엑셀 시트에 표 명칭과 기준일자를 넣습니까? 산식 주석을 넣는다면 미확정 항목은 어떻게 표기합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-23</span><div><div class="gi-title">가맹점 검색의 서버·클라이언트 경계</div><div class="gi-what">운영 어드민의 가맹점 검색은 클라이언트 필터라 전체 목록이 브라우저로 내려온다. 투자자 화면에 그대로 쓰면 스코프 밖 데이터가 클라이언트에 도달한다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 화면의 가맹점 검색을 서버 쿼리로 전환합니까? 응답 자체가 배정 가맹점으로 제한된다는 보장이 있습니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
   </section>
@@ -1318,7 +1318,7 @@
         <dt>질문</dt><dd>투자자에게 귀속되는 수익을 무엇으로 산정하는가. 스토리보드가 <code>Ty수익율 = 할인율 × (365 / w금융일수)</code>로 전제하는 <code>할인율</code>의 실체는 정산채권 단위로 저장된 수익권자 할인율인가, 실현 수익율인가. 이 기준이 운영 어드민의 배분 원장 모델과 어떻게 정합하는가.</dd>
         <dt>배경</dt><dd>스토리보드는 투자수익 화면에 <code>투자 수익</code> 열을 두면서 산식을 적지 않고, 투자자산 화면 각주에서 <code>할인율</code>을 전제하되 그 값의 출처를 적지 않는다. 정책서 <code>03_SETTLEMENT_LOGIC.md</code>에는 투자자 배분 산식이 아예 없고 채권매입수수료를 참여자별로 쪼개지 않는 단일 항목으로만 다룬다. 반대로 운영 어드민 코드는 정액 합산 + 다자 배분율 모델로 이미 돌아가며, 원장 상세의 수익은 <code>매출 − 원가</code> 축이라 스토리보드의 상환 축과 만나지 않는다 — 이 형태 불일치가 <code>spec/90_정책레지스터.md</code> V14다. 별도로 Figma에는 자금조달(대출) 이자 정산이 전용 어드민 기능까지 갖춘 채 설계돼 있어, 할인 매입 차익과 조달 이자가 동시 발생인지 택일인지도 미정이다. 화면 설계(안)이 임의로 채워 넣은 산식 카드 2종으로는 같은 화면의 표가 재현되지 않는다. (확인필요)</dd>
         <dt>위치</dt><dd>투자자 어드민 투자 수익 화면(현황 카드·일별 표) / 투자 자산·투자 수익 화면 하단 수익 산정 기준 카드 / <code>03_SETTLEMENT_LOGIC.md</code> §1·§2 / <code>spec/90_정책레지스터.md</code> V14</dd>
-        <dt>영향</dt><dd>기준이 정해져야 일별 표의 <code>투자 수익</code> 열, <code>Ty수익율</code>, 엑셀 4종, 증명서 본문이 동시에 결정된다. 할인율 기준으로 가면 정산채권 단위 원장이 필요해 현행 배치 단위 배분 원장과 집계 축이 달라지고, 배분율 기준으로 가면 C1의 요율 매트릭스 확정이 선행 조건이 된다.</dd>
+        <dt>영향</dt><dd>기준이 정해져야 일별 표의 <code>투자 수익</code> 열, <code>Ty수익율</code>, 엑셀 6종, 증명서 본문이 동시에 결정된다. 할인율 기준으로 가면 정산채권 단위 원장이 필요해 현행 배치 단위 배분 원장과 집계 축이 달라지고, 배분율 기준으로 가면 C1의 요율 매트릭스 확정이 선행 조건이 된다.</dd>
         <dt>주의</dt><dd class="caution">여기 등장하는 0.11%·연 12%는 어느 쪽도 채택하지 않는다. C1 범위이며 <code>07 §7</code> 말미의 값 채택 금지가 그대로 적용된다.</dd>
         <dt>출처</dt><dd class="src">스토리보드_Admin_투자자.pptx s3 각주·s7 / analysis/figma_policy_db.md / analysis/figma_policy_fee.md(노드 1442:8889) / 03_SETTLEMENT_LOGIC.md §1·§3 / spec/90_정책레지스터.md V14 / admin components/settlement/BatchDetailTab.tsx:868-912</dd>
         <dt>연계</dt><dd>C1. 요율 매트릭스가 서면 배분율 기준의 지위가 정해지고, 그때 조달 이자와의 동시/택일 여부가 남는다.</dd>

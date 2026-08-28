@@ -750,7 +750,7 @@
           <tr data-g="B"><td class="no">45</td><td class="k">PSD</td><td class="c"><span class="g g-B">B</span></td><td><code>Σ(Api×Dpi) / PSA</code> — 가중평균</td><td>입력값</td><td>N-5</td><td class="muted">—</td></tr>
           <tr data-g="D"><td class="no">46</td><td class="k">PSC</td><td class="c"><span class="g g-D">D</span></td><td>기간 EC 합계</td><td>계좌 + 스냅샷</td><td>N-3 · EC</td><td>D-14</td></tr>
           <tr data-g="B"><td class="no">47</td><td class="k">④ 투자실행금액 대비 ty수익율</td><td class="c"><span class="g g-B">B</span></td><td><code>PSMR × 365 / PSD</code></td><td>입력값</td><td>PSMR · PSD</td><td class="muted">—</td></tr>
-          <tr data-g="B"><td class="no">48</td><td class="k">⑤ 투자자산 대비 ty수익율</td><td class="c"><span class="g g-B">B</span></td><td><code>(④ × PSA) / (PSA + PSC)</code></td><td>입력값. <b>현행 화면은 분모를 기준일 잔액 1개(스톡)로 계산해 3.32%가 나오고, 대표 정의(기간 EC 합=유량)대로면 2.24%.</b> 화면 쪽 오류로 확정, 정정 대상</td><td>④ · PSC(D)</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">48</td><td class="k">⑤ 투자자산 대비 ty수익율</td><td class="c"><span class="g g-B">B</span></td><td><code>(④ × PSA) / (PSA + PSC)</code></td><td>입력값. 화면 분모는 대표 정의대로 기간 EC 합(유량)이다 — 기본 조회 기간에서 ④ 12.97% · ⑤ 10.72%. 분모를 기준일 잔액 1개(스톡)로 두면 <code>④ × 투자실행액 비중</code>(12.13%)이 되는데 그 산식은 쓰지 않는다</td><td>④ · PSC(D)</td><td class="muted">—</td></tr>
           <tr data-g="B"><td class="no">49</td><td class="k">⑥ 일별 투자실행금액 대비 ty수익율</td><td class="c"><span class="g g-B">B</span></td><td><code>(투자수익 ÷ 투자실행금) × 365 ÷ w금융일수</code> — <code>marker_legend.md</code>가 번호 마커로 <code>③</code> = 일별표 <b>투자실행금</b>임을 복원. ④와는 동명이의가 아니라 집계 단위 차이</td><td>입력값 셋. 전부 4층에서 나온다</td><td>N-5 N-7</td><td class="muted">—</td></tr>
           <tr data-g="A"><td class="no">50</td><td class="k">검색대상기간</td><td class="c"><span class="g g-A">A</span></td><td><code>components/DateRangeFilter.tsx</code> — from~to 입력 + <b>프리셋 7종 실재</b>(오늘·어제·이번 주·지난 주·이번 달·지난 달·최근 3개월, <code>:23-61</code>)</td><td>없음. 부품 그대로 재사용</td><td class="muted">—</td><td class="muted">—</td></tr>
         </tbody>
@@ -881,7 +881,7 @@
       </div>
     </div>
     <div class="empty-msg" id="noHit">조건에 맞는 항목이 없다. 등급 뱃지를 다시 켜거나 검색어를 지운다.</div>
-    <div class="note-band">엑셀 4종의 <code>※</code> 주석 4종(합계 정의·비중 분모·Ty수익율 산식·가중평균 표기)은 설계안이 새로 쓴 문장이고, 그중 <b>비중 분모</b>와 <b>Ty수익율의 첫 항</b>은 아직 미확정이다. <b>미확정 값을 확정된 주석처럼 인쇄하는 상태</b>이므로 구현 전 정리가 필요하다.</div>
+    <div class="note-band">엑셀 6종의 <code>※</code> 주석 4종(합계 정의·비중 분모·Ty수익율 산식·가중평균 표기)은 설계안이 새로 쓴 문장이고, 그중 <b>비중 분모</b>와 <b>Ty수익율의 첫 항</b>은 아직 미확정이다. <b>미확정 값을 확정된 주석처럼 인쇄하는 상태</b>이므로 구현 전 정리가 필요하다.</div>
   </section>
 
   <!-- ── 6. 개발 문의 ── -->
@@ -980,7 +980,7 @@
         <h4>산출물</h4>
         <ul class="qlist">
           <li><span class="qid">D-25</span><span class="qtx">참여자 계정의 본인 비밀번호 변경 API가 백엔드에 있습니까? 어드민에는 관리자가 가맹점 비밀번호를 초기화하는 <code>PUT /admin/merchants/{id}/reset-password</code>만 있다. 비밀번호 규칙과 변경 후 세션 무효화 정책은 무엇입니까?</span></li>
-          <li><span class="qid">D-32</span><span class="qtx">엑셀 4종을 서버에서 생성합니까, 현행처럼 브라우저에서 ExcelJS로 만듭니까? 서버 생성이면 스코프 필터가 자동으로 걸립니다.</span></li>
+          <li><span class="qid">D-32</span><span class="qtx">엑셀 6종을 서버에서 생성합니까, 현행처럼 브라우저에서 ExcelJS로 만듭니까? 서버 생성이면 스코프 필터가 자동으로 걸립니다.</span></li>
         </ul>
       </div>
     </div>

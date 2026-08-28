@@ -376,7 +376,7 @@ table.tbl td:first-child { color: var(--gray-900); }
 <p class="sec-lede">투자자 어드민의 모든 숫자는 <a class="xref" href="#t01"><code>정산금채권</code></a> 한 건에서 출발한다. 이 단계 8개를 알면 채권 1건의 주민등록등본을 읽을 수 있게 된다.</p>
 <article class="term" id="t01" data-k="정산금채권 **특정 플랫폼**이 **특정 가맹점**에게 서로의 약속으로 `정산예정일`에 주기로 한 돈, 그 받을 권리다. 가맹점은 그 권리를 페이허그에 팔고 돈을 미리 받는다. 선정산은 대출이 아니라 **권리를 사고파는 것** 기호 없음 — 대표 정의 원문이 이 용어에 기호를 붙이지 않았다. [[shot: invest-assets | anchor: th:가맹점 | kind: indirect]]
 
-채권 1건이 그대로 뜨는 화면은 투자자 어드민에 없다. 전부 합쳐진 뒤에만 보인다. 가장 가까운 것이 `투자 ">
+채권 1건이 행으로 그대로 뜨는 곳은 `투자 시뮬레이션`의 채권별 산출 표다 — 한 행이 채권 한 건이고, `">
 <div class="term-head"><span class="term-no">01</span><h3 data-field="term">정산금채권</h3><span class="chip lv">계산 재료</span></div>
 <p class="lede-line"><b>특정 플랫폼</b>이 <b>특정 가맹점</b>에게 서로의 약속으로 <a class="xref" href="#t06"><code>정산예정일</code></a>에 주기로 한 돈, 그 받을 권리다. 가맹점은 그 권리를 페이허그에 팔고 돈을 미리 받는다. 선정산은 대출이 아니라 <b>권리를 사고파는 것</b>이다. <code>확정</code> (대표 정의 2026-08-28)</p>
 <p><b>돈을 주는 곳은 모두 <code>플랫폼</code>이다.</b> 카드사도 배달앱도 가르지 않고 한 낱말로 부른다. <code>확정</code> (대표 정의 2026-08-28)</p>
@@ -400,7 +400,7 @@ table.tbl td:first-child { color: var(--gray-900); }
 </button>
 <figcaption><b>투자 자산</b> · 가맹점
 <span class="kd indirect">화면에 안 뜬다 — 재료</span></figcaption>
-</figure><p>채권 1건이 그대로 뜨는 화면은 투자자 어드민에 없다. 전부 합쳐진 뒤에만 보인다. 가장 가까운 것이 <code>투자 자산</code>의 가맹점별 투자자산 표로, 채권들을 가맹점 단위로 묶은 것이다.</p>
+</figure><p>채권 1건이 행으로 그대로 뜨는 곳은 <code>투자 시뮬레이션</code>의 채권별 산출 표다 — 한 행이 채권 한 건이고, <a class="xref" href="#t07"><code>순지급액</code></a>·<a class="xref" href="#t08"><code>금융일수</code></a>·<a class="xref" href="#t36"><code>투자실행금</code></a>·<a class="xref" href="#t15"><code>채권매입수수료</code></a>·<a class="xref" href="#t37"><code>투자수익</code></a>·<a class="xref" href="#t35"><code>상환액</code></a>이 그 한 건의 값이다. 나머지 화면은 전부 합쳐진 뒤에만 보인다. <code>투자 자산</code>의 가맹점별 투자자산 표가 가장 가까운데, 채권들을 가맹점 단위로 묶은 것이다.</p>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> 매출 1건</p>
@@ -584,6 +584,7 @@ id 자체는 화면에 없다. `가맹점`의 `가맹점id` 열이 id의 첫 조
 <span class="kd direct">화면에 뜬다</span></figcaption>
 </figure><p><code>투자 수익</code> 일별 투자수익 표의 첫 열. 현재 열 이름은 <code>입금일자</code>이고, 원문 지시대로면 <code>정산예정일</code>로 바뀐다.</p>
 <p><b>2026-08-28 캡처 실측</b> — 화면에는 이미 <code>정산예정일</code>로 적용돼 있다. 원문 지시가 반영된 상태다.</p>
+<p><code>투자 시뮬레이션</code>에서는 정산금채권 입력의 <code>정산예정일</code> 칸이고, 실행하면 일별 투자수익 표의 첫 열이 된다.</p>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> 카드사 정산 스케줄</p>
@@ -644,7 +645,10 @@ id 자체는 화면에 없다. `가맹점`의 `가맹점id` 열이 id의 첫 조
 | 뜻 | 그 채권 한 건에 투자자 돈이 묶여 있는 날수다. 선정산일에 나가서 정산예정일에 돌아오기까지다. |
 | 산식 | `di = 정산예정일 -  [[shot: invest-assets | anchor: th:w금융일수#0 | kind: indirect]]
 
-채권 1건짜리 금융일수는 화면에 안 뜬다. 가중평균한 `w금융일수`만 뜬다.">
+채권 1건짜리 금융일수는 화면에 안 뜬다. 가중평균한 `w금융일수`만 뜬다.
+
+
+`투자 시뮬레이션`은 ">
 <div class="term-head"><span class="term-no">08</span><h3 data-field="term">금융일수</h3><span class="chip lv ui">화면 용어</span></div>
 <p class="lede-line">투자자 돈이 그 채권 하나에 묶여 있는 날수다. 돈 내준 날부터 돈 돌아올 날까지 며칠이냐다. 짧을수록 같은 이익이라도 연 수익률은 커진다.</p>
 <div class="fld" data-field="var"><div class="fh"><span class="n">2</span>변수<span class="ko">대표 정의 원문 기호</span></div>
@@ -685,6 +689,7 @@ id 자체는 화면에 없다. `가맹점`의 `가맹점id` 열이 id의 첫 조
 <figcaption><b>투자 자산</b> · W금융일수
 <span class="kd indirect">화면에 안 뜬다 — 재료</span></figcaption>
 </figure><p>채권 1건짜리 금융일수는 화면에 안 뜬다. 가중평균한 <a class="xref" href="#t21"><code>w금융일수</code></a>만 뜬다.</p>
+<p><code>투자 시뮬레이션</code>은 채권 1건짜리 금융일수를 그대로 보여 준다 — 입력 행 끝의 일수 표시와 채권별 산출 표 <code>금융일수</code> 열이다.</p>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t05"><code>선정산일</code></a> <a class="xref" href="#t06"><code>정산예정일</code></a></p>
@@ -718,6 +723,7 @@ id 자체는 화면에 없다. `가맹점`의 `가맹점id` 열이 id의 첫 조
 <figcaption><b>가맹점</b> · 채권매입업체ID
 <span class="kd direct">화면에 뜬다</span></figcaption>
 </figure><p>투자자 어드민 전 화면. 사이드바 프로필의 <code>㈜테스트인베스트 님</code> + <code>투자자</code> 배지가 로그인한 유동화투자자다.</p>
+<p><code>투자 시뮬레이션</code>을 포함해 전 화면이 같은 배지를 쓴다.</p>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> 계정·계약</p>
@@ -860,8 +866,12 @@ M000654 &amp; BM0007 &amp; 20260728, 선정산일 07-29   → 조건2 ✗       
 
 **이 용어가 들어가는 기호** [`ai`](#sym-ai) [[shot: invest-assets | anchor: div:0.11% | kind: direct]]
 
-투자자 어드민 표에 열로 뜨지는 않고, `투자 자산`·`투자 수익` 하단 수익 산정 기준 안내 카드에 `0.">
-<div class="term-head"><span class="term-no">13</span><h3 data-field="term">유동화투자자의 할인율</h3><span class="chip screenlab">화면 표기 배분 요율 0.11%</span><span class="chip lv ui">화면 용어</span></div>
+투자자 어드민 표에 열로 뜨지는 않는다. 뜨는 자리는 셋이다.
+
+| 화면 | 자리 |
+|---|---|
+| ">
+<div class="term-head"><span class="term-no">13</span><h3 data-field="term">유동화투자자의 할인율</h3><span class="chip screenlab">화면 표기 할인율 0.11%</span><span class="chip lv ui">화면 용어</span></div>
 <p class="lede-line">투자자가 채권을 액면보다 얼마나 싸게 사느냐다. 100원짜리 채권을 99.89원에 사면 할인율 0.11%다. 만기에 100원을 받으니 0.11원이 남는다. 그게 투자자 수익의 원천이다.</p>
 <p><b>실체는 <code>(채권매입)수수료율</code>이고, 그 이름은 내부에서만 쓴다.</b> 투자자에게 보이는 화면에는 <code>할인율</code>로 적는다. <code>확정</code> (대표 정의 2026-08-28)</p>
 <div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>쓰는 자리</th><th>표기</th></tr></thead><tbody><tr><td>내부 — 정책·산식·개발 문서</td><td><b><code>(채권매입)수수료율</code></b></td></tr><tr><td>외부 — 투자자에게 보이는 화면</td><td><b><code>할인율</code></b></td></tr></tbody></table></div></div>
@@ -895,7 +905,8 @@ ty수익율  = 할인율 × (365 / w금융일수)</pre>
 </button>
 <figcaption><b>투자 자산</b> · 0.11%
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><p>투자자 어드민 표에 열로 뜨지는 않고, <code>투자 자산</code>·<code>투자 수익</code> 하단 수익 산정 기준 안내 카드에 <code>0.11%</code>로 적혀 있다.</p>
+</figure><p>투자자 어드민 표에 열로 뜨지는 않는다. 뜨는 자리는 셋이다.</p>
+<div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>수익 산정 기준 카드 <code>할인율</code> <code>0.11%</code></td></tr><tr><td><code>투자 수익</code></td><td>같은 카드</td></tr><tr><td><code>투자 시뮬레이션</code></td><td>기준 변수 <code>할인율 (%)</code> 입력 칸 — 값을 바꾸면 산출이 다시 계산된다</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> 정산 정책의 투자자 요율</p>
@@ -1088,7 +1099,7 @@ ty수익율  = 할인율 × (365 / w금융일수)</pre>
 </button>
 <figcaption><b>투자 자산</b> · 투자실행액
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>현황표 <a class="xref" href="#t24"><code>자산 구분</code></a> 1행 <code>투자실행액</code> / 금액 <code>1,523,100,000</code></td></tr><tr><td>〃</td><td>요약 카드 <code>투자실행액</code></td></tr><tr><td><code>투자자산 현황 엑셀</code> · <code>투자자산_현황.xlsx</code></td><td>같은 행</td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>현황표 <a class="xref" href="#t24"><code>자산 구분</code></a> 1행 <code>투자실행액</code> / 금액 <code>1,523,100,000</code></td></tr><tr><td>〃</td><td>요약 카드 <code>투자실행액</code></td></tr><tr><td><code>투자자산 현황 엑셀</code> · <code>투자자산_현황.xlsx</code></td><td>같은 행</td></tr><tr><td><code>투자 시뮬레이션</code></td><td>투자 요약 <code>투자실행액</code> · 현황표 <code>투자실행액</code> 행</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t16"><code>회수되지 않은 순지급액</code></a> × (1 − <a class="xref" href="#t13"><code>할인율</code></a>)</p>
@@ -1129,7 +1140,7 @@ ty수익율  = 할인율 × (365 / w금융일수)</pre>
 </button>
 <figcaption><b>투자 자산</b> · 순현금
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>현황표 2행 <code>순현금</code> / 금액 <code>105,300,000</code> / 보관 <code>㈜쿠콘</code></td></tr><tr><td>〃</td><td>요약 카드 <code>순현금</code></td></tr><tr><td><code>쿠콘 관리 현금</code></td><td>메뉴를 누르면 쿠콘으로 바로 넘어가 잔액을 확인하는 경로</td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>현황표 2행 <code>순현금</code> / 금액 <code>105,300,000</code> / 보관 <code>㈜쿠콘</code></td></tr><tr><td>〃</td><td>요약 카드 <code>순현금</code></td></tr><tr><td><code>쿠콘 관리 현금</code></td><td>메뉴를 누르면 쿠콘으로 바로 넘어가 잔액을 확인하는 경로</td></tr><tr><td><code>투자 시뮬레이션</code></td><td>기준 변수 <code>순현금 (원)</code> 입력 칸 · 투자 요약 <code>순현금</code> · 현황표 <code>순현금</code> 행</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> 쿠콘 가상계좌 잔액 API</p>
@@ -1142,7 +1153,9 @@ ty수익율  = 할인율 × (365 / w금융일수)</pre>
 
 **이 용어가 들어가는 기호** [`ec`](#sym-ec) · [`psc`](#sym-psc) [[shot: invest-assets | anchor: th:보관 | kind: direct]]
 
-`투자 자산` 현황표 `보관` 열의 `㈜쿠콘`. `쿠콘 관리 현금` 메뉴는 누르면 쿠콘 화면으로 바로 넘어간다.">
+`투자 자산` 현황표 `보관` 열의 `㈜쿠콘`. `쿠콘 관리 현금` 메뉴는 누르면 쿠콘 화면으로 바로 넘어간다.
+
+">
 <div class="term-head"><span class="term-no">19</span><h3 data-field="term">쿠콘 가상계좌</h3><span class="chip screenlab">화면 표기 보관 ㈜쿠콘</span><span class="chip lv ui">화면 용어</span></div>
 <p class="lede-line">㈜쿠콘이 발급해 준 가상계좌다. 이 통장에 든 돈이 곧 <a class="xref" href="#t18"><code>순현금</code></a>이다.</p>
 <p><b>법적 실체</b> — 페이허그용으로 개설된 <b>㈜쿠콘 명의의 케이뱅크 계좌</b>다. 화면의 <code>보관 ㈜쿠콘</code>은 이 명의를 가리킨다. <code>확정</code> (대표 정의 2026-08-28)</p>
@@ -1171,6 +1184,7 @@ ty수익율  = 할인율 × (365 / w금융일수)</pre>
 <figcaption><b>투자 자산</b> · 보관
 <span class="kd direct">화면에 뜬다</span></figcaption>
 </figure><p><code>투자 자산</code> 현황표 <a class="xref" href="#t25"><code>보관</code></a> 열의 <code>㈜쿠콘</code>. <code>쿠콘 관리 현금</code> 메뉴는 누르면 쿠콘 화면으로 바로 넘어간다.</p>
+<p><code>투자 시뮬레이션</code> 현황표의 <a class="xref" href="#t25"><code>보관</code></a> 열도 같은 <code>㈜쿠콘</code>이다.</p>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> 쿠콘 가상계좌 발급·할당</p>
@@ -1283,7 +1297,7 @@ w금융일수 = 365,897.07 ÷ 118,669.32 = 3.08일</pre>
 </button>
 <figcaption><b>투자 자산</b> · W금융일수
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>현황표 <a class="xref" href="#t17"><code>투자실행액</code></a> 행의 <code>W금융일수</code> = <code>3.1일</code></td></tr><tr><td>〃</td><td>가맹점별 투자자산 표 <code>W금융일수</code> 열 (가맹점마다 따로 · <code>2.7일</code> ~ <code>5.0일</code>)</td></tr><tr><td>〃</td><td>요약 카드 부제 <code>W금융일수 3.1일 기준</code></td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>현황표 <a class="xref" href="#t17"><code>투자실행액</code></a> 행의 <code>W금융일수</code> = <code>3.1일</code></td></tr><tr><td>〃</td><td>가맹점별 투자자산 표 <code>W금융일수</code> 열 (가맹점마다 따로 · <code>2.7일</code> ~ <code>5.0일</code>)</td></tr><tr><td>〃</td><td>요약 카드 부제 <code>W금융일수 3.1일 기준</code></td></tr><tr><td><code>투자 시뮬레이션</code></td><td>투자 요약 <a class="xref" href="#t22"><code>Ty수익율</code></a> 부제 · 현황표 <code>W금융일수</code> 열</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t14"><code>Ai</code></a> · <a class="xref" href="#t20"><code>Di</code></a></p>
@@ -1339,7 +1353,7 @@ w = 6.2일 (요기요)       →  0.11% × (365÷6.2) =  6.48%</pre>
 </button>
 <figcaption><b>투자 자산</b> · TY수익율
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>현황표 <a class="xref" href="#t17"><code>투자실행액</code></a> 행의 <code>ty수익율</code> = <code>12.95%</code></td></tr><tr><td>〃</td><td>가맹점별 투자자산 표 <code>ty수익율</code> 열</td></tr><tr><td>〃</td><td>요약 카드 <code>Ty수익율</code></td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>현황표 <a class="xref" href="#t17"><code>투자실행액</code></a> 행의 <code>ty수익율</code> = <code>12.95%</code></td></tr><tr><td>〃</td><td>가맹점별 투자자산 표 <code>ty수익율</code> 열</td></tr><tr><td>〃</td><td>요약 카드 <code>Ty수익율</code></td></tr><tr><td><code>투자 시뮬레이션</code></td><td>투자 요약 <code>Ty수익율</code> · 현황표 <code>Ty수익율</code> 열</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t13"><code>할인율</code></a> · <a class="xref" href="#t21"><code>w금융일수</code></a></p>
@@ -1381,7 +1395,7 @@ w = 6.2일 (요기요)       →  0.11% × (365÷6.2) =  6.48%</pre>
 </button>
 <figcaption><b>투자 자산</b> · 비중
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>현황표 <code>비중</code> 열 3행 (<code>93.5%</code> / <code>6.5%</code> / <code>100.0%</code>)</td></tr><tr><td>〃</td><td>요약 카드 부제 <code>비중 93.5% · 보관 ㈜페이허그</code></td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>현황표 <code>비중</code> 열 3행 (<code>93.5%</code> / <code>6.5%</code> / <code>100.0%</code>)</td></tr><tr><td>〃</td><td>요약 카드 부제 <code>비중 93.5% · 보관 ㈜페이허그</code></td></tr><tr><td><code>투자 시뮬레이션</code></td><td>투자 요약 부제 · 현황표 <code>비중</code> 열</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t17"><code>투자 실행액</code></a> · <a class="xref" href="#t18"><code>순현금</code></a></p>
@@ -1390,7 +1404,10 @@ w = 6.2일 (요기요)       →  0.11% × (365÷6.2) =  6.48%</pre>
 </article>
 <article class="term" id="t24" data-k="자산 구분 현황표의 세로축이다. 투자자 돈을 `투자실행액` / `순현금` / `합계` 세 줄로 가른다. 기호 없음 — 대표 정의 원문이 이 용어에 기호를 붙이지 않았다. [[shot: invest-assets | anchor: th:자산 구분 | kind: direct]]
 
-`투자 자산` 현황표 첫 열. 스토리보드 슬라이드 3·4에 같은 구조.">
+`투자 자산` 현황표 첫 열. 스토리보드 슬라이드 3·4에 같은 구조.
+
+
+`투자 시뮬레이션` 현황표도 같은 ">
 <div class="term-head"><span class="term-no">24</span><h3 data-field="term">자산 구분</h3><span class="chip lv ui">화면 용어</span></div>
 <p class="lede-line">현황표의 세로축이다. 투자자 돈을 <a class="xref" href="#t17"><code>투자실행액</code></a> / <a class="xref" href="#t18"><code>순현금</code></a> / <code>합계</code> 세 줄로 가른다.</p>
 <div class="fld" data-field="var"><div class="fh"><span class="n">2</span>변수<span class="ko">대표 정의 원문 기호</span></div>
@@ -1410,6 +1427,7 @@ w = 6.2일 (요기요)       →  0.11% × (365÷6.2) =  6.48%</pre>
 <figcaption><b>투자 자산</b> · 자산 구분
 <span class="kd direct">화면에 뜬다</span></figcaption>
 </figure><p><code>투자 자산</code> 현황표 첫 열. 스토리보드 슬라이드 3·4에 같은 구조.</p>
+<p><code>투자 시뮬레이션</code> 현황표도 같은 첫 열이다.</p>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> 없음</p>
@@ -1418,7 +1436,10 @@ w = 6.2일 (요기요)       →  0.11% × (365÷6.2) =  6.48%</pre>
 </article>
 <article class="term" id="t25" data-k="보관 그 자산을 실제로 누가 들고 있느냐다. 채권 형태로 나가 있는 건 페이허그가, 현금은 쿠콘이 들고 있다. 기호 없음 — 대표 정의 원문이 이 용어에 기호를 붙이지 않았다. [[shot: invest-assets | anchor: th:보관 | kind: direct]]
 
-`투자 자산` 현황표 마지막 열.">
+`투자 자산` 현황표 마지막 열.
+
+
+`투자 시뮬레이션` 현황표도 같은 마지막 열이다.">
 <div class="term-head"><span class="term-no">25</span><h3 data-field="term">보관</h3><span class="chip lv ui">화면 용어</span></div>
 <p class="lede-line">그 자산을 실제로 누가 들고 있느냐다. 채권 형태로 나가 있는 건 페이허그가, 현금은 쿠콘이 들고 있다.</p>
 <div class="fld" data-field="var"><div class="fh"><span class="n">2</span>변수<span class="ko">대표 정의 원문 기호</span></div>
@@ -1441,6 +1462,7 @@ w = 6.2일 (요기요)       →  0.11% × (365÷6.2) =  6.48%</pre>
 <figcaption><b>투자 자산</b> · 보관
 <span class="kd direct">화면에 뜬다</span></figcaption>
 </figure><p><code>투자 자산</code> 현황표 마지막 열.</p>
+<p><code>투자 시뮬레이션</code> 현황표도 같은 마지막 열이다.</p>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t19"><code>쿠콘 가상계좌</code></a></p>
@@ -1479,7 +1501,7 @@ w = 6.2일 (요기요)       →  0.11% × (365÷6.2) =  6.48%</pre>
 </button>
 <figcaption><b>투자 자산</b> · 합계 (투자자산)
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>현황표 3행 <code>합계 (투자자산)</code> = <code>1,628,400,000</code></td></tr><tr><td>〃</td><td>요약 카드 <code>투자자산</code>, 부제 <code>투자실행액 + 순현금</code></td></tr><tr><td><code>투자 수익</code></td><td>현황 카드 <code>ty수익율 › 투자자산 대비</code> (이쪽은 유량 기준)</td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>현황표 3행 <code>합계 (투자자산)</code> = <code>1,628,400,000</code></td></tr><tr><td>〃</td><td>요약 카드 <code>투자자산</code>, 부제 <code>투자실행액 + 순현금</code></td></tr><tr><td><code>투자 수익</code></td><td>현황 카드 <code>ty수익율 › 투자자산 대비</code> (이쪽은 유량 기준)</td></tr><tr><td><code>투자 시뮬레이션</code></td><td>투자 요약 <code>투자자산</code> · 현황표 <code>합계 (투자자산)</code> 행</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t17"><code>투자 실행액</code></a> + <a class="xref" href="#t18"><code>순현금</code></a></p>
@@ -1824,17 +1846,19 @@ D-11   = 2026-08-16     ← 표본 끝
    2026-08-07 ~ 2026-08-16 (선정산일 기준, 10일치)
 
 2) 그 구간 채권들의 순지급액을 더한다
-   Σ 순지급액 = 4,920,513,329   (채권 1,120건)
+   Σ 순지급액 = 4,920,513,328   (채권 1,120건)
 
 3) 분모를 만든다
-   Σ SAi = 4,920,513,329 × 0.9989 = 4,915,100,764
+   채권 1건씩 순지급액 × 0.9989 를 원 단위로 맞춘 뒤 더한다
+   Σ SAi = 4,915,100,764
+   (합계에 한 번만 곱하면 4,915,100,763 으로 1원 낮다. 원장은 채권 1건 단위로 만든다)
 
 4) 분자를 만든다
    Σ 미지급액 4,800,947 − Σ 과지급액 1,461,545
    Σ SLi = 3,339,402
 
 5) 나눈다
-   3,339,402 ÷ 4,915,100,764 = 0.00006794168
+   3,339,402 ÷ 4,915,100,764 = 0.00067941679
                                  = 0.067942%
    → 화면 표기 0.07%</pre>
 </div>
@@ -1848,7 +1872,7 @@ D-11   = 2026-08-16     ← 표본 끝
 </button>
 <figcaption><b>투자 자산</b> · S입금부족율
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>현황표 <a class="xref" href="#t17"><code>투자실행액</code></a> 행의 <code>S입금부족율</code> = <code>0.07%</code></td></tr><tr><td>〃</td><td>가맹점별 투자자산 표 <code>S입금부족율</code> 열 (가맹점마다)</td></tr><tr><td><code>가맹점별 투자자산 증명서</code> · 엑셀 4종</td><td>같은 열</td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 자산</code></td><td>현황표 <a class="xref" href="#t17"><code>투자실행액</code></a> 행의 <code>S입금부족율</code> = <code>0.07%</code></td></tr><tr><td>〃</td><td>가맹점별 투자자산 표 <code>S입금부족율</code> 열 (가맹점마다)</td></tr><tr><td><code>가맹점별 투자자산 증명서</code> · 엑셀 6종</td><td>같은 열</td></tr><tr><td><code>투자 시뮬레이션</code></td><td>기준 변수 <code>미지급률</code>·<code>과지급률</code> 입력 칸 · 현황표 <code>S입금부족율</code> 열</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t31"><code>SLi</code></a> · <a class="xref" href="#t32"><code>SAi</code></a> · <a class="xref" href="#t33"><code>표본집합</code></a></p>
@@ -1931,7 +1955,7 @@ SB         = 502182540.79  (미지급 0이므로 순지급액 그대로)</pre>
 </button>
 <figcaption><b>투자 수익</b> · 상환액
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>일별 투자수익 표 <code>상환액</code> 열</td></tr><tr><td><code>일별 투자수익 엑셀</code> · <code>일별_투자수익.xlsx</code></td><td>같은 열</td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>일별 투자수익 표 <code>상환액</code> 열</td></tr><tr><td><code>일별 투자수익 엑셀</code> · <code>일별_투자수익.xlsx</code></td><td>같은 열</td></tr><tr><td><code>투자 시뮬레이션</code></td><td>채권별 산출 표 <code>상환액</code> 열 · 일별 투자수익 표 <code>상환액</code> 열</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t07"><code>순지급액</code></a> − max(0, <a class="xref" href="#t29"><code>미지급금</code></a> − <a class="xref" href="#t30"><code>과지급금</code></a>), <a class="xref" href="#t06"><code>정산예정일</code></a>이 전일자인 채권만</p>
@@ -1989,7 +2013,7 @@ SA(D-1)                         119,868.00</pre>
 </button>
 <figcaption><b>투자 수익</b> · 투자실행금
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>일별 투자수익 표 <code>투자실행금</code> 열</td></tr><tr><td>〃</td><td>현황 카드 <code>투자실행금</code> (기간 합 = <a class="xref" href="#t42"><code>PSA</code></a>)</td></tr><tr><td><code>일별 투자수익 엑셀</code> · <code>투자수익 현황 엑셀</code></td><td>같은 값</td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>일별 투자수익 표 <code>투자실행금</code> 열</td></tr><tr><td>〃</td><td>현황 카드 <code>투자실행금</code> (기간 합 = <a class="xref" href="#t42"><code>PSA</code></a>)</td></tr><tr><td><code>일별 투자수익 엑셀</code> · <code>투자수익 현황 엑셀</code></td><td>같은 값</td></tr><tr><td><code>투자 시뮬레이션</code></td><td>일별 투자수익 표 <code>투자실행금</code> 열</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t14"><code>Ai</code></a>를 전일자 만기분으로 모은 것</p>
@@ -2025,10 +2049,10 @@ MD-1i = 정산예정일이 전일자(D-1)이면서 ID가 i인 대상정산금채
 <p><a class="xref" href="#t15"><code>채권매입수수료</code></a>는 투자자 몫, 곧 <code>순지급액 × 할인율 0.11%</code>다(3단계 <a class="xref" href="#t15"><code>채권매입수수료</code></a> 카드).</p>
 <p>계산 예시 (2026-08-21):</p>
 <pre class="calc">1) 그날 만기 채권의 순지급액 합
-   502182540.79
+   502,182,538
 
 2) 채권매입수수료 (순지급액 × 0.11%)
-   502182540.79 × 0.0011 = 552400.79  →  552,400 (원 단위 버림)
+   502,182,538 × 0.0011 = 552,400.79  →  552,400 (원 단위 버림)
 
 3) 못 받은 돈 차감 (무부족 가정)
    552,400 − 0 = 552,400
@@ -2045,7 +2069,7 @@ SM(D-1) = 552,400</pre>
 </button>
 <figcaption><b>투자 수익</b> · 투자 수익
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>일별 투자수익 표 <code>투자 수익</code> 열 (원문·화면 모두 어절 사이 공백)</td></tr><tr><td>〃</td><td>현황 카드 <code>투자수익</code> (기간 합 = <a class="xref" href="#t43"><code>PSM</code></a>, 공백 없음)</td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>일별 투자수익 표 <code>투자 수익</code> 열 (원문·화면 모두 어절 사이 공백)</td></tr><tr><td>〃</td><td>현황 카드 <code>투자수익</code> (기간 합 = <a class="xref" href="#t43"><code>PSM</code></a>, 공백 없음)</td></tr><tr><td><code>투자 시뮬레이션</code></td><td>채권별 산출 표 <code>투자수익</code> 열 · 일별 투자수익 표 <code>투자 수익</code> 열</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t15"><code>채권매입수수료</code></a> − max(0, <a class="xref" href="#t29"><code>미지급금</code></a> − <a class="xref" href="#t30"><code>과지급금</code></a>)</p>
@@ -2150,7 +2174,7 @@ SD = 349,615.00 ÷ 119,868.00 = 2.92일</pre>
 </button>
 <figcaption><b>투자 수익</b> · W금융일수
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>일별 투자수익 표 <a class="xref" href="#t21"><code>W금융일수</code></a> 열 (원문 표기는 <code>w</code>)</td></tr><tr><td><code>일별 투자수익 엑셀</code></td><td>같은 열</td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>일별 투자수익 표 <a class="xref" href="#t21"><code>W금융일수</code></a> 열 (원문 표기는 <code>w</code>)</td></tr><tr><td><code>일별 투자수익 엑셀</code></td><td>같은 열</td></tr><tr><td><code>투자 시뮬레이션</code></td><td>일별 투자수익 표 <a class="xref" href="#t21"><code>W금융일수</code></a> 열</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <code>A(D-1)i</code> · <code>D(D-1)i</code></p>
@@ -2197,7 +2221,7 @@ SD  = 2.9일
 </button>
 <figcaption><b>투자 수익</b> · TY수익율
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>일별 투자수익 표 <a class="xref" href="#t22"><code>Ty수익율</code></a> 열 (스토리보드 열 이름은 <code>투자실행금액 대비 ty수익율</code>)</td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>일별 투자수익 표 <a class="xref" href="#t22"><code>Ty수익율</code></a> 열 (스토리보드 열 이름은 <code>투자실행금액 대비 ty수익율</code>)</td></tr><tr><td><code>투자 시뮬레이션</code></td><td>일별 투자수익 표 <a class="xref" href="#t22"><code>Ty수익율</code></a> 열</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t38"><code>투자수익율 SMR</code></a> · <a class="xref" href="#t39"><code>w금융일수 SD</code></a></p>
@@ -2263,7 +2287,7 @@ ec 자체는 화면에 안 뜬다. 기간 합인 `psc`가 `⑤ 투자자산 대�
 </code>`<code>
 검색대상기간   투자실행금        투자수익      Ty수익율
                                           투자실행금액 대비 | 투자자산 대비
-일주일        3,511,071,647    3,862,175     12.95%      |   10.70%
+일주일        3,511,071,647    3,866,428     12.97%      |   10.72%
 </code>``</p>
 <article class="term" id="t42" data-k="투자실행금 (투자 수익 · 기간 합계) 고른 기간 동안 만기가 돌아온 채권들에 원래 얼마를 넣었었나다. 하루치 `sa`를 기간만큼 더한 것이다. [`psa`](#sym-psa) — **투자실행금**  `원문 명명`
 
@@ -2313,7 +2337,7 @@ PSA        (일주일 유량)     3,511,071,647</pre>
 </button>
 <figcaption><b>투자 수익</b> · 투자실행금
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>현황 카드 <a class="xref" href="#t36"><code>투자실행금</code></a> = <code>3,511,071,647원</code></td></tr><tr><td>〃</td><td>일별 표 합계 행 <a class="xref" href="#t36"><code>투자실행금</code></a></td></tr><tr><td><code>투자수익 현황 엑셀</code> · <code>투자수익_현황.xlsx</code></td><td>항목/값 표</td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>현황 카드 <a class="xref" href="#t36"><code>투자실행금</code></a> = <code>3,511,071,647원</code></td></tr><tr><td>〃</td><td>일별 표 합계 행 <a class="xref" href="#t36"><code>투자실행금</code></a></td></tr><tr><td><code>투자수익 현황 엑셀</code> · <code>투자수익_현황.xlsx</code></td><td>항목/값 표</td></tr><tr><td><code>투자 시뮬레이션</code></td><td>수익 현황 <a class="xref" href="#t36"><code>투자실행금</code></a> · <code>투자자산 대비</code> 툴팁의 <code>PSA</code></td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t36"><code>투자실행금 SA</code></a>의 기간 합</p>
@@ -2330,7 +2354,7 @@ PSA        (일주일 유량)     3,511,071,647</pre>
 
 | 화면 | 자리 |
 |---|---|
-| `투자 수익` | 현황 카드 `투자수익` = `3,862,175">
+| `투자 수익` | 현황 카드 `투자수익` = `3,866,428">
 <div class="term-head"><span class="term-no">43</span><h3 data-field="term">투자수익 (투자 수익 · 기간 합계)</h3><span class="chip screenlab">화면 표기 투자수익 (현황 카드)</span><span class="chip lv ui">화면 용어</span></div>
 <p class="lede-line">고른 기간 동안 남긴 돈이다. 하루치 <code>SM</code>을 기간만큼 더한 것이다.</p>
 <div class="fld" data-field="var"><div class="fh"><span class="n">2</span>변수<span class="ko">대표 정의 원문 기호</span></div>
@@ -2351,7 +2375,6 @@ PSA        (일주일 유량)     3,511,071,647</pre>
 08-27   538,292
 ──────────────────
 PSM   3,866,428</pre>
-<p>현재 화면은 <code>3,862,175</code>으로 4,253원 낮다. 화면이 <code>투자실행금 × 0.11%</code>로 만든 값이고 원문 산식은 <code>순지급액 × 0.11%</code>라 생기는 차다(순지급액이 투자실행금보다 0.11% 크다).</p>
 </div>
 <div class="fld" data-field="screen"><div class="fh"><span class="n">4</span>화면<span class="ko">눌러서 확대</span></div>
 <figure class="shot">
@@ -2363,7 +2386,7 @@ PSM   3,866,428</pre>
 </button>
 <figcaption><b>투자 수익</b> · 투자수익
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>현황 카드 <a class="xref" href="#t37"><code>투자수익</code></a> = <code>3,862,175원</code></td></tr><tr><td>〃</td><td>일별 표 합계 행 <code>투자 수익</code></td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>현황 카드 <a class="xref" href="#t37"><code>투자수익</code></a> = <code>3,866,428원</code></td></tr><tr><td>〃</td><td>일별 표 합계 행 <code>투자 수익</code></td></tr><tr><td><code>투자 시뮬레이션</code></td><td>수익 현황 <a class="xref" href="#t37"><code>투자수익</code></a> · 일별 투자수익 표 합계 행</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t37"><code>투자수익 SM</code></a>의 기간 합</p>
@@ -2548,13 +2571,13 @@ PSC     737,100,000   (= 105,300,000 × 7일)</pre>
 <p>원문:</p>
 <pre class="calc">투자실행금액 대비 ty수익율(이미지의 ④) = PSMR  x 365 / PSD</pre>
 <p>계산 예시:</p>
-<pre class="calc">PSMR = 0.110121%
-PSD  = 3.1000일
+<pre class="calc">PSMR = 0.110121%      (= 3,866,428 ÷ 3,511,071,647)
+PSD  = 3.100130일
 ────────────────────────────────
-365 ÷ 3.1000 = 117.7419회
-0.110121% × 117.7419 = 12.9659%
-→ 화면 표기 3.56%</pre>
-<p>현재 화면은 <code>12.95%</code>다. 0.02%p 차이는 <a class="xref" href="#t44"><code>PSMR</code></a>을 <code>0.11%</code>가 아니라 <code>0.110121%</code>로 쓰기 때문에 생긴다. 만기가 짧아진 만큼 <code>365 ÷ PSD</code> 배수가 커져 같은 분자 차이가 더 크게 벌어진다.</p>
+365 ÷ 3.100130 = 117.7370회
+0.110121% × 117.7370 = 12.9653%
+→ 화면 표기 12.97%</pre>
+<p><code>투자 자산</code> 화면의 <a class="xref" href="#t22"><code>Ty수익율</code></a> 12.95%와 0.02%p 어긋난다. 그쪽은 분자가 할인율 <code>0.11%</code>(순지급액 대비)이고 이쪽은 <code>PSMR 0.110121%</code>(투자실행금 대비)라 <code>1 ÷ (1 − 0.0011) = 1.0011</code>배만큼 크다. 분자가 다른 것이지 앵커가 다른 것은 아니다 — 둘 다 채권매입수수료를 순지급액에 걸어 낸다.</p>
 </div>
 <div class="fld" data-field="screen"><div class="fh"><span class="n">4</span>화면<span class="ko">눌러서 확대</span></div>
 <figure class="shot">
@@ -2566,7 +2589,7 @@ PSD  = 3.1000일
 </button>
 <figcaption><b>투자 수익</b> · 투자실행금액 대비
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>현황 카드 <code>Ty수익율 › 투자실행금액 대비</code></td></tr><tr><td><code>투자수익 현황 엑셀</code> · <code>투자수익_현황.xlsx</code></td><td>같은 항목</td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>현황 카드 <code>Ty수익율 › 투자실행금액 대비</code></td></tr><tr><td><code>투자수익 현황 엑셀</code> · <code>투자수익_현황.xlsx</code></td><td>같은 항목</td></tr><tr><td><code>투자 시뮬레이션</code></td><td>수익 현황 <code>Ty수익율 › 투자실행금액 대비</code></td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t44"><code>PSMR</code></a> · <a class="xref" href="#t45"><code>PSD</code></a></p>
@@ -2622,7 +2645,7 @@ PSA + PSC = 4,248,171,647
 </button>
 <figcaption><b>투자 수익</b> · 투자자산 대비
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>현황 카드 <code>Ty수익율 › 투자자산 대비</code></td></tr><tr><td><code>투자수익 현황 엑셀</code></td><td>같은 항목</td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>현황 카드 <code>Ty수익율 › 투자자산 대비</code></td></tr><tr><td><code>투자수익 현황 엑셀</code></td><td>같은 항목</td></tr><tr><td><code>투자 시뮬레이션</code></td><td>수익 현황 <code>Ty수익율 › 투자자산 대비</code></td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t47"><code>④</code></a> · <a class="xref" href="#t42"><code>PSA</code></a> · <a class="xref" href="#t46"><code>PSC</code></a></p>
@@ -2665,7 +2688,7 @@ w금융일수     3.2
 552,400 ÷ 501,630,140 = 0.110121%
 365 ÷ 3.2             = 114.0625
 0.110121% × 114.0625  = 12.5607%
-→ 표기 12.56%   (현재 화면 12.55%)</pre>
+→ 표기 12.56%</pre>
 </div>
 <div class="fld" data-field="screen"><div class="fh"><span class="n">4</span>화면<span class="ko">눌러서 확대</span></div>
 <figure class="shot">
@@ -2677,7 +2700,7 @@ w금융일수     3.2
 </button>
 <figcaption><b>투자 수익</b> · TY수익율
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>일별 투자수익 표 마지막 열 <a class="xref" href="#t22"><code>Ty수익율</code></a> (스토리보드 열 이름은 <code>투자실행금액 대비 ty수익율</code>)</td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>일별 투자수익 표 마지막 열 <a class="xref" href="#t22"><code>Ty수익율</code></a> (스토리보드 열 이름은 <code>투자실행금액 대비 ty수익율</code>)</td></tr><tr><td><code>투자 시뮬레이션</code></td><td>일별 투자수익 표 마지막 열</td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> <a class="xref" href="#t37"><code>투자수익 SM</code></a> ÷ <a class="xref" href="#t36"><code>투자실행금 SA</code></a> · <a class="xref" href="#t39"><code>w금융일수 SD</code></a></p>
@@ -2717,7 +2740,7 @@ w금융일수     3.2
 </button>
 <figcaption><b>투자 수익</b> · 검색대상기간
 <span class="kd direct">화면에 뜬다</span></figcaption>
-</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>현황 카드 <code>검색대상기간</code> = <code>일주일</code></td></tr><tr><td>〃</td><td>검색 컨트롤 — 날짜 두 칸, 프리셋 <code>일주일</code> <code>이번달</code>, 버튼 <code>검색</code> <code>초기화</code></td></tr><tr><td>〃</td><td>표 헤더 토글 <code>일별</code> / <code>월별</code></td></tr></tbody></table></div></div>
+</figure><div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면</th><th>자리</th></tr></thead><tbody><tr><td><code>투자 수익</code></td><td>현황 카드 <code>검색대상기간</code> = <code>일주일</code></td></tr><tr><td>〃</td><td>검색 컨트롤 — 날짜 두 칸, 프리셋 <code>일주일</code> <code>이번달</code>, 버튼 <code>검색</code> <code>초기화</code></td></tr><tr><td>〃</td><td>표 헤더 토글 <code>일별</code> / <code>월별</code></td></tr><tr><td><code>투자 시뮬레이션</code></td><td>기준 변수 <code>시작일</code>·<code>종료일</code> · 수익 현황 <code>검색대상기간</code></td></tr></tbody></table></div></div>
 </div>
 <div class="fld" data-field="rel"><div class="fh"><span class="n">5</span>관련 용어<span class="ko">재료 · 쓰이는 곳</span></div>
 <p><b>재료</b> 사용자 입력</p>
@@ -2881,9 +2904,9 @@ w금융일수     3.2
 <div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면에서 보는 이름</th><th>어느 화면 · 어느 자리</th><th>대표님 정의 원문</th><th>이 문서에서는</th><th>한 줄 뜻</th></tr></thead><tbody><tr><td>① 투자 실행액</td><td>현황표 <a class="xref" href="#t17"><code>투자실행액</code></a> 행 · 요약 카드 (화면 표기는 붙여쓰기)</td><td><code>투자 실행액: ‘유동화투자자와 정산금채권 재양도 합의서 체결한 가맹점들의 순지급액들 중 회수되지 않은 순지급액 합계’ x (1- 유동화투자자의 할인율)</code></td><td><a class="xref" href="#t17"><code>투자 실행액</code></a></td><td>투자자가 지금 채권에 깔아 놓은 돈</td></tr><tr><td>② 순현금</td><td>현황표 <a class="xref" href="#t18"><code>순현금</code></a> 행 · 요약 카드 · <code>보관 ㈜쿠콘</code></td><td><code>순현금: 조회시점 현재의 ‘유동화투자자에게 할당된 쿠콘제공 가상계좌’의 현금잔액</code></td><td><a class="xref" href="#t18"><code>순현금 (투자 자산 · 잔액)</code></a> — 화면에 뜨는 값. 조회 시점 잔액&lt;br&gt;<a class="xref" href="#t41"><code>순현금 (일별 배치 · 자정 시점)</code></a> — 배치가 자정에 찍는 <a class="xref" href="#t41"><code>EC</code></a>. 화면에는 안 뜬다&lt;br&gt;<a class="xref" href="#t46"><code>PSC</code></a> — 위 <a class="xref" href="#t41"><code>EC</code></a>를 기간만큼 더한 것. <a class="xref" href="#t48"><code>⑤</code></a>의 분모 재료</td><td>쿠콘 가상계좌에 놀고 있는 현금</td></tr><tr><td>③ W금융일수</td><td>현황표 · 가맹점별 표 <a class="xref" href="#t21"><code>W금융일수</code></a> 열 · 요약 카드 부제 · 각주 <code>용어 안내</code> (원문 표기는 소문자 <code>w</code>)</td><td><code>w금융일수 = Σ Ai x Di / Σ Ai</code></td><td><a class="xref" href="#t21"><code>w금융일수 (투자 자산 · 잔액)</code></a> — <code>투자 자산</code> 화면 두 표의 값&lt;br&gt;<a class="xref" href="#t39"><code>w금융일수 (일별 배치 · 하루치)</code></a> — <code>투자 수익</code> 일별 표 각 행의 값&lt;br&gt;<a class="xref" href="#t45"><code>PSD</code></a> — 일별 표 <b>합계 행</b>의 <code>3.1(평균)</code>. 기간 가중평균</td><td>지금 깔려 있는 채권들이 평균 며칠짜리냐</td></tr><tr><td>④ S입금부족율</td><td>현황표 · 가맹점별 표 <a class="xref" href="#t34"><code>S입금부족율</code></a> 열 · 각주 <code>용어 안내</code></td><td><code>S입금부족율 = Σ SLi / Σ SAi</code></td><td><a class="xref" href="#t34"><code>S입금부족율</code></a></td><td>넣은 돈 대비 얼마나 덜 들어왔나</td></tr><tr><td>⑤ ty수익율</td><td>현황표 · 가맹점별 표 <a class="xref" href="#t22"><code>Ty수익율</code></a> 열 · 요약 카드 · 각주 <code>용어 안내</code> (화면 표기는 <code>Ty</code>, 원문 표기는 <code>ty</code>)</td><td><code>ty수익율 = 유동화투자자의 할인율 x (365 / w금융일수)</code></td><td><a class="xref" href="#t22"><code>ty수익율 (투자 자산 · 잔액)</code></a> — <b>이 화면이 쓰는 것.</b> 분자가 할인율이라 계획값&lt;br&gt;<a class="xref" href="#t40"><code>ty수익율 (일별 배치 · 하루치)</code></a> — 분자가 실제 수익률이라 실적값. <code>투자 수익</code> 일별 표 행&lt;br&gt;<a class="xref" href="#t47"><code>ty수익율 › 투자실행금액 대비 (투자 수익 · 기간 합계)</code></a> — 현황 카드 왼쪽. 원문 <a class="xref" href="#t47"><code>④</code></a>&lt;br&gt;<a class="xref" href="#t48"><code>ty수익율 › 투자자산 대비 (투자 수익 · 기간 합계)</code></a> — 같은 카드 오른쪽. 분모에 순현금까지 넣은 것. 원문 <a class="xref" href="#t48"><code>⑤</code></a>&lt;br&gt;<a class="xref" href="#t49"><code>ty수익율 (일별 표 · 행 단위)</code></a> — 일별 표 마지막 열의 계산식. 원문 <a class="xref" href="#t49"><code>⑥</code></a></td><td>지금 굴리는 방식대로 1년을 굴리면 몇 %냐</td></tr><tr><td>⑥ 비중</td><td>현황표 <a class="xref" href="#t23"><code>비중</code></a> 열 3행 · 가맹점별 표 <a class="xref" href="#t23"><code>비중</code></a> 열 · 요약 카드 부제</td><td><code>투자 실행액의 비중 = 투자실행액 / (투자실행액 + 순현금)</code> · <code>순현금의 비중 = 순현금 / (투자실행액 + 순현금)</code></td><td><a class="xref" href="#t23"><code>비중</code></a> (두 표의 분모가 다르다 — §8 참조)</td><td>돈 전체를 100으로 놓은 각자의 몫</td></tr></tbody></table></div></div>
 <p><b>2번 이미지 — <code>투자 수익</code> 화면</b></p>
 <div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면에서 보는 이름</th><th>어느 화면 · 어느 자리</th><th>대표님 정의 원문</th><th>이 문서에서는</th><th>한 줄 뜻</th></tr></thead><tbody><tr><td>① 투자 실행금</td><td>현황 카드 <a class="xref" href="#t36"><code>투자실행금</code></a> · 일별 표 <a class="xref" href="#t36"><code>투자실행금</code></a> 열 · 합계 행</td><td><code>투자 실행금(PSA) =  정산예정일이 위 선택한 기간에 해당하는 투자실행금( SAD-1)들 합계</code></td><td><a class="xref" href="#t42"><code>투자실행금 (투자 수익 · 기간 합계)</code></a> — 현황 카드 값. 원문 <a class="xref" href="#t42"><code>PSA</code></a>&lt;br&gt;<a class="xref" href="#t36"><code>투자실행금 (일별 배치 · 하루치)</code></a> — 일별 표 각 행. 원문 <code>SA</code></td><td>고른 기간 만기 채권에 넣었던 돈</td></tr><tr><td>② 투자수익</td><td>현황 카드 <a class="xref" href="#t37"><code>투자수익</code></a> · 일별 표 <code>투자 수익</code> 열 · 합계 행 (카드는 붙여쓰기, 열은 띄어쓰기)</td><td><code>투자수익(PSM) =  정산예정일이 위 선택한 기간에 해당하는 투자수익(SMD-1)들 합계</code></td><td><a class="xref" href="#t43"><code>투자수익 (투자 수익 · 기간 합계)</code></a> — 현황 카드 값. 원문 <a class="xref" href="#t43"><code>PSM</code></a>&lt;br&gt;<a class="xref" href="#t37"><code>투자수익 (일별 배치 · 하루치)</code></a> — 일별 표 각 행. 원문 <code>SM</code>&lt;br&gt;<a class="xref" href="#t38"><code>투자수익율 (일별 배치 · 하루치)</code></a> — 금액이 아니라 <b>율</b>. 화면에는 안 뜨고 <a class="xref" href="#t22"><code>ty수익율</code></a>의 재료</td><td>고른 기간에 남긴 돈</td></tr><tr><td>③ ty수익율</td><td>현황 카드 <a class="xref" href="#t22"><code>Ty수익율</code></a> 두 칸 · 일별 표 마지막 열</td><td><code>투자실행금액 대비 ty수익율(이미지의 ④) = PSMR  x 365 / PSD</code> · <code>전일자(D-1) 대상정산금채권의 ty수익율 = SMRD-1 x 365 / SDD-1</code></td><td><a class="xref" href="#t47"><code>ty수익율 › 투자실행금액 대비 (투자 수익 · 기간 합계)</code></a> — 현황 카드 왼쪽 칸&lt;br&gt;<a class="xref" href="#t48"><code>ty수익율 › 투자자산 대비 (투자 수익 · 기간 합계)</code></a> — 현황 카드 오른쪽 칸&lt;br&gt;<a class="xref" href="#t49"><code>ty수익율 (일별 표 · 행 단위)</code></a> — 일별 표 마지막 열&lt;br&gt;<a class="xref" href="#t40"><code>ty수익율 (일별 배치 · 하루치)</code></a> — 위 행 값을 배치가 미리 계산해 둔 것. 값은 같다&lt;br&gt;<a class="xref" href="#t22"><code>ty수익율 (투자 자산 · 잔액)</code></a> — <b>이 화면 것이 아니다.</b> <code>투자 자산</code> 화면 쪽</td><td>1년으로 환산하면 몇 %냐</td></tr><tr><td>④ 투자실행금액 대비</td><td>현황 카드 <code>Ty수익율 › 투자실행금액 대비</code> 왼쪽 칸</td><td><code>투자실행금액 대비 ty수익율(이미지의 ④) = PSMR  x 365 / PSD</code></td><td><a class="xref" href="#t47"><code>ty수익율 › 투자실행금액 대비 (투자 수익 · 기간 합계)</code></a></td><td>채권에 나간 돈만 놓고 본 연 환산 수익률</td></tr><tr><td>⑤ 투자자산 대비</td><td>현황 카드 <code>Ty수익율 › 투자자산 대비</code> 오른쪽 칸</td><td><code>투자자산 대비 ty수익율 (이미지의 ⑤) = (이미지의 ④ x PSA) / (PSA + PSC)</code></td><td><a class="xref" href="#t48"><code>ty수익율 › 투자자산 대비 (투자 수익 · 기간 합계)</code></a></td><td>놀고 있는 현금까지 포함해 본 연 환산 수익률</td></tr><tr><td>⑥ 상환액</td><td>일별 표 <a class="xref" href="#t35"><code>상환액</code></a> 열 · 합계 행</td><td><code>상환액 (이미지의 ②) = 위 일별로 마감후 배치작업으로 업데이트하는 DB에서, 정산예정일이 해당 표의 입금일(“정산예정일”로 변경 필요)에 해당하는 SBD-1</code></td><td><a class="xref" href="#t35"><code>상환액 (일별 배치 · 하루치)</code></a></td><td>어제 만기 채권에서 실제로 회수한 돈</td></tr><tr><td>⑦ 투자실행금액 대비 ty수익율</td><td>일별 표 마지막 열 (현재 화면 열 이름은 <a class="xref" href="#t22"><code>Ty수익율</code></a>, 스토리보드 열 이름이 <code>투자실행금액 대비 ty수익율</code>)</td><td><code>투자실행금액 대비 ty수익율 (이미지의 ⑥) = (이미지의 ④ / 이미지의 ③) x 365 / 이미지의 ⑤</code></td><td><a class="xref" href="#t49"><code>ty수익율 (일별 표 · 행 단위)</code></a> — 열 이름이 가리키는 것. 원문 <a class="xref" href="#t49"><code>⑥</code></a>&lt;br&gt;<a class="xref" href="#t40"><code>ty수익율 (일별 배치 · 하루치)</code></a> — 같은 값을 배치식으로 쓴 것</td><td>그 하루치만 놓고 본 연 환산 수익률</td></tr></tbody></table></div></div>
-<h4 class="mini-h">0-2. 화면에 있는데 13항목에 없는 것 — 14건</h4>
+<h4 class="mini-h">0-2. 화면에 있는데 13항목에 없는 것 — 18건</h4>
 <p>위 13개만으로는 화면이 다 안 덮인다. 나머지 라벨도 카드가 있으므로 여기에 함께 건다.</p>
-<div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면에서 보는 이름</th><th>어느 화면 · 어느 자리</th><th>대표님 정의 원문</th><th>이 문서에서는</th><th>한 줄 뜻</th></tr></thead><tbody><tr><td>자산 구분</td><td>투자 자산 · 현황표 첫 열</td><td>정의문 없음 — 스토리보드 슬라이드 3</td><td><a class="xref" href="#t24"><code>자산 구분</code></a></td><td>현황표의 세로축</td></tr><tr><td>보관</td><td>투자 자산 · 현황표 마지막 열</td><td>정의문 없음 — 스토리보드 슬라이드 3</td><td><a class="xref" href="#t25"><code>보관</code></a></td><td>그 자산을 실제로 누가 들고 있느냐</td></tr><tr><td>합계 (투자자산)</td><td>투자 자산 · 현황표 3행 · 요약 카드</td><td><code>투자자산 대비 ty수익율 (이미지의 ⑤) = (이미지의 ④ x PSA) / (PSA + PSC)</code> — 이름만 쓰였고 잔액 기준 정의문은 없다</td><td><a class="xref" href="#t26"><code>투자자산</code></a></td><td>투자자가 굴리고 있는 돈 전부</td></tr><tr><td>가맹점</td><td>투자 자산 · 가맹점별 투자자산 표 첫 열</td><td>정의문 없음 — 채권을 <code>가맹점ID</code>로 묶은 축</td><td><a class="xref" href="#t12"><code>대상정산금채권</code></a> · <a class="xref" href="#t02"><code>정산금채권 ID</code></a></td><td>채권을 가맹점 단위로 묶은 것</td></tr><tr><td>투자금액 (원)</td><td>투자 자산 · 가맹점별 투자자산 표 2열</td><td>정의문 없음 — <a class="xref" href="#t17"><code>투자 실행액</code></a>을 가맹점으로 쪼갠 것</td><td><a class="xref" href="#t27"><code>가맹점별 투자금액</code></a></td><td>가맹점 한 곳에 물려 있는 돈</td></tr><tr><td>기준일</td><td>투자 자산 · 페이지 헤더 <code>기준일 2026-08-27</code></td><td>정의문 없음 — 스토리보드는 표마다 다른 날짜</td><td><a class="xref" href="#t28"><code>기준일자</code></a></td><td>표에 찍히는 날짜</td></tr><tr><td>금융일수</td><td>화면 표기 없음 — <a class="xref" href="#t21"><code>W금융일수</code></a>의 재료</td><td><code>금융일수 = 선정산일로부터 정산예정일까지의 한편넣기 일수 (예, 선정산일 =260827, 정산예정일 = 260808 이면 금융일수 = 1)</code></td><td><a class="xref" href="#t08"><code>금융일수</code></a></td><td>투자자 돈이 그 채권에 묶여 있는 날수</td></tr><tr><td>할인율</td><td>투자 자산 · <code>수익 산정 기준</code> 블록 <code>배분 요율 0.11%</code></td><td><code>유동화투자자의 할인율 = 0.11% 예정</code> · 내부 이름 <code>(채권매입)수수료율</code> (2026-08-28)</td><td><a class="xref" href="#t13"><code>유동화투자자의 할인율</code></a></td><td>채권을 액면보다 얼마나 싸게 사느냐. 그대로 투자자 수익률이 된다</td></tr><tr><td>정산예정일</td><td>투자 수익 · 일별 표 첫 열</td><td><code>해당 표의 입금일(“정산예정일”로 변경 필요)</code></td><td><a class="xref" href="#t06"><code>정산예정일</code></a></td><td>카드사·배달앱이 돈을 넣어 주기로 한 날</td></tr><tr><td>검색대상기간</td><td>투자 수익 · 현황 카드 첫 칸 · 검색 컨트롤</td><td><code>사용자가 선택한 기간 (default = 일주일)에 해당하는 기간에 정산예정일인, 레코드들을 활용해</code></td><td><a class="xref" href="#t50"><code>검색대상기간</code></a></td><td>어느 구간을 합쳤는지 알려 주는 값</td></tr><tr><td>재양도합의서</td><td>계약기록 표제 <code>재양도합의서 목록</code> · 정산채권 양수 서명 대상</td><td>단독 정의문 없음 — <a class="xref" href="#t12"><code>대상정산금채권</code></a> 정의문 안에서만 등장</td><td><a class="xref" href="#t10"><code>정산금채권 재양도 합의서</code></a></td><td>그 가맹점 채권을 투자자에게 넘긴다는 문서</td></tr><tr><td>채권매입업체</td><td>가맹점 표 열 · 필터</td><td>정의문 없음 — 원문 용어는 <a class="xref" href="#t09"><code>유동화투자자</code></a></td><td><a class="xref" href="#t09"><code>유동화투자자</code></a> (이름 충돌 — §8 참조)</td><td>자금을 대고 채권을 사 가는 주체</td></tr><tr><td>쿠콘 관리 현금</td><td>좌측 메뉴</td><td>정의문 없음 — 원문은 <code>쿠콘제공 가상계좌</code>만 언급</td><td><a class="xref" href="#t19"><code>쿠콘 가상계좌</code></a></td><td>순현금이 실제로 들어 있는 통장</td></tr><tr><td>투자자</td><td>전 화면 사이드바 프로필 배지</td><td>단독 정의문 없음 — 모든 산식이 <a class="xref" href="#t09"><code>유동화투자자</code></a>를 주어로 쓴다</td><td><a class="xref" href="#t09"><code>유동화투자자</code></a></td><td>로그인한 그 투자자</td></tr></tbody></table></div></div>
+<div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>화면에서 보는 이름</th><th>어느 화면 · 어느 자리</th><th>대표님 정의 원문</th><th>이 문서에서는</th><th>한 줄 뜻</th></tr></thead><tbody><tr><td>자산 구분</td><td>투자 자산 · 현황표 첫 열</td><td>정의문 없음 — 스토리보드 슬라이드 3</td><td><a class="xref" href="#t24"><code>자산 구분</code></a></td><td>현황표의 세로축</td></tr><tr><td>보관</td><td>투자 자산 · 현황표 마지막 열</td><td>정의문 없음 — 스토리보드 슬라이드 3</td><td><a class="xref" href="#t25"><code>보관</code></a></td><td>그 자산을 실제로 누가 들고 있느냐</td></tr><tr><td>합계 (투자자산)</td><td>투자 자산 · 현황표 3행 · 요약 카드</td><td><code>투자자산 대비 ty수익율 (이미지의 ⑤) = (이미지의 ④ x PSA) / (PSA + PSC)</code> — 이름만 쓰였고 잔액 기준 정의문은 없다</td><td><a class="xref" href="#t26"><code>투자자산</code></a></td><td>투자자가 굴리고 있는 돈 전부</td></tr><tr><td>가맹점</td><td>투자 자산 · 가맹점별 투자자산 표 첫 열</td><td>정의문 없음 — 채권을 <code>가맹점ID</code>로 묶은 축</td><td><a class="xref" href="#t12"><code>대상정산금채권</code></a> · <a class="xref" href="#t02"><code>정산금채권 ID</code></a></td><td>채권을 가맹점 단위로 묶은 것</td></tr><tr><td>투자금액 (원)</td><td>투자 자산 · 가맹점별 투자자산 표 2열</td><td>정의문 없음 — <a class="xref" href="#t17"><code>투자 실행액</code></a>을 가맹점으로 쪼갠 것</td><td><a class="xref" href="#t27"><code>가맹점별 투자금액</code></a></td><td>가맹점 한 곳에 물려 있는 돈</td></tr><tr><td>기준일</td><td>투자 자산 · 페이지 헤더 <code>기준일 2026-08-27</code></td><td>정의문 없음 — 스토리보드는 표마다 다른 날짜</td><td><a class="xref" href="#t28"><code>기준일자</code></a></td><td>표에 찍히는 날짜</td></tr><tr><td>금융일수</td><td>화면 표기 없음 — <a class="xref" href="#t21"><code>W금융일수</code></a>의 재료</td><td><code>금융일수 = 선정산일로부터 정산예정일까지의 한편넣기 일수 (예, 선정산일 =260827, 정산예정일 = 260808 이면 금융일수 = 1)</code></td><td><a class="xref" href="#t08"><code>금융일수</code></a></td><td>투자자 돈이 그 채권에 묶여 있는 날수</td></tr><tr><td>할인율</td><td>투자 자산 · <code>수익 산정 기준</code> 블록 <code>할인율 0.11%</code> · 투자 시뮬레이션 <code>할인율 (%)</code> 입력 칸</td><td><code>유동화투자자의 할인율 = 0.11% 예정</code> · 내부 이름 <code>(채권매입)수수료율</code> (2026-08-28)</td><td><a class="xref" href="#t13"><code>유동화투자자의 할인율</code></a></td><td>채권을 액면보다 얼마나 싸게 사느냐. 그대로 투자자 수익률이 된다</td></tr><tr><td>수수료 배분형</td><td>투자 자산·투자 수익 · <code>수익 산정 기준</code> 카드 왼쪽 배지</td><td>정의문 없음 — 산식 2모델 병기(D-1)</td><td>카드 없음. 이 표와 §E-2 로만 등재</td><td>순지급액에 할인율을 곱해 투자자 몫을 떼는 쪽. 화면 숫자는 전부 이 모델로 낸다</td></tr><tr><td>순지급액 (기준 금액)</td><td>투자 자산·투자 수익 · <code>수익 산정 기준</code> 카드 <code>기준 금액</code></td><td><code>채권매입수수료 = 순지급액 × 할인율</code>(D-31)</td><td><a class="xref" href="#t07"><code>순지급액</code></a></td><td>수수료를 걸어 계산하는 기준 금액</td></tr><tr><td>조달이자형</td><td>투자 자산·투자 수익 · <code>수익 산정 기준</code> 카드 오른쪽 배지</td><td>정의문 없음 — 산식 2모델 병기(D-1)</td><td>카드 없음. 이 표와 §E-2 로만 등재</td><td>투자실행금에 연이자를 붙여 기간만큼 나누는 쪽. 화면 숫자를 만드는 데는 쓰지 않는다</td></tr><tr><td>조달 이자율 · 연 12%</td><td>투자 자산·투자 수익 · <code>수익 산정 기준</code> 카드 오른쪽 요율 칸</td><td>정의문 없음 — 산식 2모델 병기(D-1)</td><td>카드 없음. 이 표와 §E-2 로만 등재</td><td>조달이자형이 쓰는 연 이자율. 할인율 0.11%와 층위가 다르다</td></tr><tr><td>정산예정일</td><td>투자 수익 · 일별 표 첫 열</td><td><code>해당 표의 입금일(“정산예정일”로 변경 필요)</code></td><td><a class="xref" href="#t06"><code>정산예정일</code></a></td><td>카드사·배달앱이 돈을 넣어 주기로 한 날</td></tr><tr><td>검색대상기간</td><td>투자 수익 · 현황 카드 첫 칸 · 검색 컨트롤</td><td><code>사용자가 선택한 기간 (default = 일주일)에 해당하는 기간에 정산예정일인, 레코드들을 활용해</code></td><td><a class="xref" href="#t50"><code>검색대상기간</code></a></td><td>어느 구간을 합쳤는지 알려 주는 값</td></tr><tr><td>재양도합의서</td><td>계약기록 표제 <code>재양도합의서 목록</code> · 정산채권 양수 서명 대상</td><td>단독 정의문 없음 — <a class="xref" href="#t12"><code>대상정산금채권</code></a> 정의문 안에서만 등장</td><td><a class="xref" href="#t10"><code>정산금채권 재양도 합의서</code></a></td><td>그 가맹점 채권을 투자자에게 넘긴다는 문서</td></tr><tr><td>채권매입업체</td><td>가맹점 표 열 · 필터</td><td>정의문 없음 — 원문 용어는 <a class="xref" href="#t09"><code>유동화투자자</code></a></td><td><a class="xref" href="#t09"><code>유동화투자자</code></a> (이름 충돌 — §8 참조)</td><td>자금을 대고 채권을 사 가는 주체</td></tr><tr><td>쿠콘 관리 현금</td><td>좌측 메뉴</td><td>정의문 없음 — 원문은 <code>쿠콘제공 가상계좌</code>만 언급</td><td><a class="xref" href="#t19"><code>쿠콘 가상계좌</code></a></td><td>순현금이 실제로 들어 있는 통장</td></tr><tr><td>투자자</td><td>전 화면 사이드바 프로필 배지</td><td>단독 정의문 없음 — 모든 산식이 <a class="xref" href="#t09"><code>유동화투자자</code></a>를 주어로 쓴다</td><td><a class="xref" href="#t09"><code>유동화투자자</code></a></td><td>로그인한 그 투자자</td></tr></tbody></table></div></div>
 <h4 class="mini-h">0-3. 이름이 갈릴 때 붙이는 꼬리표</h4>
 <p>카드 이름의 괄호는 <code>용어 (어느 계통 · 어느 집계 단위)</code> 한 규칙으로만 붙인다. 계통은 셋이다.</p>
 <div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>꼬리표</th><th>언제 만들어지나</th><th>어디에 뜨나</th><th>예</th></tr></thead><tbody><tr><td><code>투자 자산 · 잔액</code></td><td>화면을 조회하는 그 순간에 계산</td><td><code>투자 자산</code> 두 표</td><td><a class="xref" href="#t21"><code>w금융일수</code></a> · <a class="xref" href="#t22"><code>ty수익율</code></a> · <a class="xref" href="#t18"><code>순현금</code></a></td></tr><tr><td><code>일별 배치 · 하루치</code></td><td>매일 자정 배치가 D-1치로 한 줄 기록</td><td><code>투자 수익</code> 일별 표 각 행</td><td><a class="xref" href="#t35"><code>상환액</code></a> · <a class="xref" href="#t36"><code>투자실행금</code></a> · <a class="xref" href="#t21"><code>w금융일수</code></a></td></tr><tr><td><code>투자 수익 · 기간 합계</code></td><td>고른 기간만큼 하루치를 더해 계산</td><td><code>투자 수익</code> 현황 카드</td><td><a class="xref" href="#t36"><code>투자실행금</code></a> · <a class="xref" href="#t37"><code>투자수익</code></a> · <code>ty수익율 › 투자실행금액 대비</code></td></tr></tbody></table></div></div>
@@ -2895,9 +2918,9 @@ w금융일수     3.2
 <h3 class="blk-title">E-1. 같은 것을 다르게 부르는 것 — 9건</h3>
 <div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>실체</th><th>이 문서 (대표 정의)</th><th>운영 어드민</th><th>Figma 설계</th><th>계약서</th><th>현재 투자자 화면</th></tr></thead><tbody><tr><td>매출에서 카드사·플랫폼 수수료를 뗀 금액</td><td><b>순지급액</b></td><td><code>순 지급액</code> / <a class="xref" href="#t07"><code>순지급액</code></a> (<code>netPayoutAmt</code>)</td><td>지급금액(A−B−C) / 액면금액</td><td>정산금 추정액</td><td><b>없음</b></td></tr><tr><td>페이허그가 가맹점에 돈을 준 날</td><td><b>선정산일</b></td><td><code>정산일</code> (<code>closedAt</code>·<code>settlementDate</code>)</td><td>양수일</td><td>—</td><td>양수일</td></tr><tr><td>카드사·플랫폼이 돈을 넣는 날</td><td><b>정산예정일</b></td><td><code>지급일(카드사/플랫폼)</code> / <code>지급예정일</code> / <code>입금예정일</code> (<code>payoutDt</code>)</td><td>지급예정일(매출채권DB) / 지급예상일(정산채권DB)</td><td>정산(예정)일</td><td><code>입금일자</code> / <code>입금월</code></td></tr><tr><td>매출이 발생한 날</td><td><b>매출일자</b></td><td><code>거래일</code>(건별) / <code>매출일</code>(배치) / <code>거래일자</code>(입력폼)</td><td>거래일자</td><td>—</td><td><b>없음</b></td></tr><tr><td>채권 매입에 붙는 수수료</td><td><b>채권매입수수료</b></td><td><code>채권매입 수수료</code> / <code>채권매입</code> (<code>MARGIN</code>)</td><td>채권매입수수료 / 분배액</td><td>채권매입수수료(제17조)</td><td><b>없음</b></td></tr><tr><td>자금을 대는 주체</td><td><b>유동화투자자</b></td><td><code>투자자</code> (<code>INVESTOR</code>) / 유동화기관</td><td>수익권자 / 투자자ID</td><td>유동화기관 / 재재양수인</td><td>투자자 / 채권매입업체</td></tr><tr><td>총판 계층</td><td>—</td><td><code>상위파트너</code>·<code>하위파트너</code>(정책) / <code>상위총판</code>·<code>하위총판</code>(매출조회)</td><td>재양수인 / 재재양수인</td><td>양수인 / 재양수인</td><td>채권매입업체</td></tr><tr><td>투자 원금</td><td><b>투자실행액</b>(잔액) / <b>투자실행금</b>(유량)</td><td>없음</td><td>양수가액</td><td>채권매입대금</td><td><a class="xref" href="#t17"><code>투자실행액</code></a> / <a class="xref" href="#t36"><code>투자실행금</code></a> / <code>투자금액</code></td></tr><tr><td>수익률</td><td><b>투자수익율</b>(SMR) / <b>ty수익율</b>(연 환산)</td><td>없음</td><td>—</td><td>—</td><td><a class="xref" href="#t22"><code>Ty수익율</code></a>만. <a class="xref" href="#t38"><code>투자수익율</code></a> 표기 0건</td></tr></tbody></table></div></div>
 <p><b>가장 자주 걸리는 것 하나만 꼽으면 <a class="xref" href="#t07"><code>순지급액</code></a>이다.</b> 운영 어드민 화면에는 <code>순 지급액</code>으로 버젓이 떠 있는데, 투자자 어드민에는 이 낱말이 한 번도 안 나온다. 대신 <a class="xref" href="#t36"><code>투자실행금</code></a>이 기준금액 노릇을 하고 있다. 대표 정의는 모든 산식을 순지급액 위에 세우므로 <b>투자자 화면에도 이 용어를 등재해야 말이 통한다.</b></p>
-<h3 class="blk-title">E-2. 다른 것을 같은 이름으로 부르는 것 — 10건</h3>
+<h3 class="blk-title">E-2. 다른 것을 같은 이름으로 부르는 것 — 11건</h3>
 <p>이쪽이 더 위험하다. 이름이 같아서 그냥 넘어갔다가 계산이 반대로 나온다.</p>
-<div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>낱말</th><th>뜻 A</th><th>뜻 B</th><th>뜻 C</th><th>뭐가 위험한가</th></tr></thead><tbody><tr><td><b>미지급금</b></td><td>정책서 6대 개념 — 페이허그가 가맹점에 못 준 돈</td><td>대표 정의 — <b>뜻 A와 같다</b>. 어드민 미정산 누락 도메인(<code>MissedSettlementsData</code>)이 그 값</td><td>어드민 배지 <code>미지급</code>(<code>settlementLabels.ts:68</code>) — 플랫폼 환급 미반영 <b>상태값</b>. 금액이 아니다</td><td>A와 B는 같은 것. <b>C만 다르다</b> — 상태 배지를 금액으로 읽지 않는다</td></tr><tr><td><b>미지급액</b></td><td>위 A와 같은 뜻의 정책 용어</td><td>어드민 엑셀 헤더 — 배치가 건너뛴 건의 <code>netPayoutAmt</code></td><td>—</td><td>같은 필드가 어떤 화면에선 <a class="xref" href="#t07"><code>순지급액</code></a>, 어떤 화면에선 <code>미지급액</code>으로 뜬다</td></tr><tr><td><b>과지급 / 과지급금</b></td><td>정책서 — 페이허그가 가맹점에 더 준 돈</td><td>대표 정의 — <b>뜻 A와 같다</b>. 취소 환수(<code>CANCEL_CLAWBACK</code>)·현장결제 중복 수령이 그 발생 원인</td><td>계약서 <code>과정산금</code> — 플랫폼이 예정보다 초과 입금한 금액</td><td>A와 B는 같은 것. <b>C는 다르다</b> — 주체가 플랫폼이고 가맹점 반환 전제라 매핑 미확정</td></tr><tr><td><b>미회수</b></td><td>6대 개념 <code>미회수금</code> — 과지급 뒤 남은 회수 잔액</td><td>어드민 <code>carryForwardTotal</code> — 0원으로 잘린 이월 잔액</td><td>어드민 배지 — 플랫폼 조정 미반영 상태</td><td>셋 다 실재하고 셋 다 다른 값</td></tr><tr><td><b>할인율</b></td><td>대표 정의 — 유동화투자자 할인율 0.11%. 내부 이름은 <code>(채권매입)수수료율</code></td><td>어드민 <code>discountRatePct</code> — 예상 매출 정산 시의 리스크 할인</td><td>Figma — 참여자별 할인율(투자자 0.11% / 페이허그 0.35%)</td><td><b>어드민에서 <a class="xref" href="#t13"><code>할인율</code></a>을 찾으면 엉뚱한 값이 나온다</b></td></tr><tr><td><b>회수</b></td><td>6대 개념 — 과지급금 회수</td><td>어드민 <code>매출 회수</code> — 락계좌 → 모계좌 스윕</td><td>플랫폼 조정 배지 <code>회수완료</code>/<code>부분회수</code></td><td>프로젝트 원칙에 이미 등재된 충돌</td></tr><tr><td><b>플랫폼 식별자</b></td><td>대표 정의 <a class="xref" href="#t03"><code>플랫폼ID</code></a></td><td>어드민 <code>salesSource</code> / <code>platformType</code> / <code>platformCode</code> / <code>cardCorp</code></td><td>—</td><td><b>네 체계 병존.</b> 채권 ID를 채번하려면 하나를 골라야 한다</td></tr><tr><td><b>비중</b></td><td>대표 정의 — 투자실행액 : 순현금 두 갈래</td><td>투자자 현황표 — 분모 = 투자자산</td><td>투자자 가맹점별 표 — 분모 = 투자실행액</td><td>같은 열 이름, 다른 분모</td></tr><tr><td><b>투자자산</b></td><td>1번 이미지 — 투자실행액 + 순현금 (잔액)</td><td>2번 이미지 ⑤ — PSA + PSC (기간 유량)</td><td>—</td><td>같은 이름으로 <code>1,628,400,000</code>과 <code>1,987,900,000</code> 두 값이 돈다</td></tr><tr><td><b>ty수익율</b></td><td>1번 이미지 — 할인율 × 365 / w금융일수</td><td>2번 이미지 — 투자수익율 × 365 / w금융일수</td><td>—</td><td>분자가 다르다. 계획값과 실적값의 차이</td></tr></tbody></table></div></div>
+<div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>낱말</th><th>뜻 A</th><th>뜻 B</th><th>뜻 C</th><th>뭐가 위험한가</th></tr></thead><tbody><tr><td><b>미지급금</b></td><td>정책서 6대 개념 — 페이허그가 가맹점에 못 준 돈</td><td>대표 정의 — <b>뜻 A와 같다</b>. 어드민 미정산 누락 도메인(<code>MissedSettlementsData</code>)이 그 값</td><td>어드민 배지 <code>미지급</code>(<code>settlementLabels.ts:68</code>) — 플랫폼 환급 미반영 <b>상태값</b>. 금액이 아니다</td><td>A와 B는 같은 것. <b>C만 다르다</b> — 상태 배지를 금액으로 읽지 않는다</td></tr><tr><td><b>미지급액</b></td><td>위 A와 같은 뜻의 정책 용어</td><td>어드민 엑셀 헤더 — 배치가 건너뛴 건의 <code>netPayoutAmt</code></td><td>—</td><td>같은 필드가 어떤 화면에선 <a class="xref" href="#t07"><code>순지급액</code></a>, 어떤 화면에선 <code>미지급액</code>으로 뜬다</td></tr><tr><td><b>과지급 / 과지급금</b></td><td>정책서 — 페이허그가 가맹점에 더 준 돈</td><td>대표 정의 — <b>뜻 A와 같다</b>. 취소 환수(<code>CANCEL_CLAWBACK</code>)·현장결제 중복 수령이 그 발생 원인</td><td>계약서 <code>과정산금</code> — 플랫폼이 예정보다 초과 입금한 금액</td><td>A와 B는 같은 것. <b>C는 다르다</b> — 주체가 플랫폼이고 가맹점 반환 전제라 매핑 미확정</td></tr><tr><td><b>미회수</b></td><td>6대 개념 <code>미회수금</code> — 과지급 뒤 남은 회수 잔액</td><td>어드민 <code>carryForwardTotal</code> — 0원으로 잘린 이월 잔액</td><td>어드민 배지 — 플랫폼 조정 미반영 상태</td><td>셋 다 실재하고 셋 다 다른 값</td></tr><tr><td><b>할인율</b></td><td>대표 정의 — 유동화투자자 할인율 0.11%. 내부 이름은 <code>(채권매입)수수료율</code></td><td>어드민 <code>discountRatePct</code> — 예상 매출 정산 시의 리스크 할인</td><td>Figma — 참여자별 할인율(투자자 0.11% / 페이허그 0.35%)</td><td><b>어드민에서 <a class="xref" href="#t13"><code>할인율</code></a>을 찾으면 엉뚱한 값이 나온다</b></td></tr><tr><td><b>회수</b></td><td>6대 개념 — 과지급금 회수</td><td>어드민 <code>매출 회수</code> — 락계좌 → 모계좌 스윕</td><td>플랫폼 조정 배지 <code>회수완료</code>/<code>부분회수</code></td><td>프로젝트 원칙에 이미 등재된 충돌</td></tr><tr><td><b>플랫폼 식별자</b></td><td>대표 정의 <a class="xref" href="#t03"><code>플랫폼ID</code></a></td><td>어드민 <code>salesSource</code> / <code>platformType</code> / <code>platformCode</code> / <code>cardCorp</code></td><td>—</td><td><b>네 체계 병존.</b> 채권 ID를 채번하려면 하나를 골라야 한다</td></tr><tr><td><b>비중</b></td><td>대표 정의 — 투자실행액 : 순현금 두 갈래</td><td>투자자 현황표 — 분모 = 투자자산</td><td>투자자 가맹점별 표 — 분모 = 투자실행액</td><td>같은 열 이름, 다른 분모</td></tr><tr><td><b>투자자산</b></td><td>1번 이미지 — 투자실행액 + 순현금 (잔액)</td><td>2번 이미지 ⑤ — PSA + PSC (기간 유량)</td><td>—</td><td>같은 이름으로 <code>1,628,400,000</code>과 <code>1,987,900,000</code> 두 값이 돈다</td></tr><tr><td><b>ty수익율</b></td><td>1번 이미지 — 할인율 × 365 / w금융일수</td><td>2번 이미지 — 투자수익율 × 365 / w금융일수</td><td>—</td><td>분자가 다르다. 계획값과 실적값의 차이</td></tr><tr><td><b>투자 수익</b> (수익 산정 기준 카드)</td><td><code>수수료 배분형</code> — 순지급액 × 할인율 0.11%</td><td><code>조달이자형</code> — 투자실행금 × 조달 이자율 연 12% × 사용일수 ÷ 365</td><td>투자 수익 화면의 <code>투자 수익</code> 열 — 배분형으로 낸 실적값</td><td>같은 낱말에 산식이 둘 걸려 있다(D-1 2모델 병기). <b>화면 숫자는 전부 배분형이다.</b> 조달이자형은 카드에만 있고 표·엑셀 어디에도 값이 없다</td></tr></tbody></table></div></div>
 <h3 class="blk-title">E-3. 대표 정의가 지시한 라벨 정정 — 3건</h3>
 <p>원문이 화면 문구를 직접 고치라고 적어 둔 것이다.</p>
 <div class="t-card"><div class="t-scroll"><table class="tbl"><thead><tr><th>스토리보드 표기</th><th>대표 정의</th><th>대상</th></tr></thead><tbody><tr><td><code>입금일자</code></td><td><b>정산예정일</b></td><td><code>투자 수익</code> 일별 표 첫 열, <code>일별 투자수익 엑셀</code>, 엑셀 <code>일별_투자수익.xlsx</code></td></tr><tr><td><code>입금월</code></td><td><b>정산예정월</b></td><td><code>투자 수익 (월별)</code></td></tr><tr><td>각주 <code>양수일로부터 지급예정일까지</code></td><td><b>선정산일로부터 정산예정일까지</b></td><td>화면 각주 — D-23으로 각주 자체가 없다</td></tr></tbody></table></div></div>
