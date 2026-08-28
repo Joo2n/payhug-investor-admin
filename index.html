@@ -49,7 +49,8 @@
   }
 
   /* 문서 링크 카드 */
-  .doc-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+  .doc-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
+  @media (min-width: 1000px) { .doc-row { grid-template-columns: repeat(4, 1fr); } }
   a.doc-card {
     display: flex; align-items: center; gap: 12px; text-decoration: none;
     background: #fff; border: 1px solid var(--gray-100); border-radius: 16px;
@@ -64,7 +65,8 @@
   }
   .doc-card .doc-icon svg { width: 18px; height: 18px; }
   .doc-card .d-name { font-size: 15px; line-height: 22px; font-weight: 700; color: var(--gray-900); }
-  .doc-card .d-desc { font-size: 12px; line-height: 16px; color: var(--gray-400); margin-top: 1px; }
+  .doc-card .d-tag{display:inline-block;vertical-align:1px;margin-left:6px;background:var(--primary-100);color:var(--primary-800);border-radius:9999px;padding:1px 8px;font-size:10.5px;line-height:16px;font-weight:700}
+.doc-card .d-desc { font-size: 12px; line-height: 16px; color: var(--gray-400); margin-top: 1px; }
 
   /* 섹션 제목 */
   .sec-head { display: flex; align-items: baseline; gap: 10px; margin: 40px 0 0; }
@@ -141,8 +143,15 @@
     <a class="doc-card" href="glossary.html">
       <div class="doc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
       <div>
-        <div class="d-name">계산식 용어 정의</div>
-        <div class="d-desc">glossary.html · 화면 표기 용어와 산정 기준</div>
+        <div class="d-name">용어 해설 <span class="d-tag">최신</span></div>
+        <div class="d-desc">glossary.html · 용어 50건을 카드로. 용어명·변수·계산식·화면 위치·관련 용어</div>
+      </div>
+    </a>
+    <a class="doc-card" href="glossary-legacy.html">
+      <div class="doc-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+      <div>
+        <div class="d-name">용어 구버전</div>
+        <div class="d-desc">glossary-legacy.html · 서술 중심의 이전 판. 비교용</div>
       </div>
     </a>
     <a class="doc-card" href="capability.html">

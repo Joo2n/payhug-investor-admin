@@ -257,6 +257,32 @@ body[data-active="password"]       .nav-group[data-group="manage"] .nav-group-la
 .tbl tbody tr:hover { background: var(--gray-50); }     /* hover:bg-gray-50 */
 .tbl tbody tr.clickable { cursor: pointer; }
 .tbl tbody tr.clickable:hover { background: rgba(244,253,240,0.3); } /* hover:bg-primary-50/30 (가맹점관리) */
+/* 순번 열 — 원본 sales/page.tsx:107·143 (w-12 = 48px · text-xs · text-gray-400 · 왼쪽 정렬) */
+.tbl th.no, .tbl td.no { width: 48px; }
+.tbl td.no { font-size: 12px; color: var(--gray-400); }
+
+/* ── 누를 수 있는 행 — 호버·포커스 신호 ─────────────────────────
+   원본 어드민의 클릭 가능 행은 hover:bg-primary-50/30 · transition-colors · cursor-pointer 다
+   (sales/page.tsx:130 · inquiries/page.tsx:286 · manage/page.tsx:291). 배경·전이 값은 위의
+   .clickable 규칙 그대로 두고, 원본에 없는 미세 확대만 얹는다 — 원본 <tr> 의 transform·scale 은 0건.
+   확대는 오른쪽 모서리를 축으로 삼아 왼쪽·위아래로만 자란다. 가로 스크롤 상자는 시작 쪽으로
+   넘친 만큼을 스크롤 영역에 넣지 않아, 표 폭도 행 높이도 그대로면서 스크롤바가 생기지 않는다.
+   포커스 표시는 원본의 focus:ring-2 focus:ring-primary-500(PolicyFormModal.tsx:84)을 옮긴 것이다 —
+   원본 행에는 키보드 도달 자체가 없어 대응물이 없다. */
+.tbl tbody tr.clickable,
+.sign-row.pickable {
+  transform-origin: center right;
+  transition: background-color 0.15s var(--ease-default), transform 0.15s var(--ease-default);
+}
+.sign-row.pickable { cursor: pointer; }
+.sign-row.pickable:hover { background: rgba(244,253,240,0.3); }
+.sign-row.pickable.selected:hover { background: var(--primary-50); }
+.tbl tbody tr.clickable:hover,
+.sign-row.pickable:hover,
+.tbl tbody tr.clickable:focus-visible,
+.sign-row.pickable:focus-visible { transform: scale(1.005); position: relative; z-index: 1; }
+.tbl tbody tr.clickable:focus-visible,
+.sign-row.pickable:focus-visible { outline: 2px solid var(--primary-500); outline-offset: -2px; }
 /* 숫자 셀: text-right font-mono tabular-nums */
 .tbl td.num {
   text-align: right;

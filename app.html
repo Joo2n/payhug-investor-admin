@@ -155,11 +155,13 @@
   .doc-link:hover { text-decoration: underline; }
   /* 서명 버튼 — 스토리보드 15는 목록과 같은 카드 안, 가로 가운데에 둔다(x2.99 w2.36 / 카드 x1.69 w5.59).
      화면 하단 고정 바로 두면 목록이 길 때 뷰포트 밖으로 밀려 보이지 않는다. */
+  /* 선택 건수는 목록 아래 왼쪽, 서명 버튼은 그대로 가운데 — 쪽번호 줄과 같은 3열 격자다.
+     원본 어드민의 다중선택 액션 바도 건수를 왼쪽에 둔다(PreSettlementTab.tsx:1214·1264). */
   .sign-foot {
-    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
     padding: 20px 24px 24px; border-top: 1px solid var(--gray-100); background: var(--gray-50);
   }
-  .sign-foot .sel-count { font-size: 13px; color: var(--gray-600); }
+  .sign-foot .sel-count { justify-self: start; font-size: 13px; color: var(--gray-600); }
   .sign-foot .sel-count b { color: var(--gray-900); }
   .sign-foot .btn { min-width: 240px; justify-content: center; padding: 12px 40px; font-size: 16px; border-radius: 12px; }
   .list-tools { display: flex; align-items: center; gap: 8px; }
@@ -368,6 +370,7 @@
   .pagination.with-count { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
   .pagination.with-count .pg-count { justify-self: start; font-size: 12px; color: var(--gray-500); }
   .pagination.with-count .pg-nums { display: flex; align-items: center; gap: 4px; justify-self: center; }
+  .pagination.with-count .sel-pill { margin-left: 0; }
 
   /* ── 쿠콘 안내 카드 — 조회 가능 내역을 같은 카드 아래쪽에 잇는다 ── */
   .link-check { width: 100%; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--gray-100); text-align: left; }
@@ -785,7 +788,6 @@
             <div>
               <span class="card-title" style="margin:0">재양도합의서 목록</span>
               <span class="tbl-count" data-mount="ct-count"></span>
-              <span class="badge badge-green sel-pill" data-mount="ct-sel"></span>
             </div>
             <div class="list-tools">
               <button class="btn btn-ghost" data-act="ct-clear" data-mount="ct-clear">선택 해제</button>
@@ -794,7 +796,7 @@
             </div>
           </div>
           <div data-mount="ct-tbl"></div>
-          <div class="pagination" style="border-top:1px solid var(--gray-100)" data-mount="ct-page"></div>
+          <div class="pagination with-count" style="border-top:1px solid var(--gray-100)" data-mount="ct-page"></div>
         </div>
       </section>
 
@@ -1522,12 +1524,6 @@ function emptyState(icon, title, cta){
   return '<div class="empty-state"><div class="empty-ico">' + svg(icon, 1.6) + '</div>' +
          '<p class="empty-title">' + title + '</p>' + (cta || '') + '</div>';
 }
-/* 표에 적힌 총 건수와 지금 화면에 그려진 행 수가 어긋나 보이지 않도록 표시 구간을 함께 적는다. */
-function rangeLabel(cur, pages, total){
-  if(pages <= 1) return '';
-  var a = (cur - 1) * PAGE_SIZE + 1, b = Math.min(cur * PAGE_SIZE, total);
-  return ' · 표시 <b class="mono">' + a + '–' + b + '</b>';
-}
 /* 쪽번호는 가운데, 총 건수는 같은 줄 맨 왼쪽.
    원본 activity-logs/page.tsx:339 · sales/[bizNo]/page.tsx:1243 = justify-center,
    LockAccountDeposits.tsx:435-437 = 같은 줄 왼쪽 총 건수. 두 패턴을 3열 격자로 겹쳐 쓴다. */
@@ -2051,7 +2047,7 @@ RENDER['merchants'] = function(){
   }
   M('mc-tbl', 'merchants').innerHTML = t + '</tbody></table></div>';
   M('mc-page', 'merchants').innerHTML = pageBar(MC.page, pages, 'mc-page',
-    '총 <b class="mono">' + rows.length + '</b>건' + rangeLabel(MC.page, pages, rows.length));
+    '총 <b class="mono">' + rows.length + '</b>건');
 };
 
 /* ───────── 정산채권 양수 ───────── */
@@ -2071,7 +2067,7 @@ RENDER['acquisition-list'] = function(){
     var s = SIGNQ[i], sg = AQ.signed[i], sel = AQ.sel[i];
     /* 행 어디를 눌러도 선택된다 — 체크박스 자체와 계약서 링크는 각자 data-act 를 가져
        closest() 가 먼저 잡으므로 행 토글과 겹쳐 상쇄되지 않는다. */
-    h += '<div class="sign-row' + (sg ? ' done' : (sel ? ' selected' : '')) + '"' +
+    h += '<div class="sign-row' + (sg ? ' done' : ' pickable' + (sel ? ' selected' : '')) + '"' +
       (sg ? '' : ' data-act="aq-row" data-i="' + i + '" role="checkbox" tabindex="0" aria-checked="' + (sel ? 'true' : 'false') + '"') + '>' +
       '<input type="checkbox" class="chk" data-act="aq-chk" data-i="' + i + '"' + ((sel || sg) ? ' checked' : '') + (sg ? ' disabled' : '') + '>' +
       '<div style="flex:1; min-width:0"><div class="m-name">' + s.name + '</div>' +
@@ -2113,9 +2109,7 @@ RENDER['contracts'] = function(){
   var slice = rows.slice((CT.page - 1) * PAGE_SIZE, CT.page * PAGE_SIZE);
   var n = ctSelCount();
 
-  M('ct-count', 'contracts').innerHTML = '총 <b class="mono">' + rows.length + '</b>건' + rangeLabel(CT.page, pages, rows.length);
-  var pill = M('ct-sel', 'contracts');
-  pill.textContent = n + '건 선택'; pill.hidden = (n === 0);
+  M('ct-count', 'contracts').innerHTML = '총 <b class="mono">' + rows.length + '</b>건';
   var dl = M('ct-dl', 'contracts');
   dl.disabled = (n === 0);
   dl.classList.toggle('armed', n > 0 && n === rows.length && rows.length > 0);
@@ -2132,18 +2126,24 @@ RENDER['contracts'] = function(){
   var allOn = (n === rows.length);
   var t = '<div class="tbl-scroll"><table class="tbl"><thead><tr>' +
     '<th style="width:48px"><input type="checkbox" class="chk" data-act="ct-all"' + (allOn ? ' checked' : '') + '></th>' +
+    '<th class="no">No</th>' +
     th('ct-tbl', 'mid', 'MID') + th('ct-tbl', 'name', '가맹점') +
     '<th>재양도합의서</th><th class="center">검증</th></tr></thead><tbody>';
   for(i = 0; i < slice.length; i++){
     var c = slice[i], on = !!CT.sel[c.mid];
-    t += '<tr' + (on ? ' class="selected"' : '') + '>' +
+    /* 순번은 쪽이 넘어가도 이어진다 — 머리에 적은 총 건수와 같은 축이라야 행을 가리킬 수 있다.
+       원본 어드민의 순번(sales/page.tsx:143 등)은 쪽나눔이 없는 표라 배열 인덱스 그대로다. */
+    t += '<tr class="clickable' + (on ? ' selected' : '') + '" data-act="ct-row" data-mid="' + c.mid + '"' +
+      ' role="checkbox" tabindex="0" aria-checked="' + (on ? 'true' : 'false') + '">' +
       '<td><input type="checkbox" class="chk" data-act="ct-chk" data-mid="' + c.mid + '"' + (on ? ' checked' : '') + '></td>' +
+      '<td class="no">' + ((CT.page - 1) * PAGE_SIZE + i + 1) + '</td>' +
       '<td class="mono">' + c.mid + '</td><td><span class="name">' + c.name + '</span></td>' +
-      '<td><a class="file-link" href="assets/docs/재양도합의서_' + c.mid + '.pdf" target="_blank" rel="noopener">재양도합의서_' + c.mid + '.pdf</a></td>' +
+      '<td><a class="file-link" data-act="ct-doc" href="assets/docs/재양도합의서_' + c.mid + '.pdf" target="_blank" rel="noopener">재양도합의서_' + c.mid + '.pdf</a></td>' +
       '<td class="center"><span class="badge badge-gray">확인 대상</span></td></tr>';
   }
   box.innerHTML = t + '</tbody></table></div>';
-  M('ct-page', 'contracts').innerHTML = pageBar(CT.page, pages, 'ct-page');
+  M('ct-page', 'contracts').innerHTML = pageBar(CT.page, pages, 'ct-page',
+    n ? '<span class="badge badge-green sel-pill">' + n + '건 선택</span>' : ' ');
 };
 
 /* ───────── 비밀번호 변경 ───────── */
@@ -2319,7 +2319,7 @@ RENDER['index'] = function(){
 RENDER['login'] = function(){};
 RENDER['coocon'] = function(){};
 
-var KEEP_DEFAULT = ['xls-get', 'cert-pdf', 'aq-chk', 'ct-chk', 'ct-all', 'aq-doc'];
+var KEEP_DEFAULT = ['xls-get', 'cert-pdf', 'aq-chk', 'ct-chk', 'ct-all', 'aq-doc', 'ct-doc'];
 var ACT = {};
 
 /* 정렬 */
@@ -2484,6 +2484,8 @@ ACT['ct-download'] = function(){
   refresh('contracts');
 };
 ACT['ct-page'] = function(el){ var p = parseInt(el.dataset.page, 10); if(p < 1) return; CT.page = p; refresh('contracts'); };
+ACT['ct-row']  = function(el){ var m = el.dataset.mid; CT.sel[m] = !CT.sel[m]; refresh('contracts'); };
+ACT['ct-doc']  = function(){};   /* 링크는 기본 동작(새 창)으로 흘린다 — 행 토글과 겹치지 않게 */
 
 /* 비밀번호 */
 function readPw(){
@@ -2564,6 +2566,15 @@ document.addEventListener('keydown', function(e){
     ACT['aq-row'](row, e);
     var back = document.querySelector('[data-act="aq-row"][data-i="' + ri + '"]');
     if(back) back.focus();
+    return;
+  }
+  var crow = t.closest('[data-act="ct-row"]');
+  if(crow && (k === 'Enter' || k === ' ' || k === 'Spacebar')){
+    e.preventDefault();
+    var cm = crow.dataset.mid;
+    ACT['ct-row'](crow, e);
+    var cback = document.querySelector('[data-act="ct-row"][data-mid="' + cm + '"]');
+    if(cback) cback.focus();
     return;
   }
 
