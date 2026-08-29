@@ -152,7 +152,7 @@ def sync_assets(src_dir, dst_dir, s):
     missing = sorted(set(shot_refs(s)) - set(have))
     if missing:
         fail('문서가 부르는데 원본에 없는 캡처: %s' % missing); return None
-    # 배포본에는 문서가 실제로 부르는 것만 둔다 — 원본 shots 는 캡처 보관함이라 더 많다
+    # 배포본에는 문서가 실제로 부르는 것만 둔다 — 원본 shots 도 지금은 같은 5장이다
     want = sorted(set(shot_refs(s)))
     for f in want:
         shutil.copy2(os.path.join(s_shots, f), os.path.join(d_shots, f))
