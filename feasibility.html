@@ -630,7 +630,7 @@
         <dt>대상</dt>
         <dd>대표 정의 <code>투자수익 Mi = 채권매입수수료 − max(0, 미지급금−과지급금)</code>의 첫 항</dd>
         <dt>정의문 상태</dt>
-        <dd><code>ceo_definitions.md</code>에 정의문이 없고, 재양도합의서 제8조 요율 칸은 공란(16건 전건)</dd>
+        <dd><code>ceo_definitions.md</code>에 정의문이 없고, 재양도합의서 제8조 요율 칸은 공란(9건 전건)</dd>
         <dt>판정 근거</dt>
         <dd>요율은 <b>계약별로 달라지는 파라미터</b>다. 대표 자료에 기준이 있고, 실제 값은 계약 조건에 따라 정해져 어드민 요율 설정에 들어간다. 운영 코드에 <code>0.25</code>·<code>0.11</code> 리터럴이 0건인 것은 결함이 아니라 정상 — 값이 전부 DB <code>PolicyRate.rateBps</code>에서 내려온다(<code>app/settlement/policies/page.tsx:166</code>). 계약서 공란도 같은 이유다.</dd>
         <dt>재료</dt>
@@ -750,7 +750,7 @@
           <tr data-g="B"><td class="no">45</td><td class="k">PSD</td><td class="c"><span class="g g-B">B</span></td><td><code>Σ(Api×Dpi) / PSA</code> — 가중평균</td><td>입력값</td><td>N-5</td><td class="muted">—</td></tr>
           <tr data-g="D"><td class="no">46</td><td class="k">PSC</td><td class="c"><span class="g g-D">D</span></td><td>기간 EC 합계</td><td>계좌 + 스냅샷</td><td>N-3 · EC</td><td>D-14</td></tr>
           <tr data-g="B"><td class="no">47</td><td class="k">④ 투자실행금액 대비 ty수익율</td><td class="c"><span class="g g-B">B</span></td><td><code>PSMR × 365 / PSD</code></td><td>입력값</td><td>PSMR · PSD</td><td class="muted">—</td></tr>
-          <tr data-g="B"><td class="no">48</td><td class="k">⑤ 투자자산 대비 ty수익율</td><td class="c"><span class="g g-B">B</span></td><td><code>(④ × PSA) / (PSA + PSC)</code></td><td>입력값. 화면 분모는 대표 정의대로 기간 EC 합(유량)이다 — 기본 조회 기간에서 ④ 12.97% · ⑤ 10.72%. 분모를 기준일 잔액 1개(스톡)로 두면 <code>④ × 투자실행액 비중</code>(12.13%)이 되는데 그 산식은 쓰지 않는다</td><td>④ · PSC(D)</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">48</td><td class="k">⑤ 투자자산 대비 ty수익율</td><td class="c"><span class="g g-B">B</span></td><td><code>(④ × PSA) / (PSA + PSC)</code></td><td>입력값. 화면 분모는 대표 정의대로 기간 EC 합(유량)이다 — 기본 조회 기간에서 ④ 6.91% · ⑤ 4.07%. 분모를 기준일 잔액 1개(스톡)로 두면 <code>④ × 투자실행액 비중</code>(5.53%)이 되는데 그 산식은 쓰지 않는다</td><td>④ · PSC(D)</td><td class="muted">—</td></tr>
           <tr data-g="B"><td class="no">49</td><td class="k">⑥ 일별 투자실행금액 대비 ty수익율</td><td class="c"><span class="g g-B">B</span></td><td><code>(투자수익 ÷ 투자실행금) × 365 ÷ w금융일수</code> — <code>marker_legend.md</code>가 번호 마커로 <code>③</code> = 일별표 <b>투자실행금</b>임을 복원. ④와는 동명이의가 아니라 집계 단위 차이</td><td>입력값 셋. 전부 4층에서 나온다</td><td>N-5 N-7</td><td class="muted">—</td></tr>
           <tr data-g="A"><td class="no">50</td><td class="k">검색대상기간</td><td class="c"><span class="g g-A">A</span></td><td><code>components/DateRangeFilter.tsx</code> — from~to 입력 + <b>프리셋 7종 실재</b>(오늘·어제·이번 주·지난 주·이번 달·지난 달·최근 3개월, <code>:23-61</code>)</td><td>없음. 부품 그대로 재사용</td><td class="muted">—</td><td class="muted">—</td></tr>
         </tbody>
@@ -881,7 +881,7 @@
       </div>
     </div>
     <div class="empty-msg" id="noHit">조건에 맞는 항목이 없다. 등급 뱃지를 다시 켜거나 검색어를 지운다.</div>
-    <div class="note-band"><b>엑셀 8종에 <code>※</code> 주석 0건.</b> 시트에 설명을 적지 않는다는 확정에 따라 <code>build_xlsx.py</code>의 <code>put_notice</code>·<code>put_note</code>가 빈 함수로 남았고, 산출물을 풀어 XML 전수를 훑어도 <code>※</code>가 나오지 않는다. 시트에 남는 것은 제목 1줄(표 명칭 · 기준일 또는 기간 · 투자자명)·머리글·데이터 행·합계 행뿐이다. 미확정 항목을 확정된 주석처럼 인쇄하던 상태는 없어졌고, 대신 <b>화면 밖으로 나간 산출물에 용어 설명이 없다</b> — 비중의 분모, 합계행 <code>W금융일수</code>·<code>Ty수익율</code>이 가중평균이라는 것, <code>합계 (투자자산)</code>이 투자실행액 + 순현금이라는 것을 파일만 받아서는 알 수 없다. 시트의 용어·산식 표기 규칙은 정해진 것이 없다.</div>
+    <div class="note-band"><b>엑셀 14종에 <code>※</code> 주석 0건.</b> 시트에 설명을 적지 않는다는 확정에 따라 <code>build_xlsx.py</code>의 <code>put_notice</code>·<code>put_note</code>가 빈 함수로 남았고, 산출물을 풀어 XML 전수를 훑어도 <code>※</code>가 나오지 않는다. 시트에 남는 것은 제목 1줄(표 명칭 · 기준일 또는 기간 · 투자자명)·머리글·데이터 행·합계 행뿐이다. 미확정 항목을 확정된 주석처럼 인쇄하던 상태는 없어졌고, 대신 <b>화면 밖으로 나간 산출물에 용어 설명이 없다</b> — 비중의 분모, 합계행 <code>W금융일수</code>·<code>Ty수익율</code>이 가중평균이라는 것, <code>합계 (투자자산)</code>이 투자실행액 + 순현금이라는 것을 파일만 받아서는 알 수 없다. 시트의 용어·산식 표기 규칙은 정해진 것이 없다.</div>
   </section>
 
   <!-- ── 6. 개발 문의 ── -->
@@ -980,7 +980,7 @@
         <h4>산출물</h4>
         <ul class="qlist">
           <li><span class="qid">D-25</span><span class="qtx">참여자 계정의 본인 비밀번호 변경 API가 백엔드에 있습니까? 어드민에는 관리자가 가맹점 비밀번호를 초기화하는 <code>PUT /admin/merchants/{id}/reset-password</code>만 있다. 비밀번호 규칙과 변경 후 세션 무효화 정책은 무엇입니까?</span></li>
-          <li><span class="qid">D-32</span><span class="qtx">엑셀 8종을 서버에서 생성합니까, 현행처럼 브라우저에서 ExcelJS로 만듭니까? 서버 생성이면 스코프 필터가 자동으로 걸립니다.</span></li>
+          <li><span class="qid">D-32</span><span class="qtx">엑셀 14종을 서버에서 생성합니까, 현행처럼 브라우저에서 ExcelJS로 만듭니까? 서버 생성이면 스코프 필터가 자동으로 걸립니다.</span></li>
         </ul>
       </div>
     </div>

@@ -38,7 +38,7 @@ NEW_HEAD = '''<!--
   이 파일은 payhug-investor-admin/scripts/sync_prototype.py 가 app.html 에서 찍어 낸다.
   직접 고치지 않는다 — 다음 동기화에서 덮어쓰인다.
 
-  딥링크: #<화면>/<상태>  예) #invest-assets/page2 · #acquisition-list/signing
+  딥링크: #<화면>/<상태>  예) #invest-assets/cert-confirm · #acquisition-list/signing
 -->'''
 
 notes, hard = [], []
