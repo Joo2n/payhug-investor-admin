@@ -149,7 +149,7 @@
   .doc-scroll h5 { margin: 16px 0 4px; font-size: 13px; font-weight: 700; color: var(--gray-900); }
   .doc-scroll p { margin: 0 0 4px; font-size: 13px; line-height: 20px; color: var(--gray-700); }
   .doc-scroll .ct-date { margin: 20px 0 16px; text-align: center; }
-  .doc-scroll .ct-sign { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 24px; margin-top: 8px; }
+  .doc-scroll .ct-sign { display: flex; flex-direction: column; gap: 20px; margin-top: 8px; }
   .doc-scroll .ct-party { flex: 1; display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--gray-700); }
   .doc-scroll .ct-party .r { font-weight: 700; color: var(--gray-900); }
   .doc-scroll .ct-party .f { border-bottom: 1px solid var(--gray-300); padding-bottom: 3px; }
@@ -1095,7 +1095,7 @@
 </section>
 
 <!-- ═══════════ 모달 ═══════════ -->
-<div class="modal-backdrop" data-modal="invest-assets-cert-confirm" data-act="backdrop" hidden>
+<div class="modal-backdrop" data-modal="invest-assets-cert-confirm" hidden>
   <div class="modal md">
     <div class="modal-header">
       <h3>투자자산 증명서 발급</h3>
@@ -1117,7 +1117,7 @@
   </div>
 </div>
 
-<div class="modal-backdrop" data-modal="acquisition-confirm" data-act="backdrop" hidden>
+<div class="modal-backdrop" data-modal="acquisition-confirm" hidden>
   <div class="modal md">
     <div class="modal-header">
       <h3>정산금채권 양수도 계약서 서명</h3>
@@ -1134,7 +1134,7 @@
   </div>
 </div>
 
-<div class="modal-backdrop" data-modal="acquisition-doc" data-act="backdrop" hidden>
+<div class="modal-backdrop" data-modal="acquisition-doc" hidden>
   <div class="modal lg">
     <div class="modal-header">
       <h3>계약서보기</h3>
@@ -1230,7 +1230,7 @@
   </div>
 </div>
 
-<div class="modal-backdrop" data-modal="acquisition-done" data-act="backdrop" hidden>
+<div class="modal-backdrop" data-modal="acquisition-done" hidden>
   <div class="modal md">
     <div class="modal-body" style="padding-top:32px">
       <div class="done-head">
@@ -3313,13 +3313,9 @@ document.addEventListener('click', function(e){
   var t = e.target;
   if(!t || !t.closest) return;
   var a = t.closest('[data-act]');
-  /* 모달 배경 클릭으로 닫기 — 패널 안쪽 클릭은 배경으로 새지 않는다.
-     원본 ConfirmDialog.tsx:54-55 (백드롭 onClick + 패널 stopPropagation) 대응.
-     진행 중 오버레이(acquisition-signing)만 예외 — 원본도 submitting·ocrProcessing 오버레이는 닫히지 않는다. */
-  if(a && a.dataset.act === 'backdrop'){
-    if(t !== a) a = t.closest('[data-act]:not([data-act="backdrop"])') || a;
-    if(a.dataset.act === 'backdrop'){ e.preventDefault(); ACT['modal-close'](); return; }
-  }
+  /* 모달은 닫기 버튼·X 로만 닫힌다 (D-40).
+     오버레이 클릭도, 패널 안쪽 클릭도 닫지 않는다 — data-act="backdrop" 자체를 두지 않는다.
+     본문 클릭에 preventDefault 를 걸지 않으므로 스크롤·텍스트 선택은 그대로다. */
   if(a && ACT[a.dataset.act]){
     if(KEEP_DEFAULT.indexOf(a.dataset.act) < 0) e.preventDefault();
     ACT[a.dataset.act](a, e);
