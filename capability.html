@@ -504,7 +504,7 @@
             <li><span class="a-no">06</span><div class="a-body">
               <div class="a-verb">가맹점별 표 전건을 한 쪽에서 본다</div>
               <div class="a-el">보기 갯수 10 / 20 / 50 · 쪽 버튼 없음</div>
-              <div class="a-note"><code>SB s3</code>에 페이지네이션이 그려져 있으나 페이지 크기·정렬 기준 미정의. 로스터 전건(9곳)이 기본 보기 10개 안에 들어가 쪽 버튼이 서지 않는다</div>
+              <div class="a-note"><code>SB s3</code>에 페이지네이션이 그려져 있으나 페이지 크기·정렬 기준 미정의. 로스터 전건(8곳)이 기본 보기 10개 안에 들어가 쪽 버튼이 서지 않는다</div>
             </div><span class="j j-hyp">가설</span></li>
           </ul>
         </div>
@@ -636,9 +636,9 @@
             <thead><tr><th style="width:20%">항목</th><th style="width:18%">출처</th><th>근거와 판정 사유</th><th style="width:96px">판정</th></tr></thead>
             <tbody>
               <tr><td class="k">검색대상기간</td><td>기본값 <code>일주일</code></td><td><code>SB s7</code></td><td class="c"><span class="j j-fix">확정</span><br><span class="src">표기</span></td></tr>
-              <tr><td class="k">투자실행금<span class="src-line">현황</span></td><td>—</td><td>스토리보드가 현황의 <code>투자실행금</code>과 일별표 동명 열의 관계를 정의하지 않는다. 현행 예시값은 두 자리가 같은 200,353,526원이나 어느 정의로 같아진 것인지는 적혀 있지 않다</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
+              <tr><td class="k">투자실행금<span class="src-line">현황</span></td><td>—</td><td>스토리보드가 현황의 <code>투자실행금</code>과 일별표 동명 열의 관계를 정의하지 않는다. 현행 예시값은 두 자리가 같은 179,970,919원이나 어느 정의로 같아진 것인지는 적혀 있지 않다</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
               <tr><td class="k">투자수익<span class="src-line">현황</span></td><td>—</td><td>위와 동일</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
-              <tr><td class="k">Ty수익율<span class="src-line">투자실행금액 대비 / 투자자산 대비</span></td><td>2행 구성</td><td>구성은 <code>SB s7</code>로 확정. 두 값의 관계가 스토리보드에 없다. 기본 조회 기간(일주일) 화면값은 투자실행금액 대비 6.91% · 투자자산 대비 4.07%다. 두 값은 대표 정의 마커 ⑤ <code>(④ × 투자실행금) ÷ (투자실행금 + 기간 순현금 합)</code>으로 이어지며, <code>④ × 투자실행액 비중</code>(6.91% × 80.0% = 5.53%)과는 다른 산식이다</td><td class="c"><span class="j j-fix">확정</span> <span class="src">구성</span><br><span class="j j-chk">확인필요</span> <span class="src">산식</span></td></tr>
+              <tr><td class="k">Ty수익율<span class="src-line">투자실행금액 대비 / 투자자산 대비</span></td><td>2행 구성</td><td>구성은 <code>SB s7</code>로 확정. 두 값의 관계가 스토리보드에 없다. 기본 조회 기간(일주일) 화면값은 투자실행금액 대비 3.99% · 투자자산 대비 2.24%다. 두 값은 대표 정의 마커 ⑤ <code>(④ × 투자실행금) ÷ (투자실행금 + 기간 순현금 합)</code>으로 이어지며, <code>④ × 투자실행액 비중</code>(3.99% × 80.0% = 3.19%)과는 다른 산식이다</td><td class="c"><span class="j j-fix">확정</span> <span class="src">구성</span><br><span class="j j-chk">확인필요</span> <span class="src">산식</span></td></tr>
               <tr><td class="k">입금일자</td><td>—</td><td><code>SB s7</code></td><td class="c"><span class="j j-hyp">가설</span></td></tr>
               <tr><td class="k">상환액</td><td>Figma 정산채권DB <code>입금액</code>(노드 <code>529:2950</code>)이 대응 후보</td><td><code>SB s7</code></td><td class="c"><span class="j j-hyp">가설</span></td></tr>
               <tr><td class="k">투자실행금<span class="src-line">일별</span></td><td>—</td><td><code>SB s7</code></td><td class="c"><span class="j j-hyp">가설</span></td></tr>
@@ -677,7 +677,7 @@
             <li><span class="a-no">16</span><div class="a-body">
               <div class="a-verb">기준 변수 6개를 넣는다</div>
               <div class="a-el">기준 변수 카드 — 할인율(%) · 순현금(원) · 미지급률(%) · 과지급률(%) · 시작일 · 종료일</div>
-              <div class="a-note">블록 자리·서식은 어드민 <code>정책 선택</code>(<code>page.tsx:210-248</code>)이고 컨트롤은 수치 입력 4개·날짜 2개다. 기본값 4종의 원천이 이 산출물 안에서 정해졌다 — 할인율 <code>0.11%</code>는 <code>D-21</code>·<code>D-22</code>로 이 산출물에 한해 채택한 값이고 정책서 C1은 미해소, 미지급률 <code>0.07%</code>·과지급률 <code>0.01%</code>는 <code>S입금부족율 0.06%</code>에서 역산한 값이다(<code>simulation_design.md</code> §3-4)</div>
+              <div class="a-note">블록 자리·서식은 어드민 <code>정책 선택</code>(<code>page.tsx:210-248</code>)이고 컨트롤은 수치 입력 4개·날짜 2개다. 기본값 4종의 원천이 이 산출물 안에서 정해졌다 — 할인율 <code>0.11%</code>는 <code>D-21</code>·<code>D-22</code>로 이 산출물에 한해 채택한 값이고 정책서 C1은 미해소, 미지급률 <code>0.08%</code>·과지급률 <code>0.01%</code>는 <code>S입금부족율 0.07%</code>에서 역산한 값이다(<code>simulation_design.md</code> §3-4)</div>
             </div><span class="j j-chk">확인필요</span></li>
             <li><span class="a-no">17</span><div class="a-body">
               <div class="a-verb">정산금채권을 행 단위로 넣는다</div>
@@ -765,8 +765,8 @@
             </div><span class="j j-fix">확정</span></li>
             <li><span class="a-no">26</span><div class="a-body">
               <div class="a-verb">표 전건을 한 쪽에서 본다</div>
-              <div class="a-el">보기 갯수 10 / 20 / 50 · 9행 1페이지</div>
-              <div class="a-note"><code>SB s14</code>에 페이지네이션 존재, 페이지 크기 미정의. 로스터 전건(9곳)이 기본 보기 10개 안에 들어가 쪽이 하나다</div>
+              <div class="a-el">보기 갯수 10 / 20 / 50 · 8행 1페이지</div>
+              <div class="a-note"><code>SB s14</code>에 페이지네이션 존재, 페이지 크기 미정의. 로스터 전건(8곳)이 기본 보기 10개 안에 들어가 쪽이 하나다</div>
             </div><span class="j j-hyp">가설</span></li>
           </ul>
         </div>
@@ -875,8 +875,8 @@
             </div><span class="j j-chk">확인필요</span></li>
             <li><span class="a-no">34</span><div class="a-body">
               <div class="a-verb">표 전건을 한 쪽에서 본다</div>
-              <div class="a-el">보기 갯수 10 / 20 / 50 · 9행 1페이지</div>
-              <div class="a-note"><code>SB s16</code>에 페이지네이션 존재. 로스터 전건(9곳)이 기본 보기 10개 안에 들어가 쪽이 하나다</div>
+              <div class="a-el">보기 갯수 10 / 20 / 50 · 8행 1페이지</div>
+              <div class="a-note"><code>SB s16</code>에 페이지네이션 존재. 로스터 전건(8곳)이 기본 보기 10개 안에 들어가 쪽이 하나다</div>
             </div><span class="j j-hyp">가설</span></li>
             <li><span class="a-no">35</span><div class="a-body">
               <div class="a-verb">문서가 없을 때 정산채권 양수로 이동한다</div>
@@ -1208,7 +1208,7 @@
             <tr><td class="k">할인율의 실체</td><td>투자 자산 · 투자 수익</td><td><code>Ty수익율 = 할인율 × (365 / w금융일수)</code>가 전제하는 <code>할인율</code>의 출처를 스토리보드가 적지 않는다</td><td class="c"><span class="j j-chk">원천 확인필요</span></td></tr>
             <tr><td class="k">비중의 분모</td><td>투자 자산 · 엑셀</td><td>같은 라벨의 열이 두 표에 있는데 분모 설명이 없다</td><td class="c"><span class="j j-chk">정의 미확정</span></td></tr>
             <tr><td class="k">투자 수익 산식</td><td>투자 수익 · 엑셀</td><td>스토리보드가 열 이름만 두고 산식을 적지 않는다</td><td class="c"><span class="j j-chk">정의 미확정</span></td></tr>
-            <tr><td class="k">현황 ↔ 일별 투자실행금·투자수익 관계</td><td>투자 수익</td><td>두 자리의 관계가 정의되지 않았다. 현행 예시값은 둘 다 200,353,526원이다</td><td class="c"><span class="j j-chk">정의 미확정</span></td></tr>
+            <tr><td class="k">현황 ↔ 일별 투자실행금·투자수익 관계</td><td>투자 수익</td><td>두 자리의 관계가 정의되지 않았다. 현행 예시값은 둘 다 179,970,919원이다</td><td class="c"><span class="j j-chk">정의 미확정</span></td></tr>
             <tr><td class="k">월별 집계 산식</td><td>투자 수익</td><td>일별/월별 토글은 있으나 월별 산식이 없다. 합계행 W금융일수의 가중평균 재산정 여부 미정</td><td class="c"><span class="j j-chk">정의 미확정</span></td></tr>
             <tr><td class="k">업종·종목</td><td>가맹점</td><td>가맹점 상세에만 있고 목록 타입·목록 API에 없다. 라벨도 화면마다 <code>업태</code>/<code>종목</code>으로 갈린다</td><td class="c"><span class="j j-chk">데이터 미존재</span></td></tr>
             <tr><td class="k">채권매매업체ID</td><td>가맹점</td><td>가맹점 목록·상세 어디에도 대응 필드가 없다. <code>referredByInvestorId</code>는 투자자이지 채권매매업체가 아니다</td><td class="c"><span class="j j-chk">데이터 미존재</span></td></tr>
@@ -1295,13 +1295,13 @@
           <tbody>
             <tr>
               <td class="k">현황 <code>투자실행금</code> ↔ 일별표 <code>투자실행금</code></td>
-              <td class="n">둘 다 200,353,526원</td>
+              <td class="n">둘 다 179,970,919원</td>
               <td>값은 맞아떨어지나 스토리보드가 두 자리의 관계를 정의하지 않는다. 조회 기간 동안 상환된 채권의 투자액 합계인지, 조회 시점의 미상환 잔액인지 갈린 채로 남는다</td>
             </tr>
             <tr>
               <td class="k">현황 <code>Ty수익율</code> 2행</td>
-              <td class="n">6.91% / 4.07%</td>
-              <td>대표 정의 마커 ⑤ <code>(④ × 투자실행금) ÷ (투자실행금 + 기간 순현금 합)</code>로 산출된다. <code>④ × 투자실행액 비중</code>(5.53%)과는 값이 다르며, 스토리보드에 두 값의 관계가 없다</td>
+              <td class="n">3.99% / 2.24%</td>
+              <td>대표 정의 마커 ⑤ <code>(④ × 투자실행금) ÷ (투자실행금 + 기간 순현금 합)</code>로 산출된다. <code>④ × 투자실행액 비중</code>(3.19%)과는 값이 다르며, 스토리보드에 두 값의 관계가 없다</td>
             </tr>
           </tbody>
         </table>
@@ -1320,7 +1320,7 @@
 
     <div class="copy-all"><button class="copy-btn" data-copy-all>확인 질문 23건 전체 복사</button></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-1</span><div><div class="gi-title">수익 현황과 일별 표의 관계 미정의</div><div class="gi-what"><code>SB s7</code>은 현황의 <code>투자실행금</code>·<code>투자수익</code>과 일별 표의 동명 열이 어떤 관계인지 적지 않는다. 현행 예시값은 두 자리가 같은 200,353,526원이나 어느 정의로 같아진 것인지는 적혀 있지 않다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자 수익 화면 상단 `투자실행금`은 조회 기간 동안 상환된 채권의 투자액 합계입니까, 조회 시점의 미상환 잔액입니까? 두 값이 다르면 어느 쪽을 상단에 둡니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-1</span><div><div class="gi-title">수익 현황과 일별 표의 관계 미정의</div><div class="gi-what"><code>SB s7</code>은 현황의 <code>투자실행금</code>·<code>투자수익</code>과 일별 표의 동명 열이 어떤 관계인지 적지 않는다. 현행 예시값은 두 자리가 같은 179,970,919원이나 어느 정의로 같아진 것인지는 적혀 있지 않다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자 수익 화면 상단 `투자실행금`은 조회 기간 동안 상환된 채권의 투자액 합계입니까, 조회 시점의 미상환 잔액입니까? 두 값이 다르면 어느 쪽을 상단에 둡니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-2</span><div><div class="gi-title">투자자 자산 데이터 계층 부재</div><div class="gi-what"><code>SB s3</code>의 4개 지표가 요구하는 원천(정산채권 단위의 양수일·지급예정일·투자금액·입금부족액)을 운영 백엔드에서 확인할 수 없다. 특히 가맹점별 누적 투자 원금 잔액 필드가 존재하지 않는다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 단위로 정산채권 잔액을 집계하는 테이블 또는 API가 현재 존재합니까? 없다면 `GET /admin/settlement/batch-payouts`(role=INVESTOR)를 `Batch.targetDate`로 누적해 잔액을 재구성하는 방식이 가능합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
