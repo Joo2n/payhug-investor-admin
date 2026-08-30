@@ -3309,7 +3309,7 @@ document.addEventListener('click', function(e){
   if(!t || !t.closest) return;
   var a = t.closest('[data-act]');
   /* 모달은 닫기 버튼·X 로만 닫힌다 (D-40).
-     오버레이 클릭도, 패널 안쪽 클릭도 닫지 않는다 — data-act="backdrop" 자체를 두지 않는다.
+     오버레이 클릭도, 패널 안쪽 클릭도 닫지 않는다 — 배경에 액션을 걸지 않는다.
      본문 클릭에 preventDefault 를 걸지 않으므로 스크롤·텍스트 선택은 그대로다. */
   if(a && ACT[a.dataset.act]){
     if(KEEP_DEFAULT.indexOf(a.dataset.act) < 0) e.preventDefault();
