@@ -275,7 +275,7 @@
   <!-- ============================ 1. 한눈에 보기 ============================ -->
   <section class="sec">
     <div class="sec-head"><span class="sec-no">01</span><h2>한눈에 보기</h2></div>
-    <p class="sec-lead">화면 설계(안) 35개 HTML(화면 14 + 상태 변형 20 + 공용 부품 1)을 화면 블록 15개로 묶어 대조한 결과.</p>
+    <p class="sec-lead">화면 설계(안) 34개 HTML(화면 14 + 상태 변형 19 + 공용 부품 1)을 화면 블록 15개로 묶어 대조한 결과.</p>
 
     <div class="kpi">
       <div class="kpi-card">
@@ -314,8 +314,8 @@
           <div class="bar-name">데이터 항목<span class="bn-sub">58항목</span></div>
           <div class="bar">
             <div class="seg seg-fix" style="width:46.6%"><span>확정 27</span></div>
-            <div class="seg seg-hyp" style="width:17.2%"><span>가설 10</span></div>
-            <div class="seg seg-chk" style="width:36.2%"><span>확인필요 21</span></div>
+            <div class="seg seg-hyp" style="width:15.5%"><span>가설 9</span></div>
+            <div class="seg seg-chk" style="width:37.9%"><span>확인필요 22</span></div>
           </div>
         </div>
         <div class="bar-row">
@@ -858,7 +858,7 @@
         </div>
         <span class="j j-hyp">가설</span>
       </div>
-      <div class="scr-meta"><b>진입</b> 사이드바 가맹점 &gt; 계약기록(<code>SB s16</code>) &nbsp;·&nbsp; <b>상태 변형 3</b> 전체 선택 · 다운로드 완료 토스트 · 문서 0건</div>
+      <div class="scr-meta"><b>진입</b> 사이드바 가맹점 &gt; 계약기록(<code>SB s16</code>) &nbsp;·&nbsp; <b>상태 변형 2</b> 전체 선택 · 문서 0건</div>
       <div class="scr-body">
         <div class="blk">
           <p class="blk-label">투자자 행위</p>
@@ -871,7 +871,7 @@
             <li><span class="a-no">33</span><div class="a-body">
               <div class="a-verb">선택 문서를 일괄 내려받는다</div>
               <div class="a-el">선택 문서 다운로드 (n)</div>
-              <div class="a-note">요구는 <code>SB s16</code>①(체크박스에 매칭된 각 MID의 재양도합의서 파일 + 그 서명값에 대한 인증서발행기관 서명검증회신전문 다운로드). 그러나 운영 어드민의 첨부 다운로드는 단건이고(<code>GET /admin/attachments/{id}/download</code>) 지원 타입이 pdf·image 2종뿐이며, 문서 유형 목록(<code>app/merchants/[id]/page.tsx:101-111</code>)에 재양도합의서·양수도계약서·증명서 항목이 없다. 일괄 압축 다운로드 경로도 없다</div>
+              <div class="a-note">요구는 <code>SB s16</code>①(체크박스에 매칭된 각 MID의 재양도합의서 파일 + 그 서명값에 대한 인증서발행기관 서명검증회신전문 다운로드). 그러나 운영 어드민의 첨부 다운로드는 단건이고(<code>GET /admin/attachments/{id}/download</code>) 지원 타입이 pdf·image 2종뿐이며, 문서 유형 목록(<code>app/merchants/[id]/page.tsx:101-111</code>)에 재양도합의서·양수도계약서·증명서 항목이 없다. 일괄 압축 다운로드 경로도 없다.<br>결과물을 어떤 파일 형식으로 받는지가 2026-08-28 미팅 확인 필요로 남아 이 버튼은 <strong>비활성</strong>이다. 기능 자체가 빠진 것이 아니라 형식이 정해질 때까지 실물을 걸지 않는 상태다(대표 확인 요청 Q-5)</div>
             </div><span class="j j-chk">확인필요</span></li>
             <li><span class="a-no">34</span><div class="a-body">
               <div class="a-verb">페이지를 넘긴다</div>
@@ -892,13 +892,13 @@
             <tbody>
               <tr><td class="k">MID</td><td>재양도합의서 보관 데이터</td><td><code>SB s16</code>(표 2번 영역)</td><td class="c"><span class="j j-hyp">가설</span></td></tr>
               <tr><td class="k">가맹점</td><td>회원DB 가맹점명</td><td><code>SB s16</code>(표 3번 영역)</td><td class="c"><span class="j j-fix">확정</span><br><span class="src">필드</span></td></tr>
-              <tr><td class="k">재양도합의서(파일)</td><td>재양도합의서 파일</td><td><code>SB s16</code></td><td class="c"><span class="j j-hyp">가설</span></td></tr>
+              <tr><td class="k">재양도합의서(파일)</td><td>재양도합의서 파일</td><td>열 자체는 <code>SB s16</code>에 있다. 내려줄 파일 형식이 미결이라 행별 다운로드 16건·묶음 2건을 비활성으로 두었다(대표 확인 요청 Q-5)</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
               <tr><td class="k">서명일</td><td>—</td><td>근거 없음. 설계안 신규 열</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
               <tr><td class="k">검증<span class="src-line">검증 완료</span></td><td>서명검증 회신전문 존재 여부로 추정</td><td><code>SB s16</code>①은 회신전문을 <strong>다운로드 대상</strong>으로만 언급하고 목록의 상태 열로 두지 않는다. 검증 실패 상태 미설계</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
             </tbody>
           </table></div>
         </div>
-        <div class="summ"><b>판정 요약</b> — 3열(MID·가맹점·재양도합의서)까지는 <code>SB s16</code>과 1:1로 맞고 다운로드 산출물 구성(파일 + 서명검증 회신전문)도 원문으로 정의돼 있다. 설계안이 덧붙인 <code>서명일</code>·<code>검증</code> 2열은 근거가 없다 — 유용한 열이지만 데이터 출처를 먼저 정해야 한다.<br>
+        <div class="summ"><b>판정 요약</b> — 3열(MID·가맹점·재양도합의서)까지는 <code>SB s16</code>과 1:1로 맞고 다운로드 산출물 구성(파일 + 서명검증 회신전문)도 원문으로 정의돼 있다. 정해지지 않은 것은 그 산출물을 어떤 파일 형식으로 내려주느냐이며, 그 자리가 열릴 때까지 다운로드는 비활성이다. 설계안이 덧붙인 <code>서명일</code>·<code>검증</code> 2열은 근거가 없다 — 유용한 열이지만 데이터 출처를 먼저 정해야 한다.<br>
           <code>SB s16</code>①이 다운로드 대상을 &ldquo;접속자에게 매칭된 MID&rdquo;가 아니라 &ldquo;선택된 체크박스에 매칭된 MID&rdquo;로만 적는다는 점도 짚어 둔다. 목록에 어떤 MID가 오르는지, 즉 조회 범위는 여기서도 정의되지 않는다.</div>
       </div>
     </article>
@@ -1348,7 +1348,7 @@
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-14</span><div><div class="gi-title">월별 집계 산식 없음</div><div class="gi-what"><code>SB s7</code>에 일별/월별 토글은 있으나 월별 산식이 없다. 특히 합계행의 W금융일수는 각주 정의상 투자금액 가중평균이어야 한다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>월별 전환 시 W금융일수·Ty수익율은 투자금액 가중평균으로 재산정합니까, 일별 값의 단순평균입니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-15</span><div><div class="gi-title">계약문서 일괄 다운로드 경로 없음</div><div class="gi-what"><code>SB s16</code>①은 파일 + 검증회신전문 다발을 요구하나 현행 첨부 다운로드는 단건·pdf/image 한정이고 문서 유형 목록에 재양도합의서가 없다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>재양도합의서와 서명검증 회신전문을 묶어 내려주는 API(zip 등)를 신설합니까? 회신전문은 어떤 형식(xml·txt·pdf)입니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-15</span><div><div class="gi-title">계약문서 일괄 다운로드 경로 없음 · 결과물 형식 미결</div><div class="gi-what"><code>SB s16</code>①은 파일 + 검증회신전문 다발을 요구하나 현행 첨부 다운로드는 단건·pdf/image 한정이고 문서 유형 목록에 재양도합의서가 없다. 결과물 파일 형식도 미결이라 화면 다운로드는 비활성이다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>재양도합의서와 서명검증 회신전문을 묶어 내려주는 API(zip 등)를 신설합니까? 회신전문은 어떤 형식(xml·txt·pdf)입니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-16</span><div><div class="gi-title">ID 체계 대응 미정</div><div class="gi-what"><code>SB s14</code>·<code>s16</code>은 <code>MID</code>·<code>채권매매업체ID</code>를 쓰고, 운영 코드는 <code>id</code>/<code>userId</code>/<code>userType</code> 체계를 쓴다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>스토리보드의 `MID`가 코드의 어느 필드(`id`·`userId`·`businessNumber`)에 대응합니까? `채권매매업체ID`는 어느 테이블에 있습니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
@@ -1486,7 +1486,8 @@
             <tr><td class="k">정산채권 양수 #27 계약서 열람</td><td class="c"><span class="j j-hyp">가설</span></td><td>스토리보드는 리스트와 <code>서명하기</code>만 보여주고 열람 동선을 그리지 않는다</td></tr>
             <tr><td class="k">정산채권 양수 #28 대상 선택</td><td class="c"><span class="j j-hyp">가설</span></td><td>개별 선택 UI가 스토리보드에 명시되지 않는다</td></tr>
             <tr><td class="k">서명 대기 목록 데이터</td><td class="c"><span class="j j-hyp">가설</span></td><td>목록 산출 조건이 스토리보드에 없다</td></tr>
-            <tr><td class="k">계약기록 MID·재양도합의서</td><td class="c"><span class="j j-hyp">가설</span></td><td><code>SB s16</code> 표 영역</td></tr>
+            <tr><td class="k">계약기록 MID</td><td class="c"><span class="j j-hyp">가설</span></td><td><code>SB s16</code> 표 영역</td></tr>
+            <tr><td class="k">계약기록 재양도합의서(파일)</td><td class="c"><span class="j j-chk">확인필요</span></td><td>내려줄 파일 형식이 미결. 다운로드 비활성</td></tr>
             <tr><td class="k">계약기록 화면 블록</td><td class="c"><span class="j j-hyp">가설</span></td><td>스토리보드는 조회 범위를 적지 않는다</td></tr>
             <tr><td class="k">쿠콘 #21 외부 이동</td><td class="c"><span class="j j-fix">확정</span></td><td>요구 근거와 URL 근거 모두 있다. 주소는 <code>SB s10</code> 삽입 이미지 주소창이 원천</td></tr>
             <tr><td class="k">쿠콘 화면 블록</td><td class="c"><span class="j j-chk">확인필요</span></td><td>페이허그가 보여주는 데이터가 0건이고 계정 스코프가 미정</td></tr>
