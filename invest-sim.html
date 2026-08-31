@@ -156,6 +156,14 @@
       </div>
       <div class="sim-grid">
         <div class="filter-field">
+          <label for="sim-asset">투자자산 규모 (원)</label>
+          <input type="number" id="sim-asset" class="input" step="10000000" min="0" value="99912000">
+        </div>
+        <div class="filter-field">
+          <label for="sim-idle">유휴자금 비율 (%)</label>
+          <input type="number" id="sim-idle" class="input" step="1" min="0" max="100" value="20">
+        </div>
+        <div class="filter-field">
           <label for="sim-r">할인율 (%)</label>
           <input type="number" id="sim-r" class="input" step="0.01" min="0.01" max="5" value="0.11">
         </div>

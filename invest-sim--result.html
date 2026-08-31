@@ -156,6 +156,14 @@
       </div>
       <div class="sim-grid">
         <div class="filter-field">
+          <label for="sim-asset">투자자산 규모 (원)</label>
+          <input type="number" id="sim-asset" class="input" step="10000000" min="0" value="99912000">
+        </div>
+        <div class="filter-field">
+          <label for="sim-idle">유휴자금 비율 (%)</label>
+          <input type="number" id="sim-idle" class="input" step="1" min="0" max="100" value="20">
+        </div>
+        <div class="filter-field">
           <label for="sim-r">할인율 (%)</label>
           <input type="number" id="sim-r" class="input" step="0.01" min="0.01" max="5" value="0.11">
         </div>
@@ -365,7 +373,7 @@
               <div class="summary-value">4.81<span class="unit">%</span></div>
             </div>
             <div>
-              <div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자자산 대비</span><span class="tip-panel">(투자실행금액 대비 × PSA) ÷ (PSA + PSC)<span class="tip-row"><span>PSA</span><span class="tip-green">39,956,000원</span></span><span class="tip-row"><span>PSC</span><span class="tip-green">140,000,000원</span></span><span class="tip-row sum"><span>EC 7일 합</span><span>기간 순현금 합계</span></span></span></span></div>
+              <div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자자산 대비</span><span class="tip-panel">(투자실행금액 대비 × PSA) ÷ (PSA + PSC)<span class="tip-row"><span>PSA</span><span class="tip-green">39,956,000원</span></span><span class="tip-row"><span>PSC</span><span class="tip-green">140,000,000원</span></span><span class="tip-row sum"><span>EC 7일 합</span><span>기간 순현금 합계</span></span><span class="tip-row sum"><span>미확정</span><span>대표 재전달 대기</span></span></span></span> <span class="badge sm badge-amber">미확정</span></div>
               <div class="summary-value">1.07<span class="unit">%</span></div>
             </div>
           </div>
@@ -378,7 +386,7 @@
       <div class="tbl-scroll">
         <table class="tbl">
           <thead>
-            <tr><th>정산예정일</th><th class="num">상환액</th><th class="num">투자실행금</th><th class="num">투자 수익</th><th class="num">W금융일수</th><th class="num">Ty수익율</th></tr>
+            <tr><th>정산예정일</th><th class="num">상환액</th><th class="num">투자실행금</th><th class="num">투자 수익</th><th class="num">W금융일수</th><th class="num"><span class="tooltip wide"><span class="tip-anchor">Ty수익율</span><span class="tip-panel">(④ ÷ ③) × 365 ÷ ⑤<span class="tip-row"><span>번호</span><span class="tip-green">일별 표 열 ③투자실행금 ④투자 수익 ⑤W금융일수</span></span><span class="tip-row sum"><span>미확정</span><span>대표 재전달 대기</span></span></span></span> <span class="badge sm badge-amber">미확정</span></th></tr>
           </thead>
           <tbody>
             <tr><td class="mono">2026-08-24</td><td class="num">15,189,360</td><td class="num">15,183,280</td><td class="num"><span class="strong">6,080</span></td><td class="num">2.00</td><td class="num">7.31%</td></tr>
