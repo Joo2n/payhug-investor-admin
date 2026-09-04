@@ -11,6 +11,8 @@
   - 사이드바 로고의 바깥 이동 — 자기 자신(index.html)의 메인 화면으로만
   - 형제 문서 상대링크(<파일>.html) — 해시 딥링크로 교체
   - glossary·capability·feasibility·inquiry·archive·review 문자열
+  - 투자 시뮬레이션 — 메뉴·화면·전용 CSS/JS·레지스터 항목 (통합본 전용). 그 해시로 들어오면 투자 자산
+  - 엑셀 미리보기 4종 — 뷰·레지스터·시트 JS (통합본 전용). 「엑셀 다운로드」는 실물 xlsx 직행. 그 해시로 들어오면 투자 자산
 
 자산은 산출물 문서에서 참조를 역산해 고른다. 참조가 0건인 파일은 복사하지 않는다.
 
@@ -26,6 +28,13 @@ import argparse, io, os, re, shutil, sys
 BANNED = ['glossary', 'capability', 'feasibility', 'inquiry', 'archive', 'review']
 ALLOWED_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com', 'www.we-bank.co.kr']
 BANNED_WORDS = ['랜딩', '갤러리', '문의서']
+# 투자 시뮬레이션 흔적 — 메뉴·화면·JS·문자열 어느 것이든 시연본에 남으면 index.html 을 쓰지 않는다
+SIM_BANNED = [r'invest-sim', r'시뮬', r'simRun', r'simBond', r'\bSIM(?:\b|_)', r'\bsim-']
+# 엑셀 미리보기 흔적 — 뷰 id·시트 DOM 클래스·시트 JS 함수·파일바 어느 것이든 시연본에 남으면 index.html 을 쓰지 않는다
+# (assets/sheet.css 링크는 남는다 — .back-link 를 증명서 화면이 쓴다)
+XLS_BANNED = [r'xls-assets-status', r'xls-assets-merchant', r'xls-profit', r'\bsheet-(?:frame|tabs|scroll|tab)\b',
+              r'class="sheet"', r'\b(?:sheetRow|sheetData|sheetName|renderXls)\b',
+              r'data-mount="(?:filebar|sheettabs|sheet)"', r'\bfile-bar\b', r'xls-get', r'미리보기 화면']
 # 화면이 내려줄 수 있는 자산 확장자 — 역산 규칙과 되짚기 검사가 함께 쓴다
 ASSET_EXT = ['.xlsx', '.pdf', '.txt', '.zip', '.csv']
 
@@ -72,6 +81,169 @@ def cut_balanced(text, head, opener, closer):
     return i, text.index('\n', k) + 1
 
 
+def drop_sim(s):
+    """투자 시뮬레이션은 통합본 전용이다. 시연본에서는 메뉴·뷰·CSS·레지스터·JS 를 걷어 내고,
+    그 해시로 들어오면 투자 자산 기본 화면이 선다."""
+    # a) 사이드바 메뉴 항목
+    s, n = re.subn(r'[ \t]*<a class="nav-item" data-menu="invest-sim"[^>]*>.*?</a>\n', '', s, flags=re.S)
+    if n:
+        ok('시뮬레이션 메뉴 항목 제거')
+    else:
+        warn('시뮬레이션 메뉴 항목 없음 — 원본에서 이미 빠졌다')
+
+    # b) 뷰 섹션 — 바로 앞의 머리 주석부터 </section> 까지
+    sec = re.search(r'[ \t]*<section class="screen" data-screen="invest-sim"[^>]*>', s)
+    if sec:
+        a = sec.start()
+        heads = list(re.finditer(r'[ \t]*<!-- ═+ 투자 시뮬레이션 ═+ -->\n', s[:a]))
+        if heads and not re.search(r'<section\b', s[heads[-1].start():a]):
+            a = heads[-1].start()
+        b = s.index('\n', s.index('</section>', sec.end())) + 1
+        s = s[:a] + s[b:]
+        ok('시뮬레이션 <section> 제거')
+    else:
+        warn('시뮬레이션 <section> 없음 — 원본에서 이미 빠졌다')
+
+    # c) 전용 CSS — 머리 주석부터 다음 블록 머리 또는 </style> 앞까지
+    c = re.search(r'  /\* ── 투자 시뮬레이션 ─[^\n]*\n', s)
+    if c:
+        nxt = re.search(r'\n  /\* ── |\n</style>', s[c.end():])
+        if nxt:
+            s = s[:c.start()] + s[c.end() + nxt.start() + 1:]
+            ok('시뮬레이션 전용 CSS 제거')
+        else:
+            warn('시뮬레이션 CSS 끝을 못 찾음 — 남겨 둔다')
+
+    # d) 레지스터 — DERIVE 한 줄 · SEED 블록 · STATE_META · 문자열 대응표 · SCREEN_ORDER
+    s, n = re.subn(r"[ \t]*'invest-sim':\s*function\(\)\{[^\n]*\n", '', s)
+    if n:
+        ok('DERIVE 에서 invest-sim 제거')
+    m = re.search(r"'invest-sim':\s*function\(s\)\{", s)
+    if m:
+        a, b = cut_balanced(s, m.group(0), '{', '}')
+        a = s.rfind('\n', 0, a) + 1
+        s = s[:a] + s[b:]
+        ok('SEED 에서 invest-sim 제거')
+    for pat, why in [
+            (r"'invest-sim':\s*\{(?:[^{}]|\{[^{}]*\})*\},\s*", 'STATE_META'),
+            (r"'invest-sim[^']*'\s*:\s*'[^']*',\s*", 'MENU_OF·SCREEN_LABEL·FILE2SCREEN·STATEFILE'),
+            (r"'invest-sim'\s*,\s*", 'SCREEN_ORDER')]:
+        s, n = re.subn(pat, '', s)
+        if n:
+            ok('%s 에서 invest-sim 제거 x%d' % (why, n))
+
+    # e) JS 본문 — 시뮬레이션 블록 머리부터 다음 블록 머리 전까지 (SIM 상태·산식·RENDER·입력 취급)
+    j = re.search(r'\n/\* ───────── 투자 시뮬레이션 ─', s)
+    if j:
+        nxt = re.search(r'\n/\* ───────── ', s[j.end():])
+        if nxt:
+            s = s[:j.start() + 1] + s[j.end() + nxt.start() + 1:]
+            ok('시뮬레이션 JS 본문 제거')
+        else:
+            fail('시뮬레이션 JS 본문 끝을 못 찾음')
+    else:
+        warn('시뮬레이션 JS 본문 없음 — 원본에서 이미 빠졌다')
+
+    # f) ACT 핸들러 — sim-add · sim-del · sim-run
+    k = re.search(r'\n/\* 투자 시뮬레이션 \*/\n', s)
+    if k:
+        nxt = re.search(r'\n/\* ═══ ', s[k.end():])
+        if nxt:
+            s = s[:k.start() + 1] + s[k.end() + nxt.start() + 1:]
+            ok('시뮬레이션 ACT 핸들러 제거')
+        else:
+            fail('시뮬레이션 ACT 블록 끝을 못 찾음')
+
+    # g) change·input 바인딩의 sim-* 분기
+    s, n = re.subn(r"[ \t]*if\(el\.dataset\.act === 'sim-[a-z]+'\)\{ simTake[A-Za-z]+\(el\); return; \}\n", '', s)
+    if n:
+        ok('입력 바인딩에서 sim-* 분기 제거 x%d' % n)
+
+    # h) go() 의 clearSimTimer() 호출
+    s, n = re.subn(r'[ \t]*clearSimTimer\(\);\n', '', s)
+    if n:
+        ok('clearSimTimer() 호출 제거 x%d' % n)
+
+    # i) 원장 주석 — 시뮬레이션과 같은 앵커라는 뒷문장
+    s, n = re.subn(r'\s*—\s*투자 시뮬레이션 simBond 와 같은 앵커라[^\n]*?(?=\s*\*/)', '.', s)
+    if n:
+        ok('원장 주석의 시뮬레이션 언급 제거')
+
+    # j) hashchange — 닿는 화면이 없는 해시(#invest-sim 계열)는 투자 자산 기본 화면
+    anchor = "  var h = readHash();\n  if(h) go(h.screen, h.state);\n});"
+    if anchor in s:
+        s = s.replace(anchor,
+            "  var h = readHash();\n"
+            "  go(h ? h.screen : 'invest-assets', h ? h.state : 'default');   /* 시연본: 닿는 화면이 없는 해시는 투자 자산으로 */\n"
+            "});", 1)
+        ok('hashchange — 닿는 화면이 없는 해시는 투자 자산으로')
+    else:
+        warn('hashchange 앵커 없음 — 첫 진입은 init 이 투자 자산으로 보낸다')
+    return s
+
+
+def drop_xls_preview(s):
+    """엑셀 미리보기 4종은 통합본 전용이다. 시연본에서는 뷰·레지스터·시트 JS·파일바 핸들러를 걷어 낸다.
+    「엑셀 다운로드」 버튼(ACT['xls-open'] → pullFile → a[download])과 「다운로드 완료」 상태는 그대로다.
+    그 해시로 들어오면 go() 의 폴백(app.html: if(!SEC(screen)) screen='invest-assets')과
+    drop_sim j) 의 hashchange 분기가 투자 자산 기본 화면을 세운다."""
+    # a) 뷰 섹션 4종
+    s, n = re.subn(r'[ \t]*<section class="screen" data-screen="xls-[a-z-]+"[^>]*>.*?</section>\n', '', s, flags=re.S)
+    if n:
+        ok('엑셀 미리보기 <section> 제거 x%d' % n)
+    else:
+        warn('엑셀 미리보기 <section> 없음 — 원본에서 이미 빠졌다')
+
+    # b) XLSX 레지스터 — 파일 없이 미리보기 화면만 가리키던 자리 2건 · screen 필드 · 머리 주석의 미리보기 문장
+    xa = s.find('var XLSX = {')
+    if xa >= 0:
+        xb = s.index('\n};', xa) + 3
+        blk = s[xa:xb]
+        blk, n1 = re.subn(r"[ \t]*'profit-(?:status|daily)':\s*\{screen:'xls-[^']*',\s*from:'[^']*'\},?\n", '', blk)
+        blk, n2 = re.subn(r"\s*screen:\s*(?:'xls-[^']*'|null),", '', blk)
+        s = s[:xa] + blk + s[xb:]
+        if n1:
+            ok('XLSX 에서 파일 없는 미리보기 자리 제거 x%d' % n1)
+        if n2:
+            ok('XLSX 에서 screen 필드 제거 x%d' % n2)
+    s, n = re.subn(r"\n[ \t]*`profit-status`·`profit-daily` 는 미리보기 화면을 가리키는 자리이고 파일을 갖지 않는다\. \*/", ' */', s)
+    s, n2 = re.subn(r"\n[ \t]*미리보기 화면\(파일바·시트\)과 다운로드가 같은 답을 쓰도록 (해석은[^\n]*)", r'\n   \1', s)
+    if n or n2:
+        ok('XLSX·xlsKey 주석의 미리보기 문장 제거 x%d' % (n + n2))
+
+    # c) 레지스터 — MENU_OF·SCREEN_LABEL·FILE2SCREEN 문자열 대응 · STATE_META · SCREEN_ORDER
+    for pat, why in [
+            (r"'xls-(?:assets|profit)-[^']*'\s*:\s*'[^']*',\s*", 'MENU_OF·SCREEN_LABEL·FILE2SCREEN'),
+            (r",\s*'xls-(?:assets|profit)-[^']*'\s*:\s*'[^']*'(?=\s*\})", 'FILE2SCREEN 말미'),
+            (r"'xls-(?:assets|profit)-[^']*'\s*:\s*\{[^{}]*\},\s*", 'STATE_META'),
+            (r"'xls-(?:assets|profit)-[^']*'\s*,\s*", 'SCREEN_ORDER')]:
+        s, n = re.subn(pat, '', s)
+        if n:
+            ok('%s 에서 xls-* 제거 x%d' % (why, n))
+
+    # d) 시트 JS — 머리 주석부터 마지막 RENDER['xls-…'] 줄까지 (sheetRow·sheetData·sheetName·renderXls)
+    j = re.search(r'\n/\* ───────── 엑셀 미리보기[^\n]*\n', s)
+    if j:
+        tail = list(re.finditer(r"^RENDER\['xls-[^']*'\][^\n]*\n", s[j.end():], re.M))
+        if tail and not re.search(r'\n/\* ───────── ', s[j.end():j.end() + tail[-1].end()]):
+            s = s[:j.start() + 1] + s[j.end() + tail[-1].end():]
+            ok('엑셀 미리보기 시트 JS 제거')
+        else:
+            fail('엑셀 미리보기 시트 JS 끝을 못 찾음')
+    else:
+        warn('엑셀 미리보기 시트 JS 없음 — 원본에서 이미 빠졌다')
+
+    # e) 파일바 「엑셀 파일 내려받기」 핸들러 — ACT['xls-get'] · KEEP_DEFAULT 항목
+    if "ACT['xls-get']" in s:
+        a, b = cut_balanced(s, "ACT['xls-get']", '{', '}')
+        s = s[:a] + s[b:]
+        ok("ACT['xls-get'] 제거")
+    s, n = re.subn(r"'xls-get',\s*", '', s)
+    if n:
+        ok('KEEP_DEFAULT 에서 xls-get 제거 x%d' % n)
+    return s
+
+
 def transform(s):
     # ── 1) 랜딩 갤러리 화면 — 뷰 ────────────────────────────────────
     m = re.search(r'<section class="screen" data-screen="index"[^>]*>', s)
@@ -113,7 +285,13 @@ def transform(s):
         if n:
             ok('%s 에서 index 제거 x%d' % (why, n))
 
-    # ── 4) 사이드바 로고 — 자기 자신(index.html) 안의 메인 화면으로만 ─
+    # ── 4) 투자 시뮬레이션 — 메뉴·뷰·CSS·레지스터·JS ───────────────
+    s = drop_sim(s)
+
+    # ── 5) 엑셀 미리보기 4종 — 뷰·레지스터·시트 JS (다운로드 버튼은 그대로) ─
+    s = drop_xls_preview(s)
+
+    # ── 6) 사이드바 로고 — 자기 자신(index.html) 안의 메인 화면으로만 ─
     logo = re.search(r'(<div class="sidebar-logo">\s*<a\b)([^>]*)>', s)
     if logo:
         s = (s[:logo.start()] + logo.group(1) +
@@ -128,7 +306,7 @@ def transform(s):
     if "'index'" in s or '"index"' in s:
         fail('index 화면 참조 잔존: %r' % (re.findall(r".{0,50}['\"]index['\"].{0,20}", s)[:2],))
 
-    # ── 5) 해시 링크가 실제로 화면을 넘기게 한다 ────────────────────
+    # ── 7) 해시 링크가 실제로 화면을 넘기게 한다 ────────────────────
     anchor = "    if(href.charAt(0) === '#'){\n      e.preventDefault();\n"
     patch = anchor + \
         "      var tg = href.slice(1).split('/');\n" \
@@ -140,7 +318,7 @@ def transform(s):
     else:
         warn('해시 분기 앵커 없음 — .html 상대링크를 그대로 둔다(클릭은 FILE2SCREEN 이 받는다)')
 
-    # ── 6) 형제 문서 상대링크 -> 해시 딥링크 ────────────────────────
+    # ── 8) 형제 문서 상대링크 -> 해시 딥링크 ────────────────────────
     if hash_ok:
         def js_map(name):
             mm = re.search(r'var %s = \{(.*?)\n\};' % name, s, re.S)
@@ -152,7 +330,7 @@ def transform(s):
                        lambda mo: 'href="#%s"' % tbl[mo.group(1)] if mo.group(1) in tbl else mo.group(0), s)
         ok('형제 .html 링크 -> 해시 딥링크 x%d (대응표 %d건)' % (n, len(tbl)))
 
-    # ── 7) 머리말 ───────────────────────────────────────────────────
+    # ── 9) 머리말 ───────────────────────────────────────────────────
     head = re.search(r'<!--\n  통합 프로토타입 —.*?\n-->', s, re.S)
     if head:
         s = s[:head.start()] + NEW_HEAD + s[head.end():]
@@ -178,8 +356,16 @@ def gate(s):
     for w in BANNED_WORDS:
         if w in s:
             fail('제거 대상 문구 잔존: %s' % w)
+    for b in SIM_BANNED:
+        hit = re.findall(r'.{0,30}' + b + r'.{0,30}', s)
+        if hit:
+            fail('시뮬레이션 잔존 %s x%d -> %r' % (b, len(hit), hit[:2]))
+    for b in XLS_BANNED:
+        hit = re.findall(r'.{0,30}' + b + r'.{0,30}', s)
+        if hit:
+            fail('엑셀 미리보기 잔존 %s x%d -> %r' % (b, len(hit), hit[:2]))
     if not hard:
-        ok('통로 검사 통과 — 금칙 0 · 형제링크 0 · 허용 외부호스트 %s' % ', '.join(ALLOWED_HOSTS))
+        ok('통로 검사 통과 — 금칙 0 · 형제링크 0 · 시뮬레이션 0 · 엑셀 미리보기 0 · 허용 외부호스트 %s' % ', '.join(ALLOWED_HOSTS))
 
 
 def wanted_assets(s):

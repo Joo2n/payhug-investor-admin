@@ -157,11 +157,11 @@
       <div class="sim-grid">
         <div class="filter-field">
           <label for="sim-asset">투자자산 규모 (원)</label>
-          <input type="number" id="sim-asset" class="input" step="10000000" min="0" value="99912000">
+          <input type="number" id="sim-asset" class="input" step="10000000" min="0" value="102309360">
         </div>
         <div class="filter-field">
           <label for="sim-idle">유휴자금 비율 (%)</label>
-          <input type="number" id="sim-idle" class="input" step="1" min="0" max="100" value="20">
+          <input type="number" id="sim-idle" class="input" step="1" min="0" max="100" value="19.5">
         </div>
         <div class="filter-field">
           <label for="sim-r">할인율 (%)</label>
@@ -181,11 +181,11 @@
         </div>
         <div class="filter-field">
           <label for="sim-from">시작일</label>
-          <input type="date" id="sim-from" class="input" value="2026-08-21">
+          <input type="date" id="sim-from" class="input" value="2026-08-20">
         </div>
         <div class="filter-field">
           <label for="sim-to">종료일</label>
-          <input type="date" id="sim-to" class="input" value="2026-08-27">
+          <input type="date" id="sim-to" class="input" value="2026-08-26">
         </div>
       </div>
       <p class="range-warn" hidden>시작일은 종료일보다 이후일 수 없습니다.</p>
@@ -292,23 +292,23 @@
     <div class="summary-grid">
       <div class="summary-card highlight">
         <div class="summary-label">투자자산</div>
-        <div class="summary-value">99,912,000<span class="unit">원</span></div>
+        <div class="summary-value">102,309,360<span class="unit">원</span></div>
         <div class="summary-sub">투자실행액 + 순현금</div>
       </div>
       <div class="summary-card">
         <div class="summary-label">투자실행액</div>
-        <div class="summary-value">79,912,000<span class="unit">원</span></div>
-        <div class="summary-sub">비중 80.0% · 보관 ㈜페이허그</div>
+        <div class="summary-value">82,309,360<span class="unit">원</span></div>
+        <div class="summary-sub">비중 80.5% · 보관 ㈜페이허그</div>
       </div>
       <div class="summary-card">
         <div class="summary-label">순현금</div>
         <div class="summary-value">20,000,000<span class="unit">원</span></div>
-        <div class="summary-sub">비중 20.0% · 보관 ㈜쿠콘</div>
+        <div class="summary-sub">비중 19.5% · 보관 ㈜쿠콘</div>
       </div>
       <div class="summary-card">
-        <div class="summary-label">Ty수익율</div>
-        <div class="summary-value">13.21<span class="unit">%</span></div>
-        <div class="summary-sub">W금융일수 3.04일 기준</div>
+        <div class="summary-label">예상 연환산수익률</div>
+        <div class="summary-value">12.84<span class="unit">%</span></div>
+        <div class="summary-sub">가중평균 금융일수 3.13일 기준</div>
       </div>
     </div>
 
@@ -327,7 +327,7 @@
             <tr><td class="num">5</td><td>기간 내</td><td>카드사</td><td class="num">15,200,000</td><td class="num">2</td><td class="num">15,183,280</td><td class="num">16,720</td><td class="num">10,640</td><td class="num"><span class="strong">6,080</span></td><td class="num">15,189,360</td></tr>
             <tr><td class="num">6</td><td>기간 내</td><td>배달의민족</td><td class="num">17,600,000</td><td class="num">3</td><td class="num">17,580,640</td><td class="num">19,360</td><td class="num">12,320</td><td class="num"><span class="strong">7,040</span></td><td class="num">17,587,680</td></tr>
             <tr><td class="num">7</td><td>기간 내</td><td>쿠팡이츠</td><td class="num">4,800,000</td><td class="num">5</td><td class="num">4,794,720</td><td class="num">5,280</td><td class="num">3,360</td><td class="num"><span class="strong">1,920</span></td><td class="num">4,796,640</td></tr>
-            <tr><td class="num">8</td><td>기간 내</td><td>요기요</td><td class="num">2,400,000</td><td class="num">6</td><td class="num">2,397,360</td><td class="num">2,640</td><td class="num">1,680</td><td class="num"><span class="strong">960</span></td><td class="num">2,398,320</td></tr>
+            <tr><td class="num">8</td><td>미회수</td><td>요기요</td><td class="num">2,400,000</td><td class="num">6</td><td class="num">2,397,360</td><td class="num">2,640</td><td class="num">1,680</td><td class="num"><span class="strong">960</span></td><td class="num">2,398,320</td></tr>
           </tbody>
         </table>
       </div>
@@ -338,12 +338,12 @@
       <div class="tbl-scroll">
         <table class="tbl">
           <thead>
-            <tr><th>자산 구분</th><th class="num">금액 (원)</th><th class="num">W금융일수</th><th class="num">S입금부족율</th><th class="num">Ty수익율</th><th class="num">비중</th><th>보관</th></tr>
+            <tr><th>자산 구분</th><th class="num">금액 (원)</th><th class="num">가중평균 금융일수</th><th class="num">입금부족률</th><th class="num">예상 연환산수익률</th><th class="num">비중</th><th>보관</th></tr>
           </thead>
           <tbody>
-            <tr><td><span class="name">투자실행액</span></td><td class="num"><span class="strong">79,912,000</span></td><td class="num">3.04일</td><td class="num">0.07%</td><td class="num">13.21%</td><td class="num">80.0%</td><td>㈜페이허그</td></tr>
-            <tr><td><span class="name">순현금</span></td><td class="num"><span class="strong">20,000,000</span></td><td class="num"><span class="none">-</span></td><td class="num"><span class="none">-</span></td><td class="num"><span class="none">-</span></td><td class="num">20.0%</td><td>㈜쿠콘</td></tr>
-            <tr class="total-row"><td>합계 (투자자산)</td><td class="num">99,912,000</td><td class="num"><span class="none">-</span></td><td class="num"><span class="none">-</span></td><td class="num"><span class="none">-</span></td><td class="num">100.0%</td><td><span class="none">-</span></td></tr>
+            <tr><td><span class="name">투자실행액</span></td><td class="num"><span class="strong">82,309,360</span></td><td class="num">3.13일</td><td class="num">0.07%</td><td class="num">12.84%</td><td class="num">80.5%</td><td>㈜페이허그</td></tr>
+            <tr><td><span class="name">순현금</span></td><td class="num"><span class="strong">20,000,000</span></td><td class="num"><span class="none">-</span></td><td class="num"><span class="none">-</span></td><td class="num"><span class="none">-</span></td><td class="num">19.5%</td><td>㈜쿠콘</td></tr>
+            <tr class="total-row"><td>합계 (투자자산)</td><td class="num">102,309,360</td><td class="num"><span class="none">-</span></td><td class="num"><span class="none">-</span></td><td class="num"><span class="none">-</span></td><td class="num">100.0%</td><td><span class="none">-</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -355,26 +355,26 @@
         <div class="stat">
           <div class="summary-label">검색대상기간</div>
           <div class="stat-period">7일</div>
-          <div class="summary-sub mono">2026-08-21 ~ 2026-08-27</div>
+          <div class="summary-sub mono">2026-08-20 ~ 2026-08-26</div>
         </div>
         <div class="stat">
           <div class="summary-label">투자실행금</div>
-          <div class="summary-value">39,956,000<span class="unit">원</span></div>
+          <div class="summary-value">37,558,640<span class="unit">원</span></div>
         </div>
         <div class="stat">
           <div class="summary-label">투자수익</div>
-          <div class="summary-value">16,000<span class="unit">원</span></div>
+          <div class="summary-value">15,040<span class="unit">원</span></div>
         </div>
         <div class="stat">
-          <div class="summary-label">Ty수익율</div>
+          <div class="summary-label">연환산수익률</div>
           <div class="ty-split">
             <div>
-              <div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자실행금액 대비</span><span class="tip-panel">PSMR × 365 ÷ PSD<span class="tip-row"><span>PSMR</span><span class="tip-green">투자수익 ÷ 투자실행금</span></span><span class="tip-row"><span>PSD</span><span class="tip-green">투자실행금 가중평균 금융일수</span></span><span class="tip-row"><span>항등식</span><span class="tip-green">할인율 − max(0, 미지급금 − 과지급금) ÷ 투자실행액</span></span><span class="tip-row"><span>부족액 0</span><span class="tip-green">할인율 0.11% ↔ SMR 0.110121% · 미확정</span></span><span class="tip-row sum"><span>대표 DM 16:45</span><span>실적치 · SMR 계통</span></span></span></span></div>
-              <div class="summary-value">4.81<span class="unit">%</span></div>
+              <div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자실행금액 대비</span><span class="tip-panel">PY<sub>a</sub> · 투자실행금액 대비 연환산수익률 (관찰된 값) · PMR × 365 ÷ PD<span class="tip-row"><span>PMR</span><span class="tip-green">기간 투자수익율 · PM ÷ PA = 0.040044%</span></span><span class="tip-row"><span>PM</span><span class="tip-green">기간 투자수익 · 15,040원</span></span><span class="tip-row"><span>PA</span><span class="tip-green">기간 투자실행금 · 37,558,640원</span></span><span class="tip-row"><span>PD</span><span class="tip-green">기간 가중평균 금융일수 · 2.85일</span></span><span class="tip-row"><span>항등식</span><span class="tip-green">할인율 − max(0, 미지급금 − 과지급금) ÷ 투자실행액</span></span><span class="tip-row"><span>부족액 0</span><span class="tip-green">할인율 0.11% ↔ PMR 0.110121% · 미확정</span></span><span class="tip-row sum"><span>대표 DM 16:45</span><span>관찰된 값 · PMR 계통</span></span></span></span></div>
+              <div class="summary-value">5.13<span class="unit">%</span></div>
             </div>
             <div>
-              <div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자자산 대비</span><span class="tip-panel">(투자실행금액 대비 × PSA) ÷ (PSA + PSC)<span class="tip-row"><span>PSA</span><span class="tip-green">39,956,000원</span></span><span class="tip-row"><span>PSC</span><span class="tip-green">140,000,000원</span></span><span class="tip-row sum"><span>EC 7일 합</span><span>기간 순현금 합계</span></span><span class="tip-row sum"><span>미확정</span><span>대표 재전달 대기</span></span></span></span> <span class="badge sm badge-amber">미확정</span></div>
-              <div class="summary-value">1.07<span class="unit">%</span></div>
+              <div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자자산 대비</span><span class="tip-panel">PY<sub>t</sub> · 투자자산 대비 연환산수익률 (관찰된 값) · PM × 365 ÷ ( Σ( A<sub>i</sub> × D<sub>i</sub> ) + PEC )<span class="tip-row"><span>PY<sub>a</sub></span><span class="tip-green">투자실행금액 대비 연환산수익률 (관찰된 값) · 5.13%</span></span><span class="tip-row"><span>Σ( A<sub>i</sub> × D<sub>i</sub> )</span><span class="tip-green">107,082,080원</span></span><span class="tip-row"><span>PEC</span><span class="tip-green">기간 순현금 · 140,000,000원</span></span><span class="tip-row sum"><span>EC</span><span>순현금 · 20,000,000원 × 7일</span></span><span class="tip-row sum"><span>미확정</span><span>대표 확인 대기</span></span></span></span> <span class="badge sm badge-amber">미확정</span></div>
+              <div class="summary-value">2.22<span class="unit">%</span></div>
             </div>
           </div>
         </div>
@@ -386,16 +386,15 @@
       <div class="tbl-scroll">
         <table class="tbl">
           <thead>
-            <tr><th>정산예정일</th><th class="num">상환액</th><th class="num"><span class="tooltip wide"><span class="tip-anchor">투자실행금</span><span class="tip-panel">⑥ 의 ③<span class="tip-row"><span>번호</span><span class="tip-green">상단 현황의 기간 전체 숫자 · 칸 미지목</span></span><span class="tip-row sum"><span>미확정</span><span>대표 재전달 대기</span></span></span></span> <span class="badge sm badge-amber">미확정</span></th><th class="num">투자 수익</th><th class="num">W금융일수</th><th class="num"><span class="tooltip wide"><span class="tip-anchor">Ty수익율</span><span class="tip-panel">(④ ÷ ③) × 365 ÷ ⑤<span class="tip-row"><span>번호</span><span class="tip-green">일별 표 열 ③투자실행금 ④투자 수익 ⑤W금융일수</span></span><span class="tip-row"><span>행</span><span class="tip-green">정산예정일이 그 날짜인 대상정산금채권 집합</span></span><span class="tip-row sum"><span>미확정</span><span>대표 재전달 대기</span></span></span></span> <span class="badge sm badge-amber">미확정</span></th></tr>
+            <tr><th>정산예정일</th><th class="num">상환액</th><th class="num"><span class="tooltip wide"><span class="tip-anchor">투자실행금</span><span class="tip-panel">⑥ 의 ③<span class="tip-row"><span>번호</span><span class="tip-green">상단 현황의 기간 전체 숫자 · 칸 미지목</span></span><span class="tip-row sum"><span>미확정</span><span>대표 재전달 대기</span></span></span></span> <span class="badge sm badge-amber">미확정</span></th><th class="num">투자 수익</th><th class="num">가중평균 금융일수</th><th class="num"><span class="tooltip wide"><span class="tip-anchor">연환산수익률</span><span class="tip-panel">(④ ÷ ③) × 365 ÷ ⑤<span class="tip-row"><span>번호</span><span class="tip-green">일별 표 열 ③투자실행금 ④투자 수익 ⑤가중평균 금융일수</span></span><span class="tip-row"><span>행</span><span class="tip-green">정산예정일이 그 날짜인 대상정산금채권 집합</span></span><span class="tip-row sum"><span>미확정</span><span>대표 재전달 대기</span></span></span></span> <span class="badge sm badge-amber">미확정</span></th></tr>
           </thead>
           <tbody>
             <tr><td class="mono">2026-08-24</td><td class="num">15,189,360</td><td class="num">15,183,280</td><td class="num"><span class="strong">6,080</span></td><td class="num">2.00</td><td class="num">7.31%</td></tr>
             <tr><td class="mono">2026-08-25</td><td class="num">17,587,680</td><td class="num">17,580,640</td><td class="num"><span class="strong">7,040</span></td><td class="num">3.00</td><td class="num">4.87%</td></tr>
             <tr><td class="mono">2026-08-26</td><td class="num">4,796,640</td><td class="num">4,794,720</td><td class="num"><span class="strong">1,920</span></td><td class="num">5.00</td><td class="num">2.92%</td></tr>
-            <tr><td class="mono">2026-08-27</td><td class="num">2,398,320</td><td class="num">2,397,360</td><td class="num"><span class="strong">960</span></td><td class="num">6.00</td><td class="num">2.44%</td></tr>
           </tbody>
           <tfoot>
-            <tr><td>합계</td><td class="num">39,972,000</td><td class="num">39,956,000</td><td class="num">16,000</td><td class="num">3.04<span class="avg-sub">가중평균</span></td><td class="num">4.81%<span class="avg-sub">가중평균</span></td></tr>
+            <tr><td>합계</td><td class="num">37,573,680</td><td class="num">37,558,640</td><td class="num">15,040</td><td class="num">2.85<span class="avg-sub">가중평균</span></td><td class="num">5.13%<span class="avg-sub">가중평균</span></td></tr>
           </tfoot>
         </table>
       </div>

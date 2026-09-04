@@ -333,7 +333,7 @@
         <div class="legend-item"><span class="legend-chip" style="background:var(--red-500)"></span>확인필요 — 데이터가 없거나 값의 정의가 미확정이다</div>
         <div class="legend-item"><span class="legend-chip" style="background:var(--gray-300)"></span>해당없음 — 실서비스 화면이 아니다</div>
       </div>
-      <p class="sec-lead" style="margin:16px 0 0">화면 블록 막대는 엑셀 미리보기 4종을 1건으로 환산한 12건 기준. 확정 판정을 받은 화면 블록은 0건 — 어느 화면도 그대로 개발 착수할 수 있는 상태가 아니다.</p>
+      <p class="sec-lead" style="margin:16px 0 0">화면 블록 막대는 엑셀 미리보기 4종을 1건으로 환산한 12건 기준. 확정 판정을 받은 화면 블록은 0건. 어느 화면도 그대로 개발 착수할 수 있는 상태가 아니다.</p>
       <p class="sec-lead" style="margin:8px 0 0">데이터 항목 <span class="j j-fix">확정</span> 27건 가운데 14건은 이중 판정 — 13건이 <strong>확정(정의·표기·구성) / 확인필요(원천·산식)</strong>, 나머지 1건(투자 시뮬레이션 플랫폼별 만기)이 <strong>확정(실측) / 가설(반올림)</strong>. 원천 기준으로만 세면 실데이터로 채울 수 있는 항목은 가맹점명·가맹점ID·사업자번호·대표자·작성자 고정문구·조회 메뉴 명칭 수준이다.</p>
     </div>
   </section>
@@ -385,7 +385,7 @@
             <tr>
               <td class="k">열람 대상</td>
               <td>전 참여자 배분율·배분액·수수료 원장·세금계산서</td>
-              <td>자기 투자금액·수익·W금융일수·S입금부족율·Ty수익율</td>
+              <td>자기 투자실행액·수익·W금융일수·S입금부족율·Ty수익율</td>
             </tr>
             <tr>
               <td class="k">상태 변경</td>
@@ -510,7 +510,7 @@
         </div>
         <div class="blk">
           <p class="blk-label">보여주는 데이터 항목과 출처</p>
-          <p style="margin:0 0 10px; font-size:12px; line-height:18px; color:var(--gray-500)">현황 표 7열(자산 구분·금액·W금융일수·S입금부족율·ty수익율·비중·보관)과 가맹점별 표 6열(가맹점·투자금액·W금융일수·S입금부족율·ty수익율·비중)은 <code>SB s3</code>의 표 구성과 1:1로 일치한다.</p>
+          <p style="margin:0 0 10px; font-size:12px; line-height:18px; color:var(--gray-500)">현황 표 7열(자산 구분·금액·W금융일수·S입금부족율·ty수익율·비중·보관)과 가맹점별 표 6열(가맹점·투자실행액·W금융일수·S입금부족율·ty수익율·비중)은 <code>SB s3</code>의 표 구성과 1:1로 일치한다.</p>
           <div class="scroll"><table class="dt">
             <thead><tr><th style="width:20%">항목</th><th style="width:18%">페이허그 로직상 출처</th><th>근거와 판정 사유</th><th style="width:96px">판정</th></tr></thead>
             <tbody>
@@ -519,7 +519,7 @@
               <tr><td class="k">순현금<br><span class="src">보관 ㈜쿠콘</span></td><td>—</td><td>쿠콘을 자금 보관 주체로 규정한 문서가 없다. 운영 어드민의 모계좌 잔액 화면은 전역 단일 계좌이고 가맹점·투자자 분해가 없으며 <code>isAdmin</code> 아니면 페이지 전체가 차단된다(<code>app/account-balance/page.tsx:67·:119-141·:171</code>)</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
               <tr><td class="k">합계(투자자산)</td><td>투자실행액 + 순현금</td><td>합계 행이 있다는 사실은 <code>SB s3</code>로 확정, 합산 정의는 표 구조에서 읽은 것</td><td class="c"><span class="j j-hyp">가설</span></td></tr>
               <tr><td class="k">비중</td><td>현황표·가맹점별표에 같은 라벨로 각각 존재</td><td><strong>분모가 표마다 다르다.</strong> 설계안 예시값 기준 현황표는 투자자산 총액, 가맹점별표는 투자실행액 합계다. 스토리보드에 분모 설명이 없다</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
-              <tr><td class="k">W금융일수</td><td><code>SB s3</code> 각주</td><td>각주 정의 — &ldquo;취소 등이 없다는 가정하에, 보유한 정산채권들의 투자금액을 가중한 금융일수 평균&rdquo;. 하위 개념 <code>금융일수</code> = &ldquo;양수일로부터 지급예정일까지의 (…) 일수&rdquo;. 정의는 원문이나 <code>양수일</code>·<code>지급예정일</code>·<code>투자금액</code>을 정산채권 단위로 들고 있는 테이블이 운영 코드에 없다. Figma 정산채권DB 설계에는 대응 필드가 있다(<code>지급예상일</code>·<code>보정후양수가액</code>, 노드 <code>529:2950</code>)</td><td class="c"><span class="j j-fix">확정</span> <span class="src">정의</span><br><span class="j j-chk">확인필요</span> <span class="src">원천</span></td></tr>
+              <tr><td class="k">W금융일수</td><td><code>SB s3</code> 각주</td><td>각주 정의 — &ldquo;취소 등이 없다는 가정하에, 보유한 정산채권들의 투자금액을 가중한 금융일수 평균&rdquo;. 하위 개념 <code>금융일수</code> = &ldquo;양수일로부터 지급예정일까지의 (…) 일수&rdquo;. 정의는 원문이나 <code>양수일</code>·<code>지급예정일</code>·<code>투자실행액</code>을 정산채권 단위로 들고 있는 테이블이 운영 코드에 없다. Figma 정산채권DB 설계에는 대응 필드가 있다(<code>지급예상일</code>·<code>보정후양수가액</code>, 노드 <code>529:2950</code>)</td><td class="c"><span class="j j-fix">확정</span> <span class="src">정의</span><br><span class="j j-chk">확인필요</span> <span class="src">원천</span></td></tr>
               <tr><td class="k">S입금부족율</td><td><code>SB s3</code> 각주</td><td>각주 정의 — &ldquo;20일 전일자부터 11일 전일자까지인 기간의 거래금액을 샘플로 한 <code>입금부족액 / 선정산금액</code>&rdquo;. 원천은 Figma 정산채권DB <code>상환부족액</code>(노드 <code>529:2950</code>)으로 보이나 운영 코드 미노출</td><td class="c"><span class="j j-fix">확정</span> <span class="src">정의</span><br><span class="j j-chk">확인필요</span> <span class="src">원천</span></td></tr>
               <tr><td class="k">Ty수익율</td><td><code>SB s3</code> 각주</td><td>각주 정의 — <code>할인율 × (365 / w금융일수)</code>. 설계안 예시값을 역산하면 할인율 ≈ 0.11%로 Figma 정산채권DB 수익권자 할인율과 맞으나, 그 값은 C1 범위이므로 채택하지 않는다</td><td class="c"><span class="j j-fix">확정</span> <span class="src">정의</span><br><span class="j j-chk">확인필요</span> <span class="src">할인율 실체</span></td></tr>
               <tr><td class="k">보관<br><span class="src">㈜페이허그 / ㈜쿠콘</span></td><td>스토리보드 고정 표기</td><td>표기는 <code>SB s3</code>. 보관 주체 개념이 정책서·계약서에 정의된 바 없다</td><td class="c"><span class="j j-fix">확정</span> <span class="src">표기</span><br><span class="j j-chk">확인필요</span> <span class="src">개념</span></td></tr>
@@ -529,7 +529,7 @@
             </tbody>
           </table></div>
         </div>
-        <div class="summ"><b>판정 요약</b> — 표 구성과 4개 지표의 정의는 <code>SB s3</code> 원문으로 확정돼 있고 이것이 현행 계산 기준이다. 그러나 그 정의가 요구하는 원천 값(정산채권 단위의 양수일·지급예정일·투자금액·입금부족액)을 운영 백엔드에서 확인할 수 없어, 화면 6개 열 가운데 실데이터로 채울 수 있는 것은 <b>가맹점명 하나</b>다.</div>
+        <div class="summ"><b>판정 요약</b> — 표 구성과 4개 지표의 정의는 <code>SB s3</code> 원문으로 확정돼 있고 이것이 현행 계산 기준이다. 그러나 그 정의가 요구하는 원천 값(정산채권 단위의 양수일·지급예정일·투자실행액·입금부족액)을 운영 백엔드에서 확인할 수 없어, 화면 6개 열 가운데 실데이터로 채울 수 있는 것은 <b>가맹점명 하나</b>다.</div>
         <div class="warn-inline"><b>혼용 주의</b> — 운영 코드에는 &ldquo;남아 있는 금액&rdquo;처럼 보이는 필드가 4종 있으나 어느 것도 투자 원금 잔액이 아니다. 이관 부채 잔액(<code>debt.remainingAmount</code>), 미회수 이월(<code>carryForwardAmount</code>), 광고비 누적 미회수(<code>outstandingAmount</code>), 현장결제 미회수(<code>offlinePendingTotal</code>). 각각 발생 원인과 귀속 주체가 다르며, 이 중 미회수 이월은 6대 개념의 미회수금과도 다른 축이다. 투자자산 화면을 만들면서 이 값들을 원금 잔액으로 끌어다 쓰지 않는다.</div>
       </div>
     </article>
@@ -638,7 +638,7 @@
               <tr><td class="k">검색대상기간</td><td>기본값 <code>일주일</code></td><td><code>SB s7</code></td><td class="c"><span class="j j-fix">확정</span><br><span class="src">표기</span></td></tr>
               <tr><td class="k">투자실행금<span class="src-line">현황</span></td><td>—</td><td>스토리보드가 현황의 <code>투자실행금</code>과 일별표 동명 열의 관계를 정의하지 않는다. 현행 예시값은 두 자리가 같은 179,970,919원이나 어느 정의로 같아진 것인지는 적혀 있지 않다</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
               <tr><td class="k">투자수익<span class="src-line">현황</span></td><td>—</td><td>위와 동일</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
-              <tr><td class="k">Ty수익율<span class="src-line">투자실행금액 대비 / 투자자산 대비</span></td><td>2행 구성</td><td>구성은 <code>SB s7</code>로 확정. 두 값의 관계가 스토리보드에 없다. 기본 조회 기간(일주일) 화면값은 투자실행금액 대비 3.99% · 투자자산 대비 2.24%다. 두 값은 대표 정의 마커 ⑤ <code>(④ × 투자실행금) ÷ (투자실행금 + 기간 순현금 합)</code>으로 이어지며, <code>④ × 투자실행액 비중</code>(3.99% × 80.0% = 3.19%)과는 다른 산식이다</td><td class="c"><span class="j j-fix">확정</span> <span class="src">구성</span><br><span class="j j-chk">확인필요</span> <span class="src">산식</span></td></tr>
+              <tr><td class="k">Ty수익율<span class="src-line">투자실행금액 대비 / 투자자산 대비</span></td><td>2행 구성</td><td>구성은 <code>SB s7</code>로 확정. 두 값의 관계가 스토리보드에 없다. 기본 조회 기간(일주일) 화면값은 투자실행금액 대비 3.99% · 투자자산 대비 2.25%다. 두 값은 대표 정의 마커 ⑤ <code>(④ × 투자실행금) ÷ (투자실행금 + 기간 순현금 합)</code>으로 이어지며, <code>④ × 투자실행액 비중</code>(3.99% × 80.0% = 3.19%)과는 다른 산식이다</td><td class="c"><span class="j j-fix">확정</span> <span class="src">구성</span><br><span class="j j-chk">확인필요</span> <span class="src">산식</span></td></tr>
               <tr><td class="k">입금일자</td><td>—</td><td><code>SB s7</code></td><td class="c"><span class="j j-hyp">가설</span></td></tr>
               <tr><td class="k">상환액</td><td>Figma 정산채권DB <code>입금액</code>(노드 <code>529:2950</code>)이 대응 후보</td><td><code>SB s7</code></td><td class="c"><span class="j j-hyp">가설</span></td></tr>
               <tr><td class="k">투자실행금<span class="src-line">일별</span></td><td>—</td><td><code>SB s7</code></td><td class="c"><span class="j j-hyp">가설</span></td></tr>
@@ -650,7 +650,7 @@
           </table></div>
         </div>
         <div class="note-inline"><b>참고 — 운영 어드민에 실재하는 가장 가까운 데이터</b><br>
-          투자자 몫 금액이 실제로 존재하는 곳은 배분 원장이다. 배치 단위 이해관계자 배분 요약이 이미 있고(<code>BatchDetailTab.tsx:609-675</code> — 8열 + 합계행), 참여자 역할 상수에 <code>INVESTOR: "투자자"</code>가 정의돼 있으며(<code>app/settlement/policies/page.tsx:41-49</code>), 정산 상품의 기본 요율행은 일반계약·다우계약 양쪽 모두 첫 행이 <code>MARGIN × INVESTOR</code>다.
+          투자자 몫 금액이 실제로 존재하는 곳은 배분 원장이다. 배치 단위 이해관계자 배분 요약이 이미 있고(<code>BatchDetailTab.tsx:609-675</code> — 8열 + 합계행), 참여자 역할 값에 <code>INVESTOR: "투자자"</code>가 정의돼 있으며(<code>app/settlement/policies/page.tsx:41-49</code>), 정산 상품의 기본 요율행은 일반계약·다우계약 양쪽 모두 첫 행이 <code>MARGIN × INVESTOR</code>다.
           기간 단위 조회 엔드포인트도 열려 있다 — <code>GET /admin/settlement/batch-payouts?dateFrom&amp;dateTo</code>·<code>GET /admin/settlement/batch-ledgers?dateFrom&amp;dateTo</code>(<code>hooks/useSettlementOverview.ts:275-276·:284-285</code>). <code>role === "INVESTOR"</code> 행을 <code>Batch.targetDate</code>로 묶으면 일별 표의 뼈대가 신규 집계 없이 성립한다.<br>
           다만 이 원장이 담는 구조는 정액 합산 + 다자 배분율이고, 스토리보드가 요구하는 구조는 할인 매입한 채권의 상환 결과다(<code>상환액</code>·<code>투자실행금</code>·<code>할인율</code> 축). 원장 상세의 수익이 <code>매출 − 원가</code> 축으로 서 있어 스토리보드의 상환 축과 만나지 않는다(<code>spec/90_정책레지스터.md</code> V14의 확장판).</div>
         <div class="summ"><b>판정 요약</b> — 조회·필터·엑셀 골격은 운영 어드민 부품을 그대로 쓸 수 있고 표를 채울 원자료도 배분 원장에 있다(<code>app/profit</code> 라우트 자체는 없다. 운영 어드민에 &ldquo;수익&rdquo; 메뉴·탭·라벨은 0건이며 수익 개념은 원장 컬럼으로만 존재한다). 그러나 <b>투자 수익 열의 산식이 스토리보드에 없고</b>, 설계안이 채워 넣은 산식 카드 2종은 같은 화면의 표를 만들어내지 못한다.</div>
@@ -871,7 +871,7 @@
             <li><span class="a-no">33</span><div class="a-body">
               <div class="a-verb">선택 문서를 일괄 내려받는다</div>
               <div class="a-el">선택 문서 다운로드 (n)</div>
-              <div class="a-note">요구는 <code>SB s16</code>①(체크박스에 매칭된 각 MID의 재양도합의서 파일 + 그 서명값에 대한 인증서발행기관 서명검증회신전문 다운로드). 그러나 운영 어드민의 첨부 다운로드는 단건이고(<code>GET /admin/attachments/{id}/download</code>) 지원 타입이 pdf·image 2종뿐이며, 문서 유형 목록(<code>app/merchants/[id]/page.tsx:101-111</code>)에 재양도합의서·양수도계약서·증명서 항목이 없다. 일괄 압축 다운로드 경로도 없다.<br>결과물을 어떤 파일 형식으로 받는지가 2026-08-28 미팅 확인 필요로 남아 이 버튼은 <strong>비활성</strong>이다. 기능 자체가 빠진 것이 아니라 형식이 정해질 때까지 실물을 걸지 않는 상태다(대표 확인 요청 Q-5)</div>
+              <div class="a-note">요구는 <code>SB s16</code>①(체크박스에 매칭된 각 MID의 재양도합의서 파일 + 그 서명값에 대한 인증서발행기관 서명검증회신전문 다운로드). 그러나 운영 어드민의 첨부 다운로드는 단건이고(<code>GET /admin/attachments/{id}/download</code>) 지원 타입이 pdf·image 2종뿐이며, 문서 유형 목록(<code>app/merchants/[id]/page.tsx:101-111</code>)에 재양도합의서·양수도계약서·증명서 항목이 없다. 일괄 압축 다운로드 경로도 없다.<br>결과물을 어떤 파일 형식으로 받는지가 2026-08-28 미팅에서 정해지지 않은 채 남아 이 버튼은 <strong>비활성</strong>이다. 기능 자체가 빠진 것이 아니라 형식이 정해질 때까지 실물을 걸지 않는 상태다(대표 확인 요청 Q-5)</div>
             </div><span class="j j-chk">확인필요</span></li>
             <li><span class="a-no">34</span><div class="a-body">
               <div class="a-verb">표 전건을 한 쪽에서 본다</div>
@@ -892,7 +892,7 @@
             <tbody>
               <tr><td class="k">MID</td><td>재양도합의서 보관 데이터</td><td><code>SB s16</code>(표 2번 영역)</td><td class="c"><span class="j j-hyp">가설</span></td></tr>
               <tr><td class="k">가맹점</td><td>회원DB 가맹점명</td><td><code>SB s16</code>(표 3번 영역)</td><td class="c"><span class="j j-fix">확정</span><br><span class="src">필드</span></td></tr>
-              <tr><td class="k">재양도합의서(파일)</td><td>재양도합의서 파일</td><td>열 자체는 <code>SB s16</code>에 있다. 내려줄 파일 형식이 미결이라 행별 다운로드 6건·묶음 2건을 비활성으로 두었다(대표 확인 요청 Q-5). 나머지 3행은 <code>서명 대기</code>라 다운로드 자리가 서지 않는다</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
+              <tr><td class="k">재양도합의서(파일)</td><td>재양도합의서 파일</td><td>열 자체는 <code>SB s16</code>에 있다. 내려줄 파일 형식이 정해지지 않아 행별 다운로드 6건·묶음 2건을 비활성으로 두었다(대표 확인 요청 Q-5). 나머지 3행은 <code>서명 대기</code>라 다운로드 자리가 서지 않는다</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
               <tr><td class="k">서명일</td><td>—</td><td>근거 없음. 설계안 신규 열</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
               <tr><td class="k">검증<span class="src-line">검증 완료</span></td><td>서명검증 회신전문 존재 여부로 추정</td><td><code>SB s16</code>①은 회신전문을 <strong>다운로드 대상</strong>으로만 언급하고 목록의 상태 열로 두지 않는다. 검증 실패 상태 미설계</td><td class="c"><span class="j j-chk">확인필요</span></td></tr>
             </tbody>
@@ -937,7 +937,7 @@
           </table></div>
         </div>
         <div class="summ"><b>판정 요약</b> — 페이허그가 보여주는 데이터가 0건인 화면이며 외부 링크가 전부다. 쿠콘은 이체(펌뱅킹·오픈뱅킹) 실행 벤더로 락계좌↔모계좌 자금 이동을 처리하는 제3자 기술 파트너이며, 투자자(자금 공급자)와 문서상 교차 지점이 없다.<br>
-          운영 어드민에 쿠콘 연동은 이미 있다 — <code>services/cooconService.ts</code>의 엔드포인트 4개, 전문번호 상수(출금 <code>02003700</code>·입금 <code>02001110</code>), 락계좌 등록 배지. 반면 운영 어드민 레포에는 <code>We-bank</code>·<code>위뱅크</code>·<code>펌뱅킹</code>·<code>오픈뱅킹</code> 문자열이 0건이고 쿠콘 자격증명·콘솔 URL도 프론트에 없다. 콘솔 주소·로그인 수단·조회 메뉴의 근거는 코드가 아니라 스토리보드 삽입 이미지 쪽에 있다. 이 메뉴는 기존 연동의 연장이 아니라 <b>별도 외부 콘솔 계정 발급 문제</b>다.</div>
+          운영 어드민에 쿠콘 연동은 이미 있다 — <code>services/cooconService.ts</code>의 엔드포인트 4개, 전문번호(출금 <code>02003700</code>·입금 <code>02001110</code>), 락계좌 등록 배지. 반면 운영 어드민 레포에는 <code>We-bank</code>·<code>위뱅크</code>·<code>펌뱅킹</code>·<code>오픈뱅킹</code> 문자열이 0건이고 쿠콘 자격증명·콘솔 URL도 프론트에 없다. 콘솔 주소·로그인 수단·조회 메뉴의 근거는 코드가 아니라 스토리보드 삽입 이미지 쪽에 있다. 이 메뉴는 기존 연동의 연장이 아니라 <b>별도 외부 콘솔 계정 발급 문제</b>다.</div>
         <div class="warn-inline"><b>계정 스코프</b> — 쿠콘 콘솔은 페이허그 전체 자금 이동(락계좌↔모계좌 스윕 포함)을 담는다. 스코프 없는 계정을 투자자에게 발급하면 전체가 열린다.</div>
       </div>
     </article>
@@ -1094,7 +1094,7 @@
         <div class="expo-head"><span class="t">노출 가능</span><span class="c">10</span></div>
         <ul class="expo-list">
           <li><div class="expo-item">가맹점명·가맹점ID(MID)</div><div class="expo-why">계약 당사자 정보. 대상 범위는 스코프 정의에 달려 있다<span class="expo-src">SB s3·s14·s16 / types/merchant.ts:17-20</span></div></li>
-          <li><div class="expo-item">자기 채권의 투자금액·상환액·수익</div><div class="expo-why">계약상 채권의 최종 귀속자가 유동화기관. 산식 정의는 별건<span class="expo-src">archive_02_계약약관.md §2.4 제3조②③ / SB s3·s7</span></div></li>
+          <li><div class="expo-item">자기 채권의 투자실행액·상환액·수익</div><div class="expo-why">계약상 채권의 최종 귀속자가 유동화기관. 산식 정의는 별건<span class="expo-src">archive_02_계약약관.md §2.4 제3조②③ / SB s3·s7</span></div></li>
           <li><div class="expo-item">W금융일수·S입금부족율·Ty수익율의 정의</div><div class="expo-why">정의는 확정, 원천 데이터는 미확인<span class="expo-src">SB s3 각주 4종 원문</span></div></li>
           <li><div class="expo-item">재양도합의서 원본 파일</div><div class="expo-why">자신이 당사자인 계약서<span class="expo-src">SB s16①</span></div></li>
           <li><div class="expo-item">서명값과 인증서 발행기관 검증 회신전문</div><div class="expo-why">증빙 확보 목적<span class="expo-src">SB s3⑬ · SB s16①</span></div></li>
@@ -1109,7 +1109,7 @@
       <div class="expo-col no">
         <div class="expo-head"><span class="t">노출 불가·주의</span><span class="c">11</span></div>
         <ul class="expo-list">
-          <li><div class="expo-item">1. 타 투자자의 상호·투자금액·수익</div><div class="expo-why"><span class="lbl">사유</span> 약관 제11조② — 페이허그의 유동화회사 및 수수료 조건은 비밀정보<span class="expo-src">archive_02_계약약관.md §2.5</span></div></li>
+          <li><div class="expo-item">1. 타 투자자의 상호·투자실행액·수익</div><div class="expo-why"><span class="lbl">사유</span> 약관 제11조② — 페이허그의 유동화회사 및 수수료 조건은 비밀정보<span class="expo-src">archive_02_계약약관.md §2.5</span></div></li>
           <li><div class="expo-item">2. 페이허그·총판·영업의 배분율과 배분액</div><div class="expo-why"><span class="lbl">사유</span> 같은 조항. 투자자에게 필요한 것은 자기 몫이며, 배분 폭포수 전체는 페이허그의 원가·마진 구조 그 자체다. 배분 요약 8열 표와 요율 툴팁을 그대로 투자자에게 재사용하면 안 된다<span class="expo-src">spec/admin/02_매출조회.md #40 / BatchDetailTab.tsx:609-675·:868-912</span></div></li>
           <li><div class="expo-item">3. 자기 채권과 무관한 가맹점의 대표자 성명</div><div class="expo-why"><span class="lbl">사유</span> 개인 성명이며 계약 관계 없는 개인정보다. <code>SB s14</code>가 조회 범위를 정의하지 않아 기본값이 전체가 될 위험이 있다<span class="expo-src">SB s14 / types/merchant.ts:21</span></div></li>
           <li><div class="expo-item">4. 자기 채권과 무관한 가맹점의 사업자등록번호</div><div class="expo-why"><span class="lbl">사유</span> 항목 3과 동일<span class="expo-src">SB s14 / types/merchant.ts:19</span></div></li>
@@ -1203,7 +1203,7 @@
           <tbody>
             <tr><td class="k">투자실행액</td><td>투자 자산</td><td>가맹점별 누적 투자 원금 잔액 필드가 운영 코드에 없다</td><td class="c"><span class="j j-chk">데이터 미존재</span></td></tr>
             <tr><td class="k">순현금 / 보관 주체</td><td>투자 자산</td><td>쿠콘을 자금 보관 주체로 규정한 문서가 없다. 모계좌 잔액 화면은 전역 단일 계좌이고 가맹점·투자자 분해가 없다</td><td class="c"><span class="j j-chk">데이터 미존재</span></td></tr>
-            <tr><td class="k">W금융일수 원천</td><td>투자 자산 · 투자 수익 · 엑셀</td><td>정의는 <code>SB s3</code> 각주로 확정. <code>양수일</code>·<code>지급예정일</code>·<code>투자금액</code>을 정산채권 단위로 들고 있는 테이블이 운영 코드에 없다. Figma 정산채권DB 설계에는 대응 필드가 있다(노드 <code>529:2950</code>)</td><td class="c"><span class="j j-chk">원천 확인필요</span></td></tr>
+            <tr><td class="k">W금융일수 원천</td><td>투자 자산 · 투자 수익 · 엑셀</td><td>정의는 <code>SB s3</code> 각주로 확정. <code>양수일</code>·<code>지급예정일</code>·<code>투자실행액</code>을 정산채권 단위로 들고 있는 테이블이 운영 코드에 없다. Figma 정산채권DB 설계에는 대응 필드가 있다(노드 <code>529:2950</code>)</td><td class="c"><span class="j j-chk">원천 확인필요</span></td></tr>
             <tr><td class="k">S입금부족율 원천</td><td>투자 자산 · 엑셀</td><td>정의는 확정. 원천은 Figma 정산채권DB <code>상환부족액</code>으로 보이나 운영 코드 미노출</td><td class="c"><span class="j j-chk">원천 확인필요</span></td></tr>
             <tr><td class="k">할인율의 실체</td><td>투자 자산 · 투자 수익</td><td><code>Ty수익율 = 할인율 × (365 / w금융일수)</code>가 전제하는 <code>할인율</code>의 출처를 스토리보드가 적지 않는다</td><td class="c"><span class="j j-chk">원천 확인필요</span></td></tr>
             <tr><td class="k">비중의 분모</td><td>투자 자산 · 엑셀</td><td>같은 라벨의 열이 두 표에 있는데 분모 설명이 없다</td><td class="c"><span class="j j-chk">정의 미확정</span></td></tr>
@@ -1300,7 +1300,7 @@
             </tr>
             <tr>
               <td class="k">현황 <code>Ty수익율</code> 2행</td>
-              <td class="n">3.99% / 2.24%</td>
+              <td class="n">3.99% / 2.25%</td>
               <td>대표 정의 마커 ⑤ <code>(④ × 투자실행금) ÷ (투자실행금 + 기간 순현금 합)</code>로 산출된다. <code>④ × 투자실행액 비중</code>(3.19%)과는 값이 다르며, 스토리보드에 두 값의 관계가 없다</td>
             </tr>
           </tbody>
@@ -1320,56 +1320,56 @@
 
     <div class="copy-all"><button class="copy-btn" data-copy-all>확인 질문 23건 전체 복사</button></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-1</span><div><div class="gi-title">수익 현황과 일별 표의 관계 미정의</div><div class="gi-what"><code>SB s7</code>은 현황의 <code>투자실행금</code>·<code>투자수익</code>과 일별 표의 동명 열이 어떤 관계인지 적지 않는다. 현행 예시값은 두 자리가 같은 179,970,919원이나 어느 정의로 같아진 것인지는 적혀 있지 않다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자 수익 화면 상단 `투자실행금`은 조회 기간 동안 상환된 채권의 투자액 합계입니까, 조회 시점의 미상환 잔액입니까? 두 값이 다르면 어느 쪽을 상단에 둡니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-1</span><div><div class="gi-title">수익 현황과 일별 표의 관계 미정의</div><div class="gi-what"><code>SB s7</code>은 현황의 <code>투자실행금</code>·<code>투자수익</code>과 일별 표의 동명 열이 어떤 관계인지 적지 않는다. 현행 예시값은 두 자리가 같은 179,970,919원이나 어느 정의로 같아진 것인지는 적혀 있지 않다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자 수익 화면 상단 <code>투자실행금</code>은 조회 기간 동안 상환된 채권의 투자액 합계입니까, 조회 시점의 미상환 잔액입니까? 두 값이 다르면 어느 쪽을 상단에 둡니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-2</span><div><div class="gi-title">투자자 자산 데이터 계층 부재</div><div class="gi-what"><code>SB s3</code>의 4개 지표가 요구하는 원천(정산채권 단위의 양수일·지급예정일·투자금액·입금부족액)을 운영 백엔드에서 확인할 수 없다. 특히 가맹점별 누적 투자 원금 잔액 필드가 존재하지 않는다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 단위로 정산채권 잔액을 집계하는 테이블 또는 API가 현재 존재합니까? 없다면 `GET /admin/settlement/batch-payouts`(role=INVESTOR)를 `Batch.targetDate`로 누적해 잔액을 재구성하는 방식이 가능합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-2</span><div><div class="gi-title">투자자 자산 데이터 계층 부재</div><div class="gi-what"><code>SB s3</code>의 4개 지표가 요구하는 원천(정산채권 단위의 양수일·지급예정일·투자실행액·입금부족액)을 운영 백엔드에서 확인할 수 없다. 특히 가맹점별 누적 투자 원금 잔액 필드가 존재하지 않는다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 단위로 정산채권 잔액을 집계하는 테이블 또는 API가 현재 존재합니까? 없다면 <code>GET /admin/settlement/batch-payouts</code>(role=INVESTOR)를 <code>Batch.targetDate</code>로 누적해 잔액을 재구성하는 방식이 가능합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-3</span><div><div class="gi-title"><code>투자 수익</code> 산식과 <code>할인율</code>의 실체</div><div class="gi-what"><code>SB s7</code>은 <code>투자 수익</code> 열 이름만 두고 산식을 적지 않는다. <code>SB s3</code> 각주는 <code>Ty수익율 = 할인율 × (365 / w금융일수)</code>로 <code>할인율</code>을 전제하나 그 값의 근거를 적지 않는다. 설계안 산식 카드 2종(수수료 배분형 / 조달이자형)의 동시 적용·택일 관계가 어디에도 없다. 현행 화면 표는 할인율 0.11% 한 값으로 생성돼 두 열이 서로 맞는다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>`투자 수익` 열은 어떤 식으로 산정합니까? `Ty수익율`의 `할인율`은 정산채권 단위로 저장된 수익권자 할인율 필드입니까, 실현 수익율입니까? 두 열이 같은 기준으로 산출됩니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-3</span><div><div class="gi-title"><code>투자 수익</code> 산식과 <code>할인율</code>의 실체</div><div class="gi-what"><code>SB s7</code>은 <code>투자 수익</code> 열 이름만 두고 산식을 적지 않는다. <code>SB s3</code> 각주는 <code>Ty수익율 = 할인율 × (365 / w금융일수)</code>로 <code>할인율</code>을 전제하나 그 값의 근거를 적지 않는다. 설계안 산식 카드 2종(수수료 배분형 / 조달이자형)의 동시 적용·택일 관계가 어디에도 없다. 현행 화면 표는 할인율 0.11% 한 값으로 생성돼 두 열이 서로 맞는다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q><code>투자 수익</code> 열은 어떤 식으로 산정합니까? <code>Ty수익율</code>의 <code>할인율</code>은 정산채권 단위로 저장된 수익권자 할인율 필드입니까, 실현 수익율입니까? 두 열이 같은 기준으로 산출됩니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-4</span><div><div class="gi-title">증명서 문서명이 3개</div><div class="gi-what"><code>SB s3</code>⑬은 전자문서에 기재할 명칭을 <code>투자자산 현황</code>이라 하고 <code>SB s6</code> 제목은 <code>가맹점별 투자자산 증명서</code>다. 설계안은 여기에 <code>투자자산 증명서</code>를 더했다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>발급 문서의 정식 명칭을 하나로 확정해 주십시오. 전자문서 본문에 인쇄될 문서명과 파일명이 같아야 합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-5</span><div><div class="gi-title">"비중" 라벨의 분모가 표마다 다름</div><div class="gi-what"><code>SB s3</code>의 두 표에 같은 <code>비중</code> 열이 있으나 분모 설명이 없다. 설계안은 현황표를 투자자산 총액, 가맹점별표를 투자실행액 합계로 잡았고, 그 차이를 화면에도 엑셀 시트에도 적지 않았다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>두 표의 `비중`을 같은 분모로 통일합니까, 라벨을 갈라 적습니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-5</span><div><div class="gi-title">"비중" 라벨의 분모가 표마다 다름</div><div class="gi-what"><code>SB s3</code>의 두 표에 같은 <code>비중</code> 열이 있으나 분모 설명이 없다. 설계안은 현황표를 투자자산 총액, 가맹점별표를 투자실행액 합계로 잡았고, 그 차이를 화면에도 엑셀 시트에도 적지 않았다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>두 표의 <code>비중</code>을 같은 분모로 통일합니까, 라벨을 갈라 적습니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-6</span><div><div class="gi-title">서명 대상 문서명이 스토리보드 안에서 둘</div><div class="gi-what"><code>SB s15</code>는 <code>정산금채권 양수도 계약서</code>, <code>SB s16</code>은 <code>재양도합의서</code>. 계약 골격상 투자자가 당사자로 서명하는 문서는 재양도 합의서다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자가 정산채권 양수 화면에서 서명하는 문서는 `정산금채권 재양도 합의서`가 맞습니까? 맞다면 화면 문구를 재양도 합의서로 통일합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-6</span><div><div class="gi-title">서명 대상 문서명이 스토리보드 안에서 둘</div><div class="gi-what"><code>SB s15</code>는 <code>정산금채권 양수도 계약서</code>, <code>SB s16</code>은 <code>재양도합의서</code>. 계약 골격상 투자자가 당사자로 서명하는 문서는 재양도 합의서다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자가 정산채권 양수 화면에서 서명하는 문서는 <code>정산금채권 재양도 합의서</code>가 맞습니까? 맞다면 화면 문구를 재양도 합의서로 통일합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-7</span><div><div class="gi-title"><code>채권매입업체</code> vs <code>채권매매업체</code></div><div class="gi-what"><code>SB s14</code> 안에서 필터 라벨은 <code>채권매입업체</code>, 표 헤더는 <code>채권매매업체 ID</code>다. 약관 총판본 정의는 "정산금채권을 가맹점으로부터 양수하여 서비스제공사에게 재양도하는 회사" = 채권매입업체</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>가맹점 목록의 해당 열 명칭을 `채권매입업체`로 통일합니까? 이 값이 총판(파트너)을 가리키는 것이 맞습니까? 어느 필드에 담깁니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-7</span><div><div class="gi-title"><code>채권매입업체</code> vs <code>채권매매업체</code></div><div class="gi-what"><code>SB s14</code> 안에서 필터 라벨은 <code>채권매입업체</code>, 표 헤더는 <code>채권매매업체 ID</code>다. 약관 총판본 정의는 "정산금채권을 가맹점으로부터 양수하여 서비스제공사에게 재양도하는 회사" = 채권매입업체</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>가맹점 목록의 해당 열 명칭을 <code>채권매입업체</code>로 통일합니까? 이 값이 총판(파트너)을 가리키는 것이 맞습니까? 어느 필드에 담깁니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-8</span><div><div class="gi-title">전자서명·인증서 연동 부재</div><div class="gi-what">페이허그 인증서 서명(증명서 발급, <code>SB s3</code>⑬)과 계약 서명(<code>SB s15</code>) 모두 인증서 기반 연동이 운영 어드민에 없다. 존재하는 것은 직인 이미지 기반 자체 다자간 서명뿐이다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>전자서명 연동은 어느 벤더·어느 방식으로 붙입니까? 현행 `POST /admin/contracts/{id}/sign` 플로우를 인증서 방식으로 대체합니까, 별도 경로를 만듭니까? 서명 요청부터 검증 회신전문 수신까지 동기 처리입니까, 비동기 콜백입니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-8</span><div><div class="gi-title">전자서명·인증서 연동 부재</div><div class="gi-what">페이허그 인증서 서명(증명서 발급, <code>SB s3</code>⑬)과 계약 서명(<code>SB s15</code>) 모두 인증서 기반 연동이 운영 어드민에 없다. 존재하는 것은 직인 이미지 기반 자체 다자간 서명뿐이다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>전자서명 연동은 어느 벤더·어느 방식으로 붙입니까? 현행 <code>POST /admin/contracts/{id}/sign</code> 플로우를 인증서 방식으로 대체합니까, 별도 경로를 만듭니까? 서명 요청부터 검증 회신전문 수신까지 동기 처리입니까, 비동기 콜백입니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-9</span><div><div class="gi-title">실패·오류 상태 전무</div><div class="gi-what">스토리보드 17장에 오류·실패 화면이 0장이다. 설계안이 비밀번호 2종만 채웠고 로그인 실패, 증명서 서명검증 실패, 계약 서명 실패, 다운로드 실패는 여전히 비어 있다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>실패 시 처리(에러 문구·재시도 허용 횟수·계정 잠금·검증 실패 문서의 보관 여부)를 이번 범위에 포함합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-10</span><div><div class="gi-title">Figma 정의 기능 2개가 화면에 없음</div><div class="gi-what">Figma 투자자 어드민 스윔레인은 <code>계약 및 약관 동의 여부</code>(노드 <code>774:878</code>) → <code>투자자 개인정보 입력 여부</code>(노드 <code>774:881</code>)를 선행 게이트로 둔다. 설계안 화면 30개 중 이 둘에 해당하는 화면이 없다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 온보딩(약관 동의·개인정보 입력)은 어드민 화면으로 만듭니까, 페이허그가 대행 등록합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-11</span><div><div class="gi-title">쿠콘 계정 스코프와 이동 주소</div><div class="gi-what">쿠콘 We-bank 계정을 투자자에게 발급하면 페이허그 전체 자금 이동이 열린다. 이동 주소는 <code>SB s10</code> 삽입 이미지 주소창에 축자로 있어 근거가 있고, 남은 미결은 계정 스코프다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>쿠콘 We-bank가 조회 범위를 계정 단위로 제한하는 기능을 제공합니까? 없다면 투자자 화면에서 이 메뉴를 빼고 페이허그가 발췌본을 제공하는 방식이 가능합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-11</span><div><div class="gi-title">쿠콘 계정 스코프와 이동 주소</div><div class="gi-what">쿠콘 We-bank 계정을 투자자에게 발급하면 페이허그 전체 자금 이동이 열린다. 이동 주소는 <code>SB s10</code> 삽입 이미지 주소창에 축자로 있어 근거가 있고, 남은 것은 계정 스코프다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>쿠콘 We-bank가 조회 범위를 계정 단위로 제한하는 기능을 제공합니까? 없다면 투자자 화면에서 이 메뉴를 빼고 페이허그가 발췌본을 제공하는 방식이 가능합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-12</span><div><div class="gi-title">조회 범위(스코프) 미정의</div><div class="gi-what"><code>SB s3</code>·<code>s14</code>·<code>s16</code> 세 화면 모두 대상 집합의 경계를 적지 않는다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 계정의 가맹점 목록·투자자산·계약기록 조회는 자기에게 배정된 가맹점으로 제한합니까, 전체를 봅니까? 서버가 토큰 기준으로 거릅니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-13</span><div><div class="gi-title"><code>서명일</code>·<code>검증</code>·<code>계약 생성일</code> 열 출처 없음</div><div class="gi-what">계약기록 2열·정산채권 양수 1열이 설계안 신규</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>재양도합의서의 서명 완료 일시와 검증 결과를 조회 API로 내려줄 수 있습니까? 현행 `GET /admin/contracts/{id}/signing-status` 응답으로 대체 가능합니까? 검증 실패 건은 목록에 남습니까 숨깁니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-13</span><div><div class="gi-title"><code>서명일</code>·<code>검증</code>·<code>계약 생성일</code> 열 출처 없음</div><div class="gi-what">계약기록 2열·정산채권 양수 1열이 설계안 신규</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>재양도합의서의 서명 완료 일시와 검증 결과를 조회 API로 내려줄 수 있습니까? 현행 <code>GET /admin/contracts/{id}/signing-status</code> 응답으로 대체 가능합니까? 검증 실패 건은 목록에 남습니까 숨깁니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-14</span><div><div class="gi-title">월별 집계 산식 없음</div><div class="gi-what"><code>SB s7</code>에 일별/월별 토글은 있으나 월별 산식이 없다. 특히 합계행의 W금융일수는 각주 정의상 투자금액 가중평균이어야 한다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>월별 전환 시 W금융일수·Ty수익율은 투자금액 가중평균으로 재산정합니까, 일별 값의 단순평균입니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-14</span><div><div class="gi-title">월별 집계 산식 없음</div><div class="gi-what"><code>SB s7</code>에 일별/월별 토글은 있으나 월별 산식이 없다. 특히 합계행의 W금융일수는 각주 정의상 금액 가중평균이어야 한다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>월별 전환 시 W금융일수·Ty수익율은 투자실행액 가중평균으로 재산정합니까, 일별 값의 단순평균입니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-15</span><div><div class="gi-title">계약문서 일괄 다운로드 경로 없음 · 결과물 형식 미결</div><div class="gi-what"><code>SB s16</code>①은 파일 + 검증회신전문 다발을 요구하나 현행 첨부 다운로드는 단건·pdf/image 한정이고 문서 유형 목록에 재양도합의서가 없다. 결과물 파일 형식도 미결이라 화면 다운로드는 비활성이다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>재양도합의서와 서명검증 회신전문을 묶어 내려주는 API(zip 등)를 신설합니까? 회신전문은 어떤 형식(xml·txt·pdf)입니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-15</span><div><div class="gi-title">계약문서 일괄 다운로드 경로 없음 · 결과물 형식 정해지지 않음</div><div class="gi-what"><code>SB s16</code>①은 파일 + 검증회신전문 다발을 요구하나 현행 첨부 다운로드는 단건·pdf/image 한정이고 문서 유형 목록에 재양도합의서가 없다. 결과물 파일 형식도 정해지지 않아 화면 다운로드는 비활성이다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>재양도합의서와 서명검증 회신전문을 묶어 내려주는 API(zip 등)를 신설합니까? 회신전문은 어떤 형식(xml·txt·pdf)입니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-16</span><div><div class="gi-title">ID 체계 대응 미정</div><div class="gi-what"><code>SB s14</code>·<code>s16</code>은 <code>MID</code>·<code>채권매매업체ID</code>를 쓰고, 운영 코드는 <code>id</code>/<code>userId</code>/<code>userType</code> 체계를 쓴다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>스토리보드의 `MID`가 코드의 어느 필드(`id`·`userId`·`businessNumber`)에 대응합니까? `채권매매업체ID`는 어느 테이블에 있습니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-16</span><div><div class="gi-title">ID 체계 대응 미정</div><div class="gi-what"><code>SB s14</code>·<code>s16</code>은 <code>MID</code>·<code>채권매매업체ID</code>를 쓰고, 운영 코드는 <code>id</code>/<code>userId</code>/<code>userType</code> 체계를 쓴다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>스토리보드의 <code>MID</code>가 코드의 어느 필드(<code>id</code>·<code>userId</code>·<code>businessNumber</code>)에 대응합니까? <code>채권매매업체ID</code>는 어느 테이블에 있습니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-17</span><div><div class="gi-title">투자자 계약의 상태 필드 부재</div><div class="gi-what">계약DB에 <code>계약상태</code>·<code>해지일</code>·<code>종료일</code> 필드가 없다(<code>분석 figma_policy_db.md</code>)</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 계약의 해지·만료를 어디에 기록합니까? 해지된 투자자의 어드민 접근은 어떻게 차단합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-18</span><div><div class="gi-title">투자 원금 잔액과 기존 "잔액" 필드 4종의 혼용 위험</div><div class="gi-what">코드에 남아 있는 잔액성 필드는 이관 부채(<code>debt.remainingAmount</code>)·미회수 이월(<code>carryForwardAmount</code>)·광고비 누적 미회수(<code>outstandingAmount</code>)·현장결제 미회수(<code>offlinePendingTotal</code>) 4종이며 전부 다른 개념이다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자 원금 잔액을 새 필드로 신설합니까? 위 4개 필드 중 어느 것도 원금 잔액으로 전용하지 않는다는 확인이 필요하다.</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-19</span><div><div class="gi-title">본인 비밀번호 변경 기능 부재</div><div class="gi-what">운영 어드민 전체에 본인 비밀번호 변경이 없다. 관리자가 가맹점 비밀번호를 초기화하는 모달만 존재. 가맹점 Web에는 완성된 화면·정책이 있어(<code>app/my-info/change-password/page.tsx</code>, <code>lib/passwordPolicy.ts</code>) 설계 화면은 그것을 따랐다 — 규칙은 8~16자·영문·숫자·허용 특수문자 <code>!@#$%^&amp;*()</code>, 세션 처리는 변경 1.5초 뒤 강제 로그아웃. <strong>어드민 적용 여부만 미결</strong></div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>참여자 계정의 본인 비밀번호 변경 API가 백엔드에 있습니까? 없다면 신규 개발 범위에 포함합니까? 비밀번호 규칙과 변경 후 세션 무효화 정책은 무엇입니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-19</span><div><div class="gi-title">본인 비밀번호 변경 기능 부재</div><div class="gi-what">운영 어드민 전체에 본인 비밀번호 변경이 없다. 관리자가 가맹점 비밀번호를 초기화하는 모달만 존재. 가맹점 Web에는 완성된 화면·정책이 있어(<code>app/my-info/change-password/page.tsx</code>, <code>lib/passwordPolicy.ts</code>) 설계 화면은 그것을 따랐다 — 규칙은 8~16자·영문·숫자·허용 특수문자 <code>!@#$%^&amp;*()</code>, 세션 처리는 변경 1.5초 뒤 강제 로그아웃. <strong>어드민 적용 여부만 정해지지 않음</strong></div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>참여자 계정의 본인 비밀번호 변경 API가 백엔드에 있습니까? 없다면 신규 개발 범위에 포함합니까? 비밀번호 규칙과 변경 후 세션 무효화 정책은 무엇입니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-20</span><div><div class="gi-title">서버측 인가 부재</div><div class="gi-what">서버사이드 미들웨어가 없고 라우트 보호가 클라이언트 기반. 참여자 5종의 프론트 화면이 동일해 차이가 전부 서버 응답 범위에서 난다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 계정에 대한 API 응답 필터링(타 투자자·페이허그 마진·미배정 가맹점 제외)을 백엔드에서 보장합니까? 프론트 조건부 렌더에 의존하지 않는다는 확인이 필요하다.</span><button class="copy-btn" data-copy>복사</button></div></div>
 
-    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-21</span><div><div class="gi-title">현행 <code>INVESTOR</code> 계정의 기존 노출 범위 처리</div><div class="gi-what">투자자는 이미 파트너 공용 4메뉴와 정산현황 3탭(선정산 결과·차액 정산·이체 내역)을 본다. 투자자 전용 뷰를 신설해도 이 경로는 그대로 남는다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 전용 메뉴를 신설하면 기존 참여자 공용 메뉴는 투자자에게 닫습니까, 병존시킵니까? `isInvestorUser()` 헬퍼를 신설해 메뉴 그룹을 분기하는 방향이 맞습니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
+    <div class="gap-item"><div class="gi-head"><span class="gi-no">4-21</span><div><div class="gi-title">현행 <code>INVESTOR</code> 계정의 기존 노출 범위 처리</div><div class="gi-what">투자자는 이미 파트너 공용 4메뉴와 정산현황 3탭(선정산 결과·차액 정산·이체 내역)을 본다. 투자자 전용 뷰를 신설해도 이 경로는 그대로 남는다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 전용 메뉴를 신설하면 기존 참여자 공용 메뉴는 투자자에게 닫습니까, 병존시킵니까? <code>isInvestorUser()</code> 헬퍼를 신설해 메뉴 그룹을 분기하는 방향이 맞습니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-22</span><div><div class="gi-title">엑셀 시트 서식 규칙 미정</div><div class="gi-what">산출물 14종의 존재는 <code>SB s4</code>·<code>s5</code>·<code>s8</code>·<code>s9</code>로 확인되나 시트 제목·기준일 표기 규칙이 스토리보드에 없다. 현행 시트는 제목 1줄과 표만 담고 <code>※</code> 주석이 0건이라, 미확정 항목(비중 분모·Ty수익율 첫 항)은 물론 열 이름의 뜻도 파일 안에 없다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>엑셀 시트에 표 명칭과 기준일자를 넣습니까? 산식 주석을 넣는다면 미확정 항목은 어떻게 표기합니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
 
     <div class="gap-item"><div class="gi-head"><span class="gi-no">4-23</span><div><div class="gi-title">가맹점 검색의 서버·클라이언트 경계</div><div class="gi-what">운영 어드민의 가맹점 검색은 클라이언트 필터라 전체 목록이 브라우저로 내려온다. 투자자 화면에 그대로 쓰면 스코프 밖 데이터가 클라이언트에 도달한다</div></div></div><div class="gi-q"><span class="q-label">확인 질문</span><span class="q-text" data-q>투자자 화면의 가맹점 검색을 서버 쿼리로 전환합니까? 응답 자체가 배정 가맹점으로 제한된다는 보장이 있습니까?</span><button class="copy-btn" data-copy>복사</button></div></div>
   </section>
 
-  <!-- ============================ 8. 정책 미결 6건 ============================ -->
+  <!-- ============================ 8. 정책 미확정 6건 ============================ -->
   <section class="sec">
-    <div class="sec-head"><span class="sec-no">08</span><h2>정책 미결 6건 — 07_OPEN_QUESTIONS 등재 후보</h2></div>
+    <div class="sec-head"><span class="sec-no">08</span><h2>정책 미확정 6건 — 07_OPEN_QUESTIONS 등재 후보</h2></div>
     <p class="sec-lead"><code>07_OPEN_QUESTIONS.md</code> §7의 마지막 번호는 <code>7-14</code>. 아래 6건은 <strong>후보이며 실제 등재는 하지 않는다.</strong> 서식은 §7 기존 항목과 동일한 5필드(질문 / 배경 / 위치 / 영향 / 출처)를 따르고 배경 말미에 판정 괄호를 붙인다.<br>
       C1(수수료율)·C2(지급 캘린더)·C4(예상 지급 차액)에 이미 걸린 사안은 §7 도입부의 중복 방지 규약에 따라 세우지 않는다 — &ldquo;투자자 배분율 0.11%가 정답인가&rdquo;는 후보에 넣지 않고 C1으로 넘긴다.</p>
 
@@ -1414,7 +1414,7 @@
       <div class="cand-head"><span class="cand-id">7-18</span><span class="cand-t">투자자 대외 노출 용어 — 05 §5 매핑표의 참여자 명칭 축 부재</span><span class="badge sm badge-gray">후보</span></div>
       <div class="cand-body"><dl>
         <dt>질문</dt><dd>투자자 어드민에 인쇄할 대외 용어를 어디에 정의하는가. <code>투자자</code>와 <code>유동화기관</code>과 <code>수익권자</code>를 화면에서 어떻게 갈라 쓰는가. <code>W금융일수</code>·<code>S입금부족율</code>·<code>Ty수익율</code>·<code>입금부족액</code> 같은 내부 산정 지표를 그대로 노출하는가. <code>채권매입업체</code>와 <code>채권매매업체</code> 중 무엇을 쓰는가.</dd>
-        <dt>배경</dt><dd><code>05_UI_REQUIREMENTS.md</code> §5 매핑표는 금액 개념 8행만 담고 있어 참여자 명칭 축이 통째로 비어 있고, 05 전체에 투자자·유동화기관·채권매입 관련 낱말이 한 건도 없다. <code>02_TERMS_AND_STATUS.md</code> §6은 투자자를 "자금 공급 참여자"로 한 줄 정의할 뿐 유동화기관과 같은 실체인지 밝히지 않으며, Figma 용어정리조차 <code>유동화기관(투자자?)</code>로 물음표를 달아 두었다. 스토리보드 자체도 한 슬라이드 안에서 필터를 <code>채권매입업체</code>, 표 헤더를 <code>채권매매업체 ID</code>로 달리 부른다. 한편 스토리보드가 쓰는 <code>입금부족액</code>은 6대 개념의 새 항목이 아니라 <code>미지급금</code>·<code>과지급</code>을 재료로 삼는 파생 지표다. 다만 Figma 정산채권DB <code>상환부족액</code>(카드사에서 락계좌로 들어온 금액이 예상보다 적은 경우)과 같은 값인지는 미확정이고, 이름이 <code>미회수금</code>·<code>과지급</code>과 비슷해 대외 문구에서 섞일 위험이 크다. (확인필요)</dd>
+        <dt>배경</dt><dd><code>05_UI_REQUIREMENTS.md</code> §5 매핑표는 금액 개념 8행만 담고 있어 참여자 명칭 축이 통째로 비어 있고, 05 전체에 투자자·유동화기관·채권매입 관련 낱말이 한 건도 없다. <code>02_TERMS_AND_STATUS.md</code> §6은 투자자를 "자금 공급 참여자"로 한 줄 정의할 뿐 유동화기관과 같은 실체인지 밝히지 않으며, Figma 용어정리조차 <code>유동화기관(투자자?)</code>로 물음표를 달아 두었다. 스토리보드 자체도 한 슬라이드 안에서 필터를 <code>채권매입업체</code>, 표 헤더를 <code>채권매매업체 ID</code>로 달리 부른다. 한편 스토리보드가 쓰는 <code>입금부족액</code>은 6대 개념의 새 항목이 아니라 <code>미지급금</code>·<code>과지급</code>을 계산에 넣는 파생 지표다. 다만 Figma 정산채권DB <code>상환부족액</code>(카드사에서 락계좌로 들어온 금액이 예상보다 적은 경우)과 같은 값인지는 미확정이고, 이름이 <code>미회수금</code>·<code>과지급</code>과 비슷해 대외 문구에서 섞일 위험이 크다. (확인필요)</dd>
         <dt>위치</dt><dd><code>05_UI_REQUIREMENTS.md</code> §5 매핑표(참여자 명칭 축 신설) / <code>02_TERMS_AND_STATUS.md</code> §2·§4·§6 / 투자자 어드민 전 화면 용어 안내 박스·가맹점 목록 열 라벨</dd>
         <dt>영향</dt><dd>매핑표에 참여자 축이 생기면 가맹점 화면·계약서·투자자 어드민 세 곳의 명칭을 한 표에서 관리하게 된다. <code>입금부족액</code> 계열을 투자자 전용 지표로 둘지 02에 파생 지표로 등재할지에 따라 02의 구조가 달라진다.</dd>
         <dt>주의</dt><dd class="caution"><code>입금부족액</code>을 6대 개념 목록의 일곱 번째 항목으로 세우지 않는다. <code>미지급금</code>·<code>과지급</code>에서 나오는 파생 지표라 목록에 넣으면 같은 값을 두 번 세게 된다.</dd>
@@ -1461,7 +1461,7 @@
             <tr><td class="k">데이터 계층 구조</td><td>투자자 자산을 담는 테이블 계층이 정의되지 않았다. 운영 백엔드에 대응 테이블이 확인되지 않는다</td></tr>
             <tr><td class="k"><code>투자 수익</code> 산식</td><td>산식 근거가 없다. 스토리보드는 열 이름만 두고 산식을 적지 않는다 → 확인 질문 4-3</td></tr>
             <tr><td class="k"><code>금융일적수</code> 산식</td><td>스토리보드 각주에 대응 개념이 없다</td></tr>
-            <tr><td class="k"><code>W금융일수</code> 계산식</td><td>근거는 <code>SB s3</code> 각주의 정의(투자금액 가중 금융일수 평균) 하나뿐</td></tr>
+            <tr><td class="k"><code>W금융일수</code> 계산식</td><td>근거는 <code>SB s3</code> 각주의 정의(금액 가중 금융일수 평균) 하나뿐</td></tr>
             <tr><td class="k"><code>Ty수익율</code> 정의</td><td>근거는 스토리보드 각주의 <code>할인율 × (365 / w금융일수)</code> 하나뿐</td></tr>
             <tr><td class="k">현황 <code>투자실행금</code> 정의</td><td>정의가 비었다 → 확인 질문 4-1</td></tr>
             <tr><td class="k">조회 스코프</td><td><strong>어디에도 정의되지 않은 상태</strong>로 다룬다 → 확인 질문 4-12, 후보 7-16</td></tr>
@@ -1487,7 +1487,7 @@
             <tr><td class="k">정산채권 양수 #28 대상 선택</td><td class="c"><span class="j j-hyp">가설</span></td><td>개별 선택 UI가 스토리보드에 명시되지 않는다</td></tr>
             <tr><td class="k">서명 대기 목록 데이터</td><td class="c"><span class="j j-hyp">가설</span></td><td>목록 산출 조건이 스토리보드에 없다</td></tr>
             <tr><td class="k">계약기록 MID</td><td class="c"><span class="j j-hyp">가설</span></td><td><code>SB s16</code> 표 영역</td></tr>
-            <tr><td class="k">계약기록 재양도합의서(파일)</td><td class="c"><span class="j j-chk">확인필요</span></td><td>내려줄 파일 형식이 미결. 다운로드 비활성</td></tr>
+            <tr><td class="k">계약기록 재양도합의서(파일)</td><td class="c"><span class="j j-chk">확인필요</span></td><td>내려줄 파일 형식이 정해지지 않음. 다운로드 비활성</td></tr>
             <tr><td class="k">계약기록 화면 블록</td><td class="c"><span class="j j-hyp">가설</span></td><td>스토리보드는 조회 범위를 적지 않는다</td></tr>
             <tr><td class="k">쿠콘 #21 외부 이동</td><td class="c"><span class="j j-fix">확정</span></td><td>요구 근거와 URL 근거 모두 있다. 주소는 <code>SB s10</code> 삽입 이미지 주소창이 원천</td></tr>
             <tr><td class="k">쿠콘 화면 블록</td><td class="c"><span class="j j-chk">확인필요</span></td><td>페이허그가 보여주는 데이터가 0건이고 계정 스코프가 미정</td></tr>

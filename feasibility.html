@@ -301,7 +301,7 @@
     <div class="verdict-top">
       <p class="lead"><b>막는 것은 없다.</b> <span class="weak">남은 것은 순서다.</span></p>
       <p class="note">
-        기술적으로 불가능하다고 판정된 항목은 <b>0건</b>이고, 정의가 없어 착수를 못 하는 항목도 <b>0건</b>이다. 재료는 대부분 페이허그 안에 이미 있다 — 매출 원장에 정산금채권 축의 재료 8종이 전부 실재하고,
+        기술적으로 불가능하다고 판정된 항목은 <b>0건</b>이고, 정의가 없어 착수를 못 하는 항목도 <b>0건</b>이다. 원천 값은 대부분 페이허그 안에 이미 있다 — 매출 원장에 정산금채권 축의 원천 값 8종이 전부 실재하고,
         <code>미지급금</code>·<code>과지급금</code>도 어드민 정산 로직에 이미 있는 값이며, 채권매입수수료 요율은 계약별로 어드민 요율 설정에서 읽어 온다. 남은 제약은 <b>외부 계약 2건</b>뿐이다.
       </p>
     </div>
@@ -323,7 +323,7 @@
     <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 6v3.5M8 11.5h.01M8 1.5 1.5 13.5h13L8 1.5Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <ul>
       <li><b>백엔드를 보지 못했다.</b> 확인한 것은 프론트 레포 2개(<code>payhug-admin-web</code>·<code>payhug-merchant-web</code>)뿐이다. 판정 근거는 "화면이 받아 쓰는 필드가 무엇인가"이고, 그 필드 뒤에 무엇이 있는지는 개발 회신으로만 닫힌다.</li>
-      <li><b>공수·기간은 추정하지 않았다.</b> 이 문서는 "얼마나 걸리나"가 아니라 "재료가 있나 없나"만 답한다.</li>
+      <li><b>공수·기간은 추정하지 않았다.</b> 이 문서는 "얼마나 걸리나"가 아니라 "원천 값이 있나 없나"만 답한다.</li>
       <li>C1(수수료율)·C2(지급 캘린더)·C4(예상 지급 차액) 미확정 유지. 6대 개념 병합 0건. 조사는 읽기뿐이고 변경·커밋 0건.</li>
     </ul>
   </div>
@@ -344,7 +344,7 @@
         <span class="lbl">비유하면</span>
         지금은 <b>"8월 24일 김밥나라 정산 한 봉투"</b>에 카드 건과 배달 건이 섞여 들어가 통째로 이체된다. 대표 정의는 그 봉투를 <b>"김밥나라 × 하나카드 × 8월 24일"</b>, <b>"김밥나라 × 배달의민족 × 8월 24일"</b>처럼 플랫폼별로 갈라 놓기를 요구한다. 봉투를 가르지 않으면 채권 1건마다 금융일수를 세거나 입금이 얼마 부족했는지를 따질 자리가 없다.
       </div>
-      <p><b>다만 "재료가 없다"는 뜻은 아니다.</b> 봉투 안의 낱장 영수증(거래 원장 <code>LedgerItem</code>, <code>hooks/usePurchaseLedger.ts:40-79</code>)에는 가를 근거가 전부 붙어 있다.</p>
+      <p><b>다만 "원천 값이 없다"는 뜻은 아니다.</b> 봉투 안의 낱장 영수증(거래 원장 <code>LedgerItem</code>, <code>hooks/usePurchaseLedger.ts:40-79</code>)에는 가를 근거가 전부 붙어 있다.</p>
       <div class="scroll">
       <table class="mini">
         <thead><tr><th>채권 축이 필요로 하는 것</th><th>원장의 필드</th><th>줄</th></tr></thead>
@@ -360,7 +360,7 @@
         </tbody>
       </table>
       </div>
-      <p>즉 <b><code>GROUP BY (bizNo, salesSource·cardCorp, transactionDt)</code> 하면 정산금채권이 그대로 나온다.</b> 없는 것은 재료가 아니라 <b>그 축으로 묶어 적재하는 자리</b>와 <b>투자자 단위로 횡단 조회하는 경로</b>다. 현행 조회 API는 <code>bizNo</code>가 필수인 단건 조회다(<code>hooks/usePurchaseLedger.ts:214-227</code>). 그래서 E가 아니라 <b>C</b>다.</p>
+      <p>즉 <b><code>GROUP BY (bizNo, salesSource·cardCorp, transactionDt)</code> 하면 정산금채권이 그대로 나온다.</b> 없는 것은 원천 값이 아니라 <b>그 축으로 묶어 적재하는 자리</b>와 <b>투자자 단위로 횡단 조회하는 경로</b>다. 현행 조회 API는 <code>bizNo</code>가 필수인 단건 조회다(<code>hooks/usePurchaseLedger.ts:214-227</code>). 그래서 E가 아니라 <b>C</b>다.</p>
     </div>
 
     <div class="bn bn-2">
@@ -414,7 +414,7 @@
           <rect x="32" y="192" width="240" height="46" rx="9" fill="#fff" stroke="#e17100" stroke-width="2"/>
           <text x="44" y="211" font-size="11" font-weight="700" fill="#bb4d00">N-1 · C</text>
           <text x="98" y="211" font-size="12.5" font-weight="700" fill="#101828">정산금채권 객체</text>
-          <text x="44" y="228" font-size="10.5" fill="#6a7282">최대 병목. 재료는 원장에 다 있음</text>
+          <text x="44" y="228" font-size="10.5" fill="#6a7282">최대 병목. 원천 값은 원장에 다 있음</text>
 
           <rect x="32" y="248" width="152" height="44" rx="9" fill="#fff" stroke="#fee685"/>
           <text x="44" y="266" font-size="11" font-weight="700" fill="#bb4d00">N-2 · C</text>
@@ -547,7 +547,7 @@
   <!-- ── 3. 분포 ── -->
   <section class="sec">
     <div class="sec-head"><span class="sec-no">3</span><h2>등급 분포 한눈표</h2></div>
-    <p class="sec-lead">A+B 75건(60%)은 페이허그 안의 재료로 선다. C 37건은 저장 구조가 먼저고, D 11건만 밖에서 답이 와야 한다. E는 0건이다.</p>
+    <p class="sec-lead">A+B 75건(60%)은 페이허그 안의 원천 값으로 선다. C 37건은 저장 구조가 먼저고, D 11건만 밖에서 답이 와야 한다. E는 0건이다.</p>
 
     <div class="panel">
       <div class="bar-row">
@@ -609,7 +609,7 @@
 
       <div class="legend">
         <div class="legend-item"><span class="legend-chip" style="background:var(--emerald-600)"></span>A 바로 됨 — 값도 화면도 이미 있음 · 38</div>
-        <div class="legend-item"><span class="legend-chip" style="background:var(--blue-700)"></span>B 계산만 추가 — 재료가 다 있고 식만 새로 · 36</div>
+        <div class="legend-item"><span class="legend-chip" style="background:var(--blue-700)"></span>B 계산만 추가 — 원천 값이 다 있고 식만 새로 · 36</div>
         <div class="legend-item"><span class="legend-chip" style="background:var(--amber-500)"></span>C 데이터 구조 추가 — 저장 자리·조회 경로부터 · 37</div>
         <div class="legend-item"><span class="legend-chip" style="background:var(--violet-700)"></span>D 외부 의존 — 쿠콘·전자서명 · 11</div>
         <div class="legend-item"><span class="legend-chip" style="background:var(--red-600)"></span>E 착수 불가 — 선결이 안 풀림 · <b>0</b></div>
@@ -633,10 +633,10 @@
         <dd><code>ceo_definitions.md</code>에 정의문이 없고, 재양도합의서 제8조 요율 칸은 공란(8건 전건)</dd>
         <dt>판정 근거</dt>
         <dd>요율은 <b>계약별로 달라지는 파라미터</b>다. 대표 자료에 기준이 있고, 실제 값은 계약 조건에 따라 정해져 어드민 요율 설정에 들어간다. 운영 코드에 <code>0.25</code>·<code>0.11</code> 리터럴이 0건인 것은 결함이 아니라 정상 — 값이 전부 DB <code>PolicyRate.rateBps</code>에서 내려온다(<code>app/settlement/policies/page.tsx:166</code>). 계약서 공란도 같은 이유다.</dd>
-        <dt>재료</dt>
+        <dt>원천 값</dt>
         <dd>금액 <code>marginFeeAmt</code> · <code>Payout.margin</code>(<code>types/settlement.ts:50</code>) · <code>LedgerItem.marginFee</code>(<code>usePurchaseLedger.ts:66</code>), 요율 행 <code>{ feeType: "MARGIN", targetRole: "INVESTOR" }</code>(<code>policies/page.tsx:108</code>·<code>:120</code>), 투자자 몫 판별 <code>role === "INVESTOR"</code>(<code>BatchDetailTab.tsx:609-675</code>)</dd>
         <dt>남는 것</dt>
-        <dd>요율 <b>값</b>은 정책서 C1 미확정 유지. 이 산출물의 화면은 D-22에 따라 <code>0.11%</code>를 고정 입력값으로 쓴다. 값이 미확정인 것과 구현이 막히는 것은 별개다. 통 전체냐 투자자 몫이냐는 요율 행의 <code>targetRole</code>로 이미 갈려 있다.</dd>
+        <dd>요율 <b>값</b>은 정책서 C1 미확정 유지. 이 산출물의 화면은 D-22에 따라 <code>0.11%</code>를 고정 입력값으로 쓴다. 값이 미확정인 것과 구현이 막히는 것은 별개다. 통 전체냐 투자자 몫이냐는 요율 행의 <code>targetRole</code>로 이미 나뉘어 있다.</dd>
       </dl>
     </div>
 
@@ -703,7 +703,7 @@
       <table class="dt">
         <thead><tr><th style="width:36px"></th><th style="width:150px">대상</th><th style="width:74px">등급</th><th>근거</th><th>무엇이 없나</th><th style="width:120px">선행</th><th style="width:82px">물을 것</th></tr></thead>
         <tbody id="tb-term">
-          <tr data-g="C"><td class="no">1</td><td class="k">정산금채권</td><td class="c"><span class="g g-C">C</span></td><td>재료 8종이 <code>hooks/usePurchaseLedger.ts:40-79</code> <code>LedgerItem</code>에 전수 실재. 현행 묶음은 <code>types/settlement.ts:33-45</code> <code>Batch</code>(가맹점×매출일)</td><td>그 축으로 묶어 적재하는 테이블. 플랫폼 차원 자체</td><td class="muted">—</td><td>D-01 D-02</td></tr>
+          <tr data-g="C"><td class="no">1</td><td class="k">정산금채권</td><td class="c"><span class="g g-C">C</span></td><td>원천 값 8종이 <code>hooks/usePurchaseLedger.ts:40-79</code> <code>LedgerItem</code>에 전수 실재. 현행 묶음은 <code>types/settlement.ts:33-45</code> <code>Batch</code>(가맹점×매출일)</td><td>그 축으로 묶어 적재하는 테이블. 플랫폼 차원 자체</td><td class="muted">—</td><td>D-01 D-02</td></tr>
           <tr data-g="C"><td class="no">2</td><td class="k">정산금채권 ID</td><td class="c"><span class="g g-C">C</span></td><td>채번 규칙은 Figma 정산채권DB <code>529:2950</code>(가맹점ID+거래일자+카드사명). 운영 어드민에 대응 필드 <b>0건</b></td><td>채번 규칙과 그 값을 담을 컬럼</td><td>정산금채권 · 플랫폼ID</td><td>D-02 D-09</td></tr>
           <tr data-g="B"><td class="no">3</td><td class="k">플랫폼ID</td><td class="c"><span class="g g-B">B</span></td><td>값은 있으나 <b>4체계 병존</b> — <code>salesSource</code>(<code>PreSettlementTab.tsx:30-33</code>) · <code>platformType</code>(<code>types/merchant.ts:138</code>) · <code>platformCode</code>(<code>LockAccountDeposits.tsx:27-42</code>) · <code>cardCorp</code>(<code>usePurchaseLedger.ts:63</code>)</td><td>4체계를 하나로 정규화하는 매핑</td><td class="muted">—</td><td>D-09</td></tr>
           <tr data-g="A"><td class="no">4</td><td class="k">매출일자</td><td class="c"><span class="g g-A">A</span></td><td><code>transactionDt</code>(<code>usePurchaseLedger.ts:47</code>), 배치 축 <code>Batch.targetDate</code>(<code>types/settlement.ts:36</code>). 화면 라벨 <b>거래일</b>(건별) · <b>매출일</b>(배치, <code>BatchDetailTab.tsx:398</code>)</td><td>라벨만 다름</td><td class="muted">—</td><td class="muted">—</td></tr>
@@ -712,24 +712,24 @@
           <tr data-g="A"><td class="no">7</td><td class="k">순지급액</td><td class="c"><span class="g g-A">A</span></td><td><code>netPayoutAmt</code> — <code>types/settlement.ts:110·222·324·419·624</code>, 원장 <code>usePurchaseLedger.ts:55</code>. 화면 KPI <b>순 지급액</b>(<code>app/page.tsx:203-205</code>, sub <code>매출 - 수수료</code>)</td><td>없음. <b>대표 정의 전 산식의 바닥값이 그대로 실재한다</b></td><td class="muted">—</td><td>D-03</td></tr>
           <tr data-g="C"><td class="no">8</td><td class="k">금융일수</td><td class="c"><span class="g g-C">C</span></td><td>두 끝점(<code>closedAt</code>·<code>payoutDt</code>)이 둘 다 실재. 뺄셈만 하면 됨</td><td>붙일 자리 — 채권 1건 단위 레코드. 셈법(편면/양편) 미확정은 정의 문제</td><td>정산금채권</td><td>D-05 D-06</td></tr>
           <tr data-g="A"><td class="no">9</td><td class="k">유동화투자자</td><td class="c"><span class="g g-A">A</span></td><td><code>userType = INVESTOR</code> — <code>lib/permissions.ts:11</code>, 회원 등록 셀렉트 <code>app/partners/page.tsx:34</code>, 배분 역할 <code>settlement/policies/page.tsx:42</code>, 서명자 역할 <code>merchants/[id]/page.tsx:1590</code>. <b>이미 어드민에 로그인한다</b></td><td>대외 명칭 통일(투자자 / 유동화기관 / 수익권자 / 채권매입업체 4종 병존)</td><td class="muted">—</td><td>D-31</td></tr>
-          <tr data-g="C"><td class="no">10</td><td class="k">재양도 합의서</td><td class="c"><span class="g g-C">C</span></td><td>어드민에 언급 1곳 — <code>merchants/[id]/page.tsx:957</code> "재양도 합의서가 '투자자 없음' 버전으로 작성됩니다". 백엔드가 계약서 생성 시 분기하는 문서로 <b>존재는 한다</b></td><td>계약 유형 목록에 없다. <code>CONTRACT_TYPE_LABELS</code>(<code>:107-111</code>)는 3종뿐</td><td class="muted">—</td><td>D-16</td></tr>
+          <tr data-g="C"><td class="no">10</td><td class="k">재양도 합의서</td><td class="c"><span class="g g-C">C</span></td><td>어드민에 언급 1곳이다. <code>merchants/[id]/page.tsx:957</code> "재양도 합의서가 '투자자 없음' 버전으로 작성됩니다". 백엔드가 계약서 생성 시 분기하는 문서로 <b>존재는 한다</b></td><td>계약 유형 목록에 없다. <code>CONTRACT_TYPE_LABELS</code>(<code>:107-111</code>)는 3종뿐</td><td class="muted">—</td><td>D-16</td></tr>
           <tr data-g="C"><td class="no">11</td><td class="k">효력기간</td><td class="c"><span class="g g-C">C</span></td><td>대응 필드 <b>0건</b>. 투자자 매칭(<code>PUT /admin/merchants/{id}/assign-investor</code>, <code>:435</code>)만 있고 기간 개념이 없다</td><td>효력 시작일·종료일 컬럼. 해지·만료 기록 자리도 없음</td><td>재양도 합의서</td><td>D-17 D-18</td></tr>
           <tr data-g="C"><td class="no">12</td><td class="k">대상정산금채권</td><td class="c"><span class="g g-C">C</span></td><td>모집단의 절반은 실재 — 투자자 매칭(<code>referredByInvestorId</code>, <code>:92</code>) · 투자자 목록(<code>GET /admin/investors</code>, <code>:277</code>) · <b>가맹점 승인 게이트</b>(<code>:413-414</code> "승인 전 투자자를 먼저 매칭해주세요")</td><td>나머지 절반 — <code>선정산일자가 효력기간에 속하는가</code> 조건. 효력기간이 없어 모집단을 못 닫는다</td><td>효력기간 · 정산금채권</td><td>D-17</td></tr>
           <tr data-g="B"><td class="no">13</td><td class="k">유동화투자자의 할인율</td><td class="c"><span class="g g-B">B</span></td><td><b>담을 자리가 이미 있다</b> — 정책 요율행 첫 줄이 <code>{feeType:"MARGIN", targetRole:"INVESTOR"}</code>(<code>settlement/policies/page.tsx:108·120</code>), 저장 시 <code>investorId</code> 필수(<code>:332</code>), 화면 노출 <code>investorRate</code>(<code>sales/[bizNo]/page.tsx:1196</code>)</td><td>그 요율이 대표 정의의 <b>할인율</b>과 같은 값인지. 어드민의 <code>할인율</code>이라는 낱말은 딴 것 — <code>discountRatePct</code>(<code>merchants/[id]/page.tsx:674</code>)는 예상 매출 정산 시의 리스크 할인이다. 요율 <b>값</b>은 C1 미확정 유지</td><td class="muted">—</td><td>D-27</td></tr>
-          <tr data-g="B"><td class="no">14</td><td class="k">Ai</td><td class="c"><span class="g g-B">B</span></td><td><code>순지급액 × (1−할인율)</code>. 두 재료 다 실재</td><td>원 단위 처리 규약(반올림 vs 버림)</td><td>할인율 · 정산금채권</td><td>D-26</td></tr>
+          <tr data-g="B"><td class="no">14</td><td class="k">Ai</td><td class="c"><span class="g g-B">B</span></td><td><code>순지급액 × (1−할인율)</code>. 두 원천 값 다 실재</td><td>원 단위 처리 규약(반올림 vs 버림)</td><td>할인율 · 정산금채권</td><td>D-26</td></tr>
           <tr data-g="A"><td class="no">15</td><td class="k">채권매입수수료</td><td class="c"><span class="g g-A">A</span></td><td>유형 코드 <code>MARGIN</code> — 라벨 <code>lib/settlementLabels.ts:9-15</code>. 금액 <code>marginFeeAmt</code> · <code>Payout.margin</code>(<code>types/settlement.ts:50</code>) · <code>LedgerItem.marginFee</code>(<code>:66</code>). 화면 열 <b>채권매입</b>. <b><code>role === "INVESTOR"</code> 행이 곧 투자자 몫</b>(<code>BatchDetailTab.tsx:609-675</code>)</td><td>없음. 투자자 몫은 요율 행의 <code>targetRole</code>로 갈린다. 요율 <b>값</b>은 C1 미확정 유지</td><td class="muted">—</td><td>D-27 D-28</td></tr>
           <tr data-g="C"><td class="no">16</td><td class="k">회수되지 않은 순지급액</td><td class="c"><span class="g g-C">C</span></td><td>순지급액은 실재. <b>회수 여부</b>를 가르는 값이 없음</td><td>채권 단위 입금 대사 결과. 어드민의 "잔액처럼 보이는" 필드 4종은 전부 다른 것 — 이관 부채 · 미회수 이월 · 광고비 누적 · 현장결제 미회수</td><td>N-2</td><td>D-07 D-08</td></tr>
           <tr data-g="B"><td class="no">17</td><td class="k">투자 실행액</td><td class="c"><span class="g g-B">B</span></td><td>산식 = 회수되지 않은 순지급액 합계 × (1−할인율). 곱셈·합계뿐</td><td>입력값(회수되지 않은 순지급액)</td><td>회수되지 않은 순지급액 · 할인율</td><td class="muted">—</td></tr>
           <tr data-g="D"><td class="no">18</td><td class="k">순현금</td><td class="c"><span class="g g-D">D</span></td><td>쿠콘 연동 실재(<code>services/cooconService.ts</code>). 잔액은 모 계좌 1개(<code>:16</code>)</td><td><b>투자자별 가상계좌.</b> 병목 ②</td><td>N-3</td><td>D-13 D-14</td></tr>
           <tr data-g="D"><td class="no">19</td><td class="k">쿠콘 가상계좌</td><td class="c"><span class="g g-D">D</span></td><td><code>가상계좌</code>·<code>virtual</code> 전수 0건. 투자자 화면의 가상계좌(<code>coocon.html:135·139</code>)는 <b>쿠콘 외부 사이트 메뉴명</b></td><td>계좌 자체</td><td class="muted">—</td><td>D-13 D-15</td></tr>
           <tr data-g="C"><td class="no">20</td><td class="k">Di</td><td class="c"><span class="g g-C">C</span></td><td>금융일수와 동일</td><td>채권 1건 단위 자리</td><td>정산금채권</td><td>D-04 D-06</td></tr>
-          <tr data-g="B"><td class="no">21</td><td class="k">w금융일수 (잔액 기준)</td><td class="c"><span class="g g-B">B</span></td><td><code>Σ Ai×Di / Σ Ai</code> — 가중평균</td><td>입력값. <b>현행 화면은 투자금액 가중이라 대표 정의(Ai 가중)와 가중치가 다르다</b></td><td>Ai · Di</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">21</td><td class="k">w금융일수 (잔액 기준)</td><td class="c"><span class="g g-B">B</span></td><td><code>Σ Ai×Di / Σ Ai</code> — 가중평균</td><td>입력값. <b>대표 정의는 Ai 가중이고, 스토리보드 각주 「보유한 정산채권들의 투자금액을 가중한 금융일수 평균」(SB s3) 과 가중치 이름이 다르다</b></td><td>Ai · Di</td><td class="muted">—</td></tr>
           <tr data-g="B"><td class="no">22</td><td class="k">ty수익율 (잔액 기준)</td><td class="c"><span class="g g-B">B</span></td><td><code>할인율 × (365 / w금융일수)</code> — 나눗셈</td><td>입력값</td><td>할인율 · w금융일수</td><td class="muted">—</td></tr>
           <tr data-g="B"><td class="no">23</td><td class="k">비중</td><td class="c"><span class="g g-B">B</span></td><td>나눗셈</td><td>입력값. <b>같은 열 이름인데 두 표의 분모가 다르다</b> — 현황표는 투자자산, 가맹점별표는 투자실행액(<code>xls-assets-merchant.html:149</code> 각주)</td><td>투자 실행액 · 순현금(D)</td><td class="muted">기획 S-3</td></tr>
-          <tr data-g="A"><td class="no">24</td><td class="k">자산 구분</td><td class="c"><span class="g g-A">A</span></td><td>고정 3행(투자실행액·순현금·합계). 화면 상수</td><td>없음</td><td class="muted">—</td><td class="muted">—</td></tr>
+          <tr data-g="A"><td class="no">24</td><td class="k">자산 구분</td><td class="c"><span class="g g-A">A</span></td><td>고정 3행(투자실행액·순현금·합계). 화면 고정값</td><td>없음</td><td class="muted">—</td><td class="muted">—</td></tr>
           <tr data-g="A"><td class="no">25</td><td class="k">보관</td><td class="c"><span class="g g-A">A</span></td><td>고정 문자열(㈜페이허그 / ㈜쿠콘)</td><td>값은 없어도 된다. 다만 "보관 주체" 개념이 정책서·계약서에 정의된 바 없다</td><td class="muted">—</td><td class="muted">—</td></tr>
           <tr data-g="B"><td class="no">26</td><td class="k">투자자산</td><td class="c"><span class="g g-B">B</span></td><td>덧셈</td><td>입력값. <code>잔액(투자실행액+순현금)</code>인가 <code>유량(PSA+PSC)</code>인가 미정</td><td>투자 실행액 · 순현금(D)</td><td class="muted">—</td></tr>
-          <tr data-g="C"><td class="no">27</td><td class="k">가맹점별 투자금액</td><td class="c"><span class="g g-C">C</span></td><td><b>가맹점 단위 누적 원금 잔액 필드가 0개</b> — <code>MerchantListItem</code>(<code>types/merchant.ts:16-34</code>) · <code>MerchantDetail</code>(<code>merchants/[id]/page.tsx:79-96</code>). 투자자 관련 필드는 관계값 3개뿐</td><td>원금 잔액 컬럼</td><td>정산금채권 · N-2</td><td>D-01</td></tr>
+          <tr data-g="C"><td class="no">27</td><td class="k">가맹점별 투자실행액</td><td class="c"><span class="g g-C">C</span></td><td><b>가맹점 단위 누적 원금 잔액 필드가 0개</b> — <code>MerchantListItem</code>(<code>types/merchant.ts:16-34</code>) · <code>MerchantDetail</code>(<code>merchants/[id]/page.tsx:79-96</code>). 투자자 관련 필드는 관계값 3개뿐</td><td>원금 잔액 컬럼</td><td>정산금채권 · N-2</td><td>D-01</td></tr>
           <tr data-g="A"><td class="no">28</td><td class="k">기준일자</td><td class="c"><span class="g g-A">A</span></td><td>조회 시점 날짜. 화면 규정만</td><td>표마다 따로 둘지 화면에 하나만 둘지 미정</td><td class="muted">—</td><td class="muted">기획 S-5</td></tr>
           <tr data-g="A"><td class="no">29</td><td class="k">미지급금</td><td class="c"><span class="g g-A">A</span></td><td>미정산 누락 도메인이 그대로 이 값 — <code>MissedSettlementsData.totalAmount</code>(<code>types/settlement.ts:651</code>) · <code>totalNetPayoutAmt</code>(<code>:645</code>) · <code>netPayoutAmt</code>(<code>:635</code>·<code>:624</code>). 화면 라벨 <b>미지급</b>(<code>PreSettlementTab.tsx:1269</code>), 엑셀 헤더 <b>미지급액</b>(<code>:385</code>), 조회 <code>GET /admin/settlement/missed-settlements</code>(<code>useSettlementOverview.ts:349</code>). 정의문(<code>:1197</code>)이 “선정산 처리가 누락된 건”으로 못박는다. <b>6대 개념 미지급금과 같은 것</b></td><td>없음. 값이 그대로 있다. 붙일 자리(채권 1건 축)만 N-1·N-2 몫</td><td class="muted">—</td><td>D-07 D-08</td></tr>
           <tr data-g="B"><td class="no">30</td><td class="k">과지급금</td><td class="c"><span class="g g-B">B</span></td><td>단일 필드는 없고 발생 원인 두 갈래가 실재 — 취소 환수 <code>CANCEL_CLAWBACK</code>(<code>types/settlement.ts:525</code>, 금액은 <code>AdjustmentCategorySummary.pendingAmount</code> <code>:533</code> 필터) · 현장결제 중복 수령 <code>offlinePendingTotal</code>(<code>usePurchaseLedger.ts:108</code>). <b>6대 개념 과지급과 같은 것</b></td><td>두 갈래를 합치는 식. <code>carryForward*</code>는 <b>미회수금</b>이라 여기 쓰지 않는다</td><td class="muted">—</td><td>D-07 D-08</td></tr>
@@ -750,7 +750,7 @@
           <tr data-g="B"><td class="no">45</td><td class="k">PSD</td><td class="c"><span class="g g-B">B</span></td><td><code>Σ(Api×Dpi) / PSA</code> — 가중평균</td><td>입력값</td><td>N-5</td><td class="muted">—</td></tr>
           <tr data-g="D"><td class="no">46</td><td class="k">PSC</td><td class="c"><span class="g g-D">D</span></td><td>기간 EC 합계</td><td>계좌 + 스냅샷</td><td>N-3 · EC</td><td>D-14</td></tr>
           <tr data-g="B"><td class="no">47</td><td class="k">④ 투자실행금액 대비 ty수익율</td><td class="c"><span class="g g-B">B</span></td><td><code>PSMR × 365 / PSD</code></td><td>입력값</td><td>PSMR · PSD</td><td class="muted">—</td></tr>
-          <tr data-g="B"><td class="no">48</td><td class="k">⑤ 투자자산 대비 ty수익율</td><td class="c"><span class="g g-B">B</span></td><td><code>(④ × PSA) / (PSA + PSC)</code></td><td>입력값. 화면 분모는 대표 정의대로 기간 EC 합(유량)이다 — 기본 조회 기간에서 ④ 3.99% · ⑤ 2.24%. 분모를 기준일 잔액 1개(스톡)로 두면 <code>④ × 투자실행액 비중</code>(3.19%)이 되는데 그 산식은 쓰지 않는다</td><td>④ · PSC(D)</td><td class="muted">—</td></tr>
+          <tr data-g="B"><td class="no">48</td><td class="k">⑤ 투자자산 대비 ty수익율</td><td class="c"><span class="g g-B">B</span></td><td><code>(④ × PSA) / (PSA + PSC)</code></td><td>입력값. 화면 분모는 대표 정의대로 기간 EC 합(유량)이다 — 기본 조회 기간에서 ④ 3.99% · ⑤ 2.25%. 분모를 기준일 잔액 1개(스톡)로 두면 <code>④ × 투자실행액 비중</code>(3.19%)이 되는데 그 산식은 쓰지 않는다</td><td>④ · PSC(D)</td><td class="muted">—</td></tr>
           <tr data-g="B"><td class="no">49</td><td class="k">⑥ 일별 투자실행금액 대비 ty수익율</td><td class="c"><span class="g g-B">B</span></td><td><code>(투자수익 ÷ 투자실행금) × 365 ÷ w금융일수</code> — <code>marker_legend.md</code>가 번호 마커로 <code>③</code> = 일별표 <b>투자실행금</b>임을 복원. ④와는 동명이의가 아니라 집계 단위 차이</td><td>입력값 셋. 전부 4층에서 나온다</td><td>N-5 N-7</td><td class="muted">—</td></tr>
           <tr data-g="A"><td class="no">50</td><td class="k">검색대상기간</td><td class="c"><span class="g g-A">A</span></td><td><code>components/DateRangeFilter.tsx</code> — from~to 입력 + <b>프리셋 7종 실재</b>(오늘·어제·이번 주·지난 주·이번 달·지난 달·최근 3개월, <code>:23-61</code>)</td><td>없음. 부품 그대로 재사용</td><td class="muted">—</td><td class="muted">—</td></tr>
         </tbody>
@@ -774,7 +774,7 @@
           <tr data-g="A"><td class="no">6</td><td class="k">쿠콘 관리 현금</td><td class="c"><span class="g g-A">A</span></td><td>페이허그가 보여주는 데이터 <b>0건</b>. 외부 링크 1개 + 안내 문구가 전부라 지금도 만들 수 있다</td><td><b>쿠콘 계정 스코프.</b> 투자자에게 We-bank 계정을 발급하면 페이허그 전체 자금 이동이 열린다. <code>We-bank</code>·<code>펌뱅킹</code>·<code>오픈뱅킹</code> 문자열 레포 전수 0건</td><td class="muted">계정 발급은 D</td><td>D-15</td></tr>
           <tr data-g="C"><td class="no">7</td><td class="k">가맹점</td><td class="c"><span class="g g-C">C</span></td><td>7열 중 4열 실재 — 가맹점ID(<code>types/merchant.ts:17-18</code>)·가맹점명(<code>:20</code>)·사업자번호(<code>:19</code>)·대표자(<code>:21</code>). 검색 4항목도 동일한 것이 실재(<code>app/manage/page.tsx:249-255</code>)</td><td>업종·종목은 <b>상세에만 있고 목록 타입·목록 API에 없다</b>. <b>채권매매업체ID는 필드 자체가 없다.</b> 필터 2종도 운영 어드민에 없다. 검색이 <b>클라이언트 필터</b>라 전체 목록이 브라우저로 내려온다(<code>:121-131</code>)</td><td>N-11</td><td>D-22 D-23 D-24</td></tr>
           <tr data-g="B"><td class="no">8</td><td class="k">정산채권 양수</td><td class="c"><span class="g g-B">B</span></td><td><b>9개 화면 중 기존 구현에 가장 가깝다.</b> 다자간 서명 플로우가 이미 돈다 — <code>GET /admin/contracts/{id}/signing-status</code>(<code>merchants/[id]/page.tsx:246</code>) · <code>POST /admin/contracts/{id}/sign</code>(<code>:582</code>) · 서명 현황 UI(<code>:1576-1622</code>). <b>서명자 역할에 INVESTOR가 이미 있고</b>(<code>:1590</code>) 본인 차례일 때만 버튼이 뜬다(<code>:1588</code>)</td><td>투자자 시점의 서명 대기 목록 화면. 인증서 기반 서명 수단. <b>문서 명칭이 계약 골격과 어긋난다</b> — 투자자가 당사자인 문서는 재양도 합의서다</td><td class="muted">서명 벤더(D)</td><td>D-16 D-19</td></tr>
-          <tr data-g="C"><td class="no">9</td><td class="k">계약기록</td><td class="c"><span class="g g-C">C</span></td><td>3열(MID·가맹점·재양도합의서)까지 요구 정의 있음</td><td>문서 유형 목록에 재양도합의서·양수도계약서·증명서 <b>없음</b>(<code>merchants/[id]/page.tsx:101-111</code>). 첨부 다운로드는 <b>단건</b>이고 pdf·image 2종만(<code>AttachmentPreviewModal.tsx:5·41·49-50</code>). 일괄 압축 경로 없음. 서명일·검증 2열은 출처 없음. 결과물 파일 형식이 미결이라 화면 다운로드는 비활성</td><td>N-4</td><td>D-16 D-20 D-21</td></tr>
+          <tr data-g="C"><td class="no">9</td><td class="k">계약기록</td><td class="c"><span class="g g-C">C</span></td><td>3열(MID·가맹점·재양도합의서)까지 요구 정의 있음</td><td>문서 유형 목록에 재양도합의서·양수도계약서·증명서 <b>없음</b>(<code>merchants/[id]/page.tsx:101-111</code>). 첨부 다운로드는 <b>단건</b>이고 pdf·image 2종만(<code>AttachmentPreviewModal.tsx:5·41·49-50</code>). 일괄 압축 경로 없음. 서명일·검증 2열은 출처 없음. 결과물 파일 형식이 정해지지 않아 화면 다운로드는 비활성</td><td>N-4</td><td>D-16 D-20 D-21</td></tr>
           <tr data-g="C"><td class="no">10</td><td class="k">비밀번호 변경</td><td class="c"><span class="g g-C">C</span></td><td><b>운영 어드민 전체에 본인 비밀번호 변경이 없다.</b> 있는 것은 관리자가 가맹점 비밀번호를 초기화하는 <code>PUT /admin/merchants/{id}/reset-password</code>(<code>services/merchantService.ts:290</code>)뿐</td><td>신규 API. 비밀번호 규칙·세션 무효화 정책</td><td class="muted">—</td><td>D-25</td></tr>
           <tr data-g="N"><td class="no">11</td><td class="k">랜딩 갤러리</td><td class="c"><span class="g g-N">해당없음</span></td><td>검토용 갤러리</td><td>실서비스 미포함. 구현 시 삭제 대상</td><td class="muted">—</td><td class="muted">—</td></tr>
           <tr data-g="C"><td class="no">12</td><td class="k">엑셀 미리보기 ①</td><td class="c"><span class="g g-C">C</span></td><td>생성 부품 실재 — <code>lib/excel.ts</code> <code>downloadExcel:57</code>·<code>downloadExcelSheets:72</code></td><td>내려받을 데이터. 대응 화면을 따름</td><td>화면 2</td><td>D-32</td></tr>
@@ -850,7 +850,7 @@
           <tr data-g="D"><td class="no">25</td><td class="k">전자서명한다</td><td class="c"><span class="g g-D">D</span></td><td>다자간 서명 플로우·INVESTOR 서명자 역할 실재. <b>PKI·공동인증·본인인증 벤더 연동 레포 전수 0건</b></td><td>인증서 수단. 직인 이미지 방식으로 갈 경우엔 B로 내려감</td><td>D-19</td></tr>
           <tr data-g="A"><td class="no">26</td><td class="k">서명 후 계약기록으로 이동한다</td><td class="c"><span class="g g-A">A</span></td><td>화면 전환</td><td class="muted">—</td><td class="muted">—</td></tr>
           <tr data-g="A"><td class="no">27</td><td class="k">문서를 개별·전체 선택한다</td><td class="c"><span class="g g-A">A</span></td><td>체크박스 상태</td><td class="muted">—</td><td class="muted">—</td></tr>
-          <tr data-g="C"><td class="no">28</td><td class="k">선택 문서를 일괄 내려받는다</td><td class="c"><span class="g g-C">C</span></td><td>현행 다운로드는 단건 + pdf·image 2종. 결과물 파일 형식 미결로 화면 버튼은 비활성</td><td>압축 묶음 API. 회신전문 형식 미정. 전자서명 결과물을 어느 형식으로 내려줄지 대표 회신 대기</td><td>D-20 D-21</td></tr>
+          <tr data-g="C"><td class="no">28</td><td class="k">선택 문서를 일괄 내려받는다</td><td class="c"><span class="g g-C">C</span></td><td>현행 다운로드는 단건 + pdf·image 2종. 결과물 파일 형식이 정해지지 않아 화면 버튼은 비활성</td><td>압축 묶음 API. 회신전문 형식 미정. 전자서명 결과물을 어느 형식으로 내려줄지 대표 회신 대기</td><td>D-20 D-21</td></tr>
           <tr data-g="B"><td class="no">29</td><td class="k">계약기록 페이지를 넘긴다</td><td class="c"><span class="g g-B">B</span></td><td>서버 페이징 신설</td><td class="muted">—</td><td>D-24</td></tr>
           <tr data-g="A"><td class="no">30</td><td class="k">빈 상태에서 양수 화면으로 이동한다</td><td class="c"><span class="g g-A">A</span></td><td>화면 전환</td><td class="muted">—</td><td class="muted">—</td></tr>
           <tr data-g="A"><td class="no">31</td><td class="k">현재·새 비밀번호를 입력한다</td><td class="c"><span class="g g-A">A</span></td><td>프론트 폼</td><td class="muted">—</td><td class="muted">—</td></tr>
@@ -993,7 +993,7 @@
       <div class="foot">
         <ul>
           <li><b>백엔드를 보지 못했다.</b> 판정 근거는 프론트 레포 2개뿐이다. 서버 테이블·응답 실물은 D-01~D-32의 회신으로만 닫힌다.</li>
-          <li><b>공수·기간을 추정하지 않았다.</b> "재료가 있나"만 답했다.</li>
+          <li><b>공수·기간을 추정하지 않았다.</b> "원천 값이 있나"만 답했다.</li>
           <li><b>C1(수수료율)·C2(지급 캘린더)·C4(예상 지급 차액) 미확정 유지.</b> 대표 정의의 <code>0.11% 예정</code>도 정책값으로 채택하지 않았다.</li>
           <li><b>6대 개념(미지급금·선정산 제외금액·바로이체·과지급·미회수금·환급) 병합 0건.</b> 대표 정의의 미지급금·과지급금은 제7의 축으로 격리했다.</li>
           <li><b>계약 용어(과정산금·미정산금)와 운영 6개념의 매핑.</b> 근거가 없어 손대지 않았다.</li>

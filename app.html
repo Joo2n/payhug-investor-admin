@@ -339,23 +339,35 @@
 
   /* ── 로그인 (사이드바 없는 독립 화면) ─────────────────────── */
   .login-wrap {
-    min-height: 100vh; background: var(--gray-50);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 16px;
+    min-height: 100vh; position: relative; overflow: hidden;
+    background: linear-gradient(to bottom right in oklab, var(--primary-700), var(--primary-600), var(--primary-500));
+    display: flex; align-items: center; justify-content: center;
   }
-  .login-card { width: 100%; max-width: 400px; padding: 36px 32px 28px; }
-  .login-logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px; }
-  .login-logo .logo-mark { display: block; width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; }
-  .login-logo .wordmark { font-size: 22px; line-height: 30px; font-weight: 700; color: var(--gray-900); white-space: nowrap; }
-  .login-logo .wordmark em { font-style: normal; color: var(--primary-600); }
-  .login-sub { text-align: center; font-size: 13px; line-height: 20px; color: var(--secondary); margin: 0 0 28px; }
+  .login-glow { position: absolute; border-radius: 9999px; filter: blur(64px); pointer-events: none; }
+  .login-glow:nth-child(1) { top: -160px; right: -160px; width: 320px; height: 320px; background: rgba(255,255,255,0.1); }
+  .login-glow:nth-child(2) { bottom: -160px; left: -160px; width: 320px; height: 320px; background: rgba(255,255,255,0.1); }
+  .login-glow:nth-child(3) { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 384px; height: 384px; background: rgba(255,255,255,0.05); }
+  .login-box { position: relative; z-index: 10; width: 100%; max-width: 448px; margin: 0 16px; }
+  .login-card {
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(24px); border: 0; border-radius: 24px;
+    padding: 32px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+  }
+  .login-logo { text-align: center; margin-bottom: 32px; }
+  .login-logo .wordmark { margin: 0; font-size: 30px; line-height: 36px; font-weight: 700; letter-spacing: -0.025em; color: var(--gray-900); }
+  .login-logo .wordmark em { font-style: normal; color: var(--primary); }
+  .login-sub { margin: 8px 0 0; font-size: 16px; line-height: 24px; color: var(--secondary); }
   .login-field { margin-bottom: 16px; }
-  .login-field label { display: block; font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 6px; }
-  .login-field .input { width: 100%; padding: 11px 16px; border-radius: 12px; background: #fff; border-color: var(--gray-300); }
-  .login-submit { width: 100%; padding: 12px 0; border-radius: 12px; margin-top: 8px; }
-  .login-links { text-align: center; margin-top: 16px; }
-  .login-links a { font-size: 12px; line-height: 16px; color: var(--gray-500); text-decoration: none; cursor: pointer; }
-  .login-links a:hover { color: var(--gray-700); text-decoration: underline; }
-  .login-links .link-off { font-size: 12px; line-height: 16px; color: var(--gray-300); text-decoration: none; cursor: not-allowed; }
+  .login-field label { display: block; font-size: 14px; line-height: 20px; font-weight: 500; color: var(--gray-700); margin-bottom: 8px; }
+  .login-field .search-input-wrap svg { pointer-events: none; }
+  .login-field .input { width: 100%; padding: 14px 16px 14px 48px; border-radius: 12px; font-size: 16px; line-height: 24px; color: var(--gray-900); }
+  .login-field .input::placeholder { color: var(--gray-400); }
+  .login-submit { width: 100%; padding: 14px 0; border-radius: 12px; font-size: 16px; line-height: 24px; margin-top: 8px; box-shadow: var(--shadow-button); }
+  .login-submit:hover { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); }
+  .login-submit[aria-disabled="true"] { background: var(--gray-300); box-shadow: none; cursor: not-allowed; pointer-events: none; }
+  .login-card .notice { margin: 24px 0 0; padding: 16px; align-items: flex-start; gap: 12px; color: var(--amber-800); }
+  .login-card .notice svg { width: 20px; height: 20px; margin-top: 2px; color: var(--amber-500); }
+  .login-card .notice p { margin: 0; }
+  .login-foot { margin: 24px 0 0; text-align: center; font-size: 14px; line-height: 20px; color: rgba(255,255,255,0.6); }
 
   /* ── 랜딩 갤러리 ──────────────────────────────────────────── */
   .wrap { max-width: 1024px; margin: 0 auto; padding: 56px 32px 64px; }
@@ -443,7 +455,7 @@
 </style>
 </head>
 <!--
-  통합 프로토타입 — 한 파일에서 화면 16 · 상태 18 전부를 조작한다.
+  통합 프로토타입 — 한 파일에서 화면 15 · 상태 18 전부를 조작한다.
   개별 HTML 33개는 Figma 임포트용 정적 원본으로 별도 보존한다(이 파일이 대체하지 않는다).
   화면은 데이터 모델에서만 그린다. 표·합계·비중은 조작 결과로 계산되며 하드코딩하지 않는다.
   딥링크: #<화면>/<상태>  예) #invest-assets/download · #acquisition-list/signing
@@ -1064,35 +1076,46 @@
       </div>
       <span class="hero-date">2026-08-27</span>
     </div>
-    <div class="sec-head"><h2>화면</h2><span class="sec-note">메뉴 대응 8 · 하위 7 · 상태 18</span></div>
+    <div class="sec-head"><h2>화면</h2><span class="sec-note">메뉴 대응 8 · 하위 6 · 상태 18</span></div>
     <div class="gallery" data-mount="ix-gallery"></div>
   </div>
 </section>
 
 <section class="screen" data-screen="login" data-state="default" hidden>
   <div class="login-wrap">
+  <div class="login-glow"></div>
+  <div class="login-glow"></div>
+  <div class="login-glow"></div>
+  <div class="login-box">
   <div class="card login-card">
     <div class="login-logo">
-      <span class="logo-mark" role="img" aria-label="PayHug"></span>
-      <span class="wordmark">PayHug <em>Admin</em></span>
+      <h1 class="wordmark">PayHug <em>Admin</em></h1>
+      <p class="login-sub">관리자 로그인</p>
     </div>
-    <p class="login-sub">투자자 어드민</p>
 
     <div class="login-field">
-      <label>사업자등록번호 또는 휴대전화번호</label>
-      <input type="text" class="input" data-login="id" placeholder="'-' 없이 숫자만 입력">
+      <label>아이디</label>
+      <div class="search-input-wrap">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <input type="text" class="input" data-login="id" placeholder="휴대전화번호 또는 사업자번호">
+      </div>
     </div>
-    <div class="login-field" style="margin-bottom:8px">
+    <div class="login-field">
       <label>비밀번호</label>
-      <input type="password" class="input" data-login="pw" placeholder="비밀번호 입력">
+      <div class="search-input-wrap">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        <input type="password" class="input" data-login="pw" placeholder="비밀번호">
+      </div>
     </div>
 
     <a class="btn btn-primary login-submit" href="invest-assets.html">로그인</a>
 
-    <div class="login-links">
-      <span class="link-off" aria-disabled="true">비밀번호 찾기</span>
+    <div class="notice notice-amber">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+      <p><strong>안내:</strong> 이 페이지는 관리자 전용입니다.</p>
     </div>
-
+  </div>
+  <p class="login-foot">© 2026 PayHug. All rights reserved.</p>
   </div>
   </div>
 </section>
@@ -1257,7 +1280,9 @@
 'use strict';
 
 /* ═══ 예시 데이터 — 개별 화면 HTML·assets/xlsx 실측값 그대로. 새 값 생성 없음 ═══ */
-var BASE_DATE = '2026-08-27';
+/* 프리셋·달력 상한의 기준 — 일별 표 마지막 행이다. 화면 「기준일」 라벨(2026-08-27)과 하루 다르다.
+   기준일 당일 정산예정 채권은 배치가 다음 날 자정에 돌아 조회 시점에 DB 에 없다. */
+var BASE_DATE = '2026-08-26';
 var INVESTOR  = '㈜테스트인베스트';
 
 var MERCHANTS = [
@@ -1266,9 +1291,9 @@ var MERCHANTS = [
   {mid:'M2026-0006', name:'김밥나라', biz:'678-90-12345', ceo:'김나라', sector:'음식점업', item:'김밥', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:11827388, w:3.27, s:0.09, ty:12.28},
   {mid:'M2026-0008', name:'골목냉면', biz:'890-12-34567', ceo:'백미순', sector:'음식점업', item:'냉면', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:9286833, w:3.09, s:0.08, ty:12.99},
   {mid:'M2026-0002', name:'달빛곱창 홍대점', biz:'234-56-78901', ceo:'이달빛', sector:'음식점업', item:'곱창', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:7074838, w:2.84, s:0.06, ty:14.14},
-  {mid:'M2026-0009', name:'청춘포차 신촌점', biz:'901-23-45678', ceo:'오지훈', sector:'음식점업', item:'포차', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:5624058, w:2.70, s:0.05, ty:14.87},
-  {mid:'M2026-0004', name:'바다마루 횟집', biz:'456-78-90123', ceo:'조해민', sector:'음식점업', item:'일식', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:4799968, w:2.55, s:0.05, ty:15.75},
-  {mid:'M2026-0005', name:'한강커피 잠원점', biz:'567-89-01234', ceo:'정한강', sector:'음식점업', item:'카페', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:3981371, w:2.52, s:0.04, ty:15.93}
+  {mid:'M2026-0009', name:'청춘포차 신촌점', biz:'901-23-45678', ceo:'오지훈', sector:'음식점업', item:'포차', tier:'평범', buyer:'A-001', buyerName:'㈜페이허그', amount:5624058, w:2.70, s:0.05, ty:14.89},
+  {mid:'M2026-0004', name:'바다마루 횟집', biz:'456-78-90123', ceo:'조해민', sector:'음식점업', item:'일식', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:4799968, w:2.55, s:0.05, ty:15.72},
+  {mid:'M2026-0005', name:'한강커피 잠원점', biz:'567-89-01234', ceo:'정한강', sector:'음식점업', item:'카페', tier:'소액', buyer:'A-001', buyerName:'㈜페이허그', amount:3981371, w:2.52, s:0.04, ty:15.95}
 ];
 /* 업종 옵션은 원장 데이터에서 뽑는다 — 화면에 없는 업종을 옵션으로 내걸지 않는다.
    운영 어드민에는 업종 필터 자체가 없어(admin app/manage/page.tsx:223-255 · services/merchantService.ts:199-205)
@@ -1291,191 +1316,378 @@ var ASSET_ROWS = [
 /* 일별 투자수익 원장 — 2026-03-01 ~ 08-27 180일. 생성기 daily_ledger.py.
    월별 표는 이 원장을 조회 기간만큼 잘라 달별로 합친 결과다(rollupMonths). 월별 배열을 따로 두지 않는다.
    그래야 같은 조회 기간에서 일별 합계와 월별 합계, 그리고 카드 값이 어긋날 수 없다.
-   투자 수익 = floor(순지급액 x 0.11%) · 상환액 = 투자실행금 + 투자 수익 ·
+   투자 수익 = floor(순지급액 x 0.11%) - 부족액 · 상환액 = 순지급액 - 부족액 ·
    Ty수익율 = (투자 수익 / 투자실행금 x 100) x 365 / W금융일수.
+   상환액은 순지급액에서 한 번에 뺀다 — 투자실행금 + 투자 수익으로 쪼개면 원 단위로 두 번
+   끊겨 하루 최대 7원이 어긋난다(dm_0901/rounding_rule_0901.md).
+   w 는 소수 6자리 값을 싣는다 — 표는 fx(r.w, 2) 로 2자리만 보이고 합계는 6자리로 센다.
    수수료 앵커는 순지급액이다(D-31) — 투자 시뮬레이션 simBond 와 같은 앵커라 두 화면의 같은 열이 갈리지 않는다. */
 var DAILY = [
-  {d:'2026-03-01', repay:27297344, exec:27288063, profit:9281, w:3.11, ty:3.99},
-  {d:'2026-03-02', repay:26903581, exec:26893810, profit:9771, w:3.07, ty:4.32},
-  {d:'2026-03-03', repay:26463898, exec:26453754, profit:10144, w:3.05, ty:4.59},
-  {d:'2026-03-04', repay:26019537, exec:26009374, profit:10163, w:3.05, ty:4.68},
-  {d:'2026-03-05', repay:25579362, exec:25569438, profit:9924, w:3.06, ty:4.63},
-  {d:'2026-03-06', repay:25233328, exec:25223865, profit:9463, w:3.07, ty:4.46},
-  {d:'2026-03-07', repay:25104629, exec:25095556, profit:9073, w:3.09, ty:4.27},
-  {d:'2026-03-08', repay:25513514, exec:25504492, profit:9022, w:3.07, ty:4.21},
-  {d:'2026-03-09', repay:26165846, exec:26156775, profit:9071, w:3.06, ty:4.14},
-  {d:'2026-03-10', repay:26847046, exec:26837727, profit:9319, w:3.05, ty:4.16},
-  {d:'2026-03-11', repay:27362340, exec:27352745, profit:9595, w:3.06, ty:4.18},
-  {d:'2026-03-12', repay:27437414, exec:27427511, profit:9903, w:3.06, ty:4.31},
-  {d:'2026-03-13', repay:27069912, exec:27059768, profit:10144, w:3.06, ty:4.47},
-  {d:'2026-03-14', repay:26466260, exec:26455781, profit:10479, w:3.03, ty:4.77},
-  {d:'2026-03-15', repay:26181365, exec:26170283, profit:11082, w:2.98, ty:5.19},
-  {d:'2026-03-16', repay:25902648, exec:25891268, profit:11380, w:2.94, ty:5.46},
-  {d:'2026-03-17', repay:25751444, exec:25740012, profit:11432, w:2.93, ty:5.53},
-  {d:'2026-03-18', repay:25596853, exec:25585873, profit:10980, w:2.96, ty:5.29},
-  {d:'2026-03-19', repay:25408263, exec:25398029, profit:10234, w:3.01, ty:4.89},
-  {d:'2026-03-20', repay:25218012, exec:25208742, profit:9270, w:3.07, ty:4.37},
-  {d:'2026-03-21', repay:25103740, exec:25095253, profit:8487, w:3.12, ty:3.96},
-  {d:'2026-03-22', repay:25378344, exec:25370175, profit:8169, w:3.13, ty:3.75},
-  {d:'2026-03-23', repay:25834849, exec:25826742, profit:8107, w:3.12, ty:3.67},
-  {d:'2026-03-24', repay:26320809, exec:26312403, profit:8406, w:3.11, ty:3.75},
-  {d:'2026-03-25', repay:26771423, exec:26762550, profit:8873, w:3.10, ty:3.90},
-  {d:'2026-03-26', repay:26950283, exec:26940865, profit:9418, w:3.08, ty:4.14},
-  {d:'2026-03-27', repay:26850372, exec:26840489, profit:9883, w:3.06, ty:4.39},
-  {d:'2026-03-28', repay:26578867, exec:26568512, profit:10355, w:3.03, ty:4.69},
-  {d:'2026-03-29', repay:26561710, exec:26550789, profit:10921, w:2.98, ty:5.04},
-  {d:'2026-03-30', repay:26452554, exec:26441500, profit:11054, w:2.96, ty:5.16},
-  {d:'2026-03-31', repay:26332882, exec:26321956, profit:10926, w:2.98, ty:5.08},
-  {d:'2026-04-01', repay:26135203, exec:26124823, profit:10380, w:3.02, ty:4.80},
-  {d:'2026-04-02', repay:25848079, exec:25838369, profit:9710, w:3.06, ty:4.48},
-  {d:'2026-04-03', repay:25547733, exec:25538670, profit:9063, w:3.10, ty:4.18},
-  {d:'2026-04-04', repay:25359711, exec:25350925, profit:8786, w:3.11, ty:4.07},
-  {d:'2026-04-05', repay:25702004, exec:25692819, profit:9185, w:3.07, ty:4.25},
-  {d:'2026-04-06', repay:26282833, exec:26272951, profit:9882, w:3.01, ty:4.56},
-  {d:'2026-04-07', repay:26983725, exec:26972866, profit:10859, w:2.96, ty:4.96},
-  {d:'2026-04-08', repay:27562417, exec:27550674, profit:11743, w:2.93, ty:5.31},
-  {d:'2026-04-09', repay:27740378, exec:27727952, profit:12426, w:2.90, ty:5.64},
-  {d:'2026-04-10', repay:27390303, exec:27377664, profit:12639, w:2.90, ty:5.81},
-  {d:'2026-04-11', repay:26694872, exec:26682306, profit:12566, w:2.90, ty:5.93},
-  {d:'2026-04-12', repay:26155291, exec:26142859, profit:12432, w:2.89, ty:6.01},
-  {d:'2026-04-13', repay:25531802, exec:25519957, profit:11845, w:2.91, ty:5.82},
-  {d:'2026-04-14', repay:25075454, exec:25064315, profit:11139, w:2.95, ty:5.50},
-  {d:'2026-04-15', repay:24766016, exec:24755742, profit:10274, w:3.00, ty:5.05},
-  {d:'2026-04-16', repay:24634638, exec:24625127, profit:9511, w:3.04, ty:4.64},
-  {d:'2026-04-17', repay:24704687, exec:24695740, profit:8947, w:3.07, ty:4.31},
-  {d:'2026-04-18', repay:25004967, exec:24996137, profit:8830, w:3.07, ty:4.20},
-  {d:'2026-04-19', repay:25818398, exec:25809032, profit:9366, w:3.03, ty:4.37},
-  {d:'2026-04-20', repay:26716345, exec:26706326, profit:10019, w:2.99, ty:4.58},
-  {d:'2026-04-21', repay:27457161, exec:27446413, profit:10748, w:2.96, ty:4.83},
-  {d:'2026-04-22', repay:27785120, exec:27773967, profit:11153, w:2.97, ty:4.94},
-  {d:'2026-04-23', repay:27497278, exec:27486075, profit:11203, w:2.99, ty:4.98},
-  {d:'2026-04-24', repay:26667501, exec:26656709, profit:10792, w:3.02, ty:4.89},
-  {d:'2026-04-25', repay:25626648, exec:25616399, profit:10249, w:3.05, ty:4.79},
-  {d:'2026-04-26', repay:24971034, exec:24961136, profit:9898, w:3.05, ty:4.75},
-  {d:'2026-04-27', repay:24620097, exec:24610667, profit:9430, w:3.05, ty:4.59},
-  {d:'2026-04-28', repay:24688236, exec:24679110, profit:9126, w:3.06, ty:4.41},
-  {d:'2026-04-29', repay:25121215, exec:25112347, profit:8868, w:3.07, ty:4.20},
-  {d:'2026-04-30', repay:25715811, exec:25706989, profit:8822, w:3.08, ty:4.07},
-  {d:'2026-05-01', repay:26344651, exec:26335709, profit:8942, w:3.08, ty:4.02},
-  {d:'2026-05-02', repay:26878646, exec:26869268, profit:9378, w:3.06, ty:4.16},
-  {d:'2026-05-03', repay:27566429, exec:27556156, profit:10273, w:3.01, ty:4.52},
-  {d:'2026-05-04', repay:27923775, exec:27912736, profit:11039, w:2.97, ty:4.86},
-  {d:'2026-05-05', repay:27902978, exec:27891293, profit:11685, w:2.95, ty:5.18},
-  {d:'2026-05-06', repay:27424822, exec:27412923, profit:11899, w:2.96, ty:5.35},
-  {d:'2026-05-07', repay:26560106, exec:26548329, profit:11777, w:2.96, ty:5.47},
-  {d:'2026-05-08', repay:25500742, exec:25489467, profit:11275, w:2.98, ty:5.42},
-  {d:'2026-05-09', repay:24609429, exec:24598684, profit:10745, w:3.00, ty:5.31},
-  {d:'2026-05-10', repay:24367915, exec:24357464, profit:10451, w:2.98, ty:5.26},
-  {d:'2026-05-11', repay:24546268, exec:24536213, profit:10055, w:2.98, ty:5.02},
-  {d:'2026-05-12', repay:25101846, exec:25092069, profit:9777, w:3.00, ty:4.74},
-  {d:'2026-05-13', repay:25832241, exec:25822775, profit:9466, w:3.03, ty:4.42},
-  {d:'2026-05-14', repay:26434790, exec:26425559, profit:9231, w:3.05, ty:4.18},
-  {d:'2026-05-15', repay:26747175, exec:26738102, profit:9073, w:3.08, ty:4.02},
-  {d:'2026-05-16', repay:26717710, exec:26708590, profit:9120, w:3.09, ty:4.03},
-  {d:'2026-05-17', repay:26744136, exec:26734579, profit:9557, w:3.07, ty:4.25},
-  {d:'2026-05-18', repay:26569241, exec:26559330, profit:9911, w:3.04, ty:4.48},
-  {d:'2026-05-19', repay:26299069, exec:26288869, profit:10200, w:3.03, ty:4.67},
-  {d:'2026-05-20', repay:25940913, exec:25930747, profit:10166, w:3.03, ty:4.72},
-  {d:'2026-05-21', repay:25484614, exec:25474772, profit:9842, w:3.05, ty:4.62},
-  {d:'2026-05-22', repay:25032526, exec:25023310, profit:9216, w:3.08, ty:4.36},
-  {d:'2026-05-23', repay:24735361, exec:24726779, profit:8582, w:3.12, ty:4.06},
-  {d:'2026-05-24', repay:24935817, exec:24927636, profit:8181, w:3.12, ty:3.84},
-  {d:'2026-05-25', repay:25460783, exec:25452970, profit:7813, w:3.13, ty:3.58},
-  {d:'2026-05-26', repay:26114199, exec:26106502, profit:7697, w:3.15, ty:3.42},
-  {d:'2026-05-27', repay:26774491, exec:26766773, profit:7718, w:3.16, ty:3.33},
-  {d:'2026-05-28', repay:27102133, exec:27094229, profit:7904, w:3.17, ty:3.36},
-  {d:'2026-05-29', repay:27079851, exec:27071624, profit:8227, w:3.16, ty:3.51},
-  {d:'2026-05-30', repay:26800954, exec:26792151, profit:8803, w:3.14, ty:3.82},
-  {d:'2026-05-31', repay:26793468, exec:26783691, profit:9777, w:3.06, ty:4.35},
-  {d:'2026-06-01', repay:26751866, exec:26741322, profit:10544, w:3.00, ty:4.80},
-  {d:'2026-06-02', repay:26723245, exec:26712092, profit:11153, w:2.97, ty:5.13},
-  {d:'2026-06-03', repay:26569300, exec:26558081, profit:11219, w:2.97, ty:5.19},
-  {d:'2026-06-04', repay:26221809, exec:26210963, profit:10846, w:3.00, ty:5.03},
-  {d:'2026-06-05', repay:25737155, exec:25727076, profit:10079, w:3.04, ty:4.70},
-  {d:'2026-06-06', repay:25286798, exec:25277469, profit:9329, w:3.08, ty:4.37},
-  {d:'2026-06-07', repay:25261203, exec:25252294, profit:8909, w:3.09, ty:4.17},
-  {d:'2026-06-08', repay:25480202, exec:25471564, profit:8638, w:3.10, ty:3.99},
-  {d:'2026-06-09', repay:25852397, exec:25843697, profit:8700, w:3.09, ty:3.98},
-  {d:'2026-06-10', repay:26293717, exec:26284796, profit:8921, w:3.09, ty:4.01},
-  {d:'2026-06-11', repay:26566218, exec:26556904, profit:9314, w:3.07, ty:4.17},
-  {d:'2026-06-12', repay:26620569, exec:26610876, profit:9693, w:3.06, ty:4.34},
-  {d:'2026-06-13', repay:26504102, exec:26493965, profit:10137, w:3.03, ty:4.61},
-  {d:'2026-06-14', repay:26592173, exec:26581458, profit:10715, w:2.99, ty:4.92},
-  {d:'2026-06-15', repay:26505555, exec:26494704, profit:10851, w:2.97, ty:5.03},
-  {d:'2026-06-16', repay:26301089, exec:26290419, profit:10670, w:2.99, ty:4.95},
-  {d:'2026-06-17', repay:25934502, exec:25924548, profit:9954, w:3.04, ty:4.61},
-  {d:'2026-06-18', repay:25428063, exec:25419052, profit:9011, w:3.11, ty:4.16},
-  {d:'2026-06-19', repay:24931314, exec:24923329, profit:7985, w:3.17, ty:3.69},
-  {d:'2026-06-20', repay:24591046, exec:24583770, profit:7276, w:3.21, ty:3.37},
-  {d:'2026-06-21', repay:24803562, exec:24796406, profit:7156, w:3.20, ty:3.29},
-  {d:'2026-06-22', repay:25435701, exec:25428282, profit:7419, w:3.16, ty:3.37},
-  {d:'2026-06-23', repay:26291069, exec:26282979, profit:8090, w:3.12, ty:3.60},
-  {d:'2026-06-24', repay:27219045, exec:27210137, profit:8908, w:3.08, ty:3.88},
-  {d:'2026-06-25', repay:27800645, exec:27790954, profit:9691, w:3.06, ty:4.16},
-  {d:'2026-06-26', repay:27883256, exec:27873020, profit:10236, w:3.04, ty:4.41},
-  {d:'2026-06-27', repay:27505206, exec:27494567, profit:10639, w:3.03, ty:4.66},
-  {d:'2026-06-28', repay:27143115, exec:27132067, profit:11048, w:3.00, ty:4.95},
-  {d:'2026-06-29', repay:26558559, exec:26547549, profit:11010, w:2.99, ty:5.06},
-  {d:'2026-06-30', repay:25989910, exec:25979154, profit:10756, w:3.00, ty:5.04},
-  {d:'2026-07-01', repay:25478969, exec:25468748, profit:10221, w:3.04, ty:4.82},
-  {d:'2026-07-02', repay:25093466, exec:25083804, profit:9662, w:3.06, ty:4.59},
-  {d:'2026-07-03', repay:24918918, exec:24909739, profit:9179, w:3.08, ty:4.37},
-  {d:'2026-07-04', repay:25045529, exec:25036425, profit:9104, w:3.07, ty:4.32},
-  {d:'2026-07-05', repay:25786301, exec:25776676, profit:9625, w:3.02, ty:4.51},
-  {d:'2026-07-06', repay:26711134, exec:26700806, profit:10328, w:2.97, ty:4.75},
-  {d:'2026-07-07', repay:27566227, exec:27555085, profit:11142, w:2.94, ty:5.02},
-  {d:'2026-07-08', repay:28039830, exec:28028107, profit:11723, w:2.94, ty:5.19},
-  {d:'2026-07-09', repay:27882532, exec:27870546, profit:11986, w:2.94, ty:5.34},
-  {d:'2026-07-10', repay:27099102, exec:27087293, profit:11809, w:2.96, ty:5.38},
-  {d:'2026-07-11', repay:26019032, exec:26007564, profit:11468, w:2.98, ty:5.40},
-  {d:'2026-07-12', repay:25258841, exec:25247608, profit:11233, w:2.97, ty:5.47},
-  {d:'2026-07-13', repay:24671814, exec:24661089, profit:10725, w:2.97, ty:5.34},
-  {d:'2026-07-14', repay:24461072, exec:24450838, profit:10234, w:2.99, ty:5.11},
-  {d:'2026-07-15', repay:24566763, exec:24557155, profit:9608, w:3.03, ty:4.71},
-  {d:'2026-07-16', repay:24895838, exec:24886764, profit:9074, w:3.06, ty:4.35},
-  {d:'2026-07-17', repay:25377242, exec:25368579, profit:8663, w:3.08, ty:4.05},
-  {d:'2026-07-18', repay:25913974, exec:25905374, profit:8600, w:3.09, ty:3.92},
-  {d:'2026-07-19', repay:26718388, exec:26709308, profit:9080, w:3.06, ty:4.06},
-  {d:'2026-07-20', repay:27372650, exec:27363029, profit:9621, w:3.03, ty:4.24},
-  {d:'2026-07-21', repay:27706156, exec:27695910, profit:10246, w:3.02, ty:4.47},
-  {d:'2026-07-22', repay:27623738, exec:27613101, profit:10637, w:3.02, ty:4.66},
-  {d:'2026-07-23', repay:27065311, exec:27054499, profit:10812, w:3.02, ty:4.83},
-  {d:'2026-07-24', repay:26194590, exec:26183896, profit:10694, w:3.03, ty:4.92},
-  {d:'2026-07-25', repay:25350226, exec:25339689, profit:10537, w:3.02, ty:5.03},
-  {d:'2026-07-26', repay:25064370, exec:25053752, profit:10618, w:2.99, ty:5.17},
-  {d:'2026-07-27', repay:25099113, exec:25088641, profit:10472, w:2.97, ty:5.13},
-  {d:'2026-07-28', repay:25476277, exec:25465924, profit:10353, w:2.98, ty:4.98},
-  {d:'2026-07-29', repay:26017657, exec:26007546, profit:10111, w:3.00, ty:4.73},
-  {d:'2026-07-30', repay:26494267, exec:26484341, profit:9926, w:3.02, ty:4.53},
-  {d:'2026-07-31', repay:26767102, exec:26757307, profit:9795, w:3.04, ty:4.40},
-  {d:'2026-08-01', repay:26810462, exec:26800514, profit:9948, w:3.04, ty:4.46},
-  {d:'2026-08-02', repay:27018789, exec:27008184, profit:10605, w:3.00, ty:4.78},
-  {d:'2026-08-03', repay:27035527, exec:27024300, profit:11227, w:2.96, ty:5.12},
-  {d:'2026-08-04', repay:26950203, exec:26938289, profit:11914, w:2.92, ty:5.53},
-  {d:'2026-08-05', repay:26667989, exec:26655718, profit:12271, w:2.91, ty:5.77},
-  {d:'2026-08-06', repay:26191462, exec:26179169, profit:12293, w:2.90, ty:5.91},
-  {d:'2026-08-07', repay:25557856, exec:25545958, profit:11898, w:2.92, ty:5.82},
-  {d:'2026-08-08', repay:24997886, exec:24986538, profit:11348, w:2.94, ty:5.64},
-  {d:'2026-08-09', repay:24900020, exec:24889141, profit:10879, w:2.95, ty:5.41},
-  {d:'2026-08-10', repay:25021545, exec:25011361, profit:10184, w:2.98, ty:4.99},
-  {d:'2026-08-11', repay:25340699, exec:25331129, profit:9570, w:3.02, ty:4.57},
-  {d:'2026-08-12', repay:25727826, exec:25718836, profit:8990, w:3.07, ty:4.16},
-  {d:'2026-08-13', repay:25975401, exec:25966805, profit:8596, w:3.11, ty:3.89},
-  {d:'2026-08-14', repay:26048289, exec:26039881, profit:8408, w:3.13, ty:3.77},
-  {d:'2026-08-15', repay:25993161, exec:25984567, profit:8594, w:3.12, ty:3.87},
-  {d:'2026-08-16', repay:26249346, exec:26240030, profit:9316, w:3.07, ty:4.22},
-  {d:'2026-08-17', repay:26504845, exec:26494834, profit:10011, w:3.01, ty:4.58},
-  {d:'2026-08-18', repay:26723565, exec:26712931, profit:10634, w:2.98, ty:4.88},
-  {d:'2026-08-19', repay:26756200, exec:26745390, profit:10810, w:2.99, ty:4.93},
-  {d:'2026-08-20', repay:26478270, exec:26467707, profit:10563, w:3.01, ty:4.84},
-  {d:'2026-08-21', repay:25951644, exec:25941773, profit:9871, w:3.06, ty:4.54},
-  {d:'2026-08-22', repay:25375335, exec:25366208, profit:9127, w:3.10, ty:4.24},
-  {d:'2026-08-23', repay:25188287, exec:25179655, profit:8632, w:3.12, ty:4.01},
-  {d:'2026-08-24', repay:25281442, exec:25273193, profit:8249, w:3.12, ty:3.82},
-  {d:'2026-08-25', repay:25602099, exec:25593903, profit:8196, w:3.13, ty:3.73},
-  {d:'2026-08-26', repay:26102543, exec:26094204, profit:8339, w:3.12, ty:3.74},
-  {d:'2026-08-27', repay:26530744, exec:26521983, profit:8761, w:3.11, ty:3.88}
+  {d:'2026-03-01', repay:27297343, exec:27288063, profit:9281, w:3.107189, ty:4.00, ad:84789164},
+  {d:'2026-03-02', repay:26903579, exec:26893810, profit:9771, w:3.069837, ty:4.32, ad:82559616},
+  {d:'2026-03-03', repay:26463905, exec:26453754, profit:10144, w:3.047485, ty:4.59, ad:80617426},
+  {d:'2026-03-04', repay:26019540, exec:26009374, profit:10163, w:3.047822, ty:4.68, ad:79271946},
+  {d:'2026-03-05', repay:25579366, exec:25569438, profit:9924, w:3.056035, ty:4.64, ad:78141099},
+  {d:'2026-03-06', repay:25233330, exec:25223865, profit:9463, w:3.074697, ty:4.45, ad:77555750},
+  {d:'2026-03-07', repay:25104629, exec:25095556, profit:9073, w:3.086671, ty:4.28, ad:77461729},
+  {d:'2026-03-08', repay:25513516, exec:25504492, profit:9022, w:3.072189, ty:4.20, ad:78354624},
+  {d:'2026-03-09', repay:26165845, exec:26156775, profit:9071, w:3.057964, ty:4.14, ad:79986484},
+  {d:'2026-03-10', repay:26847053, exec:26837727, profit:9319, w:3.052915, ty:4.15, ad:81933292},
+  {d:'2026-03-11', repay:27362349, exec:27352745, profit:9595, w:3.059096, ty:4.19, ad:83674662},
+  {d:'2026-03-12', repay:27437419, exec:27427511, profit:9903, w:3.058964, ty:4.31, ad:83899768},
+  {d:'2026-03-13', repay:27069915, exec:27059768, profit:10144, w:3.055662, ty:4.48, ad:82685512},
+  {d:'2026-03-14', repay:26466262, exec:26455781, profit:10479, w:3.033582, ty:4.77, ad:80255787},
+  {d:'2026-03-15', repay:26181366, exec:26170283, profit:11082, w:2.976985, ty:5.19, ad:77908552},
+  {d:'2026-03-16', repay:25902638, exec:25891268, profit:11380, w:2.939699, ty:5.46, ad:76112529},
+  {d:'2026-03-17', repay:25751442, exec:25740012, profit:11432, w:2.933256, ty:5.53, ad:75502049},
+  {d:'2026-03-18', repay:25596845, exec:25585873, profit:10980, w:2.963064, ty:5.29, ad:75812571},
+  {d:'2026-03-19', repay:25408255, exec:25398029, profit:10234, w:3.009482, ty:4.89, ad:76434922},
+  {d:'2026-03-20', repay:25218017, exec:25208742, profit:9270, w:3.067913, ty:4.38, ad:77338227},
+  {d:'2026-03-21', repay:25103753, exec:25095253, profit:8487, w:3.116036, ty:3.96, ad:78197718},
+  {d:'2026-03-22', repay:25378348, exec:25370175, profit:8169, w:3.127552, ty:3.76, ad:79346533},
+  {d:'2026-03-23', repay:25834850, exec:25826742, profit:8107, w:3.121176, ty:3.67, ad:80609820},
+  {d:'2026-03-24', repay:26320804, exec:26312403, profit:8406, w:3.108869, ty:3.75, ad:81801808},
+  {d:'2026-03-25', repay:26771425, exec:26762550, profit:8873, w:3.097323, ty:3.91, ad:82892266},
+  {d:'2026-03-26', repay:26950285, exec:26940865, profit:9418, w:3.075886, ty:4.15, ad:82867025},
+  {d:'2026-03-27', repay:26850377, exec:26840489, profit:9883, w:3.055332, ty:4.40, ad:82006614},
+  {d:'2026-03-28', repay:26578868, exec:26568512, profit:10355, w:3.027348, ty:4.70, ad:80432126},
+  {d:'2026-03-29', repay:26561711, exec:26550789, profit:10921, w:2.981276, ty:5.04, ad:79155235},
+  {d:'2026-03-30', repay:26452563, exec:26441500, profit:11054, w:2.962943, ty:5.15, ad:78344666},
+  {d:'2026-03-31', repay:26332884, exec:26321956, profit:10926, w:2.976083, ty:5.09, ad:78336315},
+  {d:'2026-04-01', repay:26135195, exec:26124823, profit:10380, w:3.017237, ty:4.81, ad:78824790},
+  {d:'2026-04-02', repay:25848079, exec:25838369, profit:9710, w:3.061181, ty:4.48, ad:79095917},
+  {d:'2026-04-03', repay:25547736, exec:25538670, profit:9063, w:3.100443, ty:4.18, ad:79181188},
+  {d:'2026-04-04', repay:25359708, exec:25350925, profit:8786, w:3.111984, ty:4.06, ad:78891676},
+  {d:'2026-04-05', repay:25702003, exec:25692819, profit:9185, w:3.070175, ty:4.25, ad:78881442},
+  {d:'2026-04-06', repay:26282837, exec:26272951, profit:9882, w:3.012643, ty:4.56, ad:79151017},
+  {d:'2026-04-07', repay:26983725, exec:26972866, profit:10859, w:2.959043, ty:4.97, ad:79813871},
+  {d:'2026-04-08', repay:27562423, exec:27550674, profit:11743, w:2.925097, ty:5.32, ad:80588382},
+  {d:'2026-04-09', repay:27740379, exec:27727952, profit:12426, w:2.901513, ty:5.64, ad:80453025},
+  {d:'2026-04-10', repay:27390296, exec:27377664, profit:12639, w:2.899143, ty:5.81, ad:79371766},
+  {d:'2026-04-11', repay:26694868, exec:26682306, profit:12566, w:2.902751, ty:5.92, ad:77452078},
+  {d:'2026-04-12', repay:26155296, exec:26142859, profit:12432, w:2.893398, ty:6.00, ad:75641703},
+  {d:'2026-04-13', repay:25531810, exec:25519957, profit:11845, w:2.910651, ty:5.82, ad:74279690},
+  {d:'2026-04-14', repay:25075459, exec:25064315, profit:11139, w:2.948878, ty:5.50, ad:73911600},
+  {d:'2026-04-15', repay:24766029, exec:24755742, profit:10274, w:3.001564, ty:5.05, ad:74305954},
+  {d:'2026-04-16', repay:24634643, exec:24625127, profit:9511, w:3.043807, ty:4.63, ad:74954130},
+  {d:'2026-04-17', repay:24704697, exec:24695740, profit:8947, w:3.072206, ty:4.30, ad:75870402},
+  {d:'2026-04-18', repay:25004974, exec:24996137, profit:8830, w:3.071864, ty:4.20, ad:76784744},
+  {d:'2026-04-19', repay:25818399, exec:25809032, profit:9366, w:3.028305, ty:4.37, ad:78157616},
+  {d:'2026-04-20', repay:26716352, exec:26706326, profit:10019, w:2.985322, ty:4.59, ad:79726972},
+  {d:'2026-04-21', repay:27457154, exec:27446413, profit:10748, w:2.962149, ty:4.83, ad:81300370},
+  {d:'2026-04-22', repay:27785116, exec:27773967, profit:11153, w:2.967773, ty:4.94, ad:82426819},
+  {d:'2026-04-23', repay:27497279, exec:27486075, profit:11203, w:2.986064, ty:4.98, ad:82075166},
+  {d:'2026-04-24', repay:26667505, exec:26656709, profit:10792, w:3.019488, ty:4.89, ad:80489616},
+  {d:'2026-04-25', repay:25626653, exec:25616399, profit:10249, w:3.047971, ty:4.79, ad:78078052},
+  {d:'2026-04-26', repay:24971040, exec:24961136, profit:9898, w:3.048257, ty:4.75, ad:76087948},
+  {d:'2026-04-27', repay:24620102, exec:24610667, profit:9430, w:3.051481, ty:4.58, ad:75098992},
+  {d:'2026-04-28', repay:24688236, exec:24679110, profit:9126, w:3.060162, ty:4.41, ad:75522073},
+  {d:'2026-04-29', repay:25121223, exec:25112347, profit:8868, w:3.074515, ty:4.19, ad:77208284},
+  {d:'2026-04-30', repay:25715821, exec:25706989, profit:8822, w:3.078270, ty:4.07, ad:79133042},
+  {d:'2026-05-01', repay:26344651, exec:26335709, profit:8942, w:3.076114, ty:4.03, ad:81011641},
+  {d:'2026-05-02', repay:26878647, exec:26869268, profit:9378, w:3.058560, ty:4.17, ad:82181259},
+  {d:'2026-05-03', repay:27566435, exec:27556156, profit:10273, w:3.010218, ty:4.52, ad:82950045},
+  {d:'2026-05-04', repay:27923781, exec:27912736, profit:11039, w:2.971724, ty:4.86, ad:82948957},
+  {d:'2026-05-05', repay:27902979, exec:27891293, profit:11685, w:2.952163, ty:5.18, ad:82339641},
+  {d:'2026-05-06', repay:27424831, exec:27412923, profit:11899, w:2.955829, ty:5.36, ad:81027924},
+  {d:'2026-05-07', repay:26560115, exec:26548329, profit:11777, w:2.964739, ty:5.46, ad:78708858},
+  {d:'2026-05-08', repay:25500741, exec:25489467, profit:11275, w:2.983653, ty:5.41, ad:76051718},
+  {d:'2026-05-09', repay:24609430, exec:24598684, profit:10745, w:2.995205, ty:5.32, ad:73678090},
+  {d:'2026-05-10', repay:24367924, exec:24357464, profit:10451, w:2.981806, ty:5.25, ad:72629230},
+  {d:'2026-05-11', repay:24546263, exec:24536213, profit:10055, w:2.980864, ty:5.02, ad:73139104},
+  {d:'2026-05-12', repay:25101852, exec:25092069, profit:9777, w:2.995763, ty:4.75, ad:75169895},
+  {d:'2026-05-13', repay:25832239, exec:25822775, profit:9466, w:3.026212, ty:4.42, ad:78145189},
+  {d:'2026-05-14', repay:26434795, exec:26425559, profit:9231, w:3.054263, ty:4.17, ad:80710619},
+  {d:'2026-05-15', repay:26747177, exec:26738102, profit:9073, w:3.081183, ty:4.02, ad:82384976},
+  {d:'2026-05-16', repay:26717707, exec:26708590, profit:9120, w:3.092102, ty:4.03, ad:82585694},
+  {d:'2026-05-17', repay:26744140, exec:26734579, profit:9557, w:3.065733, ty:4.26, ad:81961092},
+  {d:'2026-05-18', repay:26569242, exec:26559330, profit:9911, w:3.039391, ty:4.48, ad:80724190},
+  {d:'2026-05-19', repay:26299069, exec:26288869, profit:10200, w:3.025612, ty:4.68, ad:79539928},
+  {d:'2026-05-20', repay:25940924, exec:25930747, profit:10166, w:3.033948, ty:4.72, ad:78672527},
+  {d:'2026-05-21', repay:25484621, exec:25474772, profit:9842, w:3.051996, ty:4.62, ad:77748895},
+  {d:'2026-05-22', repay:25032531, exec:25023310, profit:9216, w:3.084385, ty:4.36, ad:77181513},
+  {d:'2026-05-23', repay:24735357, exec:24726779, profit:8582, w:3.115144, ty:4.07, ad:77027470},
+  {d:'2026-05-24', repay:24935815, exec:24927636, profit:8181, w:3.124794, ty:3.83, ad:77893739},
+  {d:'2026-05-25', repay:25460790, exec:25452970, profit:7813, w:3.132146, ty:3.58, ad:79722426},
+  {d:'2026-05-26', repay:26114208, exec:26106502, profit:7697, w:3.145240, ty:3.42, ad:82111206},
+  {d:'2026-05-27', repay:26774494, exec:26766773, profit:7718, w:3.163242, ty:3.33, ad:84669793},
+  {d:'2026-05-28', repay:27102140, exec:27094229, profit:7904, w:3.169458, ty:3.36, ad:85874034},
+  {d:'2026-05-29', repay:27079855, exec:27071624, profit:8227, w:3.164694, ty:3.51, ad:85673401},
+  {d:'2026-05-30', repay:26800958, exec:26792151, profit:8803, w:3.135101, ty:3.83, ad:83996094},
+  {d:'2026-05-31', repay:26793465, exec:26783691, profit:9777, w:3.064273, ty:4.35, ad:82072553},
+  {d:'2026-06-01', repay:26751869, exec:26741322, profit:10544, w:3.003309, ty:4.79, ad:80312454},
+  {d:'2026-06-02', repay:26723233, exec:26712092, profit:11153, w:2.970000, ty:5.13, ad:79334916},
+  {d:'2026-06-03', repay:26569292, exec:26558081, profit:11219, w:2.974027, ty:5.18, ad:78984460},
+  {d:'2026-06-04', repay:26221813, exec:26210963, profit:10846, w:2.998525, ty:5.04, ad:78594225},
+  {d:'2026-06-05', repay:25737150, exec:25727076, profit:10079, w:3.042299, ty:4.70, ad:78269446},
+  {d:'2026-06-06', repay:25286795, exec:25277469, profit:9329, w:3.082958, ty:4.37, ad:77929364},
+  {d:'2026-06-07', repay:25261209, exec:25252294, profit:8909, w:3.093929, ty:4.16, ad:78128804},
+  {d:'2026-06-08', repay:25480207, exec:25471564, profit:8638, w:3.095002, ty:4.00, ad:78834538},
+  {d:'2026-06-09', repay:25852399, exec:25843697, profit:8700, w:3.092327, ty:3.97, ad:79917168},
+  {d:'2026-06-10', repay:26293714, exec:26284796, profit:8921, w:3.089606, ty:4.01, ad:81209657},
+  {d:'2026-06-11', repay:26566221, exec:26556904, profit:9314, w:3.074688, ty:4.16, ad:81654195},
+  {d:'2026-06-12', repay:26620576, exec:26610876, profit:9693, w:3.057891, ty:4.35, ad:81373167},
+  {d:'2026-06-13', repay:26504104, exec:26493965, profit:10137, w:3.032113, ty:4.61, ad:80332686},
+  {d:'2026-06-14', repay:26592172, exec:26581458, profit:10715, w:2.987938, ty:4.92, ad:79423736},
+  {d:'2026-06-15', repay:26505564, exec:26494704, profit:10851, w:2.972357, ty:5.03, ad:78751712},
+  {d:'2026-06-16', repay:26301092, exec:26290419, profit:10670, w:2.991899, ty:4.95, ad:78658285},
+  {d:'2026-06-17', repay:25934502, exec:25924548, profit:9954, w:3.044945, ty:4.60, ad:78938833},
+  {d:'2026-06-18', repay:25428058, exec:25419052, profit:9011, w:3.107442, ty:4.16, ad:78988241},
+  {d:'2026-06-19', repay:24931316, exec:24923329, profit:7985, w:3.170185, ty:3.69, ad:79011555},
+  {d:'2026-06-20', repay:24591051, exec:24583770, profit:7276, w:3.209300, ty:3.37, ad:78896701},
+  {d:'2026-06-21', repay:24803562, exec:24796406, profit:7156, w:3.198209, ty:3.29, ad:79304083},
+  {d:'2026-06-22', repay:25435702, exec:25428282, profit:7419, w:3.159199, ty:3.37, ad:80332999},
+  {d:'2026-06-23', repay:26291070, exec:26282979, profit:8090, w:3.116061, ty:3.61, ad:81899367},
+  {d:'2026-06-24', repay:27219050, exec:27210137, profit:8908, w:3.083795, ty:3.87, ad:83910474},
+  {d:'2026-06-25', repay:27800651, exec:27790954, profit:9691, w:3.056007, ty:4.16, ad:84929350},
+  {d:'2026-06-26', repay:27883256, exec:27873020, profit:10236, w:3.042470, ty:4.41, ad:84802828},
+  {d:'2026-06-27', repay:27505206, exec:27494567, profit:10639, w:3.030108, ty:4.66, ad:83311514},
+  {d:'2026-06-28', repay:27143111, exec:27132067, profit:11048, w:3.000453, ty:4.95, ad:81408503},
+  {d:'2026-06-29', repay:26558564, exec:26547549, profit:11010, w:2.991974, ty:5.06, ad:79429573},
+  {d:'2026-06-30', repay:25989913, exec:25979154, profit:10756, w:3.004832, ty:5.03, ad:78062999},
+  {d:'2026-07-01', repay:25478967, exec:25468748, profit:10221, w:3.036109, ty:4.82, ad:77325890},
+  {d:'2026-07-02', repay:25093461, exec:25083804, profit:9662, w:3.062355, ty:4.59, ad:76815522},
+  {d:'2026-07-03', repay:24918912, exec:24909739, profit:9179, w:3.080267, ty:4.37, ad:76728636},
+  {d:'2026-07-04', repay:25045533, exec:25036425, profit:9104, w:3.072503, ty:4.32, ad:76924495},
+  {d:'2026-07-05', repay:25786304, exec:25776676, profit:9625, w:3.022370, ty:4.51, ad:77906665},
+  {d:'2026-07-06', repay:26711140, exec:26700806, profit:10328, w:2.972775, ty:4.75, ad:79375488},
+  {d:'2026-07-07', repay:27566232, exec:27555085, profit:11142, w:2.941085, ty:5.02, ad:81041842},
+  {d:'2026-07-08', repay:28039827, exec:28028107, profit:11723, w:2.936052, ty:5.20, ad:82291989},
+  {d:'2026-07-09', repay:27882540, exec:27870546, profit:11986, w:2.941499, ty:5.34, ad:81981193},
+  {d:'2026-07-10', repay:27099098, exec:27087293, profit:11809, w:2.961590, ty:5.37, ad:80221453},
+  {d:'2026-07-11', repay:26019027, exec:26007564, profit:11468, w:2.977038, ty:5.41, ad:77425499},
+  {d:'2026-07-12', repay:25258844, exec:25247608, profit:11233, w:2.966411, ty:5.47, ad:74894772},
+  {d:'2026-07-13', repay:24671820, exec:24661089, profit:10725, w:2.970445, ty:5.34, ad:73254415},
+  {d:'2026-07-14', repay:24461073, exec:24450838, profit:10234, w:2.990299, ty:5.11, ad:73115317},
+  {d:'2026-07-15', repay:24566763, exec:24557155, profit:9608, w:3.025260, ty:4.72, ad:74291790},
+  {d:'2026-07-16', repay:24895842, exec:24886764, profit:9074, w:3.055505, ty:4.36, ad:76041622},
+  {d:'2026-07-17', repay:25377243, exec:25368579, profit:8663, w:3.080831, ty:4.05, ad:78156310},
+  {d:'2026-07-18', repay:25913973, exec:25905374, profit:8600, w:3.088570, ty:3.92, ad:80010552},
+  {d:'2026-07-19', repay:26718386, exec:26709308, profit:9080, w:3.061852, ty:4.05, ad:81779940},
+  {d:'2026-07-20', repay:27372645, exec:27363029, profit:9621, w:3.034116, ty:4.23, ad:83022591},
+  {d:'2026-07-21', repay:27706163, exec:27695910, profit:10246, w:3.018224, ty:4.47, ad:83592462},
+  {d:'2026-07-22', repay:27623744, exec:27613101, profit:10637, w:3.019210, ty:4.66, ad:83369756},
+  {d:'2026-07-23', repay:27065314, exec:27054499, profit:10812, w:3.020128, ty:4.83, ad:81708063},
+  {d:'2026-07-24', repay:26194593, exec:26183896, profit:10694, w:3.025905, ty:4.93, ad:79229985},
+  {d:'2026-07-25', repay:25350222, exec:25339689, profit:10537, w:3.020619, ty:5.02, ad:76541555},
+  {d:'2026-07-26', repay:25064369, exec:25053752, profit:10618, w:2.988494, ty:5.18, ad:74872978},
+  {d:'2026-07-27', repay:25099109, exec:25088641, profit:10472, w:2.972170, ty:5.13, ad:74567718},
+  {d:'2026-07-28', repay:25476277, exec:25465924, profit:10353, w:2.976023, ty:4.99, ad:75787169},
+  {d:'2026-07-29', repay:26017654, exec:26007546, profit:10111, w:2.999210, ty:4.73, ad:78002082},
+  {d:'2026-07-30', repay:26494268, exec:26484341, profit:9926, w:3.021267, ty:4.53, ad:80016273},
+  {d:'2026-07-31', repay:26767114, exec:26757307, profit:9795, w:3.041633, ty:4.39, ad:81385918},
+  {d:'2026-08-01', repay:26810473, exec:26800514, profit:9948, w:3.042811, ty:4.45, ad:81548894},
+  {d:'2026-08-02', repay:27018798, exec:27008184, profit:10605, w:3.001219, ty:4.78, ad:81057464},
+  {d:'2026-08-03', repay:27035529, exec:27024300, profit:11227, w:2.957812, ty:5.13, ad:79932795},
+  {d:'2026-08-04', repay:26950208, exec:26938289, profit:11914, w:2.923326, ty:5.52, ad:78749404},
+  {d:'2026-08-05', repay:26667987, exec:26655718, profit:12271, w:2.908988, ty:5.78, ad:77541158},
+  {d:'2026-08-06', repay:26191469, exec:26179169, profit:12293, w:2.903860, ty:5.90, ad:76020630},
+  {d:'2026-08-07', repay:25557858, exec:25545958, profit:11898, w:2.918892, ty:5.82, ad:74565898},
+  {d:'2026-08-08', repay:24997883, exec:24986538, profit:11348, w:2.939982, ty:5.64, ad:73459973},
+  {d:'2026-08-09', repay:24900027, exec:24889141, profit:10879, w:2.949531, ty:5.41, ad:73411292},
+  {d:'2026-08-10', repay:25021546, exec:25011361, profit:10184, w:2.977221, ty:4.99, ad:74464361},
+  {d:'2026-08-11', repay:25340702, exec:25331129, profit:9570, w:3.019294, ty:4.57, ad:76482122},
+  {d:'2026-08-12', repay:25727823, exec:25718836, profit:8990, w:3.069454, ty:4.16, ad:78942779},
+  {d:'2026-08-13', repay:25975401, exec:25966805, profit:8596, w:3.105887, ty:3.89, ad:80649957},
+  {d:'2026-08-14', repay:26048283, exec:26039881, profit:8408, w:3.127222, ty:3.77, ad:81432499},
+  {d:'2026-08-15', repay:25993163, exec:25984567, profit:8594, w:3.119218, ty:3.87, ad:81051541},
+  {d:'2026-08-16', repay:26249357, exec:26240030, profit:9316, w:3.065280, ty:4.23, ad:80433028},
+  {d:'2026-08-17', repay:26504842, exec:26494834, profit:10011, w:3.013076, ty:4.58, ad:79830943},
+  {d:'2026-08-18', repay:26723567, exec:26712931, profit:10634, w:2.983341, ty:4.87, ad:79693795},
+  {d:'2026-08-19', repay:26756203, exec:26745390, profit:10810, w:2.987886, ty:4.94, ad:79912189},
+  {d:'2026-08-20', repay:26478274, exec:26467707, profit:10563, w:3.012084, ty:4.84, ad:79722966},
+  {d:'2026-08-21', repay:25951644, exec:25941773, profit:9871, w:3.056525, ty:4.54, ad:79291671},
+  {d:'2026-08-22', repay:25375330, exec:25366208, profit:9127, w:3.100019, ty:4.24, ad:78635726},
+  {d:'2026-08-23', repay:25188289, exec:25179655, profit:8632, w:3.116695, ty:4.01, ad:78477301},
+  {d:'2026-08-24', repay:25281449, exec:25273193, profit:8249, w:3.123955, ty:3.81, ad:78952324},
+  {d:'2026-08-25', repay:25602105, exec:25593903, profit:8196, w:3.126224, ty:3.74, ad:80012272},
+  {d:'2026-08-26', repay:26102548, exec:26094204, profit:8339, w:3.124609, ty:3.73, ad:81534176}
 ];
+/* PwD 의 분자 Σ(A<sub>i</sub> x D<sub>i</sub>) — 날짜별 W금융일수를 6자리로 끊기 전 값이다.
+   원장 daily_ledger.py LEDGER 의 wx 를 그대로 싣는다. 6자리로 끊은 W 를 다시 가중하면
+   조회 기간을 임의로 자를 때 PwD 가 한 눈금 밀린다(전 구간 16,290개 중 372개). */
+var DAILY_WX = {
+  '2026-03-01':84789164,
+  '2026-03-02':82559616,
+  '2026-03-03':80617426,
+  '2026-03-04':79271946,
+  '2026-03-05':78141099,
+  '2026-03-06':77555750,
+  '2026-03-07':77461729,
+  '2026-03-08':78354624,
+  '2026-03-09':79986484,
+  '2026-03-10':81933292,
+  '2026-03-11':83674662,
+  '2026-03-12':83899768,
+  '2026-03-13':82685512,
+  '2026-03-14':80255787,
+  '2026-03-15':77908552,
+  '2026-03-16':76112529,
+  '2026-03-17':75502049,
+  '2026-03-18':75812571,
+  '2026-03-19':76434922,
+  '2026-03-20':77338227,
+  '2026-03-21':78197718,
+  '2026-03-22':79346533,
+  '2026-03-23':80609820,
+  '2026-03-24':81801808,
+  '2026-03-25':82892266,
+  '2026-03-26':82867025,
+  '2026-03-27':82006614,
+  '2026-03-28':80432126,
+  '2026-03-29':79155235,
+  '2026-03-30':78344666,
+  '2026-03-31':78336315,
+  '2026-04-01':78824790,
+  '2026-04-02':79095917,
+  '2026-04-03':79181188,
+  '2026-04-04':78891676,
+  '2026-04-05':78881442,
+  '2026-04-06':79151017,
+  '2026-04-07':79813871,
+  '2026-04-08':80588382,
+  '2026-04-09':80453025,
+  '2026-04-10':79371766,
+  '2026-04-11':77452078,
+  '2026-04-12':75641703,
+  '2026-04-13':74279690,
+  '2026-04-14':73911600,
+  '2026-04-15':74305954,
+  '2026-04-16':74954130,
+  '2026-04-17':75870402,
+  '2026-04-18':76784744,
+  '2026-04-19':78157616,
+  '2026-04-20':79726972,
+  '2026-04-21':81300370,
+  '2026-04-22':82426819,
+  '2026-04-23':82075166,
+  '2026-04-24':80489616,
+  '2026-04-25':78078052,
+  '2026-04-26':76087948,
+  '2026-04-27':75098992,
+  '2026-04-28':75522073,
+  '2026-04-29':77208284,
+  '2026-04-30':79133042,
+  '2026-05-01':81011641,
+  '2026-05-02':82181259,
+  '2026-05-03':82950045,
+  '2026-05-04':82948957,
+  '2026-05-05':82339641,
+  '2026-05-06':81027924,
+  '2026-05-07':78708858,
+  '2026-05-08':76051718,
+  '2026-05-09':73678090,
+  '2026-05-10':72629230,
+  '2026-05-11':73139104,
+  '2026-05-12':75169895,
+  '2026-05-13':78145189,
+  '2026-05-14':80710619,
+  '2026-05-15':82384976,
+  '2026-05-16':82585694,
+  '2026-05-17':81961092,
+  '2026-05-18':80724190,
+  '2026-05-19':79539928,
+  '2026-05-20':78672527,
+  '2026-05-21':77748895,
+  '2026-05-22':77181513,
+  '2026-05-23':77027470,
+  '2026-05-24':77893739,
+  '2026-05-25':79722426,
+  '2026-05-26':82111206,
+  '2026-05-27':84669793,
+  '2026-05-28':85874034,
+  '2026-05-29':85673401,
+  '2026-05-30':83996094,
+  '2026-05-31':82072553,
+  '2026-06-01':80312454,
+  '2026-06-02':79334916,
+  '2026-06-03':78984460,
+  '2026-06-04':78594225,
+  '2026-06-05':78269446,
+  '2026-06-06':77929364,
+  '2026-06-07':78128804,
+  '2026-06-08':78834538,
+  '2026-06-09':79917168,
+  '2026-06-10':81209657,
+  '2026-06-11':81654195,
+  '2026-06-12':81373167,
+  '2026-06-13':80332686,
+  '2026-06-14':79423736,
+  '2026-06-15':78751712,
+  '2026-06-16':78658285,
+  '2026-06-17':78938833,
+  '2026-06-18':78988241,
+  '2026-06-19':79011555,
+  '2026-06-20':78896701,
+  '2026-06-21':79304083,
+  '2026-06-22':80332999,
+  '2026-06-23':81899367,
+  '2026-06-24':83910474,
+  '2026-06-25':84929350,
+  '2026-06-26':84802828,
+  '2026-06-27':83311514,
+  '2026-06-28':81408503,
+  '2026-06-29':79429573,
+  '2026-06-30':78062999,
+  '2026-07-01':77325890,
+  '2026-07-02':76815522,
+  '2026-07-03':76728636,
+  '2026-07-04':76924495,
+  '2026-07-05':77906665,
+  '2026-07-06':79375488,
+  '2026-07-07':81041842,
+  '2026-07-08':82291989,
+  '2026-07-09':81981193,
+  '2026-07-10':80221453,
+  '2026-07-11':77425499,
+  '2026-07-12':74894772,
+  '2026-07-13':73254415,
+  '2026-07-14':73115317,
+  '2026-07-15':74291790,
+  '2026-07-16':76041622,
+  '2026-07-17':78156310,
+  '2026-07-18':80010552,
+  '2026-07-19':81779940,
+  '2026-07-20':83022591,
+  '2026-07-21':83592462,
+  '2026-07-22':83369756,
+  '2026-07-23':81708063,
+  '2026-07-24':79229985,
+  '2026-07-25':76541555,
+  '2026-07-26':74872978,
+  '2026-07-27':74567718,
+  '2026-07-28':75787169,
+  '2026-07-29':78002082,
+  '2026-07-30':80016273,
+  '2026-07-31':81385918,
+  '2026-08-01':81548894,
+  '2026-08-02':81057464,
+  '2026-08-03':79932795,
+  '2026-08-04':78749404,
+  '2026-08-05':77541158,
+  '2026-08-06':76020630,
+  '2026-08-07':74565898,
+  '2026-08-08':73459973,
+  '2026-08-09':73411292,
+  '2026-08-10':74464361,
+  '2026-08-11':76482122,
+  '2026-08-12':78942779,
+  '2026-08-13':80649957,
+  '2026-08-14':81432499,
+  '2026-08-15':81051541,
+  '2026-08-16':80433028,
+  '2026-08-17':79830943,
+  '2026-08-18':79693795,
+  '2026-08-19':79912189,
+  '2026-08-20':79722966,
+  '2026-08-21':79291671,
+  '2026-08-22':78635726,
+  '2026-08-23':78477301,
+  '2026-08-24':78952324,
+  '2026-08-25':80012272,
+  '2026-08-26':81534176
+};
+(function(){ for(var i = 0; i < DAILY.length; i++) DAILY[i].wx = DAILY_WX[DAILY[i].d]; })();
 
 var CONTRACTS = [
   {mid:'M2026-0001', name:'김성호떡볶이 본점', signed:'2026-01-05'},
@@ -1504,22 +1716,22 @@ var SIGNQ = [
    두 조합(일별 일주일·금월)이 한 파일을 가리켜, 화면은 27행 금월인데 파일은 일주일치가 된다.
    `profit-status`·`profit-daily` 는 미리보기 화면을 가리키는 자리이고 파일을 갖지 않는다. */
 var XLSX = {
-  'assets-status':   {file:'투자자산현황_2026-08-27_2026-08-27.xlsx',   size:'5.6 KB', made:'2026-08-31 03:36', sheet:'투자자산 현황',   screen:'xls-assets-status',   from:'invest-assets'},
-  'assets-merchant': {file:'가맹점별투자자산_2026-08-27_2026-08-27.xlsx', size:'5.9 KB', made:'2026-08-31 03:36', sheet:'가맹점별 투자자산', screen:'xls-assets-merchant', from:'invest-assets'},
+  'assets-status':   {file:'투자자산현황_2026-08-27_2026-08-27.xlsx',   size:'5.6 KB', made:'2026-09-04 21:58', sheet:'투자자산 현황',   screen:'xls-assets-status',   from:'invest-assets'},
+  'assets-merchant': {file:'가맹점별투자자산_2026-08-27_2026-08-27.xlsx', size:'6.0 KB', made:'2026-09-04 21:58', sheet:'가맹점별 투자자산', screen:'xls-assets-merchant', from:'invest-assets'},
   'profit-status':   {screen:'xls-profit-status', from:'invest-profit'},
   'profit-daily':    {screen:'xls-profit-daily',  from:'invest-profit'},
-  'profit-daily@daily:2026-08-21:2026-08-27': {file:'일별투자수익_2026-08-21_2026-08-27.xlsx', size:'5.7 KB', made:'2026-08-31 03:36', sheet:'일별 투자수익', screen:null, from:'invest-profit'},
-  'profit-status@daily:2026-08-21:2026-08-27': {file:'투자수익현황_2026-08-21_2026-08-27.xlsx', size:'5.3 KB', made:'2026-08-31 03:36', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
-  'profit-daily@daily:2026-08-01:2026-08-27': {file:'일별투자수익_2026-08-01_2026-08-27.xlsx', size:'6.6 KB', made:'2026-08-31 03:36', sheet:'일별 투자수익', screen:null, from:'invest-profit'},
-  'profit-status@daily:2026-08-01:2026-08-27': {file:'투자수익현황_2026-08-01_2026-08-27.xlsx', size:'5.3 KB', made:'2026-08-31 03:36', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
-  'profit-daily@weekly:2026-08-03:2026-08-27': {file:'주별투자수익_2026-08-03_2026-08-27.xlsx', size:'5.6 KB', made:'2026-08-31 03:36', sheet:'주별 투자수익', screen:null, from:'invest-profit'},
-  'profit-status@weekly:2026-08-03:2026-08-27': {file:'투자수익현황_2026-08-03_2026-08-27.xlsx', size:'5.3 KB', made:'2026-08-31 03:36', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
-  'profit-daily@weekly:2026-06-08:2026-08-27': {file:'주별투자수익_2026-06-08_2026-08-27.xlsx', size:'6.0 KB', made:'2026-08-31 03:36', sheet:'주별 투자수익', screen:null, from:'invest-profit'},
-  'profit-status@weekly:2026-06-08:2026-08-27': {file:'투자수익현황_2026-06-08_2026-08-27.xlsx', size:'5.3 KB', made:'2026-08-31 03:36', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
-  'profit-daily@monthly:2026-06-01:2026-08-27': {file:'월별투자수익_2026-06-01_2026-08-27.xlsx', size:'5.6 KB', made:'2026-08-31 03:36', sheet:'월별 투자수익', screen:null, from:'invest-profit'},
-  'profit-status@monthly:2026-06-01:2026-08-27': {file:'투자수익현황_2026-06-01_2026-08-27.xlsx', size:'5.3 KB', made:'2026-08-31 03:36', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
-  'profit-daily@monthly:2026-03-01:2026-08-27': {file:'월별투자수익_2026-03-01_2026-08-27.xlsx', size:'5.7 KB', made:'2026-08-31 03:36', sheet:'월별 투자수익', screen:null, from:'invest-profit'},
-  'profit-status@monthly:2026-03-01:2026-08-27': {file:'투자수익현황_2026-03-01_2026-08-27.xlsx', size:'5.3 KB', made:'2026-08-31 03:36', sheet:'투자수익 현황', screen:null, from:'invest-profit'}
+  'profit-daily@daily:2026-08-20:2026-08-26': {file:'일별투자수익_2026-08-20_2026-08-26.xlsx', size:'5.7 KB', made:'2026-09-04 21:58', sheet:'일별 투자수익', screen:null, from:'invest-profit'},
+  'profit-status@daily:2026-08-20:2026-08-26': {file:'투자수익현황_2026-08-20_2026-08-26.xlsx', size:'5.3 KB', made:'2026-09-04 21:58', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
+  'profit-daily@daily:2026-08-01:2026-08-26': {file:'일별투자수익_2026-08-01_2026-08-26.xlsx', size:'6.5 KB', made:'2026-09-04 21:58', sheet:'일별 투자수익', screen:null, from:'invest-profit'},
+  'profit-status@daily:2026-08-01:2026-08-26': {file:'투자수익현황_2026-08-01_2026-08-26.xlsx', size:'5.3 KB', made:'2026-09-04 21:58', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
+  'profit-daily@weekly:2026-08-03:2026-08-26': {file:'주별투자수익_2026-08-03_2026-08-26.xlsx', size:'5.6 KB', made:'2026-09-04 21:58', sheet:'주별 투자수익', screen:null, from:'invest-profit'},
+  'profit-status@weekly:2026-08-03:2026-08-26': {file:'투자수익현황_2026-08-03_2026-08-26.xlsx', size:'5.3 KB', made:'2026-09-04 21:58', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
+  'profit-daily@weekly:2026-06-08:2026-08-26': {file:'주별투자수익_2026-06-08_2026-08-26.xlsx', size:'6.0 KB', made:'2026-09-04 21:58', sheet:'주별 투자수익', screen:null, from:'invest-profit'},
+  'profit-status@weekly:2026-06-08:2026-08-26': {file:'투자수익현황_2026-06-08_2026-08-26.xlsx', size:'5.3 KB', made:'2026-09-04 21:58', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
+  'profit-daily@monthly:2026-06-01:2026-08-26': {file:'월별투자수익_2026-06-01_2026-08-26.xlsx', size:'5.6 KB', made:'2026-09-04 21:58', sheet:'월별 투자수익', screen:null, from:'invest-profit'},
+  'profit-status@monthly:2026-06-01:2026-08-26': {file:'투자수익현황_2026-06-01_2026-08-26.xlsx', size:'5.3 KB', made:'2026-09-04 21:58', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
+  'profit-daily@monthly:2026-03-01:2026-08-26': {file:'월별투자수익_2026-03-01_2026-08-26.xlsx', size:'5.7 KB', made:'2026-09-04 21:58', sheet:'월별 투자수익', screen:null, from:'invest-profit'},
+  'profit-status@monthly:2026-03-01:2026-08-26': {file:'투자수익현황_2026-03-01_2026-08-26.xlsx', size:'5.3 KB', made:'2026-09-04 21:58', sheet:'투자수익 현황', screen:null, from:'invest-profit'}
 };
 
 /* 지금 보고 있는 기간·집계 단위의 파일을 고른다. 프리셋 밖 기간(직접입력)에는 실물이 없어 null 이다 —
@@ -1629,6 +1841,9 @@ var MODAL_OF = {
 function fmt(n){ return Number(n).toLocaleString('ko-KR'); }
 function pct(v, d){ return (v===null||v===undefined) ? '-' : Number(v).toFixed(d===undefined?1:d) + '%'; }
 function fx(v, d){ return Number(v).toFixed(d); }
+/* 비율·일수는 소수 일곱째 자리에서 반올림해 여섯째 자리까지 남기고, 그 값을 다음 계산에 넣는다.
+   화면에만 소수 2자리로 자른다(dm_0901/rounding_rule_0901.md · 생성기 daily_ledger.r6). */
+function r6(v){ return Math.round(Number(v) * 1e6) / 1e6; }
 function sum(a, k){ var t=0; for(var i=0;i<a.length;i++) t += a[i][k]; return t; }
 /* 비중 — 소수 1자리 반올림 후 잔차를 최대 금액 행에 흡수해 합계를 정확히 100.0 으로 닫는다 */
 /* 비중 — 최대잉여법. 0.1pp 눈금으로 내린 뒤 남는 눈금을 소수부가 큰 행부터 하나씩 나눠 준다.
@@ -1655,39 +1870,38 @@ function wavg(a, k, wk){ var n=0, d=0; for(var i=0;i<a.length;i++){ n += a[i][k]
    현황표의 두 칸과 맞아떨어지지 않는다. 그 모집단을 열머리 툴팁이 그대로 적는다.
    건수는 채권 원장 실측이다(daily_ledger.py) — 화면에 손으로 적지 않는다. */
 var POP_W = {of:'대상정산금채권 전체 (발생 기준)', n:'61,760건'};
-/* 소문자 d 표기는 잠정이다 — 대표 DM 15:15 는 금융일수 쪽 글자를 바꾸라고 했고 우리는 날짜 쪽을
-   내렸다(dm_0831/symbol_rule_0831.md). 4차 미팅 확인 전까지 표기에 미확정을 단다. */
-var POP_S = {of:'선정산일 d-20 ~ d-11 표본',       n:'3,200건', pend:1};
+var POP_S = {of:'선정산일이 기준일 20일 전 ~ 11일 전인 표본', n:'3,200건'};
 function popTh(label, p){
   return '<th class="num"><span class="tooltip wide"><span class="tip-anchor">' + label + '</span>' +
          '<span class="tip-panel">' + p.of +
            '<span class="tip-row"><span>채권 건수</span><span class="tip-green">' + p.n + '</span></span>' +
-           (p.pend ? '<span class="tip-row"><span>표기 d</span><span>미확정</span></span>' + PEND_ROW : '') +
-         '</span></span>' + (p.pend ? PEND_BADGE : '') + '</th>';
+         '</span></span></th>';
 }
-/* 대표 재전달 대기 — 2026-08-31 회의에서 ⑤ 는 「수식 새로 작성해 전달」,
-   ⑥ 은 「4,5번과 다르니 계산식 다시 확인할 것」 으로 끝났다(meeting_0831/ceo_definitions_20260831.txt).
+/* 미확정 표기 — 2026-08-31 회의에서 ③ 은 칸 미지목, ⑥ 은 「4,5번과 다르니 계산식 다시 확인할 것」
+   으로 끝나 대표 재전달 대기다(meeting_0831/ceo_definitions_20260831.txt). ⑤ 는 원문 산식이
+   「수식 오류」로 닫혀 우리 확정안(daily_ledger.TY5_EXPR)을 넣고 대표 확인을 기다린다.
    값은 그대로 두고 미확정만 표시한다 — 표기는 용어정의서가 쓰는 낱말 `미확정` 을 그대로 쓴다. */
 var PEND_BADGE = ' <span class="badge sm badge-amber">미확정</span>';
 var PEND_ROW   = '<span class="tip-row sum"><span>미확정</span><span>대표 재전달 대기</span></span>';
+var PEND5_ROW  = '<span class="tip-row sum"><span>미확정</span><span>대표 확인 대기</span></span>';
 /* ── ③ ⑤ ⑥ 단일 원천 ────────────────────────────────────────────
    산식은 생성기 daily_ledger.py 의 ty_third · ty_asset · ty_row 한 벌에서 온다
    (TY3_JS · TY5_JS · TY6_JS). 화면에 두 번째 산식을 적지 않는다 —
-   대표가 ⑤ 를 새로 주면 daily_ledger.ty_asset 한 곳만 고치면 ⑤·⑥ 이 함께 움직인다. */
+   ⑤ 산식은 daily_ledger.ty_asset 한 곳만 고치면 ⑤·⑥ 이 함께 움직인다. */
 function ty3(execu){ return execu; }
-function ty5(ty4, psa, psc){ var tot = psa + psc;
-  return tot ? ty4 * psa / tot : 0; }
-var TY6_PSC = 0;   /* ⑥ 이 ⑤ 를 거칠 때 넣는 PSC — 일별 EC 원장이 없어 0 이다 */
+function ty5(ty4, ad, psc){ var tot = ad + psc;
+  return tot ? ty4 * ad / tot : 0; }
+var TY6_PSC = 0;   /* ⑥ 이 ⑤ 를 거칠 때 넣는 PEC — 일별 EC 원장이 없어 0 이다 */
 function ty6(profit, execu, w){ var third = ty3(execu);
   if(!(third && w)) return 0;
-  return ty5((profit / third * 100) * 365 / w, third, TY6_PSC); }
+  return ty5(r6(profit / third * 100) * 365 / w, third * w, TY6_PSC); }
 /* ⑥ 일별 Ty수익율 열 — 원문 `(④ ÷ ③) × 365 ÷ ⑤` 를 일별 표의 열 번호로 읽은 것이다.
    현황 카드 번호(④ 투자실행금액 대비 · ⑤ 투자자산 대비)를 그대로 넣으면
    `수익률 ÷ 금액 × 365 ÷ 수익률` 이 되어 성립하지 않는다. */
 function tyTh(){
-  return '<th class="num"><span class="tooltip wide"><span class="tip-anchor">Ty수익율</span>' +
+  return '<th class="num"><span class="tooltip wide"><span class="tip-anchor">연환산수익률</span>' +
          '<span class="tip-panel">(④ ÷ ③) × 365 ÷ ⑤' +
-           '<span class="tip-row"><span>번호</span><span class="tip-green">일별 표 열 ③투자실행금 ④투자 수익 ⑤W금융일수</span></span>' +
+           '<span class="tip-row"><span>번호</span><span class="tip-green">일별 표 열 ③투자실행금 ④투자 수익 ⑤가중평균 금융일수</span></span>' +
            '<span class="tip-row"><span>행</span><span class="tip-green">정산예정일이 그 날짜인 대상정산금채권 집합</span></span>' +
            PEND_ROW +
          '</span></span>' + PEND_BADGE + '</th>';
@@ -1723,7 +1937,7 @@ function svg(key, w, cls, style){
 
 /* ═══ 모델 (조작 결과가 여기 쌓이고, 화면은 여기서만 그려진다) ═══ */
 var IA = {page:1, downloaded:false, empty:false, cert:false};
-var PF = {gran:'daily', from:'2026-08-21', to:'2026-08-27'};
+var PF = {gran:'daily', from:'2026-08-20', to:'2026-08-27'};
 /* ── 두 축 ─────────────────────────────────────────────────────────────
    PF.from · PF.to = 무엇을 조회하느냐.  PF.gran = 표의 한 행이 무엇이냐(하루·한 주·한 달).
    두 축은 서로를 지우지 않는다. 집계 단위를 바꿔도 기간은 남고, 새 단위 경계로 넓혀 스냅될 뿐이다.
@@ -1771,7 +1985,7 @@ var PRESET_GRAN  = {week:'daily', month:'daily', w4:'weekly', w12:'weekly', m3:'
 var GRAN_LABEL   = {daily:'일별', weekly:'주별', monthly:'월별'};
 var GRAN_COL     = {daily:'정산예정일', weekly:'정산예정주', monthly:'정산예정월'};
 /* 활성 판정은 현재 날짜값이 프리셋 범위와 같은지로 역산한다 — 따로 담아 두지 않는다.
-   그래서 피커를 만져 값이 어긋나면 저절로 풀리고, 단위를 바꿔 묶음이 갈려도
+   그래서 피커를 만져 값이 어긋나면 저절로 풀리고, 단위를 바꿔 묶음이 나뉘어도
    지금 기간과 일치하는 것 하나만 켜진다. 원본 DateRangeFilter.tsx:74-77 과 같은 방식. */
 function activePreset(){
   for(var k in PRESET_RANGE)
@@ -2033,7 +2247,7 @@ function hideToast(){
 /* ── 실물 전달 ────────────────────────────────────────────────────
    화면이 `내려받기 완료`라고 말하면 그 순간 실제 파일이 나가야 한다.
    assets/ 에 실재하는 파일만 건다. 정적 묶음이 없는 조합은 개별 PDF로 내려준다. */
-/* 계약기록의 내려받기는 잠겨 있다 — 전자서명 결과 파일 형식이 미결이라 실물이 없다 (D-39). */
+/* 계약기록의 내려받기는 잠겨 있다 — 전자서명 결과 파일 형식이 정해지지 않아 실물이 없다 (D-39). */
 var CERT_PDF     = '투자자산증명서_20260827.pdf';
 var CONTRACT_TXT  = '정산금채권_재양도_합의서.txt';
 var toastServed = null;
@@ -2093,8 +2307,8 @@ RENDER['invest-assets'] = function(){
       '<div class="summary-sub">투자실행액 + 순현금</div></div>' +
     '<div class="summary-card"><div class="summary-label">' +
       '<span class="tooltip wide"><span class="tip-anchor">투자실행액</span>' +
-        '<span class="tip-panel">순지급액 × (1 − 할인율)' +
-          '<span class="tip-row"><span>할인율</span><span class="tip-green">' + fx(RATE_PCT, 2) + '%</span></span>' +
+        '<span class="tip-panel">Σ A<sub>i</sub> · 투자 실행액 · A<sub>i</sub> = 순지급액<sub>i</sub> × (1 − r) 의 합' +
+          '<span class="tip-row"><span>r</span><span class="tip-green">계약된 할인율 · ' + fx(RATE_PCT, 2) + '%</span></span>' +
           '<span class="tip-row"><span>대표 DM 16:19</span><span class="tip-green">가맹점 매입 1% 차감</span></span>' +
           '<span class="tip-row sum"><span>미확정</span><span>선정산 실행액은 이보다 작다</span></span>' +
         '</span></span></div>' +
@@ -2104,19 +2318,21 @@ RENDER['invest-assets'] = function(){
       '<div class="summary-value">' + fmt(cash) + '<span class="unit">원</span></div>' +
       '<div class="summary-sub">비중 ' + fx(rCash, 1) + '% · 보관 ㈜쿠콘</div></div>' +
     '<div class="summary-card"><div class="summary-label">' +
-      '<span class="tooltip wide"><span class="tip-anchor">Ty수익율</span>' +
-        '<span class="tip-panel">할인율 × (365 ÷ W금융일수)' +
+      '<span class="tooltip wide"><span class="tip-anchor">예상 연환산수익률</span>' +
+        '<span class="tip-panel">Y<sub>r</sub> · 예상 연환산수익률 · r × 365 ÷ D' +
+          '<span class="tip-row"><span>r</span><span class="tip-green">계약된 할인율 · ' + fx(RATE_PCT, 2) + '%</span></span>' +
+          '<span class="tip-row"><span>D</span><span class="tip-green">가중평균 금융일수 · ' + (wv === null ? '집계 대상 없음' : fx(wv, 2) + '일') + '</span></span>' +
           '<span class="tip-row"><span>연 환산</span><span class="tip-green">' + fx(tyv, 2) + '%</span></span>' +
           '<span class="tip-row"><span>일 환산</span><span>미확정</span></span>' +
           '<span class="tip-row"><span>대표 DM 16:27</span><span class="tip-green">365 ÷ W금융일수 = 1년 회전수</span></span>' +
           '<span class="tip-row sum"><span>대표 DM 16:45</span><span>예상치 · 할인율 계통</span></span>' +
         '</span></span></div>' +
       '<div class="summary-value">' + fx(tyv, 2) + '<span class="unit">%</span></div>' +
-      '<div class="summary-sub">' + (wv === null ? 'W금융일수 집계 대상 없음' : 'W금융일수 ' + fx(wv, 2) + '일 기준') + '</div></div>';
+      '<div class="summary-sub">' + (wv === null ? '가중평균 금융일수 집계 대상 없음' : '가중평균 금융일수 ' + fx(wv, 2) + '일 기준') + '</div></div>';
 
-  var h = '<thead><tr><th>자산 구분</th><th class="num">금액 (원)</th>' + popTh('W금융일수', POP_W) +
-          popTh('S입금부족율', POP_S) +
-          '<th class="num">Ty수익율</th><th class="num">비중</th><th>보관</th></tr></thead><tbody>';
+  var h = '<thead><tr><th>자산 구분</th><th class="num">금액 (원)</th>' + popTh('가중평균 금융일수', POP_W) +
+          popTh('입금부족률', POP_S) +
+          '<th class="num">예상 연환산수익률</th><th class="num">비중</th><th>보관</th></tr></thead><tbody>';
   if(!arows.length){ h += emptyRow(7, '조회 결과가 없습니다.'); }
   else {
     for(i = 0; i < arows.length; i++){
@@ -2143,9 +2359,9 @@ RENDER['invest-assets'] = function(){
   if(IA.page > pages) IA.page = 1;
   var slice = view.slice((IA.page - 1) * iaSize, IA.page * iaSize);
   var mm = M('ia-merch', 'invest-assets'), mp = M('ia-merch-page', 'invest-assets');
-  var IA_HEAD = '<th>가맹점</th><th class="num">투자금액 (원)</th>' + popTh('W금융일수', POP_W) +
-                popTh('S입금부족율', POP_S) +
-                '<th class="num">Ty수익율</th><th class="num">비중</th>';
+  var IA_HEAD = '<th>가맹점</th><th class="num">투자실행액 (원)</th>' + popTh('가중평균 금융일수', POP_W) +
+                popTh('입금부족률', POP_S) +
+                '<th class="num">예상 연환산수익률</th><th class="num">비중</th>';
   if(!mrows.length){
     mm.innerHTML = emptyTable(IA_HEAD, 6, '조회 결과가 없습니다.');
     mp.innerHTML = ''; mp.hidden = true;
@@ -2179,7 +2395,7 @@ RENDER['invest-assets'] = function(){
 /* ───────── 투자자산 증명서 ───────── */
 RENDER['certificate'] = function(){
   var exec = iaExecTotal(), cRatio = ratios(MERCHANTS, exec), i, h =
-    '<thead><tr><th>가맹점</th><th>투자금액 (원)</th><th>W금융일수</th><th>S입금부족율</th><th>Ty수익율</th><th>비중</th></tr></thead><tbody>';
+    '<thead><tr><th>가맹점</th><th>투자실행액 (원)</th><th>가중평균 금융일수</th><th>입금부족률</th><th>예상 연환산수익률</th><th>비중</th></tr></thead><tbody>';
   for(i = 0; i < MERCHANTS.length; i++){
     var m = MERCHANTS[i];
     h += '<tr><td>' + m.name + '</td><td class="num">' + fmt(m.amount) + '</td><td class="num">' + fx(m.w, 2) + '일</td>' +
@@ -2206,9 +2422,11 @@ function rollupBy(days, keyOf, labelOf){
   for(i = 0; i < days.length; i++){
     r = days[i]; k = keyOf(r.d);
     g = idx[k];
-    if(!g){ g = idx[k] = {k:k, d:labelOf(r.d), repay:0, exec:0, profit:0, w:0, ty:0, wx:0, days:0}; out.push(g); }
+    if(!g){ g = idx[k] = {k:k, d:labelOf(r.d), repay:0, exec:0, profit:0, w:0, ty:0, wx:0, ad:0, days:0}; out.push(g); }
     g.repay += r.repay; g.exec += r.exec; g.profit += r.profit;
-    g.wx += r.w * r.exec; g.days += 1;
+    /* 채권 경로 — PwD = Σ(A_i x D_i) ÷ PA. 6자리로 끊은 일자별 W 를 다시 가중하지 않는다.
+       ad 는 같은 수 — ⑤ 의 AD 를 버킷 행의 ad 합으로 낸다. */
+    g.wx += r.wx; g.ad += r.ad; g.days += 1;
   }
   for(i = 0; i < out.length; i++){
     g = out[i];
@@ -2217,8 +2435,8 @@ function rollupBy(days, keyOf, labelOf){
        SMR = 버킷 투자수익 / 버킷 투자실행금, SD = 버킷 W금융일수.
        일자별 ty 를 다시 가중평균하면 표기 자리에서 W 와 어긋난다(주 버킷에서 실제로 어긋났다).
        반올림하지 않고 담아 두고 표기할 때만 자른다. 그래야 일별·주별·월별 표의 카드 값이 같다. */
-    g.w  = g.exec ? g.wx / g.exec : 0;
-    g.ty = ty6(g.profit, g.exec, g.w);   /* ⑥ — ty5() 를 거친다 */
+    g.w  = g.exec ? r6(g.wx / g.exec) : 0;
+    g.ty = r6(ty6(g.profit, g.exec, g.w));   /* ⑥ — ty5() 를 거친다 */
   }
   out.sort(function(a, b){ return a.k < b.k ? -1 : (a.k > b.k ? 1 : 0); });
   return out;
@@ -2234,12 +2452,18 @@ function rollupWeeks(days){
     return monStart(d) + ' ~ ' + (e > PF.to ? PF.to : e).slice(5);
   });
 }
-/* 현황 카드 ④ 와 표 합계 행의 Ty수익율 = PSMR x 365 / PSD (대표 정의서).
-   PSMR = 기간 투자수익 / 기간 투자실행금, PSD = 투자실행금 가중평균 W금융일수.
-   행마다 나온 ty 를 다시 가중평균하면 같이 적어 둔 W 와 표기 자리에서 어긋난다. */
+/* 현황 카드 ④ 와 표 합계 행의 Ty수익율 = PMR x 365 / PwD (대표 정의서).
+   PMR = 기간 투자수익 / 기간 투자실행금, PwD = 투자실행금 가중평균 W금융일수.
+   행마다 나온 ty 를 다시 가중평균하면 같이 적어 둔 W 와 표기 자리에서 어긋난다.
+   PwD 는 채권 경로 Σ(A_i x D_i) ÷ PA 로 낸다 — 일별 행도 버킷 행도 wx 를 싣고 있다.
+   PMR 도 백분율 소수 여섯째 자리에서 끊고 그 값을 넣는다(dm_0901 규칙 1 · daily_ledger.TY6_EXPR). */
+function pwdOfRows(rs){
+  var ex = sum(rs, 'exec');
+  return ex ? r6(sum(rs, 'wx') / ex) : 0;
+}
 function tyOfRows(rs){
-  var ex = sum(rs, 'exec'), pf = sum(rs, 'profit'), w = rs.length ? wavg(rs, 'w', 'exec') : 0;
-  return (ex && w) ? (pf / ex * 100) * 365 / w : 0;
+  var ex = sum(rs, 'exec'), pf = sum(rs, 'profit'), w = pwdOfRows(rs);
+  return (ex && w) ? r6(r6(pf / ex * 100) * 365 / w) : 0;
 }
 function pfRows(){
   var d = pfDays();
@@ -2258,18 +2482,20 @@ function cashRow(){
   for(var i = 0; i < ASSET_ROWS.length; i++) if(ASSET_ROWS[i].name === '순현금') return ASSET_ROWS[i];
   return null;
 }
-/* ── 투자자산 대비 Ty수익율 (현황 ⑤) — 대표 정의서 ────────────────
-   산식은 ty5() 한 곳에 있다(생성기 daily_ledger.ty_asset). 여기는 PSC 를 만들어 넘기기만 한다.
-   PSA = 기간 투자실행금 합, PSC = 기간 동안 EC들의 합.
+/* ── 투자자산 대비 Ty수익율 (현황 ⑤) ─────────────────────────────
+   산식은 ty5() 한 곳에 있다(생성기 daily_ledger.ty_asset). 여기는 AD·PEC 를 만들어 넘기기만 한다.
+   AD = 기간 Σ(A_i x D_i) — 행마다 실린 ad 의 합(PwD 의 분자), PEC = 기간 동안 EC들의 합.
+   ty5() 의 매개변수 이름 ad·psc 는 daily_ledger.TY5_EXPR 한 줄에 묶여 있어 그대로 둔다.
    EC = 정산예정일이 어제인 대상정산금채권을 마감한 시점의 순현금이며 하루에 한 건 쌓인다(유량).
    기준일 잔액 1개(스톡)로 나누지 않는다.
    일별 EC 원장이 없어 EC 는 순현금 잔액으로 고정한다 — 실데이터 연결은 확인 대상. */
 /* EC 는 하루에 한 건 쌓이는 유량이라 조회 기간에 걸린 일수만큼 센다.
    일별·월별 어느 쪽으로 보든 같은 기간이면 같은 일수라야 하므로 원장 일수 하나로 센다. */
 function ecDays(){ return pfDays().length; }
-function tyAssetOf(ty4, psa){
+function adOfRows(rs){ return sum(rs, 'ad'); }
+function tyAssetOf(ty4, rs){
   var c = cashRow(), psc = (c ? c.amount : 0) * ecDays();
-  return ty5(ty4, psa, psc);
+  return r6(ty5(ty4, adOfRows(rs), psc));
 }
 RENDER['invest-profit'] = function(){
   var sec = SEC('invest-profit'), rows = pfRows();
@@ -2296,9 +2522,9 @@ RENDER['invest-profit'] = function(){
   M('pf-tbl-title', 'invest-profit').textContent = GRAN_LABEL[PF.gran] + ' 투자수익';
 
   var exec = sum(rows, 'exec'), profit = sum(rows, 'profit'), repay = sum(rows, 'repay');
-  var wAvg = rows.length ? wavg(rows, 'w', 'exec') : 0;
+  var wAvg = pwdOfRows(rows);
   var tyExec = tyOfRows(rows);
-  var tyAsset = rows.length ? tyAssetOf(tyExec, exec) : 0;
+  var tyAsset = rows.length ? tyAssetOf(tyExec, rows) : 0;
   M('pf-stat', 'invest-profit').innerHTML =
     '<div class="stat"><div class="summary-label">검색대상기간</div>' +
       '<div class="stat-period">' + presetLabel() + '</div>' +
@@ -2307,22 +2533,25 @@ RENDER['invest-profit'] = function(){
       '<div class="summary-value">' + fmt(exec) + '<span class="unit">원</span></div></div>' +
     '<div class="stat"><div class="summary-label">투자수익</div>' +
       '<div class="summary-value">' + fmt(profit) + '<span class="unit">원</span></div></div>' +
-    '<div class="stat"><div class="summary-label">Ty수익율</div><div class="ty-split">' +
+    '<div class="stat"><div class="summary-label">연환산수익률</div><div class="ty-split">' +
       '<div><div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자실행금액 대비</span>' +
-        '<span class="tip-panel">PSMR × 365 ÷ PSD' +
-          '<span class="tip-row"><span>PSMR</span><span class="tip-green">투자수익 ÷ 투자실행금</span></span>' +
-          '<span class="tip-row"><span>PSD</span><span class="tip-green">투자실행금 가중평균 금융일수</span></span>' +
+        '<span class="tip-panel">PY<sub>a</sub> · 투자실행금액 대비 연환산수익률 (관찰된 값) · PMR × 365 ÷ PD' +
+          '<span class="tip-row"><span>PMR</span><span class="tip-green">기간 투자수익율 · PM ÷ PA = ' + fx(exec ? r6(profit / exec * 100) : 0, 6) + '%</span></span>' +
+          '<span class="tip-row"><span>PM</span><span class="tip-green">기간 투자수익 · ' + fmt(profit) + '원</span></span>' +
+          '<span class="tip-row"><span>PA</span><span class="tip-green">기간 투자실행금 · ' + fmt(exec) + '원</span></span>' +
+          '<span class="tip-row"><span>PD</span><span class="tip-green">기간 가중평균 금융일수 · ' + fx(wAvg, 2) + '일</span></span>' +
           '<span class="tip-row"><span>항등식</span><span class="tip-green">할인율 − max(0, 미지급금 − 과지급금) ÷ 투자실행액</span></span>' +
-          '<span class="tip-row"><span>부족액 0</span><span class="tip-green">할인율 ' + fx(RATE_PCT, 2) + '% ↔ SMR ' + fx(RATE_PCT / (1 - RATE_PCT / 100), 6) + '% · 미확정</span></span>' +
-          '<span class="tip-row sum"><span>대표 DM 16:45</span><span>실적치 · SMR 계통</span></span>' +
+          '<span class="tip-row"><span>부족액 0</span><span class="tip-green">할인율 ' + fx(RATE_PCT, 2) + '% ↔ PMR ' + fx(RATE_PCT / (1 - RATE_PCT / 100), 6) + '% · 미확정</span></span>' +
+          '<span class="tip-row sum"><span>대표 DM 16:45</span><span>관찰된 값 · PMR 계통</span></span>' +
         '</span></span></div>' +
         '<div class="summary-value">' + fx(tyExec, 2) + '<span class="unit">%</span></div></div>' +
       '<div><div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자자산 대비</span>' +
-        '<span class="tip-panel">(투자실행금액 대비 × PSA) ÷ (PSA + PSC)' +
-          '<span class="tip-row"><span>PSA</span><span class="tip-green">' + fmt(exec) + '원</span></span>' +
-          '<span class="tip-row"><span>PSC</span><span class="tip-green">' + fmt((cashRow() ? cashRow().amount : 0) * ecDays()) + '원</span></span>' +
-          '<span class="tip-row sum"><span>EC ' + ecDays() + '일 합</span><span>기간 순현금 합계</span></span>' +
-          PEND_ROW +
+        '<span class="tip-panel">PY<sub>t</sub> · 투자자산 대비 연환산수익률 (관찰된 값) · PM × 365 ÷ ( Σ( A<sub>i</sub> × D<sub>i</sub> ) + PEC )' +
+          '<span class="tip-row"><span>PY<sub>a</sub></span><span class="tip-green">투자실행금액 대비 연환산수익률 (관찰된 값) · ' + fx(tyExec, 2) + '%</span></span>' +
+          '<span class="tip-row"><span>Σ( A<sub>i</sub> × D<sub>i</sub> )</span><span class="tip-green">' + fmt(adOfRows(rows)) + '원</span></span>' +
+          '<span class="tip-row"><span>PEC</span><span class="tip-green">기간 순현금 · ' + fmt((cashRow() ? cashRow().amount : 0) * ecDays()) + '원</span></span>' +
+          '<span class="tip-row sum"><span>EC</span><span>순현금 · ' + fmt(cashRow() ? cashRow().amount : 0) + '원 × ' + ecDays() + '일</span></span>' +
+          PEND5_ROW +
         '</span></span>' + PEND_BADGE + '</div>' +
         '<div class="summary-value">' + fx(tyAsset, 2) + '<span class="unit">%</span></div></div>' +
     '</div></div>';
@@ -2330,7 +2559,7 @@ RENDER['invest-profit'] = function(){
   var box = M('pf-tbl', 'invest-profit');
   var PF_HEAD = '<th>' + GRAN_COL[PF.gran] + '</th><th class="num">상환액</th>' +
                 thirdTh() + '<th class="num">투자 수익</th>' +
-                '<th class="num">W금융일수</th>' + tyTh();
+                '<th class="num">가중평균 금융일수</th>' + tyTh();
   if(!rows.length){
     box.innerHTML = emptyTable(PF_HEAD, 6, '조회 결과가 없습니다.');
   } else {
@@ -2380,7 +2609,7 @@ var SIM_DUR = {card:2, bm:3, cpe:5, yo:6};
 function simLabel(k){ for(var i = 0; i < SIM_PLAT.length; i++) if(SIM_PLAT[i].k === k) return SIM_PLAT[i].label; return k; }
 function simDue(sd, plat){ return sd ? addDays(sd, SIM_DUR[plat] || 0) : sd; }
 /* 미회수 4행(1~4)은 38:44:12:6 — 2x0.38 + 3x0.44 + 5x0.12 + 6x0.06 = 3.04 로, W 가 투자 자산
-   화면의 3.04 일과 같은 자리에 선다. 기간 내 4행(5~8)도 같은 구성이라 PSD 3.04 로 투자 수익 화면
+   화면의 3.04 일과 같은 자리에 선다. 기간 내 4행(5~8)도 같은 구성이라 PwD 3.04 로 투자 수익 화면
    일별 합계와 같은 자리다. 미회수 합 8,000만이라 투자실행액 79,912,000 이 된다.
    금액 실측 구성비(카드 42.83 · 배민 43.10 · 쿠팡이츠 9.55 · 요기요 4.51)를 여기 그대로
    넣으면 W 가 2.90 이 된다 — 이 화면의 금융일수는 채권 1건짜리 정수(2·3·5·6)라 플랫폼별 실측
@@ -2402,7 +2631,7 @@ function simSeedRows(){
    S = (미지급률 - 과지급률) / (1 - 할인율) = 0.07 / 0.9989 = 0.07%. 두 화면이 같은 값을 띄운다.
    순현금은 투자 자산 화면과 같은 20,000,000 이다. */
 var SIM_DEFAULT = {r:0.11, cash:20000000, unpaid:0.08, over:0.01,
-                   from:'2026-08-21', to:'2026-08-27'};
+                   from:'2026-08-20', to:'2026-08-27'};
 function simSeed(){
   var o = {rows:simSeedRows(), result:null, running:false, redraw:true}, k;
   for(k in SIM_DEFAULT) o[k] = SIM_DEFAULT[k];
@@ -2447,13 +2676,14 @@ function simRun(){
   var SH   = ratios([{amount:EXEC}, {amount:SIM.cash}], TOT);
 
   /* ── 투자 수익 (정산예정일이 기간 안에 든 채권) ── */
-  var PSA  = sum(mat, 'A'), PSM = sum(mat, 'M'), PSB = sum(mat, 'B');
-  var PSD  = PSA ? mat.reduce(function(t, b){ return t + b.A * b.D; }, 0) / PSA : 0;
-  var PSMR = PSA ? PSM / PSA * 100 : 0;
-  var TY4  = PSD ? PSMR * 365 / PSD : 0;
+  var PA   = sum(mat, 'A'), PM = sum(mat, 'M'), PB = sum(mat, 'B');
+  var AD   = mat.reduce(function(t, b){ return t + b.A * b.D; }, 0);   /* Σ(A_i x D_i) — PwD 의 분자 · ⑤ 의 AD */
+  var PwD  = PA ? AD / PA : 0;
+  var PMR  = PA ? PM / PA * 100 : 0;
+  var TY4  = PwD ? PMR * 365 / PwD : 0;
   var ECD  = (SIM.from && SIM.to) ? simDays(SIM.from, SIM.to) + 1 : 0;
-  var PSC  = SIM.cash * ECD;
-  var TY5  = ty5(TY4, PSA, PSC);
+  var PEC  = SIM.cash * ECD;
+  var TY5  = ty5(TY4, AD, PEC);
 
   /* ── 일별 ── */
   var day = {}, keys = [];
@@ -2472,8 +2702,8 @@ function simRun(){
 
   SIM.result = {bonds:bonds, out:out, mat:mat, cash:SIM.cash, from:SIM.from, to:SIM.to,
                 EXEC:EXEC, W:W, TY:TY, S:S, TOT:TOT, SH:SH,
-                PSA:PSA, PSM:PSM, PSB:PSB, PSD:PSD, PSMR:PSMR,
-                TY4:TY4, TY5:TY5, ECD:ECD, PSC:PSC, rows:rows};
+                PA:PA, PM:PM, PB:PB, AD:AD, PwD:PwD, PMR:PMR,
+                TY4:TY4, TY5:TY5, ECD:ECD, PEC:PEC, rows:rows};
 }
 
 /* 실행 가능 조건 — 어드민 page.tsx:308 과 같은 방식으로, 못 돌릴 입력이면 버튼을 막는다.
@@ -2600,22 +2830,25 @@ function simSyncRows(){
   }
 }
 function simTyTip(R){
-  return '<div class="stat"><div class="summary-label">Ty수익율</div><div class="ty-split">' +
+  return '<div class="stat"><div class="summary-label">연환산수익률</div><div class="ty-split">' +
     '<div><div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자실행금액 대비</span>' +
-      '<span class="tip-panel">PSMR × 365 ÷ PSD' +
-        '<span class="tip-row"><span>PSMR</span><span class="tip-green">투자수익 ÷ 투자실행금</span></span>' +
-        '<span class="tip-row"><span>PSD</span><span class="tip-green">투자실행금 가중평균 금융일수</span></span>' +
+      '<span class="tip-panel">PY<sub>a</sub> · 투자실행금액 대비 연환산수익률 (관찰된 값) · PMR × 365 ÷ PD' +
+        '<span class="tip-row"><span>PMR</span><span class="tip-green">기간 투자수익율 · PM ÷ PA = ' + fx(R.PMR, 6) + '%</span></span>' +
+        '<span class="tip-row"><span>PM</span><span class="tip-green">기간 투자수익 · ' + fmt(R.PM) + '원</span></span>' +
+        '<span class="tip-row"><span>PA</span><span class="tip-green">기간 투자실행금 · ' + fmt(R.PA) + '원</span></span>' +
+        '<span class="tip-row"><span>PD</span><span class="tip-green">기간 가중평균 금융일수 · ' + fx(R.PwD, 2) + '일</span></span>' +
         '<span class="tip-row"><span>항등식</span><span class="tip-green">할인율 − max(0, 미지급금 − 과지급금) ÷ 투자실행액</span></span>' +
-        '<span class="tip-row"><span>부족액 0</span><span class="tip-green">할인율 ' + fx(RATE_PCT, 2) + '% ↔ SMR ' + fx(RATE_PCT / (1 - RATE_PCT / 100), 6) + '% · 미확정</span></span>' +
-        '<span class="tip-row sum"><span>대표 DM 16:45</span><span>실적치 · SMR 계통</span></span>' +
+        '<span class="tip-row"><span>부족액 0</span><span class="tip-green">할인율 ' + fx(RATE_PCT, 2) + '% ↔ PMR ' + fx(RATE_PCT / (1 - RATE_PCT / 100), 6) + '% · 미확정</span></span>' +
+        '<span class="tip-row sum"><span>대표 DM 16:45</span><span>관찰된 값 · PMR 계통</span></span>' +
       '</span></span></div>' +
       '<div class="summary-value' + (R.TY4 < 0 ? ' neg' : '') + '">' + fx(R.TY4, 2) + '<span class="unit">%</span></div></div>' +
     '<div><div class="ty-label"><span class="tooltip wide"><span class="tip-anchor">투자자산 대비</span>' +
-      '<span class="tip-panel">(투자실행금액 대비 × PSA) ÷ (PSA + PSC)' +
-        '<span class="tip-row"><span>PSA</span><span class="tip-green">' + fmt(R.PSA) + '원</span></span>' +
-        '<span class="tip-row"><span>PSC</span><span class="tip-green">' + fmt(R.PSC) + '원</span></span>' +
-        '<span class="tip-row sum"><span>EC ' + R.ECD + '일 합</span><span>기간 순현금 합계</span></span>' +
-        PEND_ROW +
+      '<span class="tip-panel">PY<sub>t</sub> · 투자자산 대비 연환산수익률 (관찰된 값) · PM × 365 ÷ ( Σ( A<sub>i</sub> × D<sub>i</sub> ) + PEC )' +
+        '<span class="tip-row"><span>PY<sub>a</sub></span><span class="tip-green">투자실행금액 대비 연환산수익률 (관찰된 값) · ' + fx(R.TY4, 2) + '%</span></span>' +
+        '<span class="tip-row"><span>Σ( A<sub>i</sub> × D<sub>i</sub> )</span><span class="tip-green">' + fmt(R.AD) + '원</span></span>' +
+        '<span class="tip-row"><span>PEC</span><span class="tip-green">기간 순현금 · ' + fmt(R.PEC) + '원</span></span>' +
+        '<span class="tip-row sum"><span>EC</span><span>순현금 · ' + fmt(R.cash) + '원 × ' + R.ECD + '일</span></span>' +
+        PEND5_ROW +
       '</span></span>' + PEND_BADGE + '</div>' +
       '<div class="summary-value' + (R.TY5 < 0 ? ' neg' : '') + '">' + fx(R.TY5, 2) + '<span class="unit">%</span></div></div>' +
   '</div></div>';
@@ -2634,9 +2867,9 @@ function simResultHtml(){
     '<div class="summary-card"><div class="summary-label">순현금</div>' +
       '<div class="summary-value">' + fmt(R.cash) + '<span class="unit">원</span></div>' +
       '<div class="summary-sub">비중 ' + fx(R.SH[1], 1) + '% · 보관 ㈜쿠콘</div></div>' +
-    '<div class="summary-card"><div class="summary-label">Ty수익율</div>' +
+    '<div class="summary-card"><div class="summary-label">예상 연환산수익률</div>' +
       '<div class="summary-value">' + fx(R.TY, 2) + '<span class="unit">%</span></div>' +
-      '<div class="summary-sub">W금융일수 ' + fx(R.W, 2) + '일 기준</div></div>' +
+      '<div class="summary-sub">가중평균 금융일수 ' + fx(R.W, 2) + '일 기준</div></div>' +
   '</div>';
 
   /* ② 채권별 산출 — 기간 밖 행은 회색 이탤릭으로 두고 집계에서 뺀다 (page.tsx:366-369 · :560) */
@@ -2661,7 +2894,7 @@ function simResultHtml(){
   /* ③ 현황 — 투자 자산 */
   h += '<div class="tbl-wrap mb-6"><div class="tbl-head"><h2>현황</h2></div>' +
     '<div class="tbl-scroll"><table class="tbl"><thead><tr><th>자산 구분</th><th class="num">금액 (원)</th>' +
-    '<th class="num">W금융일수</th><th class="num">S입금부족율</th><th class="num">Ty수익율</th>' +
+    '<th class="num">가중평균 금융일수</th><th class="num">입금부족률</th><th class="num">예상 연환산수익률</th>' +
     '<th class="num">비중</th><th>보관</th></tr></thead><tbody>' +
     '<tr><td><span class="name">투자실행액</span></td><td class="num"><span class="strong">' + fmt(R.EXEC) + '</span></td>' +
       '<td class="num">' + fx(R.W, 2) + '일</td><td class="num">' + pct(R.S, 2) + '</td>' +
@@ -2682,15 +2915,15 @@ function simResultHtml(){
       '<div class="stat-period">' + R.ECD + '일</div>' +
       '<div class="summary-sub mono">' + R.from + ' ~ ' + R.to + '</div></div>' +
     '<div class="stat"><div class="summary-label">투자실행금</div>' +
-      '<div class="summary-value">' + fmt(R.PSA) + '<span class="unit">원</span></div></div>' +
+      '<div class="summary-value">' + fmt(R.PA) + '<span class="unit">원</span></div></div>' +
     '<div class="stat"><div class="summary-label">투자수익</div>' +
-      '<div class="summary-value' + (R.PSM < 0 ? ' neg' : '') + '">' + fmt(R.PSM) + '<span class="unit">원</span></div></div>' +
+      '<div class="summary-value' + (R.PM < 0 ? ' neg' : '') + '">' + fmt(R.PM) + '<span class="unit">원</span></div></div>' +
     simTyTip(R) +
     '</div></div>';
 
   /* ⑤ 일별 투자수익 */
   var HEAD = '<th>정산예정일</th><th class="num">상환액</th>' + thirdTh() +
-             '<th class="num">투자 수익</th><th class="num">W금융일수</th>' + tyTh();
+             '<th class="num">투자 수익</th><th class="num">가중평균 금융일수</th>' + tyTh();
   h += '<div class="tbl-wrap mb-6"><div class="tbl-head"><div class="left">' +
        '<h2 class="card-title">일별 투자수익</h2></div></div>';
   if(!R.rows.length){
@@ -2703,9 +2936,9 @@ function simResultHtml(){
         '<td class="num">' + fmt(g.A) + '</td><td class="num"><span class="strong">' + fmt(g.M) + '</span></td>' +
         '<td class="num">' + fx(g.W, 2) + '</td><td class="num">' + pct(g.TY, 2) + '</td></tr>';
     }
-    h += '</tbody><tfoot><tr><td>합계</td><td class="num">' + fmt(R.PSB) + '</td>' +
-      '<td class="num">' + fmt(R.PSA) + '</td><td class="num">' + fmt(R.PSM) + '</td>' +
-      '<td class="num">' + fx(R.PSD, 2) + '<span class="avg-sub">가중평균</span></td>' +
+    h += '</tbody><tfoot><tr><td>합계</td><td class="num">' + fmt(R.PB) + '</td>' +
+      '<td class="num">' + fmt(R.PA) + '</td><td class="num">' + fmt(R.PM) + '</td>' +
+      '<td class="num">' + fx(R.PwD, 2) + '<span class="avg-sub">가중평균</span></td>' +
       '<td class="num">' + fx(R.TY4, 2) + '%<span class="avg-sub">가중평균</span></td></tr></tfoot></table></div>';
   }
   h += '</div>';
@@ -2924,7 +3157,7 @@ RENDER['contracts'] = function(){
 
   M('ct-count', 'contracts').innerHTML = '총 <b class="mono">' + rows.length + '</b>건';
   var dl = M('ct-dl', 'contracts');
-  dl.disabled = true;                       /* D-39 — 전자서명 결과 파일 형식 미결. 실물이 없으므로 잠근다 */
+  dl.disabled = true;                       /* D-39 — 전자서명 결과 파일 형식이 정해지지 않았다. 실물이 없으므로 잠근다 */
   M('ct-dl-label', 'contracts').textContent = '선택 문서 다운로드' + (n ? ' (' + n + ')' : '');
   M('ct-clear', 'contracts').disabled = (n === 0);
 
@@ -3165,8 +3398,8 @@ function sheetData(key){
     cols = [44, 190, 175, 130, 145, 130, 120, 0];
     rows.push({n:1, c:[{v:'투자자산 현황 — 기준일 ' + BASE_DATE + ' / ' + INVESTOR, c:'c-title', span:7}]});
     rows.push({n:2, c:[null, null, null, null, null, null, null]});
-    rows.push({n:3, c:[{v:'자산 구분', c:'c-head'}, {v:'금액 (원)', c:'c-head r'}, {v:'W금융일수', c:'c-head r'},
-                       {v:'S입금부족율', c:'c-head r'}, {v:'Ty수익율', c:'c-head r'}, {v:'비중', c:'c-head r'}, {v:'보관', c:'c-head'}]});
+    rows.push({n:3, c:[{v:'자산 구분', c:'c-head'}, {v:'금액 (원)', c:'c-head r'}, {v:'가중평균 금융일수', c:'c-head r'},
+                       {v:'입금부족률', c:'c-head r'}, {v:'예상 연환산수익률', c:'c-head r'}, {v:'비중', c:'c-head r'}, {v:'보관', c:'c-head'}]});
     for(i = 0; i < ASSET_ROWS.length; i++){
       var a = ASSET_ROWS[i];
       rows.push({n:4 + i, c:[{v:a.name}, {v:fmt(a.amount), c:'c-num'},
@@ -3183,8 +3416,8 @@ function sheetData(key){
     cols = [44, 210, 175, 130, 145, 130, 120, 0];
     rows.push({n:1, c:[{v:'가맹점별 투자자산 — 기준일 ' + BASE_DATE + ' / ' + INVESTOR, c:'c-title', span:7}]});
     rows.push({n:2, c:[null, null, null, null, null, null, null]});
-    rows.push({n:3, c:[{v:'가맹점', c:'c-head'}, {v:'투자금액 (원)', c:'c-head r'}, {v:'W금융일수', c:'c-head r'},
-                       {v:'S입금부족율', c:'c-head r'}, {v:'Ty수익율', c:'c-head r'}, {v:'비중', c:'c-head r'}, null]});
+    rows.push({n:3, c:[{v:'가맹점', c:'c-head'}, {v:'투자실행액 (원)', c:'c-head r'}, {v:'가중평균 금융일수', c:'c-head r'},
+                       {v:'입금부족률', c:'c-head r'}, {v:'예상 연환산수익률', c:'c-head r'}, {v:'비중', c:'c-head r'}, null]});
     for(i = 0; i < MERCHANTS.length; i++){
       var m = MERCHANTS[i];
       rows.push({n:4 + i, c:[{v:m.name}, {v:fmt(m.amount), c:'c-num'}, {v:fx(m.w, 2), c:'c-num'},
@@ -3198,15 +3431,15 @@ function sheetData(key){
     cols = [44, 300, 340, 90, 90, 90, 90, 0];
     var rw = pfRows(), pexec = sum(rw, 'exec'), pprofit = sum(rw, 'profit');
     var tyE = tyOfRows(rw);
-    var tyA = rw.length ? tyAssetOf(tyE, pexec) : 0;
+    var tyA = rw.length ? tyAssetOf(tyE, rw) : 0;
     rows.push({n:1, c:[{v:'투자수익 현황 — 기준일 ' + BASE_DATE + ' / ' + INVESTOR, c:'c-title', span:2}, null, null, null, null]});
     rows.push({n:2, c:[null, null, null, null, null, null, null]});
     rows.push({n:3, c:[{v:'항목', c:'c-head'}, {v:'값', c:'c-head r'}, null, null, null, null, null]});
     rows.push({n:4, c:[{v:'검색대상기간'}, {v:presetLabel() + ' (' + PF.from + ' ~ ' + PF.to + ')', c:'c-num'}, null, null, null, null, null]});
     rows.push({n:5, c:[{v:'투자실행금'}, {v:fmt(pexec), c:'c-num'}, null, null, null, null, null]});
     rows.push({n:6, c:[{v:'투자수익'}, {v:fmt(pprofit), c:'c-num'}, null, null, null, null, null]});
-    rows.push({n:7, c:[{v:'Ty수익율 (투자실행금액 대비)'}, {v:fx(tyE, 2) + '%', c:'c-num'}, null, null, null, null, null]});
-    rows.push({n:8, c:[{v:'Ty수익율 (투자자산 대비)'}, {v:fx(tyA, 2) + '%', c:'c-num'}, null, null, null, null, null]});
+    rows.push({n:7, c:[{v:'연환산수익률 (투자실행금액 대비)'}, {v:fx(tyE, 2) + '%', c:'c-num'}, null, null, null, null, null]});
+    rows.push({n:8, c:[{v:'연환산수익률 (투자자산 대비)'}, {v:fx(tyA, 2) + '%', c:'c-num'}, null, null, null, null, null]});
     rows.push({n:9, c:[null, null, null, null, null, null, null]});
     rows.push({n:10, c:[null, null, null, null, null, null, null]});
     rows.push({n:11, c:[null, null, null, null, null, null, null]});
@@ -3217,7 +3450,7 @@ function sheetData(key){
     rows.push({n:1, c:[{v:GRAN_LABEL[PF.gran] + ' 투자수익 — ' + PF.from + ' ~ ' + PF.to + ' / ' + INVESTOR, c:'c-title', span:7}]});
     rows.push({n:2, c:[null, null, null, null, null, null, null]});
     rows.push({n:3, c:[{v:GRAN_COL[PF.gran], c:'c-head'}, {v:'상환액', c:'c-head r'}, {v:'투자실행금', c:'c-head r'},
-                       {v:'투자 수익', c:'c-head r'}, {v:'W금융일수', c:'c-head r'}, {v:'Ty수익율', c:'c-head r'}, null]});
+                       {v:'투자 수익', c:'c-head r'}, {v:'가중평균 금융일수', c:'c-head r'}, {v:'연환산수익률', c:'c-head r'}, null]});
     for(i = 0; i < dr.length; i++){
       var d = dr[i];
       rows.push({n:4 + i, c:[{v:d.d}, {v:fmt(d.repay), c:'c-num'}, {v:fmt(d.exec), c:'c-num'},
@@ -3226,7 +3459,7 @@ function sheetData(key){
     var nn = 4 + dr.length;
     rows.push({n:nn, cls:'r-total', c:[{v:'합계'}, {v:fmt(sum(dr, 'repay')), c:'c-num'}, {v:fmt(sum(dr, 'exec')), c:'c-num'},
       {v:fmt(sum(dr, 'profit')), c:'c-num'},
-      {v:dr.length ? fx(wavg(dr, 'w', 'exec'), 2) : '0.00', c:'c-num'},
+      {v:dr.length ? fx(pwdOfRows(dr), 2) : '0.00', c:'c-num'},
       {v:dr.length ? fx(tyOfRows(dr), 2) + '%' : '0.00%', c:'c-num'}, null]});
     rows.push({n:nn + 1, c:[null, null, null, null, null, null, null]});
     rows.push({n:nn + 2, c:[null, null, null, null, null, null, null]});
@@ -3297,7 +3530,10 @@ RENDER['index'] = function(){
   }
   M('ix-gallery', 'index').innerHTML = h;
 };
-RENDER['login'] = function(){};
+RENDER['login'] = function(){
+  var sb = document.querySelector('section[data-screen=login] .login-submit');
+  if(sb) sb.setAttribute('aria-disabled', loginValid() ? 'false' : 'true');
+};
 RENDER['coocon'] = function(){};
 
 /* pf-date 는 인풋이라 기본 동작(캐럿·타이핑·네이티브 달력)을 막으면 안 된다 */
@@ -3603,12 +3839,12 @@ document.addEventListener('keydown', function(e){
     e.preventDefault(); ACT['pf-search'](t, e); return;
   }
 
-  /* 로그인 Enter 제출 — 원본 payhug-admin-web/app/login/page.tsx:88-92.
-     원본에도 <form> 은 없다. 입력의 keydown 에서 제출 요소를 그대로 누른다. */
+  /* 로그인 Enter 제출 — 원본 payhug-admin-web/app/login/page.tsx:27 (isFormValid) · :88-92 (onKeyDown Enter -> handleLogin).
+     원본에도 <form> 은 없다. 두 칸이 다 찼을 때만 입력의 keydown 에서 제출 요소를 그대로 누른다. */
   if(t.getAttribute && t.getAttribute('data-login') && k === 'Enter'){
     e.preventDefault();
     var sb = document.querySelector('section[data-screen="login"] .login-submit');
-    if(sb) sb.click();
+    if(sb && loginValid()) sb.click();
     return;
   }
 
@@ -3654,7 +3890,18 @@ document.addEventListener('change', function(e){
     refresh('merchants');
   }
 });
+/* 로그인 제출 요소 — 원본 page.tsx:27 isFormValid · :161 disabled. 두 칸이 다 차야 켜진다. */
+function loginValid(){
+  var ins = QA('section[data-screen=login] [data-login]');
+  for(var i = 0; i < ins.length; i++){ if(!ins[i].value.trim()) return false; }
+  return true;
+}
 document.addEventListener('input', function(e){
+  if(e.target.getAttribute && e.target.getAttribute('data-login')){
+    var sb = document.querySelector('section[data-screen=login] .login-submit');
+    if(sb) sb.setAttribute('aria-disabled', loginValid() ? 'false' : 'true');
+    return;
+  }
   var el = e.target.closest && e.target.closest('[data-act]');
   if(!el) return;
   /* 가맹점 검색어 — 타이핑만으로 걸러진다. 원본 app/manage/page.tsx:249-255 는

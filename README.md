@@ -10,11 +10,11 @@
 | https://payhug-investor-prototype.vercel.app/ | 시연본. `app.html` 한 판만, 바깥으로 나가는 통로 없음 |
 | https://payhug-investor-glossary.vercel.app/ | 용어 해설 단독본 |
 
-전체본은 `main` 에 올라간 69개 파일을 그대로 서비스한다. 한글 이름을 쓰는 PDF·TXT·XLSX 도 같은 주소에서 바로 열린다.
+전체본은 `main` 에 올라간 74개 파일을 그대로 서비스한다. 한글 이름을 쓰는 PDF·TXT·XLSX 도 같은 주소에서 바로 열린다.
 
 | 구획 | 수 | 내역 |
 |---|---|---|
-| 루트 HTML | 40 | 통합 프로토타입 1 · 기본 화면 14 · 상태 18 · 랜딩 1 · 설명 문서 6 |
+| 루트 HTML | 45 | 통합 프로토타입 1 · 기본 화면 14 · 상태 18 · 랜딩 1 · 설명 문서 11 |
 | 루트 문서 | 2 | `README.md` `DESIGN_REF.md` |
 | `assets/` 공용 | 4 | `base.css` `logo-icon.png` `sheet.css` `template.html` |
 | 내려받기 실물 | 16 | `assets/docs/` 2 · `assets/xlsx/` 14 |
@@ -62,23 +62,28 @@
 
 상태 낱장 18종은 전량이 랜딩·아카이브·구현 가능성 판정에 등재되고, 통합본이 태우는 상태 18종과 같다. 배포에 실려 주소로 열리는 낱장을 목록 밖에 두지 않는다.
 
-### 설명 문서 6
+### 설명 문서 11
 
 | 파일 | 내용 |
 |---|---|
 | `archive.html` | 파일 아카이브 — 산출물·파이프라인 전량 목록 |
+| `calc.html` | 계산식 하나씩 — 변수 정의 → 산식 → 대입 → 결과 |
 | `capability.html` | 산출물이 무엇을 말할 수 있나 |
+| `ceo-questions.html` | 대표님 확인 문항 — 답을 적어 저장 |
 | `feasibility.html` | 구현 가능성 — 개발 확인 문항 |
+| `final-terms.html` | 용어·기호 정리 — 기존 표기 → 바뀐 기호 |
 | `glossary.html` | 용어 해설 — 용어 50건 · 화면 캡처 위치 표시 |
 | `inquiry.html` | 대표 확인 요청 — 문항 5건 |
 | `review.html` | 검토 이력 |
+| `steps-all.html` | 화면 칸별 중간 계산 — 투자 자산 · 투자 수익 두 화면의 값 |
+| `terms-edit.html` | 용어 정의서 편집판 — 대표 정의 45항 · 그 자리에서 고쳐 저장 |
 
 ## 구조
 
 ```
 ├── index.html            # 랜딩 (통합본 진입 + 전량 목록)
 ├── app.html              # 통합 프로토타입
-├── *.html                # 기본 화면 14 + 상태 18 + 설명 문서 6
+├── *.html                # 기본 화면 14 + 상태 18 + 설명 문서 11
 ├── scripts/              # 시연본·용어 단독본 변환기
 └── assets/
     ├── base.css          # 공용 스타일 (실측 토큰: 사이드바 #1B2537, primary #7FE141 등)
