@@ -11,24 +11,17 @@
 # 2026-08-28 이후 모든 실행이 3초 만에 실패했다. 검사만 하는 형태는 토큰이 필요 없다 —
 # 세 저장소가 모두 public 이라 인증 없이 읽을 수 있다.
 #
-# 반영은 로컬에서 한다.
+# 반영은 로컬에서 한다. 두 스크립트가 push 뒤에 대상 저장소와 배포면을 스스로 확인한다.
 #   payhug-spec/_pipeline/investor_admin/sync_prototype.sh
 #   payhug-spec/_pipeline/investor_admin/sync_glossary.sh
 #
-# 이 검사가 실패하면 두 대상 저장소 중 하나가 원본보다 뒤처져 있다는 뜻이다.
+# 이 검사는 손으로 돌릴 때만 실행한다(Actions 탭 → Run workflow). push 마다 돌리면 로컬 동기화가
+# 뒤따라오기 전 8분 재시도 끝에 실패 메일이 나가므로 push 트리거는 두지 않는다.
+# 실패하면 두 대상 저장소 중 하나가 원본보다 뒤처져 있다는 뜻이다.
 
 name: 배포 동기화 검사
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'app.html'
-      - 'glossary.html'
-      - 'assets/**'
-      - 'scripts/sync_prototype.py'
-      - 'scripts/sync_glossary.py'
-      - '.github/workflows/sync-prototype.yml'
   workflow_dispatch:
 
 concurrency:
