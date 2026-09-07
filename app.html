@@ -1867,6 +1867,12 @@ function popTh(label, p){
            '<span class="tip-row"><span>채권 건수</span><span class="tip-green">' + p.n + '</span></span>' +
          '</span></span></th>';
 }
+var YR_TIP_HEAD = 'Y<sub>r</sub> · 예상 연환산 수익률 · r × 365 ÷ D';
+var YR_TIP_ROW  = '<span class="tip-row"><span>연환산</span><span class="tip-green">일부 기간의 수익률이 1년간 계속된다는 가정하에 예상되는 연간 수익률</span></span>';
+function yrTh(){
+  return '<th class="num"><span class="tooltip wide"><span class="tip-anchor">예상 연환산 수익률</span>' +
+         '<span class="tip-panel">' + YR_TIP_HEAD + YR_TIP_ROW + '</span></span></th>';
+}
 /* 미확정 표기 — 2026-08-31 회의에서 ③ 은 칸 미지목, ⑥ 은 「4,5번과 다르니 계산식 다시 확인할 것」
    으로 끝나 대표 재전달 대기다(meeting_0831/ceo_definitions_20260831.txt). ⑤ 는 원문 산식이
    「수식 오류」로 닫혀 우리 확정안(daily_ledger.TY5_EXPR)을 넣고 대표 확인을 기다린다.
@@ -2309,8 +2315,7 @@ RENDER['invest-assets'] = function(){
       '<div class="summary-sub">비중 ' + fx(rCash, 1) + '% · 보관 ㈜쿠콘</div></div>' +
     '<div class="summary-card"><div class="summary-label">' +
       '<span class="tooltip wide"><span class="tip-anchor">예상 연환산 수익률</span>' +
-        '<span class="tip-panel">Y<sub>r</sub> · 예상 연환산 수익률 · r × 365 ÷ D' +
-          '<span class="tip-row"><span>연환산</span><span class="tip-green">일부 기간의 수익률이 1년간 계속된다는 가정하에 예상되는 연간 수익률</span></span>' +
+        '<span class="tip-panel">' + YR_TIP_HEAD + YR_TIP_ROW +
           '<span class="tip-row"><span>r</span><span class="tip-green">계약된 할인율 · ' + fx(RATE_PCT, 2) + '%</span></span>' +
           '<span class="tip-row"><span>D</span><span class="tip-green">가중평균 금융일수 · ' + (wv === null ? '집계 대상 없음' : fx(wv, 2) + '일') + '</span></span>' +
           '<span class="tip-row"><span>연 환산</span><span class="tip-green">' + fx(tyv, 2) + '%</span></span>' +
@@ -2322,8 +2327,8 @@ RENDER['invest-assets'] = function(){
       '<div class="summary-sub">' + (wv === null ? '가중평균 금융일수 집계 대상 없음' : '가중평균 금융일수 ' + fx(wv, 2) + '일 기준') + '</div></div>';
 
   var h = '<thead><tr><th>자산 구분</th><th class="num">금액 (원)</th>' + popTh('가중평균 금융일수', POP_W) +
-          popTh('입금부족률', POP_S) +
-          '<th class="num">예상 연환산 수익률</th><th class="num">비중</th><th>보관</th></tr></thead><tbody>';
+          popTh('입금부족률', POP_S) + yrTh() +
+          '<th class="num">비중</th><th>보관</th></tr></thead><tbody>';
   if(!arows.length){ h += emptyRow(7, '조회 결과가 없습니다.'); }
   else {
     for(i = 0; i < arows.length; i++){
@@ -2351,8 +2356,8 @@ RENDER['invest-assets'] = function(){
   var slice = view.slice((IA.page - 1) * iaSize, IA.page * iaSize);
   var mm = M('ia-merch', 'invest-assets'), mp = M('ia-merch-page', 'invest-assets');
   var IA_HEAD = '<th>가맹점</th><th class="num">투자실행액 (원)</th>' + popTh('가중평균 금융일수', POP_W) +
-                popTh('입금부족률', POP_S) +
-                '<th class="num">예상 연환산 수익률</th><th class="num">비중</th>';
+                popTh('입금부족률', POP_S) + yrTh() +
+                '<th class="num">비중</th>';
   if(!mrows.length){
     mm.innerHTML = emptyTable(IA_HEAD, 6, '조회 결과가 없습니다.');
     mp.innerHTML = ''; mp.hidden = true;

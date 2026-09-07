@@ -10,7 +10,7 @@
 | https://payhug-investor-prototype.vercel.app/ | 시연본. `app.html` 한 판만, 바깥으로 나가는 통로 없음 |
 | https://payhug-investor-glossary.vercel.app/ | 용어 해설 단독본 |
 
-전체본은 `main` 에 올라간 74개 파일을 그대로 서비스한다. 한글 이름을 쓰는 PDF·TXT·XLSX 도 같은 주소에서 바로 열린다.
+전체본은 `main` 에 올라간 75개 파일을 그대로 서비스한다. 한글 이름을 쓰는 PDF·TXT·XLSX 도 같은 주소에서 바로 열린다.
 
 | 구획 | 수 | 내역 |
 |---|---|---|
