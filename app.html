@@ -24,15 +24,6 @@
     font-size: 12px; line-height: 16px; font-weight: 600;
   }
 
-  /* ── 페이지 헤더 변형 · 기준일 pill (투자 자산 전용) ───────── */
-  .page-header.row-between { align-items: flex-start; }
-  .base-date {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 6px 12px; background: #fff;
-    border: 1px solid var(--gray-200); border-radius: 8px;
-    font-size: 14px; line-height: 20px; color: var(--secondary); white-space: nowrap;
-  }
-  .base-date .mono { color: var(--gray-700); font-weight: 500; }
 
   /* ── 표 카드 헤더·합계·하단 안내 ──────────────────────────── */
   .tbl-head {
@@ -543,11 +534,8 @@
   <main class="content">
       <!-- ═════════ 투자 자산 ═════════ -->
       <section class="screen" data-screen="invest-assets" data-state="default" hidden>
-        <div class="page-header row-between">
-          <div>
-            <h1 class="page-title">투자 자산<span data-state-mark></span></h1>
-          </div>
-          <div class="base-date">기준일 <span class="mono">2026-08-27</span></div>
+        <div class="page-header">
+          <h1 class="page-title">투자 자산<span data-state-mark></span></h1>
         </div>
 
         <div class="summary-grid" data-mount="ia-summary"></div>
@@ -1128,10 +1116,10 @@
       <button class="close" aria-label="닫기" data-act="modal-close"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
-      <p class="cert-desc">기준일 2026-08-27 시점의 가맹점별 투자자산 내역으로 전자문서 발급.</p>
+      <p class="cert-desc">2026-08-27 마감 기준 가맹점별 투자자산 내역으로 전자문서 발급.</p>
       <dl class="cert-info">
         <dt>문서명</dt><dd>투자자산 증명서</dd>
-        <dt>기준일</dt><dd class="mono">2026-08-27</dd>
+        <dt>기준</dt><dd class="mono">2026-08-27 마감</dd>
         <dt>대상</dt><dd data-mount="cf-target">가맹점 8개</dd>
         <dt>작성자</dt><dd>㈜페이허그</dd>
       </dl>
@@ -1280,9 +1268,9 @@
 'use strict';
 
 /* ═══ 예시 데이터 — 개별 화면 HTML·assets/xlsx 실측값 그대로. 새 값 생성 없음 ═══ */
-/* 프리셋·달력 상한의 기준 — 일별 표 마지막 행이다. 화면 「기준일」 라벨(2026-08-27)과 하루 다르다.
-   기준일 당일 정산예정 채권은 배치가 다음 날 자정에 돌아 조회 시점에 DB 에 없다. */
-var BASE_DATE = '2026-08-26';
+/* 프리셋·달력 상한의 기준 — 일별 표 마지막 행 = 어제(마감 스냅샷 날). 어제 정산예정 채권은
+   어젯밤 배치로 회수돼 마지막 행에 있다. 오늘은 화면에 표시하지 않는다. */
+var BASE_DATE = '2026-08-27';
 var INVESTOR  = '㈜테스트인베스트';
 
 var MERCHANTS = [
@@ -1501,7 +1489,8 @@ var DAILY = [
   {d:'2026-08-23', repay:25188289, exec:25179655, profit:8632, w:3.116695, ty:4.01, ad:78477301},
   {d:'2026-08-24', repay:25281449, exec:25273193, profit:8249, w:3.123955, ty:3.81, ad:78952324},
   {d:'2026-08-25', repay:25602105, exec:25593903, profit:8196, w:3.126224, ty:3.74, ad:80012272},
-  {d:'2026-08-26', repay:26102548, exec:26094204, profit:8339, w:3.124609, ty:3.73, ad:81534176}
+  {d:'2026-08-26', repay:26102548, exec:26094204, profit:8339, w:3.124609, ty:3.73, ad:81534176},
+  {d:'2026-08-27', repay:26530746, exec:26521983, profit:8761, w:3.105803, ty:3.88, ad:82372046}
 ];
 /* PwD 의 분자 Σ(A<sub>i</sub> x D<sub>i</sub>) — 날짜별 W금융일수를 6자리로 끊기 전 값이다.
    원장 daily_ledger.py LEDGER 의 wx 를 그대로 싣는다. 6자리로 끊은 W 를 다시 가중하면
@@ -1685,7 +1674,8 @@ var DAILY_WX = {
   '2026-08-23':78477301,
   '2026-08-24':78952324,
   '2026-08-25':80012272,
-  '2026-08-26':81534176
+  '2026-08-26':81534176,
+  '2026-08-27':82372046
 };
 (function(){ for(var i = 0; i < DAILY.length; i++) DAILY[i].wx = DAILY_WX[DAILY[i].d]; })();
 
@@ -1716,22 +1706,22 @@ var SIGNQ = [
    두 조합(일별 일주일·금월)이 한 파일을 가리켜, 화면은 27행 금월인데 파일은 일주일치가 된다.
    `profit-status`·`profit-daily` 는 미리보기 화면을 가리키는 자리이고 파일을 갖지 않는다. */
 var XLSX = {
-  'assets-status':   {file:'투자자산현황_2026-08-27_2026-08-27.xlsx',   size:'5.6 KB', made:'2026-09-04 21:58', sheet:'투자자산 현황',   screen:'xls-assets-status',   from:'invest-assets'},
-  'assets-merchant': {file:'가맹점별투자자산_2026-08-27_2026-08-27.xlsx', size:'6.0 KB', made:'2026-09-04 21:58', sheet:'가맹점별 투자자산', screen:'xls-assets-merchant', from:'invest-assets'},
+  'assets-status':   {file:'투자자산현황_2026-08-27_2026-08-27.xlsx',   size:'5.6 KB', made:'2026-09-07 11:36', sheet:'투자자산 현황',   screen:'xls-assets-status',   from:'invest-assets'},
+  'assets-merchant': {file:'가맹점별투자자산_2026-08-27_2026-08-27.xlsx', size:'6.0 KB', made:'2026-09-07 11:36', sheet:'가맹점별 투자자산', screen:'xls-assets-merchant', from:'invest-assets'},
   'profit-status':   {screen:'xls-profit-status', from:'invest-profit'},
   'profit-daily':    {screen:'xls-profit-daily',  from:'invest-profit'},
-  'profit-daily@daily:2026-08-20:2026-08-26': {file:'일별투자수익_2026-08-20_2026-08-26.xlsx', size:'5.7 KB', made:'2026-09-04 21:58', sheet:'일별 투자수익', screen:null, from:'invest-profit'},
-  'profit-status@daily:2026-08-20:2026-08-26': {file:'투자수익현황_2026-08-20_2026-08-26.xlsx', size:'5.3 KB', made:'2026-09-04 21:58', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
-  'profit-daily@daily:2026-08-01:2026-08-26': {file:'일별투자수익_2026-08-01_2026-08-26.xlsx', size:'6.5 KB', made:'2026-09-04 21:58', sheet:'일별 투자수익', screen:null, from:'invest-profit'},
-  'profit-status@daily:2026-08-01:2026-08-26': {file:'투자수익현황_2026-08-01_2026-08-26.xlsx', size:'5.3 KB', made:'2026-09-04 21:58', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
-  'profit-daily@weekly:2026-08-03:2026-08-26': {file:'주별투자수익_2026-08-03_2026-08-26.xlsx', size:'5.6 KB', made:'2026-09-04 21:58', sheet:'주별 투자수익', screen:null, from:'invest-profit'},
-  'profit-status@weekly:2026-08-03:2026-08-26': {file:'투자수익현황_2026-08-03_2026-08-26.xlsx', size:'5.3 KB', made:'2026-09-04 21:58', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
-  'profit-daily@weekly:2026-06-08:2026-08-26': {file:'주별투자수익_2026-06-08_2026-08-26.xlsx', size:'6.0 KB', made:'2026-09-04 21:58', sheet:'주별 투자수익', screen:null, from:'invest-profit'},
-  'profit-status@weekly:2026-06-08:2026-08-26': {file:'투자수익현황_2026-06-08_2026-08-26.xlsx', size:'5.3 KB', made:'2026-09-04 21:58', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
-  'profit-daily@monthly:2026-06-01:2026-08-26': {file:'월별투자수익_2026-06-01_2026-08-26.xlsx', size:'5.6 KB', made:'2026-09-04 21:58', sheet:'월별 투자수익', screen:null, from:'invest-profit'},
-  'profit-status@monthly:2026-06-01:2026-08-26': {file:'투자수익현황_2026-06-01_2026-08-26.xlsx', size:'5.3 KB', made:'2026-09-04 21:58', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
-  'profit-daily@monthly:2026-03-01:2026-08-26': {file:'월별투자수익_2026-03-01_2026-08-26.xlsx', size:'5.7 KB', made:'2026-09-04 21:58', sheet:'월별 투자수익', screen:null, from:'invest-profit'},
-  'profit-status@monthly:2026-03-01:2026-08-26': {file:'투자수익현황_2026-03-01_2026-08-26.xlsx', size:'5.3 KB', made:'2026-09-04 21:58', sheet:'투자수익 현황', screen:null, from:'invest-profit'}
+  'profit-daily@daily:2026-08-21:2026-08-27': {file:'일별투자수익_2026-08-21_2026-08-27.xlsx', size:'5.7 KB', made:'2026-09-07 11:36', sheet:'일별 투자수익', screen:null, from:'invest-profit'},
+  'profit-status@daily:2026-08-21:2026-08-27': {file:'투자수익현황_2026-08-21_2026-08-27.xlsx', size:'5.3 KB', made:'2026-09-07 11:36', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
+  'profit-daily@daily:2026-08-01:2026-08-27': {file:'일별투자수익_2026-08-01_2026-08-27.xlsx', size:'6.6 KB', made:'2026-09-07 11:36', sheet:'일별 투자수익', screen:null, from:'invest-profit'},
+  'profit-status@daily:2026-08-01:2026-08-27': {file:'투자수익현황_2026-08-01_2026-08-27.xlsx', size:'5.3 KB', made:'2026-09-07 11:36', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
+  'profit-daily@weekly:2026-08-03:2026-08-27': {file:'주별투자수익_2026-08-03_2026-08-27.xlsx', size:'5.6 KB', made:'2026-09-07 11:36', sheet:'주별 투자수익', screen:null, from:'invest-profit'},
+  'profit-status@weekly:2026-08-03:2026-08-27': {file:'투자수익현황_2026-08-03_2026-08-27.xlsx', size:'5.3 KB', made:'2026-09-07 11:36', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
+  'profit-daily@weekly:2026-06-08:2026-08-27': {file:'주별투자수익_2026-06-08_2026-08-27.xlsx', size:'6.0 KB', made:'2026-09-07 11:36', sheet:'주별 투자수익', screen:null, from:'invest-profit'},
+  'profit-status@weekly:2026-06-08:2026-08-27': {file:'투자수익현황_2026-06-08_2026-08-27.xlsx', size:'5.3 KB', made:'2026-09-07 11:36', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
+  'profit-daily@monthly:2026-06-01:2026-08-27': {file:'월별투자수익_2026-06-01_2026-08-27.xlsx', size:'5.6 KB', made:'2026-09-07 11:36', sheet:'월별 투자수익', screen:null, from:'invest-profit'},
+  'profit-status@monthly:2026-06-01:2026-08-27': {file:'투자수익현황_2026-06-01_2026-08-27.xlsx', size:'5.3 KB', made:'2026-09-07 11:36', sheet:'투자수익 현황', screen:null, from:'invest-profit'},
+  'profit-daily@monthly:2026-03-01:2026-08-27': {file:'월별투자수익_2026-03-01_2026-08-27.xlsx', size:'5.7 KB', made:'2026-09-07 11:36', sheet:'월별 투자수익', screen:null, from:'invest-profit'},
+  'profit-status@monthly:2026-03-01:2026-08-27': {file:'투자수익현황_2026-03-01_2026-08-27.xlsx', size:'5.3 KB', made:'2026-09-07 11:36', sheet:'투자수익 현황', screen:null, from:'invest-profit'}
 };
 
 /* 지금 보고 있는 기간·집계 단위의 파일을 고른다. 프리셋 밖 기간(직접입력)에는 실물이 없어 null 이다 —
@@ -1869,8 +1859,8 @@ function wavg(a, k, wk){ var n=0, d=0; for(var i=0;i<a.length;i++){ n += a[i][k]
    옆 칸 금액(미회수 Σ A<sub>i</sub>)까지 셋이 각자 다른 집합에서 나오므로, 행을 금액으로 가중평균해도
    현황표의 두 칸과 맞아떨어지지 않는다. 그 모집단을 열머리 툴팁이 그대로 적는다.
    건수는 채권 원장 실측이다(daily_ledger.py) — 화면에 손으로 적지 않는다. */
-var POP_W = {of:'보유 채권 전체 (발생 기준)', n:'61,760건'};
-var POP_S = {of:'선정산일이 기준일 20일 전 ~ 11일 전인 표본', n:'3,200건'};
+var POP_W = {of:'보유 채권 전체 (회수된 것 포함)', n:'61,760건'};
+var POP_S = {of:'선정산일이 오늘 기준 20일 전 ~ 11일 전인 표본', n:'3,200건'};
 function popTh(label, p){
   return '<th class="num"><span class="tooltip wide"><span class="tip-anchor">' + label + '</span>' +
          '<span class="tip-panel">' + p.of +
@@ -1937,7 +1927,7 @@ function svg(key, w, cls, style){
 
 /* ═══ 모델 (조작 결과가 여기 쌓이고, 화면은 여기서만 그려진다) ═══ */
 var IA = {page:1, downloaded:false, empty:false, cert:false};
-var PF = {gran:'daily', from:'2026-08-20', to:'2026-08-27'};
+var PF = {gran:'daily', from:'2026-08-21', to:'2026-08-27'};
 /* ── 두 축 ─────────────────────────────────────────────────────────────
    PF.from · PF.to = 무엇을 조회하느냐.  PF.gran = 표의 한 행이 무엇이냐(하루·한 주·한 달).
    두 축은 서로를 지우지 않는다. 집계 단위를 바꿔도 기간은 남고, 새 단위 경계로 넓혀 스냅될 뿐이다.
@@ -2634,7 +2624,7 @@ function simSeedRows(){
    S = (미지급률 - 과지급률) / (1 - 할인율) = 0.07 / 0.9989 = 0.07%. 두 화면이 같은 값을 띄운다.
    순현금은 투자 자산 화면과 같은 20,000,000 이다. */
 var SIM_DEFAULT = {r:0.11, cash:20000000, unpaid:0.08, over:0.01,
-                   from:'2026-08-20', to:'2026-08-27'};
+                   from:'2026-08-21', to:'2026-08-27'};
 function simSeed(){
   var o = {rows:simSeedRows(), result:null, running:false, redraw:true}, k;
   for(k in SIM_DEFAULT) o[k] = SIM_DEFAULT[k];
@@ -3401,7 +3391,7 @@ function sheetData(key){
   var sRatio = ratios(ASSET_ROWS, total), xRatio = ratios(MERCHANTS, exec);
   if(key === 'assets-status'){
     cols = [44, 190, 175, 130, 145, 130, 120, 0];
-    rows.push({n:1, c:[{v:'투자자산 현황 — 기준일 ' + BASE_DATE + ' / ' + INVESTOR, c:'c-title', span:7}]});
+    rows.push({n:1, c:[{v:'투자자산 현황 — ' + BASE_DATE + ' / ' + INVESTOR, c:'c-title', span:7}]});
     rows.push({n:2, c:[null, null, null, null, null, null, null]});
     rows.push({n:3, c:[{v:'자산 구분', c:'c-head'}, {v:'금액 (원)', c:'c-head r'}, {v:'가중평균 금융일수', c:'c-head r'},
                        {v:'입금부족률', c:'c-head r'}, {v:'예상 연환산 수익률', c:'c-head r'}, {v:'비중', c:'c-head r'}, {v:'보관', c:'c-head'}]});
@@ -3419,7 +3409,7 @@ function sheetData(key){
     rows.push({n:10, c:[null, null, null, null, null, null, null]});
   } else if(key === 'assets-merchant'){
     cols = [44, 210, 175, 130, 145, 130, 120, 0];
-    rows.push({n:1, c:[{v:'가맹점별 투자자산 — 기준일 ' + BASE_DATE + ' / ' + INVESTOR, c:'c-title', span:7}]});
+    rows.push({n:1, c:[{v:'가맹점별 투자자산 — ' + BASE_DATE + ' / ' + INVESTOR, c:'c-title', span:7}]});
     rows.push({n:2, c:[null, null, null, null, null, null, null]});
     rows.push({n:3, c:[{v:'가맹점', c:'c-head'}, {v:'투자실행액 (원)', c:'c-head r'}, {v:'가중평균 금융일수', c:'c-head r'},
                        {v:'입금부족률', c:'c-head r'}, {v:'예상 연환산 수익률', c:'c-head r'}, {v:'비중', c:'c-head r'}, null]});
@@ -3437,7 +3427,7 @@ function sheetData(key){
     var rw = pfRows(), pexec = sum(rw, 'exec'), pprofit = sum(rw, 'profit');
     var tyE = tyOfRows(rw);
     var tyA = rw.length ? tyAssetOf(tyE, rw) : 0;
-    rows.push({n:1, c:[{v:'투자수익 현황 — 기준일 ' + BASE_DATE + ' / ' + INVESTOR, c:'c-title', span:2}, null, null, null, null]});
+    rows.push({n:1, c:[{v:'투자수익 현황 — ' + BASE_DATE + ' / ' + INVESTOR, c:'c-title', span:2}, null, null, null, null]});
     rows.push({n:2, c:[null, null, null, null, null, null, null]});
     rows.push({n:3, c:[{v:'항목', c:'c-head'}, {v:'값', c:'c-head r'}, null, null, null, null, null]});
     rows.push({n:4, c:[{v:'검색대상기간'}, {v:presetLabel() + ' (' + PF.from + ' ~ ' + PF.to + ')', c:'c-num'}, null, null, null, null, null]});
