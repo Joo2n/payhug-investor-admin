@@ -14,6 +14,12 @@
   - 투자 시뮬레이션 — 메뉴·화면·전용 CSS/JS·레지스터 항목 (통합본 전용). 그 해시로 들어오면 투자 자산
   - 엑셀 미리보기 4종 — 뷰·레지스터·시트 JS (통합본 전용). 「엑셀 다운로드」는 실물 xlsx 직행. 그 해시로 들어오면 투자 자산
 
+투자자 공유 정리 (시연본에만 · 통합본 app.html 은 그대로)
+  - 탭 제목 「PayHug Admin — 통합 프로토타입」 → 「PayHug 투자자 어드민」
+  - 투자 자산 요약 카드 「투자실행액」「순현금」 아래 「비중 … · 보관 ㈜…」 줄
+  - 투자 자산 현황 표 「비중」「보관」 두 열 (열머리 · 행 · 합계 행 · 빈 행 colspan)
+  - 「투자자산 현황」 엑셀의 같은 두 열 (복사한 파일에서 뺀다 · 레지스터 size 갱신)
+
 자산은 산출물 문서에서 참조를 역산해 고른다. 참조가 0건인 파일은 복사하지 않는다.
 
 검사에 하나라도 걸리면 index.html 을 쓰지 않고 종료코드 1 로 끝난다.
@@ -39,10 +45,11 @@ XLS_BANNED = [r'xls-assets-status', r'xls-assets-merchant', r'xls-profit', r'\bs
 ASSET_EXT = ['.xlsx', '.pdf', '.txt', '.zip', '.csv']
 
 NEW_HEAD = '''<!--
-  시연 전용 배포본 — 통합 프로토타입 한 파일뿐이다.
+  시연 전용 배포본 — 한 파일뿐이다.
   이 저장소에는 이 파일과 화면이 실제로 내려주는 자산만 있다. 다른 문서로 가는 통로도, 파일도 없다.
   바깥으로 나가는 링크는 쿠콘 We-bank 1건뿐이며 이는 화면 기능이다(원본 어드민과 동일).
   사이드바 로고는 자기 자신의 메인 화면으로만 이동한다.
+  투자자 공유 정리 — 탭 제목 · 투자 자산 카드 아래 비중·보관 줄 · 현황 표 비중·보관 열 · 같은 엑셀 두 열은 이 배포본에 없다.
 
   이 파일은 payhug-investor-admin/scripts/sync_prototype.py 가 app.html 에서 찍어 낸다.
   직접 고치지 않는다 — 다음 동기화에서 덮어쓰인다.
@@ -244,6 +251,83 @@ def drop_xls_preview(s):
     return s
 
 
+def investor_share(s):
+    """투자자 공유 정리 — 시연본에만 적용한다. 통합본 app.html 은 그대로다.
+    drop_sim · drop_xls_preview 뒤에 돌린다(시뮬레이션 결과 카드·표와 엑셀 미리보기 시트에 같은 문구가 있어 먼저 걷혀야 건수가 맞는다)."""
+    # ① 탭 제목
+    s, n = re.subn(r'<title>PayHug Admin — 통합 프로토타입</title>', '<title>PayHug 투자자 어드민</title>', s)
+    if n == 1:
+        ok('탭 제목 → PayHug 투자자 어드민')
+    else:
+        fail('탭 제목 앵커 %d건 (기대 1)' % n)
+
+    # ② 투자 자산 요약 카드 아래 「비중 … · 보관 ㈜…」 줄 — 투자실행액·순현금 2건
+    s, n = re.subn(r"\s*'<div class=\"summary-sub\">비중 ' \+ fx\((?:rExec|rCash), 1\) \+ '% · 보관 ㈜(?:페이허그|쿠콘)</div></div>' \+",
+                   " '</div>' +", s)
+    if n == 2:
+        ok('투자 자산 카드 아래 비중·보관 줄 제거 x2')
+    else:
+        fail('카드 아래 비중·보관 줄 %d건 (기대 2)' % n)
+
+    # ③ 투자 자산 현황 표 — 열머리 · 행 · 합계 행 · 빈 행
+    reps = [
+        ('열머리', "'<th class=\"num\">비중</th><th>보관</th></tr></thead><tbody>'", "'</tr></thead><tbody>'"),
+        ('빈 행', "if(!arows.length){ h += emptyRow(7, '조회 결과가 없습니다.'); }",
+                  "if(!arows.length){ h += emptyRow(5, '조회 결과가 없습니다.'); }"),
+        ('행', "'<td class=\"num\">' + fx(aRatio[i], 1) + '%</td><td>' + a.keeper + '</td></tr>'", "'</tr>'"),
+        ('합계 행', "'<td class=\"num\"><span class=\"none\">-</span></td><td class=\"num\">100.0%</td><td><span class=\"none\">-</span></td></tr>'",
+                   "'<td class=\"num\"><span class=\"none\">-</span></td></tr>'"),
+    ]
+    for why, a, b in reps:
+        k = s.count(a)
+        if k != 1:
+            fail('현황 표 %s 앵커 %d건 (기대 1)' % (why, k))
+            continue
+        s = s.replace(a, b, 1)
+    ok('투자 자산 현황 표 비중·보관 열 제거 (열머리 · 행 · 합계 행 · 빈 행 colspan 5)')
+    return s
+
+
+def patch_assets_status_xlsx(src_path, dst_path):
+    """「투자자산 현황」 엑셀에서 「비중」「보관」 두 열을 뺀 사본을 dst_path 에 쓴다. 원본은 읽기만."""
+    try:
+        import openpyxl
+    except ImportError:
+        fail('openpyxl 없음 — 투자자산 현황 엑셀의 비중·보관 열을 뺄 수 없다')
+        return False
+    wb = openpyxl.load_workbook(src_path)
+    ws = wb.active
+    hr = None
+    for r in range(1, 10):
+        if ws.cell(row=r, column=1).value == '자산 구분':
+            hr = r
+            break
+    if hr is None:
+        fail('엑셀 머리 행(자산 구분)을 못 찾음: %s' % os.path.basename(src_path))
+        return False
+    labels = [ws.cell(row=hr, column=c).value for c in range(1, ws.max_column + 1)]
+    if labels[:7] != ['자산 구분', '금액 (원)', '가중평균 금융일수', '입금부족률', '예상 연환산 수익률', '비중', '보관']:
+        fail('엑셀 머리 행이 기대와 다름: %r' % (labels,))
+        return False
+    remerge = []
+    for rng in list(ws.merged_cells.ranges):
+        if rng.max_col > 5:
+            remerge.append((rng.min_row, rng.min_col, rng.max_row))
+            ws.unmerge_cells(str(rng))
+    ws.delete_cols(6, 2)
+    for r0, c0, r1 in remerge:
+        ws.merge_cells(start_row=r0, start_column=c0, end_row=r1, end_column=5)
+    wb.save(dst_path)
+    chk = openpyxl.load_workbook(dst_path).active
+    got = [chk.cell(row=hr, column=c).value for c in range(1, 8)]
+    texts = ' '.join(str(c.value) for row in chk.iter_rows() for c in row if c.value is not None)
+    if got[:5] != labels[:5] or got[5] is not None or got[6] is not None or '㈜쿠콘' in texts or '㈜페이허그' in texts:
+        fail('엑셀 두 열 제거 후 검산 실패: %r' % (got,))
+        return False
+    ok('투자자산 현황 엑셀 비중·보관 열 제거 · 검산(머리 5열 · ㈜ 0)')
+    return True
+
+
 def transform(s):
     # ── 1) 랜딩 갤러리 화면 — 뷰 ────────────────────────────────────
     m = re.search(r'<section class="screen" data-screen="index"[^>]*>', s)
@@ -290,6 +374,9 @@ def transform(s):
 
     # ── 5) 엑셀 미리보기 4종 — 뷰·레지스터·시트 JS (다운로드 버튼은 그대로) ─
     s = drop_xls_preview(s)
+
+    # ── 5b) 투자자 공유 정리 — 탭 제목 · 카드 아래 비중·보관 줄 · 현황 표 두 열 ─
+    s = investor_share(s)
 
     # ── 6) 사이드바 로고 — 자기 자신(index.html) 안의 메인 화면으로만 ─
     logo = re.search(r'(<div class="sidebar-logo">\s*<a\b)([^>]*)>', s)
@@ -364,8 +451,11 @@ def gate(s):
         hit = re.findall(r'.{0,30}' + b + r'.{0,30}', s)
         if hit:
             fail('엑셀 미리보기 잔존 %s x%d -> %r' % (b, len(hit), hit[:2]))
+    for b in ['보관 ㈜', '<th>보관</th>', 'a.keeper', '통합 프로토타입', 'emptyRow(7,']:
+        if b in s:
+            fail('투자자 공유 정리 잔존: %s x%d' % (b, s.count(b)))
     if not hard:
-        ok('통로 검사 통과 — 금칙 0 · 형제링크 0 · 시뮬레이션 0 · 엑셀 미리보기 0 · 허용 외부호스트 %s' % ', '.join(ALLOWED_HOSTS))
+        ok('통로 검사 통과 — 금칙 0 · 형제링크 0 · 시뮬레이션 0 · 엑셀 미리보기 0 · 공유 정리 잔존 0 · 허용 외부호스트 %s' % ', '.join(ALLOWED_HOSTS))
 
 
 def wanted_assets(s):
@@ -422,6 +512,24 @@ def main():
     gate(out)
     want = wanted_assets(out)   # 되짚기 검사가 여기 있다 — 쓰기 전에 돌려야 실패했을 때 index.html 이 남지 않는다
 
+    # 「투자자산 현황」 엑셀 — 비중·보관 두 열을 뺀 사본을 먼저 만들고 레지스터 size 를 그 크기로 맞춘다
+    import tempfile
+    xl = re.search(r"'assets-status':\s*\{file:'([^']+\.xlsx)',\s*size:'([^']*)'", out)
+    xl_tmp = None
+    if not xl:
+        fail('XLSX 레지스터에서 assets-status 를 못 찾음')
+    else:
+        xl_src = os.path.join(a.assets, 'xlsx', xl.group(1))
+        if not os.path.isfile(xl_src):
+            fail('원본에 없는 엑셀: %s' % xl.group(1))
+        else:
+            xl_tmp = os.path.join(tempfile.mkdtemp(prefix='proto-xlsx-'), xl.group(1))
+            if patch_assets_status_xlsx(xl_src, xl_tmp):
+                size = '%.1f KB' % (os.path.getsize(xl_tmp) / 1024.0)
+                out = out[:xl.start(2)] + size + out[xl.end(2):]
+                ok('레지스터 assets-status size %s -> %s' % (xl.group(2), size))
+            else:
+                xl_tmp = None
     if hard:
         print('\n'.join(notes))
         print('\n중단 — 검사 실패 %d건. index.html 을 쓰지 않았다.' % len(hard))
@@ -448,6 +556,11 @@ def main():
             os.makedirs(os.path.dirname(d_p))
         shutil.copy2(s_p, d_p)
         total += os.path.getsize(d_p)
+    if xl_tmp:
+        d_p = os.path.join(dst_assets, 'xlsx', os.path.basename(xl_tmp))
+        shutil.copy2(xl_tmp, d_p)
+        shutil.rmtree(os.path.dirname(xl_tmp), ignore_errors=True)
+        ok('투자자산 현황 엑셀 — 두 열 뺀 사본으로 교체 (%d bytes)' % os.path.getsize(d_p))
 
     print('\n'.join(notes))
     print('  ok   index.html  %d -> %d bytes' % (len(src), len(out)))
