@@ -266,8 +266,10 @@ def investor_share(s):
                    " '</div>' +", s)
     if n == 2:
         ok('투자 자산 카드 아래 비중·보관 줄 제거 x2')
+    elif n == 0:
+        ok('투자 자산 카드 아래 비중·보관 줄 — 원본에 없음(원본 정리 판)')
     else:
-        fail('카드 아래 비중·보관 줄 %d건 (기대 2)' % n)
+        fail('카드 아래 비중·보관 줄 %d건 (기대 2 또는 0)' % n)
 
     # ③ 투자 자산 현황 표 — 열머리 · 행 · 합계 행 · 빈 행
     reps = [
@@ -278,13 +280,19 @@ def investor_share(s):
         ('합계 행', "'<td class=\"num\"><span class=\"none\">-</span></td><td class=\"num\">100.0%</td><td><span class=\"none\">-</span></td></tr>'",
                    "'<td class=\"num\"><span class=\"none\">-</span></td></tr>'"),
     ]
+    done, absent = [], []
     for why, a, b in reps:
         k = s.count(a)
-        if k != 1:
-            fail('현황 표 %s 앵커 %d건 (기대 1)' % (why, k))
-            continue
-        s = s.replace(a, b, 1)
-    ok('투자 자산 현황 표 비중·보관 열 제거 (열머리 · 행 · 합계 행 · 빈 행 colspan 5)')
+        if k == 1:
+            s = s.replace(a, b, 1); done.append(why)
+        elif k == 0:
+            absent.append(why)
+        else:
+            fail('현황 표 %s 앵커 %d건 (기대 1 또는 0)' % (why, k))
+    if done:
+        ok('투자 자산 현황 표 비중·보관 열 제거 (%s)' % ' · '.join(done))
+    if absent:
+        ok('투자 자산 현황 표 — 원본에 이미 없음 (%s)' % ' · '.join(absent))
     return s
 
 
@@ -306,7 +314,15 @@ def patch_assets_status_xlsx(src_path, dst_path):
         fail('엑셀 머리 행(자산 구분)을 못 찾음: %s' % os.path.basename(src_path))
         return False
     labels = [ws.cell(row=hr, column=c).value for c in range(1, ws.max_column + 1)]
-    if labels[:7] != ['자산 구분', '금액 (원)', '가중평균 금융일수', '입금부족률', '예상 연환산 수익률', '비중', '보관']:
+    head5 = ['자산 구분', '금액 (원)', '가중평균 금융일수', '입금부족률', '예상 연환산 수익률']
+    if labels[:5] == head5 and all(v is None for v in labels[5:]):
+        texts = ' '.join(str(c.value) for row in ws.iter_rows() for c in row if c.value is not None)
+        if '㈜쿠콘' in texts or '㈜페이허그' in texts:
+            fail('엑셀이 5열인데 ㈜ 문자열이 남아 있음')
+            return False
+        ok('투자자산 현황 엑셀 — 원본이 이미 5열(원본 정리 판), 그대로 복사')
+        return 'unchanged'
+    if labels[:7] != head5 + ['비중', '보관']:
         fail('엑셀 머리 행이 기대와 다름: %r' % (labels,))
         return False
     remerge = []
@@ -524,11 +540,13 @@ def main():
             fail('원본에 없는 엑셀: %s' % xl.group(1))
         else:
             xl_tmp = os.path.join(tempfile.mkdtemp(prefix='proto-xlsx-'), xl.group(1))
-            if patch_assets_status_xlsx(xl_src, xl_tmp):
+            r = patch_assets_status_xlsx(xl_src, xl_tmp)
+            if r is True:
                 size = '%.1f KB' % (os.path.getsize(xl_tmp) / 1024.0)
                 out = out[:xl.start(2)] + size + out[xl.end(2):]
                 ok('레지스터 assets-status size %s -> %s' % (xl.group(2), size))
             else:
+                shutil.rmtree(os.path.dirname(xl_tmp), ignore_errors=True)
                 xl_tmp = None
     if hard:
         print('\n'.join(notes))
